@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "140068027992",
+    "project_id": "logpass-me",
+    "storage_bucket": "logpass-me.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140068027992:android:bd61b6bd90853b3538142d",
+        "android_client_info": {
+          "package_name": "me.logpass.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140068027992-gjrpt3mat2eubg4kf1775asmh3mtl7av.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUrygC_4fsUROJhg6qUB2Vbny-j9RVkMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140068027992-gjrpt3mat2eubg4kf1775asmh3mtl7av.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "140068027992-0502aji477jrqi0p9c5187u7s8obduk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.logpass.mobile.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140068027992:android:38ab5df4732d33e238142d",
+        "android_client_info": {
+          "package_name": "me.logpass.mobile.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140068027992-gjrpt3mat2eubg4kf1775asmh3mtl7av.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUrygC_4fsUROJhg6qUB2Vbny-j9RVkMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140068027992-gjrpt3mat2eubg4kf1775asmh3mtl7av.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "140068027992-0502aji477jrqi0p9c5187u7s8obduk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.logpass.mobile.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
