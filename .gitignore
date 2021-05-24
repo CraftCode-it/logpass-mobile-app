@@ -48,6 +48,9 @@ app.*.map.json
 # iOS
 ios/build/
 
+# Android
+**/key.properties
+
 # Generated
 **.g.dart
 **.gr.dart
