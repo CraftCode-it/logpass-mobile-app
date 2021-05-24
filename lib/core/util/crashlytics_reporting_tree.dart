@@ -10,7 +10,7 @@ class CrashlyticsReportingTree implements LogTree {
   List<String> getLevels() => ['W', 'E'];
 
   @override
-  void log(String level, String message, {String? tag, dynamic? ex, StackTrace? stacktrace}) {
+  void log(String level, String message, {String? tag, dynamic ex, StackTrace? stacktrace}) {
     _crashlytics.log(message);
     if (ex != null) {
       _crashlytics.recordError(ex, stacktrace, reason: message);
