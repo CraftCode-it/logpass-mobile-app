@@ -6,4 +6,7 @@ class AccessToken {
     required this.token,
     required this.type,
   });
+
+  @override
+  String toString() => '$type $token';
 }

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/auth/api/initialize/initialize_login_dto.dart';
 import 'package:logpass_me/data/auth/api/initialize/initialize_login_result_dto.dart';
-import 'package:logpass_me/data/auth/api/refresh/refresh_token_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/tokens_result_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/verify_login_dto.dart';
 import 'package:logpass_me/data/networking/log_pass_dio.dart';
@@ -27,9 +26,6 @@ abstract class AuthApiDataSource {
 
   @DELETE('/auth/users/regular/login/{loginAttemptId}')
   Future<void> abortLoginProcess(@Path('loginAttemptId') String attemptId);
-
-  @POST('/users/self/tokens/refresh')
-  Future<TokensResultDTO> refreshAccessToken(@Body() RefreshTokenDTO body);
 
   @DELETE('/users/self/tokens/{tokenId}')
   Future<void> revokeAccessToken(@Path('tokenId') String tokenId);
