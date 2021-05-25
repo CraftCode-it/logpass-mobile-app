@@ -7,8 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/core/di/di_config.dart';
+import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/presentation/log_pass_me_app.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 

@@ -26,6 +26,8 @@ class LogPassMeApp extends HookWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      // darkTheme: ,
+      // themeMode: ThMode,
       routeInformationParser: mainRouter.defaultRouteParser(),
       routerDelegate: mainRouter.delegate(),
     );
