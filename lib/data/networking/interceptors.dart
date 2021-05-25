@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/auth_token_interceptor.dart';
+import 'package:logpass_me/data/networking/language_interceptor.dart';
 import 'package:logpass_me/data/networking/refresh_token_interceptor.dart';
 
 abstract class InterceptorListContainer {
@@ -20,9 +21,11 @@ class LogPassInterceptors implements InterceptorListContainer {
   factory LogPassInterceptors.prod(
     AuthTokenInterceptor authTokenInterceptor,
     RefreshTokenInterceptor refreshTokenInterceptor,
+    LanguageInterceptor languageInterceptor,
   ) =>
       LogPassInterceptors._(
         [
+          languageInterceptor,
           authTokenInterceptor,
           refreshTokenInterceptor,
         ],
@@ -33,12 +36,14 @@ class LogPassInterceptors implements InterceptorListContainer {
   factory LogPassInterceptors.dev(
     AuthTokenInterceptor authTokenInterceptor,
     RefreshTokenInterceptor refreshTokenInterceptor,
+    LanguageInterceptor languageInterceptor,
   ) =>
       LogPassInterceptors._(
         [
+          languageInterceptor,
           authTokenInterceptor,
-          refreshTokenInterceptor,
           LogInterceptor(logPrint: (object) => Fimber.d(object.toString())),
+          refreshTokenInterceptor,
         ],
       );
 }

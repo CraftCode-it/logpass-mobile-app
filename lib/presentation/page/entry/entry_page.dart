@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:logpass_me/core/available_locales.dart';
+import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 
 class EntryPage extends StatelessWidget {
