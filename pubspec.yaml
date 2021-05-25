@@ -41,6 +41,7 @@ dependencies:
   rxdart: 0.27.0
   bloc: 7.0.0
   flutter_hooks: 0.17.0
+  easy_localization: 3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -58,11 +59,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/translations/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
