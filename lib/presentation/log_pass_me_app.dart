@@ -23,7 +23,6 @@ class LogPassMeApp extends HookWidget {
     final languageCode = context.locale.languageCode;
     useEffect(() {
       getIt<SetLanguageCodeUseCase>()(languageCode);
-      return () {};
     }, [context.locale]);
 
     final themeBrightness = useStream(getIt<ListenForThemeBrightnessChangesUseCase>()()).data ?? initialThemeBrightness;
@@ -31,7 +30,6 @@ class LogPassMeApp extends HookWidget {
 
     useEffect(() {
       updateAppThemeColors(brightness);
-      return () {};
     }, [brightness]);
 
     return MaterialApp.router(
