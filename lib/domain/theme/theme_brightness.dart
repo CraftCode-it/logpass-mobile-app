@@ -1,1 +1,1 @@
-enum ThemeBrightness { light, dark }
+enum ThemeBrightness { light, dark, system }

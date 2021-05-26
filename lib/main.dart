@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/language/language_code.dart';
+import 'package:logpass_me/domain/theme/theme_brightness.dart';
+import 'package:logpass_me/domain/theme/use_case/get_theme_brightness_use_case.dart';
 import 'package:logpass_me/presentation/log_pass_me_app.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
@@ -19,9 +21,10 @@ Future<void> runMain(String env) async {
   await setupCrashlytics();
 
   await runZonedGuarded<Future<void>>(() async {
-    configureDependencies(env);
+    await configureDependencies(env);
     setupFimber();
 
+    final themeBrightness = await getInitialBrightnessTheme();
     final mainRouter = MainRouter();
 
     runApp(
@@ -33,6 +36,7 @@ Future<void> runMain(String env) async {
         saveLocale: true,
         child: LogPassMeApp(
           mainRouter: mainRouter,
+          initialThemeBrightness: themeBrightness,
         ),
       ),
     );
@@ -57,3 +61,5 @@ Future<void> setupCrashlytics() async {
     );
   }).sendPort);
 }
+
+Future<ThemeBrightness> getInitialBrightnessTheme() => getIt<GetThemeBrightnessUseCase>()();
