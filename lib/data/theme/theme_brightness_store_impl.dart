@@ -4,7 +4,7 @@ import 'package:logpass_me/data/theme/theme_brightness_entity_mapper.dart';
 import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/theme_brigthness_store.dart';
 
-@LazySingleton(as: ThemeBrightnessStore)
+@Singleton(as: ThemeBrightnessStore)
 class ThemeBrightnessStoreImpl implements ThemeBrightnessStore {
   final ThemeBrightnessDatabase _database;
   final ThemeBrightnessEntityMapper _mapper;

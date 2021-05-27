@@ -8,6 +8,8 @@ class AppTypography {
   AppTypography(this._colors);
 
   TextStyle get primary => TextStyle(fontSize: 16, color: _colors.primaryText);
+
+  TextStyle get button => TextStyle(fontSize: 18, color: _colors.primaryButtonText);
 }
 
 AppTypography useAppTypography() {
