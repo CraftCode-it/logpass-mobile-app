@@ -1,3 +1,16 @@
 {
-  "appName": "LogPass"
+  "common": {
+    "appName": "LogPass",
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start"
+  },
+  "onboarding": {
+    "stepOneTitle": "Welcome!",
+    "stepOneContent": "Czym jest Logpass Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodsed do eiusmod",
+    "stepTwoTitle": "Safety first",
+    "stepTwoContent": "Sposoby autentyfikacji Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    "stepThreeTitle": "Data at hand",
+    "stepThreeContent": "Jakie dane mogą być przechowywane/ używane Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+  }
 }

@@ -46,6 +46,6 @@ class _Idle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: const Text(LocaleKeys.appName).tr(),
+        child: const Text(LocaleKeys.common_appName).tr(),
       );
 }

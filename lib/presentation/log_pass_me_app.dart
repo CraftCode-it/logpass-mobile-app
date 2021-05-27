@@ -25,7 +25,8 @@ class LogPassMeApp extends HookWidget {
       getIt<SetLanguageCodeUseCase>()(languageCode);
     }, [context.locale]);
 
-    final themeBrightness = useStream(getIt<ListenForThemeBrightnessChangesUseCase>()()).data ?? initialThemeBrightness;
+    final themeBrightnessStream = useMemoized(() => getIt<ListenForThemeBrightnessChangesUseCase>()());
+    final themeBrightness = useStream(themeBrightnessStream).data ?? initialThemeBrightness;
     final brightness = _mapThemeBrightnessToBrightness(themeBrightness, context);
 
     useEffect(() {
