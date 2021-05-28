@@ -1,0 +1,982 @@
+[
+  {
+    "country": "BD",
+    "code": "880"
+  },
+  {
+    "country": "BE",
+    "code": "32"
+  },
+  {
+    "country": "BF",
+    "code": "226"
+  },
+  {
+    "country": "BG",
+    "code": "359"
+  },
+  {
+    "country": "BA",
+    "code": "387"
+  },
+  {
+    "country": "BB",
+    "code": "1-246"
+  },
+  {
+    "country": "WF",
+    "code": "681"
+  },
+  {
+    "country": "BL",
+    "code": "590"
+  },
+  {
+    "country": "BM",
+    "code": "1-441"
+  },
+  {
+    "country": "BN",
+    "code": "673"
+  },
+  {
+    "country": "BO",
+    "code": "591"
+  },
+  {
+    "country": "BH",
+    "code": "973"
+  },
+  {
+    "country": "BI",
+    "code": "257"
+  },
+  {
+    "country": "BJ",
+    "code": "229"
+  },
+  {
+    "country": "BT",
+    "code": "975"
+  },
+  {
+    "country": "JM",
+    "code": "1-876"
+  },
+  {
+    "country": "BW",
+    "code": "267"
+  },
+  {
+    "country": "WS",
+    "code": "685"
+  },
+  {
+    "country": "BQ",
+    "code": "599"
+  },
+  {
+    "country": "BR",
+    "code": "55"
+  },
+  {
+    "country": "BS",
+    "code": "1-242"
+  },
+  {
+    "country": "JE",
+    "code": "44-1534"
+  },
+  {
+    "country": "BY",
+    "code": "375"
+  },
+  {
+    "country": "BZ",
+    "code": "501"
+  },
+  {
+    "country": "RU",
+    "code": "7"
+  },
+  {
+    "country": "RW",
+    "code": "250"
+  },
+  {
+    "country": "RS",
+    "code": "381"
+  },
+  {
+    "country": "TL",
+    "code": "670"
+  },
+  {
+    "country": "RE",
+    "code": "262"
+  },
+  {
+    "country": "TM",
+    "code": "993"
+  },
+  {
+    "country": "TJ",
+    "code": "992"
+  },
+  {
+    "country": "RO",
+    "code": "40"
+  },
+  {
+    "country": "TK",
+    "code": "690"
+  },
+  {
+    "country": "GW",
+    "code": "245"
+  },
+  {
+    "country": "GU",
+    "code": "1-671"
+  },
+  {
+    "country": "GT",
+    "code": "502"
+  },
+  {
+    "country": "GR",
+    "code": "30"
+  },
+  {
+    "country": "GQ",
+    "code": "240"
+  },
+  {
+    "country": "GP",
+    "code": "590"
+  },
+  {
+    "country": "JP",
+    "code": "81"
+  },
+  {
+    "country": "GY",
+    "code": "592"
+  },
+  {
+    "country": "GG",
+    "code": "44-1481"
+  },
+  {
+    "country": "GF",
+    "code": "594"
+  },
+  {
+    "country": "GE",
+    "code": "995"
+  },
+  {
+    "country": "GD",
+    "code": "1-473"
+  },
+  {
+    "country": "GB",
+    "code": "44"
+  },
+  {
+    "country": "GA",
+    "code": "241"
+  },
+  {
+    "country": "SV",
+    "code": "503"
+  },
+  {
+    "country": "GN",
+    "code": "224"
+  },
+  {
+    "country": "GM",
+    "code": "220"
+  },
+  {
+    "country": "GL",
+    "code": "299"
+  },
+  {
+    "country": "GI",
+    "code": "350"
+  },
+  {
+    "country": "GH",
+    "code": "233"
+  },
+  {
+    "country": "OM",
+    "code": "968"
+  },
+  {
+    "country": "TN",
+    "code": "216"
+  },
+  {
+    "country": "JO",
+    "code": "962"
+  },
+  {
+    "country": "HR",
+    "code": "385"
+  },
+  {
+    "country": "HT",
+    "code": "509"
+  },
+  {
+    "country": "HU",
+    "code": "36"
+  },
+  {
+    "country": "HK",
+    "code": "852"
+  },
+  {
+    "country": "HN",
+    "code": "504"
+  },
+  {
+    "country": "HM",
+    "code": " "
+  },
+  {
+    "country": "VE",
+    "code": "58"
+  },
+  {
+    "country": "PR",
+    "code": "1-787 and 1-939"
+  },
+  {
+    "country": "PS",
+    "code": "970"
+  },
+  {
+    "country": "PW",
+    "code": "680"
+  },
+  {
+    "country": "PT",
+    "code": "351"
+  },
+  {
+    "country": "SJ",
+    "code": "47"
+  },
+  {
+    "country": "PY",
+    "code": "595"
+  },
+  {
+    "country": "IQ",
+    "code": "964"
+  },
+  {
+    "country": "PA",
+    "code": "507"
+  },
+  {
+    "country": "PF",
+    "code": "689"
+  },
+  {
+    "country": "PG",
+    "code": "675"
+  },
+  {
+    "country": "PE",
+    "code": "51"
+  },
+  {
+    "country": "PK",
+    "code": "92"
+  },
+  {
+    "country": "PH",
+    "code": "63"
+  },
+  {
+    "country": "PN",
+    "code": "870"
+  },
+  {
+    "country": "PL",
+    "code": "48"
+  },
+  {
+    "country": "PM",
+    "code": "508"
+  },
+  {
+    "country": "ZM",
+    "code": "260"
+  },
+  {
+    "country": "EH",
+    "code": "212"
+  },
+  {
+    "country": "EE",
+    "code": "372"
+  },
+  {
+    "country": "EG",
+    "code": "20"
+  },
+  {
+    "country": "ZA",
+    "code": "27"
+  },
+  {
+    "country": "EC",
+    "code": "593"
+  },
+  {
+    "country": "IT",
+    "code": "39"
+  },
+  {
+    "country": "VN",
+    "code": "84"
+  },
+  {
+    "country": "SB",
+    "code": "677"
+  },
+  {
+    "country": "ET",
+    "code": "251"
+  },
+  {
+    "country": "SO",
+    "code": "252"
+  },
+  {
+    "country": "ZW",
+    "code": "263"
+  },
+  {
+    "country": "SA",
+    "code": "966"
+  },
+  {
+    "country": "ES",
+    "code": "34"
+  },
+  {
+    "country": "ER",
+    "code": "291"
+  },
+  {
+    "country": "ME",
+    "code": "382"
+  },
+  {
+    "country": "MD",
+    "code": "373"
+  },
+  {
+    "country": "MG",
+    "code": "261"
+  },
+  {
+    "country": "MF",
+    "code": "590"
+  },
+  {
+    "country": "MA",
+    "code": "212"
+  },
+  {
+    "country": "MC",
+    "code": "377"
+  },
+  {
+    "country": "UZ",
+    "code": "998"
+  },
+  {
+    "country": "MM",
+    "code": "95"
+  },
+  {
+    "country": "ML",
+    "code": "223"
+  },
+  {
+    "country": "MO",
+    "code": "853"
+  },
+  {
+    "country": "MN",
+    "code": "976"
+  },
+  {
+    "country": "MH",
+    "code": "692"
+  },
+  {
+    "country": "MK",
+    "code": "389"
+  },
+  {
+    "country": "MU",
+    "code": "230"
+  },
+  {
+    "country": "MT",
+    "code": "356"
+  },
+  {
+    "country": "MW",
+    "code": "265"
+  },
+  {
+    "country": "MV",
+    "code": "960"
+  },
+  {
+    "country": "MQ",
+    "code": "596"
+  },
+  {
+    "country": "MP",
+    "code": "1-670"
+  },
+  {
+    "country": "MS",
+    "code": "1-664"
+  },
+  {
+    "country": "MR",
+    "code": "222"
+  },
+  {
+    "country": "IM",
+    "code": "44-1624"
+  },
+  {
+    "country": "UG",
+    "code": "256"
+  },
+  {
+    "country": "TZ",
+    "code": "255"
+  },
+  {
+    "country": "MY",
+    "code": "60"
+  },
+  {
+    "country": "MX",
+    "code": "52"
+  },
+  {
+    "country": "IL",
+    "code": "972"
+  },
+  {
+    "country": "FR",
+    "code": "33"
+  },
+  {
+    "country": "IO",
+    "code": "246"
+  },
+  {
+    "country": "SH",
+    "code": "290"
+  },
+  {
+    "country": "FI",
+    "code": "358"
+  },
+  {
+    "country": "FJ",
+    "code": "679"
+  },
+  {
+    "country": "FK",
+    "code": "500"
+  },
+  {
+    "country": "FM",
+    "code": "691"
+  },
+  {
+    "country": "FO",
+    "code": "298"
+  },
+  {
+    "country": "NI",
+    "code": "505"
+  },
+  {
+    "country": "NL",
+    "code": "31"
+  },
+  {
+    "country": "NO",
+    "code": "47"
+  },
+  {
+    "country": "NA",
+    "code": "264"
+  },
+  {
+    "country": "VU",
+    "code": "678"
+  },
+  {
+    "country": "NC",
+    "code": "687"
+  },
+  {
+    "country": "NE",
+    "code": "227"
+  },
+  {
+    "country": "NF",
+    "code": "672"
+  },
+  {
+    "country": "NG",
+    "code": "234"
+  },
+  {
+    "country": "NZ",
+    "code": "64"
+  },
+  {
+    "country": "NP",
+    "code": "977"
+  },
+  {
+    "country": "NR",
+    "code": "674"
+  },
+  {
+    "country": "NU",
+    "code": "683"
+  },
+  {
+    "country": "CK",
+    "code": "682"
+  },
+  {
+    "country": "CI",
+    "code": "225"
+  },
+  {
+    "country": "CH",
+    "code": "41"
+  },
+  {
+    "country": "CO",
+    "code": "57"
+  },
+  {
+    "country": "CN",
+    "code": "86"
+  },
+  {
+    "country": "CM",
+    "code": "237"
+  },
+  {
+    "country": "CL",
+    "code": "56"
+  },
+  {
+    "country": "CC",
+    "code": "61"
+  },
+  {
+    "country": "CA",
+    "code": "1"
+  },
+  {
+    "country": "CG",
+    "code": "242"
+  },
+  {
+    "country": "CF",
+    "code": "236"
+  },
+  {
+    "country": "CD",
+    "code": "243"
+  },
+  {
+    "country": "CZ",
+    "code": "420"
+  },
+  {
+    "country": "CY",
+    "code": "357"
+  },
+  {
+    "country": "CX",
+    "code": "61"
+  },
+  {
+    "country": "CR",
+    "code": "506"
+  },
+  {
+    "country": "CW",
+    "code": "599"
+  },
+  {
+    "country": "CV",
+    "code": "238"
+  },
+  {
+    "country": "CU",
+    "code": "53"
+  },
+  {
+    "country": "SZ",
+    "code": "268"
+  },
+  {
+    "country": "SY",
+    "code": "963"
+  },
+  {
+    "country": "SX",
+    "code": "599"
+  },
+  {
+    "country": "KG",
+    "code": "996"
+  },
+  {
+    "country": "KE",
+    "code": "254"
+  },
+  {
+    "country": "SS",
+    "code": "211"
+  },
+  {
+    "country": "SR",
+    "code": "597"
+  },
+  {
+    "country": "KI",
+    "code": "686"
+  },
+  {
+    "country": "KH",
+    "code": "855"
+  },
+  {
+    "country": "KN",
+    "code": "1-869"
+  },
+  {
+    "country": "KM",
+    "code": "269"
+  },
+  {
+    "country": "ST",
+    "code": "239"
+  },
+  {
+    "country": "SK",
+    "code": "421"
+  },
+  {
+    "country": "KR",
+    "code": "82"
+  },
+  {
+    "country": "SI",
+    "code": "386"
+  },
+  {
+    "country": "KP",
+    "code": "850"
+  },
+  {
+    "country": "KW",
+    "code": "965"
+  },
+  {
+    "country": "SN",
+    "code": "221"
+  },
+  {
+    "country": "SM",
+    "code": "378"
+  },
+  {
+    "country": "SL",
+    "code": "232"
+  },
+  {
+    "country": "SC",
+    "code": "248"
+  },
+  {
+    "country": "KZ",
+    "code": "7"
+  },
+  {
+    "country": "KY",
+    "code": "1-345"
+  },
+  {
+    "country": "SG",
+    "code": "65"
+  },
+  {
+    "country": "SE",
+    "code": "46"
+  },
+  {
+    "country": "SD",
+    "code": "249"
+  },
+  {
+    "country": "DO",
+    "code": "1-809 and 1-829"
+  },
+  {
+    "country": "DM",
+    "code": "1-767"
+  },
+  {
+    "country": "DJ",
+    "code": "253"
+  },
+  {
+    "country": "DK",
+    "code": "45"
+  },
+  {
+    "country": "VG",
+    "code": "1-284"
+  },
+  {
+    "country": "DE",
+    "code": "49"
+  },
+  {
+    "country": "YE",
+    "code": "967"
+  },
+  {
+    "country": "DZ",
+    "code": "213"
+  },
+  {
+    "country": "US",
+    "code": "1"
+  },
+  {
+    "country": "UY",
+    "code": "598"
+  },
+  {
+    "country": "YT",
+    "code": "262"
+  },
+  {
+    "country": "UM",
+    "code": "1"
+  },
+  {
+    "country": "LB",
+    "code": "961"
+  },
+  {
+    "country": "LC",
+    "code": "1-758"
+  },
+  {
+    "country": "LA",
+    "code": "856"
+  },
+  {
+    "country": "TV",
+    "code": "688"
+  },
+  {
+    "country": "TW",
+    "code": "886"
+  },
+  {
+    "country": "TT",
+    "code": "1-868"
+  },
+  {
+    "country": "TR",
+    "code": "90"
+  },
+  {
+    "country": "LK",
+    "code": "94"
+  },
+  {
+    "country": "LI",
+    "code": "423"
+  },
+  {
+    "country": "LV",
+    "code": "371"
+  },
+  {
+    "country": "TO",
+    "code": "676"
+  },
+  {
+    "country": "LT",
+    "code": "370"
+  },
+  {
+    "country": "LU",
+    "code": "352"
+  },
+  {
+    "country": "LR",
+    "code": "231"
+  },
+  {
+    "country": "LS",
+    "code": "266"
+  },
+  {
+    "country": "TH",
+    "code": "66"
+  },
+  {
+    "country": "TG",
+    "code": "228"
+  },
+  {
+    "country": "TD",
+    "code": "235"
+  },
+  {
+    "country": "TC",
+    "code": "1-649"
+  },
+  {
+    "country": "LY",
+    "code": "218"
+  },
+  {
+    "country": "VA",
+    "code": "379"
+  },
+  {
+    "country": "VC",
+    "code": "1-784"
+  },
+  {
+    "country": "AE",
+    "code": "971"
+  },
+  {
+    "country": "AD",
+    "code": "376"
+  },
+  {
+    "country": "AG",
+    "code": "1-268"
+  },
+  {
+    "country": "AF",
+    "code": "93"
+  },
+  {
+    "country": "AI",
+    "code": "1-264"
+  },
+  {
+    "country": "VI",
+    "code": "1-340"
+  },
+  {
+    "country": "IS",
+    "code": "354"
+  },
+  {
+    "country": "IR",
+    "code": "98"
+  },
+  {
+    "country": "AM",
+    "code": "374"
+  },
+  {
+    "country": "AL",
+    "code": "355"
+  },
+  {
+    "country": "AO",
+    "code": "244"
+  },
+  {
+    "country": "AS",
+    "code": "1-684"
+  },
+  {
+    "country": "AR",
+    "code": "54"
+  },
+  {
+    "country": "AU",
+    "code": "61"
+  },
+  {
+    "country": "AT",
+    "code": "43"
+  },
+  {
+    "country": "AW",
+    "code": "297"
+  },
+  {
+    "country": "IN",
+    "code": "91"
+  },
+  {
+    "country": "AX",
+    "code": "358-18"
+  },
+  {
+    "country": "AZ",
+    "code": "994"
+  },
+  {
+    "country": "IE",
+    "code": "353"
+  },
+  {
+    "country": "ID",
+    "code": "62"
+  },
+  {
+    "country": "UA",
+    "code": "380"
+  },
+  {
+    "country": "QA",
+    "code": "974"
+  },
+  {
+    "country": "MZ",
+    "code": "258"
+  }
+]

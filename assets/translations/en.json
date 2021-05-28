@@ -3,7 +3,9 @@
     "appName": "LogPass",
     "skip": "Skip",
     "next": "Next",
-    "start": "Start"
+    "start": "Start",
+    "prefix": "Prefix",
+    "phoneNumber": "Phone number"
   },
   "onboarding": {
     "stepOneTitle": "Welcome!",
@@ -12,5 +14,12 @@
     "stepTwoContent": "Sposoby autentyfikacji Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
     "stepThreeTitle": "Data at hand",
     "stepThreeContent": "Jakie dane mogą być przechowywane/ używane Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+  },
+  "start": {
+    "termsAcceptInfo": "By registering to the application, I accept ",
+    "termsAcceptHighlight": "Terms&Conditions of use",
+    "helpAction": "Need help?",
+    "addNewDeviceAction": "Add new device",
+    "addNewDeviceInfo": "Already registered\nbut using different device?"
   }
 }
