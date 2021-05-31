@@ -14,4 +14,6 @@ class CountryCodePickerState with _$CountryCodePickerState {
     List<CountryCode> countryCodeList,
     CountryCode countryCode,
   ) = _CountryCodePickerStateSelected;
+
+  factory CountryCodePickerState.selectedEvent(CountryCode countryCode) = _CountryCodePickerStateSelectedEvent;
 }

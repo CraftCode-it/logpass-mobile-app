@@ -15,7 +15,7 @@ abstract class AuthApiDataSource {
   @factoryMethod
   factory AuthApiDataSource(LogPassDio dio) = _AuthApiDataSource;
 
-  @POST('/auth/users/regular/login')
+  @POST('/auth/users/regular/login/')
   Future<InitializeLoginResultDTO> initializeLoginProcess(@Body() InitializeLoginDTO body);
 
   @PUT('/auth/users/regular/login/{loginAttemptId}')

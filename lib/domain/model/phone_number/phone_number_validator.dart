@@ -7,10 +7,8 @@ class PhoneNumberValidator {
   Future<bool> isValid(PhoneNumber phoneNumber) async {
     if (phoneNumber.number.isEmpty) return false;
 
-    final fullPhoneNumber = phoneNumber.countryCode + phoneNumber.number;
-
     final isValid = await PhoneNumberUtil.isValidPhoneNumber(
-      phoneNumber: fullPhoneNumber,
+      phoneNumber: phoneNumber.fullPhoneNumber(),
       isoCode: phoneNumber.country,
     );
 

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/auth_token_interceptor.dart';
+import 'package:logpass_me/data/networking/content_type_interceptor.dart';
 import 'package:logpass_me/data/networking/language_interceptor.dart';
 import 'package:logpass_me/data/networking/refresh_token_interceptor.dart';
 
@@ -22,11 +22,13 @@ class LogPassInterceptors implements InterceptorListContainer {
     AuthTokenInterceptor authTokenInterceptor,
     RefreshTokenInterceptor refreshTokenInterceptor,
     LanguageInterceptor languageInterceptor,
+    ContentTypeInterceptor contentTypeInterceptor,
   ) =>
       LogPassInterceptors._(
         [
           languageInterceptor,
           authTokenInterceptor,
+          contentTypeInterceptor,
           refreshTokenInterceptor,
         ],
       );
@@ -37,12 +39,14 @@ class LogPassInterceptors implements InterceptorListContainer {
     AuthTokenInterceptor authTokenInterceptor,
     RefreshTokenInterceptor refreshTokenInterceptor,
     LanguageInterceptor languageInterceptor,
+    ContentTypeInterceptor contentTypeInterceptor,
   ) =>
       LogPassInterceptors._(
         [
           languageInterceptor,
           authTokenInterceptor,
-          LogInterceptor(logPrint: (object) => Fimber.d(object.toString())),
+          LogInterceptor(),
+          contentTypeInterceptor,
           refreshTokenInterceptor,
         ],
       );
@@ -57,13 +61,28 @@ class RefreshTokenInterceptors implements InterceptorListContainer {
 
   @prod
   @factoryMethod
-  factory RefreshTokenInterceptors.prod() => RefreshTokenInterceptors._([]);
+  factory RefreshTokenInterceptors.prod(
+    LanguageInterceptor languageInterceptor,
+    ContentTypeInterceptor contentTypeInterceptor,
+  ) =>
+      RefreshTokenInterceptors._(
+        [
+          languageInterceptor,
+          contentTypeInterceptor,
+        ],
+      );
 
   @dev
   @factoryMethod
-  factory RefreshTokenInterceptors.dev() => RefreshTokenInterceptors._(
+  factory RefreshTokenInterceptors.dev(
+    LanguageInterceptor languageInterceptor,
+    ContentTypeInterceptor contentTypeInterceptor,
+  ) =>
+      RefreshTokenInterceptors._(
         [
-          LogInterceptor(logPrint: (object) => Fimber.d(object.toString())),
+          languageInterceptor,
+          contentTypeInterceptor,
+          LogInterceptor(),
         ],
       );
 }

@@ -20,6 +20,7 @@
     "termsAcceptHighlight": "Terms&Conditions of use",
     "helpAction": "Need help?",
     "addNewDeviceAction": "Add new device",
-    "addNewDeviceInfo": "Already registered\nbut using different device?"
+    "addNewDeviceInfo": "Already registered\nbut using different device?",
+    "phoneNumberFormatError": "Nieprawidłowy format numeru telefonu"
   }
 }

@@ -17,8 +17,9 @@ class InitializeLoginResultDTO {
 class InitializeLoginResultDataDTO {
   final String verificationUrl;
   final String verificationMethod;
+  final InitializeLoginResultVerificationDataDTO? verificationData;
 
-  InitializeLoginResultDataDTO(this.verificationUrl, this.verificationMethod);
+  InitializeLoginResultDataDTO(this.verificationUrl, this.verificationMethod, this.verificationData);
 
   Map<String, dynamic> toJson() => _$InitializeLoginResultDataDTOToJson(this);
 

@@ -19,10 +19,12 @@ class CountryCodePickerCubit extends Cubit<CountryCodePickerState> {
 
     _countryCodeList = countryCodeList;
 
+    emit(CountryCodePickerState.selectedEvent(selectedCountryCode));
     emit(CountryCodePickerState.selected(countryCodeList, selectedCountryCode));
   }
 
   void select(CountryCode countryCode) {
+    emit(CountryCodePickerState.selectedEvent(countryCode));
     emit(CountryCodePickerState.selected(_countryCodeList, countryCode));
   }
 

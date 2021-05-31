@@ -24,6 +24,13 @@ class CountryCodePicker extends HookWidget {
     final cubit = useCubit<CountryCodePickerCubit>();
     final state = useCubitBuilder(cubit);
 
+    useCubitListener(cubit, (CountryCodePickerCubit cubit, CountryCodePickerState state, context) {
+      state.maybeWhen(
+        selectedEvent: onCountryCodeSelected,
+        orElse: () {},
+      );
+    });
+
     useEffect(() {
       cubit.initialize(_getSystemLocale());
     }, [cubit]);
@@ -45,9 +52,10 @@ class CountryCodePicker extends HookWidget {
               height: AppDimens.inputHeight,
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: state.map(
+                child: state.maybeMap(
                   loading: (state) => const Center(child: CircularProgressIndicator()),
                   selected: (state) => Text('+${state.countryCode.code}'),
+                  orElse: () {},
                 ),
               ),
             ),
