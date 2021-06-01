@@ -57,3 +57,6 @@ ios/build/
 **.freezed.dart
 **.config.dart
 **.mocks.dart
+
+### FVM related ###
+.fvm/flutter_sdk
