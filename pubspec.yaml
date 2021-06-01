@@ -57,6 +57,7 @@ dev_dependencies:
   injectable_generator: 1.4.0
   json_serializable: 4.1.2
   pedantic: 1.11.0
+  mockito: 5.0.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

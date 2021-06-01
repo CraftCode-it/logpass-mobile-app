@@ -10,4 +10,16 @@ class SignUpVerification {
     this.verificationUrl,
     this.toSign,
   );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SignUpVerification &&
+          runtimeType == other.runtimeType &&
+          verificationMethod == other.verificationMethod &&
+          verificationUrl == other.verificationUrl &&
+          toSign == other.toSign;
+
+  @override
+  int get hashCode => verificationMethod.hashCode ^ verificationUrl.hashCode ^ toSign.hashCode;
 }

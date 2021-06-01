@@ -13,6 +13,6 @@ abstract class RefreshTokenApiDataSource {
   @factoryMethod
   factory RefreshTokenApiDataSource(RefreshTokenDio dio) = _RefreshTokenApiDataSource;
 
-  @POST('/users/self/tokens/refresh')
+  @POST('/users/self/tokens/refresh/')
   Future<TokensResultDTO> refreshAccessToken(@Body() RefreshTokenDTO body);
 }

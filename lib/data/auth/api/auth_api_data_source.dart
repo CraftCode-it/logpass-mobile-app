@@ -10,23 +10,29 @@ import 'package:retrofit/http.dart';
 part 'auth_api_data_source.g.dart';
 
 @Singleton()
+class AuthApiDataSource extends __AuthApiDataSource implements _AuthApiDataSource {
+  AuthApiDataSource(LogPassDio dio) : super(dio);
+
+  Future<TokensResultDTO> verifyLoginProcess(String url, VerifyLoginDTO body) async {
+    final options = Options(method: HttpMethod.PUT, headers: <String, dynamic>{}, extra: <String, dynamic>{})
+        .compose(_dio.options, url, data: body.toJson());
+
+    final result = await _dio.fetch(options);
+
+    return TokensResultDTO.fromJson(result.data as Map<String, dynamic>);
+  }
+}
+
 @RestApi()
-abstract class AuthApiDataSource {
-  @factoryMethod
-  factory AuthApiDataSource(LogPassDio dio) = _AuthApiDataSource;
+abstract class _AuthApiDataSource {
+  factory _AuthApiDataSource(LogPassDio dio) = __AuthApiDataSource;
 
   @POST('/auth/users/regular/login/')
   Future<InitializeLoginResultDTO> initializeLoginProcess(@Body() InitializeLoginDTO body);
 
-  @PUT('/auth/users/regular/login/{loginAttemptId}')
-  Future<TokensResultDTO> verifyLoginProcess(
-    @Path('loginAttemptId') String attemptId,
-    @Body() VerifyLoginDTO body,
-  );
-
-  @DELETE('/auth/users/regular/login/{loginAttemptId}')
+  @DELETE('/auth/users/regular/login/{loginAttemptId}/')
   Future<void> abortLoginProcess(@Path('loginAttemptId') String attemptId);
 
-  @DELETE('/users/self/tokens/{tokenId}')
+  @DELETE('/users/self/tokens/{tokenId}/')
   Future<void> revokeAccessToken(@Path('tokenId') String tokenId);
 }
