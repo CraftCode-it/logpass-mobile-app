@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Init commands
+- FVM use:
+`fvm use 2.2.0`
+- Easy localization:
+`fvm flutter pub run easy_localization:generate --source-dir ./assets/translations -f keys -o local_keys.g.dart`
+
