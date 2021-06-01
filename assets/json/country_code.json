@@ -253,7 +253,11 @@
   },
   {
     "country": "PR",
-    "code": "1-787 and 1-939"
+    "code": "1-787"
+  },
+  {
+    "country": "PR",
+    "code": "1-939"
   },
   {
     "country": "PS",
@@ -749,7 +753,11 @@
   },
   {
     "country": "DO",
-    "code": "1-809 and 1-829"
+    "code": "1-809"
+  },
+  {
+    "country": "DO",
+    "code": "1-829"
   },
   {
     "country": "DM",
