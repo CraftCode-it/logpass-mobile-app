@@ -9,4 +9,12 @@ class RefreshTokenDTO {
   RefreshTokenDTO({required this.refreshToken});
 
   Map<String, dynamic> toJson() => _$RefreshTokenDTOToJson(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RefreshTokenDTO && runtimeType == other.runtimeType && refreshToken == other.refreshToken;
+
+  @override
+  int get hashCode => refreshToken.hashCode;
 }

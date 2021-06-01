@@ -14,5 +14,6 @@ class LanguageInterceptor extends Interceptor {
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final languageCode = await _languageStore.getLanguageCode();
     options.headers[HttpHeaders.acceptLanguageHeader] = languageCode;
+    handler.next(options);
   }
 }

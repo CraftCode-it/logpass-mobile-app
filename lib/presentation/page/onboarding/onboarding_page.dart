@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/onboarding/onboarding_step.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -44,7 +46,7 @@ class OnboardingPage extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildSkippButton(index),
+              _buildSkippButton(context, index),
               const SizedBox(height: AppDimens.xxl),
               Expanded(
                 child: PageView(
@@ -60,7 +62,7 @@ class OnboardingPage extends HookWidget {
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
                 ),
-                startPressed: _navigateToLoginPage,
+                startPressed: () => _navigateToLoginPage(context),
               ),
               const SizedBox(height: AppDimens.l),
               Center(
@@ -80,23 +82,25 @@ class OnboardingPage extends HookWidget {
     );
   }
 
-  Visibility _buildSkippButton(ValueNotifier<int> index) => Visibility(
-        visible: index.value != _lastPageIndex,
-        maintainSize: true,
-        maintainAnimation: true,
-        maintainState: true,
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () {},
-            child: const Text(
-              LocaleKeys.common_skip,
-            ).tr(),
-          ),
+  Visibility _buildSkippButton(BuildContext context, ValueNotifier<int> index) {
+    return Visibility(
+      visible: index.value != _lastPageIndex,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+          onPressed: () => _navigateToLoginPage(context),
+          child: const Text(
+            LocaleKeys.common_skip,
+          ).tr(),
         ),
-      );
+      ),
+    );
+  }
 
-  void _navigateToLoginPage() {}
+  void _navigateToLoginPage(BuildContext context) => AutoRouter.of(context).replace(const StartPageRoute());
 }
 
 class _NavigationButton extends StatelessWidget {

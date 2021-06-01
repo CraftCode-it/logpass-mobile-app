@@ -56,3 +56,4 @@ ios/build/
 **.gr.dart
 **.freezed.dart
 **.config.dart
+**.mocks.dart

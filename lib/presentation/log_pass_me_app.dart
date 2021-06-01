@@ -70,7 +70,7 @@ class LogPassMeApp extends HookWidget {
       case ThemeBrightness.dark:
         return Brightness.dark;
       case ThemeBrightness.system:
-        return MediaQuery.platformBrightnessOf(context);
+        return WidgetsBinding.instance!.window.platformBrightness;
     }
   }
 }

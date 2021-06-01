@@ -23,7 +23,7 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
 
   @override
   Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.response == null) handler.next(err);
+    if (err.response == null) super.onError(err, handler);
 
     if (err.response?.statusCode == HttpStatus.unauthorized) {
       try {
@@ -53,6 +53,8 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
         handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
       }
     }
+
+    super.onError(err, handler);
   }
 
   Future<void> _refreshAccessTokenAndRetryRequest(DioError err, ErrorInterceptorHandler handler) async {

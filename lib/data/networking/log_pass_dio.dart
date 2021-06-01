@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/app_env.dart';
@@ -16,7 +17,9 @@ class LogPassDio extends DioMixin implements Dio {
       headers: {
         HttpHeaders.acceptHeader: acceptHeaderValue,
       },
+      followRedirects: false,
     );
+    httpClientAdapter = DefaultHttpClientAdapter();
     _setupInterceptors(interceptors.list);
   }
 

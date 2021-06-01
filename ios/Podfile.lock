@@ -40,6 +40,8 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.4)
     - PromisesObjC (~> 1.2)
   - Flutter (1.0.0)
+  - flutter_keyboard_visibility (0.0.1):
+    - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
   - GoogleDataTransport (9.0.0):
@@ -52,6 +54,10 @@ PODS:
     - GoogleUtilities/Environment
   - GoogleUtilities/UserDefaults (7.4.1):
     - GoogleUtilities/Logger
+  - libphonenumber (0.0.1):
+    - Flutter
+    - libPhoneNumber-iOS
+  - libPhoneNumber-iOS (0.9.15)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -66,7 +72,9 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `8.0.0`)
   - Flutter (from `Flutter`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - libphonenumber (from `.symlinks/plugins/libphonenumber/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
 SPEC REPOS:
@@ -78,6 +86,7 @@ SPEC REPOS:
     - FirebaseInstallations
     - GoogleDataTransport
     - GoogleUtilities
+    - libPhoneNumber-iOS
     - nanopb
     - PromisesObjC
 
@@ -91,8 +100,12 @@ EXTERNAL SOURCES:
     :tag: 8.0.0
   Flutter:
     :path: Flutter
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  libphonenumber:
+    :path: ".symlinks/plugins/libphonenumber/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
 
@@ -111,9 +124,12 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 0d1548ab6085002d87c173ce3f881129f39b3565
   FirebaseInstallations: c4aab1005d6547b00a7529777fe52f5d4d45165b
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   GoogleDataTransport: 11e3a5f2c190327df1a4a5d7e7ae3d4d5b9c9e4c
   GoogleUtilities: f8a43108b38a68eebe8b3540e1f4f2d28843ce20
+  libphonenumber: bd14d5abfc5939ab0b0767234e2d8e2593af258e
+  libPhoneNumber-iOS: 0a32a9525cf8744fe02c5206eb30d571e38f7d75
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d

@@ -6,7 +6,7 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 
 class RoundedButton extends HookWidget {
   final String text;
-  final Function() onPressed;
+  final Function()? onPressed;
 
   const RoundedButton({
     required this.text,
@@ -28,6 +28,7 @@ class RoundedButton extends HookWidget {
       height: AppDimens.buttonHeight,
       onPressed: onPressed,
       color: colors.primaryButton,
+      disabledColor: colors.primaryButton.withOpacity(0.5),
       child: Text(
         text,
         style: typography.button,
