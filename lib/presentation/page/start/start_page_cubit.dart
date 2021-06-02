@@ -50,7 +50,7 @@ class StartPageCubit extends Cubit<StartPageState> {
 
       switch (result.verificationMethod) {
         case VerificationMethod.otpCode:
-          emit(StartPageState.successOTP(result.verificationUrl));
+          emit(StartPageState.successOTP(result));
           break;
         case VerificationMethod.signature:
           emit(StartPageState.successSignature());

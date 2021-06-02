@@ -1,10 +1,11 @@
-
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/auth/api/auth_api_data_source.dart';
 import 'package:logpass_me/data/auth/api/initialize/initialize_login_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/tokens_result_dto.dart';
+import 'package:logpass_me/data/auth/api/verify/verify_login_dto.dart';
 import 'package:logpass_me/domain/auth/auth_repository.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
+import 'package:logpass_me/domain/auth/token/user_tokens.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
 
 @Singleton(as: AuthRepository)
@@ -34,5 +35,13 @@ class AuthRepositoryImpl implements AuthRepository {
       response.data.verificationUrl,
       response.data.verificationData?.toSign,
     );
+  }
+
+  @override
+  Future<UserTokens> verifyOTPSignUp(String url, String otpCode) async {
+    final request = VerifyLoginDTO(secret: otpCode);
+    final response = await _authApiDataSource.verifyLoginProcess(url, request);
+
+    return _userTokensDTOMapper(response);
   }
 }

@@ -20,7 +20,7 @@ class CountryCodePickerPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text('Select your country'),
+        title: const Text('Select your country'),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.only(
