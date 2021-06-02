@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -30,7 +32,7 @@ class OTPCodePage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verify your number'),
+        title: const Text(LocaleKeys.otp_code_title).tr(),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.xl),
@@ -40,18 +42,18 @@ class OTPCodePage extends HookWidget {
           children: [
             const SizedBox(height: AppDimens.xl),
             const Text(
-              'Please insert the code that we just send\nto provided phone number',
+              LocaleKeys.otp_code_info,
               textAlign: TextAlign.center,
-            ),
+            ).tr(),
             const SizedBox(height: AppDimens.xl),
             _CodeField(cubit: cubit, state: state),
             const SizedBox(height: AppDimens.xxl),
             _VerifyButton(state: state, cubit: cubit),
             const SizedBox(height: AppDimens.xl),
             const Text(
-              'Did not get anything?',
+              LocaleKeys.otp_code_resend_info,
               textAlign: TextAlign.center,
-            ),
+            ).tr(),
             const SizedBox(height: AppDimens.s),
             _ResendButton(cubit: cubit, state: state),
           ],
@@ -122,7 +124,7 @@ class _VerifyButton extends StatelessWidget {
     );
 
     return RoundedButton(
-      text: 'Verify',
+      text: tr(LocaleKeys.common_verify),
       onPressed: isActive ? () => cubit.verify() : null,
     );
   }
@@ -151,7 +153,7 @@ class _ResendButton extends StatelessWidget {
 
   Widget _buildButton(bool enabled) {
     return RoundedButton(
-      text: 'Resend code',
+      text: tr(LocaleKeys.otp_code_resend_action),
       onPressed: enabled ? () => cubit.resendCode() : null,
     );
   }
