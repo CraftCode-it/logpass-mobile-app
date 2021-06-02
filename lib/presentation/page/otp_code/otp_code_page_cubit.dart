@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:clock/clock.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
@@ -8,7 +9,7 @@ import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 @Injectable()
 class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   static const otpCodeLength = 6;
-  static const _resendDelayDuration = Duration(seconds: 30);
+  static const resendDelayDuration = Duration(seconds: 30);
 
   final VerifyOTPSignUpUseCase _verifyOTPSignUpUseCase;
 
@@ -21,7 +22,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   void initialize(SignUpVerification verification) {
     _signUpVerification = verification;
-    _resendTimestamp = DateTime.now().add(_resendDelayDuration);
+    _resendTimestamp = clock.now().add(resendDelayDuration);
 
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
   }
@@ -46,7 +47,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   }
 
   Future<void> resendCode() async {
-    _resendTimestamp = DateTime.now().add(_resendDelayDuration);
+    _resendTimestamp = clock.now().add(resendDelayDuration);
     _emitIdleState();
   }
 
