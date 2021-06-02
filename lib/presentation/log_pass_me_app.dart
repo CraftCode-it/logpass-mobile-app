@@ -7,6 +7,7 @@ import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/listen_for_theme_brightness_changes_use_case.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/utils/brightness_utils.dart';
 
 class LogPassMeApp extends HookWidget {
   final MainRouter mainRouter;
@@ -18,6 +19,13 @@ class LogPassMeApp extends HookWidget {
     Key? key,
   }) : super(key: key);
 
+  void _systemBrightnessChanged(ThemeBrightness themeBrightness) {
+    if (themeBrightness == ThemeBrightness.system) {
+      final brightness = WidgetsBinding.instance?.window.platformBrightness;
+      if (brightness != null) updateAppThemeColors(brightness);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final languageCode = context.locale.languageCode;
@@ -27,7 +35,13 @@ class LogPassMeApp extends HookWidget {
 
     final themeBrightnessStream = useMemoized(() => getIt<ListenForThemeBrightnessChangesUseCase>()());
     final themeBrightness = useStream(themeBrightnessStream).data ?? initialThemeBrightness;
-    final brightness = _mapThemeBrightnessToBrightness(themeBrightness, context);
+    final brightness = themeBrightness.toBrightness();
+
+    useEffect(() {
+      WidgetsBinding.instance?.window.onPlatformBrightnessChanged = () {
+        _systemBrightnessChanged(themeBrightness);
+      };
+    }, []);
 
     useEffect(() {
       updateAppThemeColors(brightness);
@@ -60,17 +74,6 @@ class LogPassMeApp extends HookWidget {
         return ThemeMode.dark;
       case ThemeBrightness.system:
         return ThemeMode.system;
-    }
-  }
-
-  Brightness _mapThemeBrightnessToBrightness(ThemeBrightness brightness, BuildContext context) {
-    switch (brightness) {
-      case ThemeBrightness.light:
-        return Brightness.light;
-      case ThemeBrightness.dark:
-        return Brightness.dark;
-      case ThemeBrightness.system:
-        return WidgetsBinding.instance!.window.platformBrightness;
     }
   }
 }

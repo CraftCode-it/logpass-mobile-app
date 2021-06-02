@@ -3,22 +3,35 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:rxdart/rxdart.dart';
 
-late AppThemeColors _appThemeColors;
+late BehaviorSubject<AppThemeColors> _appThemeColorsSubject;
 
 void updateAppThemeColors(Brightness brightness) {
   switch (brightness) {
     case Brightness.dark:
-      _appThemeColors = DarkThemeColors();
+      _appThemeColorsSubject.sink.add(DarkThemeColors());
       break;
     case Brightness.light:
-      _appThemeColors = LightThemeColors();
+      _appThemeColorsSubject.sink.add(LightThemeColors());
+      break;
+  }
+}
+
+void setupAppThemeColor(Brightness brightness) {
+  switch (brightness) {
+    case Brightness.dark:
+      _appThemeColorsSubject = BehaviorSubject.seeded(DarkThemeColors());
+      break;
+    case Brightness.light:
+      _appThemeColorsSubject = BehaviorSubject.seeded(LightThemeColors());
       break;
   }
 }
 
 AppThemeColors useAppThemeColors() {
-  return useMemoized(() => _appThemeColors, [_appThemeColors]);
+  final appThemeColors = useStream(_appThemeColorsSubject).data ?? _appThemeColorsSubject.value;
+  return appThemeColors;
 }
 
 class AppColors {
