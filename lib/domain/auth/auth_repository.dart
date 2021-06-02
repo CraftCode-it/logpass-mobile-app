@@ -3,4 +3,6 @@ import 'package:logpass_me/domain/auth/token/user_tokens.dart';
 
 abstract class AuthRepository {
   Future<SignUpVerification> signUp(String phoneNumber, String verifyKey, String publicKey);
+
+  Future<UserTokens> verifyOTPSignUp(String url, String otpCode);
 }

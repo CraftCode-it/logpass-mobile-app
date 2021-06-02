@@ -39,7 +39,7 @@ class CountryCodePicker extends HookWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Prefix'),
+        const Text('Prefix'),
         ConstrainedBox(
           constraints: const BoxConstraints(
             minHeight: AppDimens.inputHeight,

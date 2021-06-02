@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/auth/auth_exception.dart';
-import 'package:logpass_me/domain/auth/auth_repository.dart';
 import 'package:logpass_me/domain/auth/auth_store.dart';
 import 'package:logpass_me/domain/auth/refresh_token_repository.dart';
 

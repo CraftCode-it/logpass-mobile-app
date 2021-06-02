@@ -5,7 +5,8 @@
     "next": "Next",
     "start": "Start",
     "prefix": "Prefix",
-    "phoneNumber": "Phone number"
+    "phoneNumber": "Phone number",
+    "verify": "Verify"
   },
   "onboarding": {
     "stepOneTitle": "Welcome!",
@@ -22,5 +23,11 @@
     "addNewDeviceAction": "Add new device",
     "addNewDeviceInfo": "Already registered\nbut using different device?",
     "phoneNumberFormatError": "Wrong phone number format"
+  },
+  "otp_code": {
+    "title": "Verify your number",
+    "info": "Please insert the code that we just send\nto provided phone number",
+    "resend_info": "Did not get anything?",
+    "resend_action": "Resend code"
   }
 }

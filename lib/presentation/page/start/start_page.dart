@@ -84,7 +84,7 @@ class StartPage extends HookWidget {
   void _cubitListener(StartPageCubit cubit, StartPageState state, BuildContext context) {
     state.maybeMap(
       successOTP: (state) {
-        AutoRouter.of(context).push(OTPCodePageRoute(verificationUrl: state.verificationUrl));
+        AutoRouter.of(context).push(OTPCodePageRoute(verification: state.verification));
       },
       successSignature: (state) {}, // TODO navigate to home page as we are logged in
       error: (state) {},
