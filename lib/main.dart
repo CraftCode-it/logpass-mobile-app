@@ -13,6 +13,8 @@ import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/get_theme_brightness_use_case.dart';
 import 'package:logpass_me/presentation/log_pass_me_app.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/utils/brightness_utils.dart';
 
 Future<void> runMain(String env) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ Future<void> runMain(String env) async {
     setupFimber();
 
     final themeBrightness = await getInitialBrightnessTheme();
+    setupAppThemeColor(themeBrightness.toBrightness());
     final mainRouter = MainRouter();
 
     runApp(
