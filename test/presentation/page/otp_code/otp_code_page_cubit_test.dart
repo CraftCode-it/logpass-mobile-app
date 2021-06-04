@@ -1,7 +1,8 @@
-import 'package:bloc_test/bloc_test.dart' hide when;
+import 'package:bloc_test/bloc_test.dart' hide when, verify;
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
+import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
@@ -14,20 +15,23 @@ import 'otp_code_page_cubit_test.mocks.dart';
 @GenerateMocks(
   [
     VerifyOTPSignUpUseCase,
+    SignUpUsingOTPCodeUseCase,
   ],
 )
 void main() {
   late VerifyOTPSignUpUseCase verifyOTPSignUpUseCase;
+  late SignUpUsingOTPCodeUseCase signUpUsingOTPCodeUseCase;
   late OTPCodePageCubit cubit;
 
   setUp(() {
     verifyOTPSignUpUseCase = MockVerifyOTPSignUpUseCase();
-    cubit = OTPCodePageCubit(verifyOTPSignUpUseCase);
+    signUpUsingOTPCodeUseCase = MockSignUpUsingOTPCodeUseCase();
+    cubit = OTPCodePageCubit(verifyOTPSignUpUseCase, signUpUsingOTPCodeUseCase);
   });
 
   final nowDateTime = DateTime(2021);
   final basicResendTimestamp = nowDateTime.add(OTPCodePageCubit.resendDelayDuration);
-  final verification = SignUpVerification(VerificationMethod.otpCode, 'https://url', null);
+  final verification = SignUpVerification('+49123123123', VerificationMethod.otpCode, 'https://url', null);
 
   group('initialize', () {
     blocTest<OTPCodePageCubit, OTPCodePageState>(
@@ -66,21 +70,72 @@ void main() {
   });
 
   group('resendCode', () {
+    final newVerification = SignUpVerification('+49123123123', VerificationMethod.otpCode, 'https://url/2', null);
+
     setUp(() {
       withClock(Clock.fixed(nowDateTime), () => cubit.initialize(verification));
     });
 
     blocTest<OTPCodePageCubit, OTPCodePageState>(
-      'emits state with updated resendAvailabilityTimestamp',
-      build: () => cubit,
+      'emits [Resending, Idle] states on success',
+      build: () {
+        when(signUpUsingOTPCodeUseCase(verification.phoneNumber)).thenAnswer((realInvocation) async => newVerification);
+
+        return cubit;
+      },
       act: (cubit) {
         cubit.updateCode('123');
         withClock(Clock.fixed(basicResendTimestamp), () => cubit.resendCode());
       },
       expect: () => [
         OTPCodePageState.idle('123', false, basicResendTimestamp),
+        OTPCodePageState.resending('123'),
         OTPCodePageState.idle('123', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
       ],
+    );
+
+    blocTest<OTPCodePageCubit, OTPCodePageState>(
+      'after resend verify is being called with new url',
+      build: () {
+        when(signUpUsingOTPCodeUseCase(verification.phoneNumber)).thenAnswer((realInvocation) async => newVerification);
+        when(verifyOTPSignUpUseCase(verification.verificationUrl, '123456')).thenAnswer((invocation) async {});
+
+        return cubit;
+      },
+      act: (cubit) async {
+        await withClock(Clock.fixed(basicResendTimestamp), () => cubit.resendCode());
+        cubit.updateCode('123456');
+        await cubit.verify();
+      },
+      expect: () => [
+        OTPCodePageState.resending(''),
+        OTPCodePageState.idle('', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
+        OTPCodePageState.idle('123456', true, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
+        OTPCodePageState.verifying('123456'),
+        OTPCodePageState.success(),
+        OTPCodePageState.idle('123456', true, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
+      ],
+      verify: (cubit) {
+        verify(verifyOTPSignUpUseCase(newVerification.verificationUrl, '123456'));
+      },
+    );
+
+    blocTest<OTPCodePageCubit, OTPCodePageState>(
+      'emits [Processing, Error, Idle] states on error',
+      build: () {
+        return cubit;
+      },
+      act: (cubit) {
+        cubit.updateCode('123');
+        withClock(Clock.fixed(basicResendTimestamp), () => cubit.resendCode());
+      },
+      expect: () => [
+        OTPCodePageState.idle('123', false, basicResendTimestamp),
+        OTPCodePageState.resending('123'),
+        OTPCodePageState.error(),
+        OTPCodePageState.idle('123', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
+      ],
+      verify: (cubit) {},
     );
   });
 
@@ -100,7 +155,7 @@ void main() {
         ..verify(),
       expect: () => [
         OTPCodePageState.idle('123456', true, basicResendTimestamp),
-        OTPCodePageState.processing('123456'),
+        OTPCodePageState.verifying('123456'),
         OTPCodePageState.success(),
         OTPCodePageState.idle('123456', true, basicResendTimestamp),
       ],

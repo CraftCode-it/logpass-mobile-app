@@ -16,7 +16,10 @@ class OTPCodePageState with _$OTPCodePageState {
   ) = _OTPCodePageStateIdle;
 
   @Implements(BuildState)
-  factory OTPCodePageState.processing(String code) = _OTPCodePageStateProcessing;
+  factory OTPCodePageState.verifying(String code) = _OTPCodePageStateVeryfying;
+
+  @Implements(BuildState)
+  factory OTPCodePageState.resending(String code) = _OTPCodePageStateProcessingResending;
 
   factory OTPCodePageState.success() = _OTPCodePageStateSuccess;
 

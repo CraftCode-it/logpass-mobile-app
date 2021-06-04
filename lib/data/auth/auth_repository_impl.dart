@@ -31,6 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final response = await _authApiDataSource.initializeLoginProcess(requestBody);
 
     return SignUpVerification(
+      phoneNumber,
       _verificationMethodMapper.to(response.data.verificationMethod),
       response.data.verificationUrl,
       response.data.verificationData?.toSign,
