@@ -31,7 +31,11 @@ class GetSaferPage extends HookWidget {
           loading: (_) => const Center(
             child: CircularProgressIndicator(),
           ),
-          idle: (state) => _Body(withBiometrics: state.withBiometrics),
+          idle: (state) => _Body(
+            withBiometrics: state.withBiometrics,
+            setPinCodeCallback: () {},
+            verifyBiometricsCallback: () {},
+          ),
         ),
       ),
     );
@@ -39,9 +43,16 @@ class GetSaferPage extends HookWidget {
 }
 
 class _Body extends HookWidget {
+  final Function() verifyBiometricsCallback;
+  final Function() setPinCodeCallback;
   final bool withBiometrics;
 
-  const _Body({required this.withBiometrics, Key? key}) : super(key: key);
+  const _Body({
+    required this.verifyBiometricsCallback,
+    required this.setPinCodeCallback,
+    required this.withBiometrics,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,28 +69,26 @@ class _Body extends HookWidget {
             textAlign: TextAlign.center,
             style: typography.primary,
           ).tr(),
-          Spacer(),
-          Text(
-            LocaleKeys.getSafer_biometricInfo,
-            textAlign: TextAlign.center,
-            style: typography.primary,
-          ).tr(),
-          const SizedBox(height: AppDimens.m),
-          RoundedButton(
-            text: tr(LocaleKeys.getSafer_biometricAction),
-            onPressed: () {},
-          ),
-          const SizedBox(height: AppDimens.xl),
-          Text(
-            LocaleKeys.getSafer_codeInfo,
-            textAlign: TextAlign.center,
-            style: typography.primary,
-          ).tr(),
-          const SizedBox(height: AppDimens.m),
-          RoundedButton(
-            text: tr(LocaleKeys.getSafer_biometricAction),
-            onPressed: () {},
-          ),
+          const Spacer(),
+          if (withBiometrics) ...[
+            _MethodContainer(
+              info: tr(LocaleKeys.getSafer_biometricInfo),
+              action: tr(LocaleKeys.getSafer_biometricAction),
+              onPressed: verifyBiometricsCallback,
+            ),
+            const SizedBox(height: AppDimens.xl),
+            _MethodContainer(
+              info: tr(LocaleKeys.getSafer_codeInfoSecondary),
+              action: tr(LocaleKeys.getSafer_codeAction),
+              onPressed: setPinCodeCallback,
+            ),
+          ],
+          if (!withBiometrics)
+            _MethodContainer(
+              info: tr(LocaleKeys.getSafer_codeInfoPrimary),
+              action: tr(LocaleKeys.getSafer_codeAction),
+              onPressed: setPinCodeCallback,
+            ),
           const SizedBox(height: AppDimens.c),
           RoundedButton(
             text: tr(LocaleKeys.getSafer_skipAction),
@@ -87,6 +96,40 @@ class _Body extends HookWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _MethodContainer extends HookWidget {
+  final String info;
+  final String action;
+  final Function() onPressed;
+
+  const _MethodContainer({
+    required this.info,
+    required this.action,
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          info,
+          textAlign: TextAlign.center,
+          style: typography.primary,
+        ),
+        const SizedBox(height: AppDimens.m),
+        RoundedButton(
+          text: action,
+          onPressed: onPressed,
+        ),
+      ],
     );
   }
 }

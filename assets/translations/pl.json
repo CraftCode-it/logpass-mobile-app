@@ -38,7 +38,8 @@
     "info": "Choose preferred login method to be sure that only you have access to this account.",
     "biometricInfo": "Allow this device to use biometrics for login verification",
     "biometricAction": "Use biometrics",
-    "codeInfo": "or simply set unique PIN code ",
+    "codeInfoPrimary": "Set unique PIN code ",
+    "codeInfoSecondary": "or simply set unique PIN code ",
     "codeAction": "Set PIN code",
     "skipAction": "Not now"
   }
