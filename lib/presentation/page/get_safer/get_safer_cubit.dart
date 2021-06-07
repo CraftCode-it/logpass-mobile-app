@@ -13,6 +13,8 @@ class GetSaferCubit extends Cubit<GetSaferPageState> {
   final SetAppSecurityTypeUseCase _setAppSecurityTypeUseCase;
   final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
 
+  late bool _supportsBiometric;
+
   GetSaferCubit(
     this._isBiometricAvailableUseCase,
     this._setAppSecurityTypeUseCase,
@@ -20,12 +22,14 @@ class GetSaferCubit extends Cubit<GetSaferPageState> {
   ) : super(GetSaferPageState.loading());
 
   Future<void> initialize() async {
-    final supportsBiometric = await _isBiometricAvailableUseCase();
-    emit(GetSaferPageState.idle(supportsBiometric));
+    _supportsBiometric = await _isBiometricAvailableUseCase();
+    emit(GetSaferPageState.idle(_supportsBiometric));
   }
 
-  Future<void> invokeBiometricsSetup() async {
-    try {
+    Future<void> invokeBiometricsSetup() async {
+      emit(GetSaferPageState.loading());
+
+      try {
       final biometricAuthorized = await _authorizeWithBiometricsUseCase();
       if (biometricAuthorized) {
         emit(GetSaferPageState.setCodeForBiometrics());
@@ -33,6 +37,8 @@ class GetSaferCubit extends Cubit<GetSaferPageState> {
     } catch (e, s) {
       Fimber.e('Authorizing with biometrics on initialization failed', ex: e, stacktrace: s);
     }
+
+    emit(GetSaferPageState.idle(_supportsBiometric));
   }
 
   Future<void> setPinSecurity() async {
