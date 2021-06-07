@@ -35,7 +35,7 @@ class ConfirmPinPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Set PIN code'),
+        title: const Text(LocaleKeys.confirmPin_title).tr(),
       ),
       body: SafeArea(
         child: Padding(
@@ -45,10 +45,10 @@ class ConfirmPinPage extends HookWidget {
             children: [
               const Spacer(flex: 2),
               Text(
-                'Repeat your PIN code',
+                LocaleKeys.confirmPin_info,
                 textAlign: TextAlign.center,
                 style: typography.primary,
-              ),
+              ).tr(),
               const Spacer(flex: 2),
               PinField(onPinChanged: cubit.updatePin),
               const Spacer(flex: 1),

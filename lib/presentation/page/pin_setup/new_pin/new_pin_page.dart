@@ -23,7 +23,7 @@ class NewPinPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Set PIN code'),
+        title: const Text(LocaleKeys.newPin_title).tr(),
         leading: IconButton(
           onPressed: () => AutoRouter.of(context).popUntilRoot(),
           icon: const Icon(Icons.close),
@@ -37,10 +37,10 @@ class NewPinPage extends HookWidget {
             children: [
               const Spacer(flex: 2),
               Text(
-                'Set unique PIN code that you will use for login into application',
+                LocaleKeys.newPin_info,
                 textAlign: TextAlign.center,
                 style: typography.primary,
-              ),
+              ).tr(),
               const Spacer(flex: 2),
               PinField(onPinChanged: cubit.updatePin),
               const Spacer(flex: 1),
