@@ -85,7 +85,8 @@ class _CodeField extends StatelessWidget {
   Widget build(BuildContext context) {
     return state.maybeMap(
       idle: (state) => _buildCodeField(state.code, true),
-      processing: (state) => _buildCodeField(state.code, false),
+      verifying: (state) => _buildCodeField(state.code, false),
+      resending: (state) => _buildCodeField(state.code, false),
       orElse: () => _buildCodeField('', false),
     );
   }
@@ -110,7 +111,7 @@ class _VerifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return state.maybeMap(
-      processing: (_) => const Center(
+      verifying: (_) => const Center(
         child: CircularProgressIndicator(),
       ),
       orElse: () => _buildButton(),
@@ -146,6 +147,9 @@ class _ResendButton extends StatelessWidget {
       idle: (state) => TimedWrapper(
         builder: (timePassed) => _buildButton(timePassed),
         timestamp: state.resendAvailabilityTimestamp,
+      ),
+      resending: (_) => const Center(
+        child: CircularProgressIndicator(),
       ),
       orElse: () => _buildButton(false),
     );

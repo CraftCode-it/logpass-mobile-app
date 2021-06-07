@@ -48,7 +48,7 @@ void main() {
         ),
       );
 
-      final expected = SignUpVerification(VerificationMethod.otpCode, 'https://some.url/verify', null);
+      final expected = SignUpVerification(phoneNumber, VerificationMethod.otpCode, 'https://some.url/verify', null);
 
       when(authApiDataSource.initializeLoginProcess(any)).thenAnswer((realInvocation) async => apiResult);
       when(verificationMethodMapper.to('otp_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
