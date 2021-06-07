@@ -24,6 +24,12 @@
     "addNewDeviceInfo": "Already registered\nbut using different device?",
     "phoneNumberFormatError": "Nieprawidłowy format numeru telefonu"
   },
+  "home": {
+    "code_error_placeholder": "XXXXXX",
+    "active_info": "Kod jest aktywny przez {}",
+    "copy_code_label": "kopiuj",
+    "refresh_code_label": "odśwież"
+  },
   "otp_code": {
     "title": "Verify your number",
     "info": "Please insert the code that we just send\nto provided phone number",

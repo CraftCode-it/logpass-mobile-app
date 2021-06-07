@@ -4,7 +4,8 @@ part of 'home_cubit.dart';
 class HomeState with _$HomeState {
   const factory HomeState.loadInProgress() = LoadInProgress;
 
-  const factory HomeState.idle(OneTimeCode oneTimeCode) = Idle;
+  // TODO: refactor in accordance to backend model
+  const factory HomeState.idle(List<String> pendingActions) = Idle;
 
   const factory HomeState.error(String message) = Error;
 }
