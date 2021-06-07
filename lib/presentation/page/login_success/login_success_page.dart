@@ -38,7 +38,7 @@ class LoginSuccessPage extends HookWidget {
             ).tr(),
             const Spacer(),
             Text(
-              LocaleKeys.login_success_info,
+              LocaleKeys.loginSuccess_info,
               style: typography.primary,
               textAlign: TextAlign.center,
             ).tr(),

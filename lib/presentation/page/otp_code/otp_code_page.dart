@@ -34,7 +34,7 @@ class OTPCodePage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(LocaleKeys.otp_code_title).tr(),
+        title: const Text(LocaleKeys.otpCode_title).tr(),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.xl),
@@ -44,7 +44,7 @@ class OTPCodePage extends HookWidget {
           children: [
             const SizedBox(height: AppDimens.xl),
             const Text(
-              LocaleKeys.otp_code_info,
+              LocaleKeys.otpCode_info,
               textAlign: TextAlign.center,
             ).tr(),
             const SizedBox(height: AppDimens.xl),
@@ -53,7 +53,7 @@ class OTPCodePage extends HookWidget {
             _VerifyButton(state: state, cubit: cubit),
             const SizedBox(height: AppDimens.xl),
             const Text(
-              LocaleKeys.otp_code_resend_info,
+              LocaleKeys.otpCode_resendInfo,
               textAlign: TextAlign.center,
             ).tr(),
             const SizedBox(height: AppDimens.s),
@@ -164,7 +164,7 @@ class _ResendButton extends StatelessWidget {
 
   Widget _buildButton(bool enabled) {
     return RoundedButton(
-      text: tr(LocaleKeys.otp_code_resend_action),
+      text: tr(LocaleKeys.otpCode_resendAction),
       onPressed: enabled ? () => cubit.resendCode() : null,
     );
   }

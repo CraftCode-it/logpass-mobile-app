@@ -24,13 +24,22 @@
     "addNewDeviceInfo": "Already registered\nbut using different device?",
     "phoneNumberFormatError": "Wrong phone number format"
   },
-  "otp_code": {
+  "otpCode": {
     "title": "Verify your number",
     "info": "Please insert the code that we just send\nto provided phone number",
-    "resend_info": "Did not get anything?",
-    "resend_action": "Resend code"
+    "resendInfo": "Did not get anything?",
+    "resendAction": "Resend code"
   },
-  "login_success": {
+  "loginSuccess": {
     "info": "You successfully accessed the account."
+  },
+  "getSafer": {
+    "title": "Get safer",
+    "info": "Choose preferred login method to be sure that only you have access to this account.",
+    "biometricInfo": "Allow this device to use biometrics for login verification",
+    "biometricAction": "Use biometrics",
+    "codeInfo": "or simply set unique PIN code ",
+    "codeAction": "Set PIN code",
+    "skipAction": "Not now"
   }
 }

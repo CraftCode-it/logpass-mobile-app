@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_cubit.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
@@ -21,7 +24,7 @@ class GetSaferPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Get safer'),
+        title: const Text(LocaleKeys.getSafer_title).tr(),
       ),
       body: SafeArea(
         child: state.map(
@@ -35,13 +38,15 @@ class GetSaferPage extends HookWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends HookWidget {
   final bool withBiometrics;
 
   const _Body({required this.withBiometrics, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
       child: Column(
@@ -49,32 +54,35 @@ class _Body extends StatelessWidget {
         children: [
           const SizedBox(height: AppDimens.m),
           Text(
-            'Choose prefered login method to be sure that only you have access to this account.',
+            LocaleKeys.getSafer_info,
             textAlign: TextAlign.center,
-          ),
+            style: typography.primary,
+          ).tr(),
           Spacer(),
           Text(
-            'Allow this device to use biometrics for login verification',
+            LocaleKeys.getSafer_biometricInfo,
             textAlign: TextAlign.center,
-          ),
+            style: typography.primary,
+          ).tr(),
           const SizedBox(height: AppDimens.m),
           RoundedButton(
-            text: 'Use biometric',
+            text: tr(LocaleKeys.getSafer_biometricAction),
             onPressed: () {},
           ),
           const SizedBox(height: AppDimens.xl),
           Text(
-            'or simply set unique PIN code ',
+            LocaleKeys.getSafer_codeInfo,
             textAlign: TextAlign.center,
-          ),
+            style: typography.primary,
+          ).tr(),
           const SizedBox(height: AppDimens.m),
           RoundedButton(
-            text: 'Set PIN code',
+            text: tr(LocaleKeys.getSafer_biometricAction),
             onPressed: () {},
           ),
           const SizedBox(height: AppDimens.c),
           RoundedButton(
-            text: 'Not now',
+            text: tr(LocaleKeys.getSafer_skipAction),
             onPressed: () => AutoRouter.of(context).popUntilRoot(),
           ),
         ],
