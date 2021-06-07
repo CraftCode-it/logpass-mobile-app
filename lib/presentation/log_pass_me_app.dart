@@ -7,6 +7,7 @@ import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/listen_for_theme_brightness_changes_use_case.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/themes.dart';
 import 'package:logpass_me/presentation/utils/brightness_utils.dart';
 
 class LogPassMeApp extends HookWidget {
@@ -52,14 +53,8 @@ class LogPassMeApp extends HookWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        backgroundColor: AppColors.backgroundLight,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        backgroundColor: AppColors.backgroundDark,
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: _mapThemeBrightnessToThemeMode(themeBrightness),
       routeInformationParser: mainRouter.defaultRouteParser(),
       routerDelegate: mainRouter.delegate(),

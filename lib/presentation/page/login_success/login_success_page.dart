@@ -18,7 +18,7 @@ class LoginSuccessPage extends HookWidget {
       Future.delayed(const Duration(seconds: 3)).then((_) {
         AutoRouter.of(context).replaceAll(
           [
-            // TODO add main page route
+            const MainPageRoute(),
             const GetSaferPageRoute(),
           ],
         );

@@ -4,6 +4,7 @@ import 'package:logpass_me/presentation/page/country_code/country_code_picker_pa
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
 import 'package:logpass_me/presentation/page/login_success/login_success_page.dart';
+import 'package:logpass_me/presentation/page/main/main_page.dart';
 import 'package:logpass_me/presentation/page/onboarding/onboarding_page.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page.dart';
 import 'package:logpass_me/presentation/page/start/start_page.dart';
@@ -17,6 +18,7 @@ import 'package:logpass_me/presentation/page/start/start_page.dart';
     AutoRoute(page: OTPCodePage),
     AutoRoute(page: GetSaferPage),
     AutoRoute(page: LoginSuccessPage),
+    AutoRoute(page: MainPage),
   ],
 )
 class $MainRouter {}
