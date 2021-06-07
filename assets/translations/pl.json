@@ -29,5 +29,8 @@
     "info": "Please insert the code that we just send\nto provided phone number",
     "resend_info": "Did not get anything?",
     "resend_action": "Resend code"
+  },
+  "login_success": {
+    "info": "You successfully accessed the account."
   }
 }
