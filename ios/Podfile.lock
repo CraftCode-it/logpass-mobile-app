@@ -58,6 +58,8 @@ PODS:
     - Flutter
     - libPhoneNumber-iOS
   - libPhoneNumber-iOS (0.9.15)
+  - local_auth (0.0.1):
+    - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -77,6 +79,7 @@ DEPENDENCIES:
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - libphonenumber (from `.symlinks/plugins/libphonenumber/ios`)
+  - local_auth (from `.symlinks/plugins/local_auth/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sms_autofill (from `.symlinks/plugins/sms_autofill/ios`)
 
@@ -109,6 +112,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   libphonenumber:
     :path: ".symlinks/plugins/libphonenumber/ios"
+  local_auth:
+    :path: ".symlinks/plugins/local_auth/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sms_autofill:
@@ -135,6 +140,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: f8a43108b38a68eebe8b3540e1f4f2d28843ce20
   libphonenumber: bd14d5abfc5939ab0b0767234e2d8e2593af258e
   libPhoneNumber-iOS: 0a32a9525cf8744fe02c5206eb30d571e38f7d75
+  local_auth: 25938960984c3a7f6e3253e3f8d962fdd16852bd
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
