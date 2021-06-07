@@ -49,6 +49,7 @@ dependencies:
   pinput: 1.2.0
   sms_autofill: 2.0.0
   clock: 1.1.0
+  local_auth: 1.1.6
 
 dev_dependencies:
   flutter_test:
