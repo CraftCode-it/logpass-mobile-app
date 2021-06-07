@@ -13,7 +13,6 @@ class AuthStoreImpl implements AuthStore {
 
   @override
   Future<UserTokens?> loadUserTokens() async {
-    await _authSecureDatabase.clear();
     final entity = await _authSecureDatabase.loadTokens();
 
     if (entity == null) return null;
