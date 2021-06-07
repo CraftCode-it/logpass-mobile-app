@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_cubit.dart';
@@ -41,39 +42,43 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'Choose prefered login method to be sure that only you have access to this account.',
-          textAlign: TextAlign.center,
-        ),
-        Spacer(),
-        Text(
-          'Allow this device to use biometrics for login verification',
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: AppDimens.m),
-        RoundedButton(
-          text: 'Use biometric',
-          onPressed: () {},
-        ),
-        const SizedBox(height: AppDimens.xl),
-        Text(
-          'or simply set unique PIN code ',
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: AppDimens.m),
-        RoundedButton(
-          text: 'Set PIN code',
-          onPressed: () {},
-        ),
-        const SizedBox(height: AppDimens.c),
-        RoundedButton(
-          text: 'Not now',
-          onPressed: () {},
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: AppDimens.m),
+          Text(
+            'Choose prefered login method to be sure that only you have access to this account.',
+            textAlign: TextAlign.center,
+          ),
+          Spacer(),
+          Text(
+            'Allow this device to use biometrics for login verification',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppDimens.m),
+          RoundedButton(
+            text: 'Use biometric',
+            onPressed: () {},
+          ),
+          const SizedBox(height: AppDimens.xl),
+          Text(
+            'or simply set unique PIN code ',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppDimens.m),
+          RoundedButton(
+            text: 'Set PIN code',
+            onPressed: () {},
+          ),
+          const SizedBox(height: AppDimens.c),
+          RoundedButton(
+            text: 'Not now',
+            onPressed: () => AutoRouter.of(context).popUntilRoot(),
+          ),
+        ],
+      ),
     );
   }
 }
