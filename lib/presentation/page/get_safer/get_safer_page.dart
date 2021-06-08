@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_cubit.dart';
+import 'package:logpass_me/presentation/page/get_safer/get_safer_page_state.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
@@ -16,6 +19,7 @@ class GetSaferPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<GetSaferCubit>();
     final state = useCubitBuilder(cubit);
+    useCubitListener(cubit, _listener);
 
     useEffect(() {
       cubit.initialize();
@@ -27,17 +31,33 @@ class GetSaferPage extends HookWidget {
         title: const Text(LocaleKeys.getSafer_title).tr(),
       ),
       body: SafeArea(
-        child: state.map(
+        child: state.maybeMap(
           loading: (_) => const Center(
             child: CircularProgressIndicator(),
           ),
           idle: (state) => _Body(
             withBiometrics: state.withBiometrics,
-            setPinCodeCallback: () {},
-            verifyBiometricsCallback: () {},
+            setPinCodeCallback: () => _setPinCode(context, cubit.setPinSecurity),
+            verifyBiometricsCallback: () => cubit.invokeBiometricsSetup(),
           ),
+          orElse: () => const Loader(),
         ),
       ),
+    );
+  }
+
+  Future<void> _setPinCode(BuildContext context, Function() onSuccess) async {
+    final success = await AutoRouter.of(context).push(const NewPinPageRoute());
+    if (success == true) {
+      await onSuccess();
+    }
+  }
+
+  void _listener(GetSaferCubit cubit, GetSaferPageState state, BuildContext context) {
+    state.maybeMap(
+      setCodeForBiometrics: (_) => _setPinCode(context, cubit.setBiometricsSecurity),
+      success: (_) => AutoRouter.of(context).popUntilRoot(),
+      orElse: () {},
     );
   }
 }

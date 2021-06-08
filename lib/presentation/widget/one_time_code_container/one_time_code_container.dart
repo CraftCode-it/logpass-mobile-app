@@ -15,12 +15,10 @@ const _progressIndicatorHeight = 5.0;
 const _customFontSize = 12.0;
 
 class OneTimeCodeContainer extends HookWidget {
-  bool _shouldBuild(OneTimeCodeContainerState state) => state is LoadInProgress || state is Idle || state is Error;
-
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<OneTimeCodeContainerCubit>();
-    final state = useCubitBuilder(cubit, buildWhen: _shouldBuild);
+    final state = useCubitBuilder(cubit);
     final appColors = useAppThemeColors();
 
     useEffect(() {

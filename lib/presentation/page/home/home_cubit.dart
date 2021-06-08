@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 part 'home_state.dart';
 part 'home_cubit.freezed.dart';
@@ -16,7 +17,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future init() async {
     // TODO: replace stub with actual implementation
-    _getActions();
+    await _getActions();
   }
 
   Future _getActions() async {

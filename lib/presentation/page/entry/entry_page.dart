@@ -35,13 +35,7 @@ class EntryPage extends HookWidget {
   void _listener(EntryPageCubit cubit, EntryPageState state, BuildContext context) {
     state.maybeMap(
       onboarding: (_) => AutoRouter.of(context).replace(const OnboardingPageRoute()),
-      home: (_) {
-        // for debug purposes
-        AutoRouter.of(context).pushAndPopUntil(
-          const HomePageRoute(),
-          predicate: (route) => false,
-        );
-      },
+      home: (_) => AutoRouter.of(context).replace(const MainPageRoute()),
       orElse: () {},
     );
   }

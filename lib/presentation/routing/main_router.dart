@@ -5,8 +5,11 @@ import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
 import 'package:logpass_me/presentation/page/login_success/login_success_page.dart';
+import 'package:logpass_me/presentation/page/main/main_page.dart';
 import 'package:logpass_me/presentation/page/onboarding/onboarding_page.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/new_pin/new_pin_page.dart';
 import 'package:logpass_me/presentation/page/start/start_page.dart';
 
 @AdaptiveAutoRouter(
@@ -19,6 +22,9 @@ import 'package:logpass_me/presentation/page/start/start_page.dart';
     AutoRoute(page: HomePage),
     AutoRoute(page: GetSaferPage),
     AutoRoute(page: LoginSuccessPage),
+    AutoRoute(page: MainPage),
+    AutoRoute(page: NewPinPage),
+    AutoRoute(page: ConfirmPinPage),
   ],
 )
 class $MainRouter {}

@@ -13,12 +13,10 @@ import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_
 const _customFontSize = 12.0;
 
 class HomePage extends HookWidget {
-  bool _shouldBuild(HomeState state) => state is LoadInProgress || state is Idle;
-
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<HomeCubit>();
-    final state = useCubitBuilder(cubit, buildWhen: _shouldBuild);
+    final state = useCubitBuilder(cubit);
 
     useEffect(() {
       cubit.init();

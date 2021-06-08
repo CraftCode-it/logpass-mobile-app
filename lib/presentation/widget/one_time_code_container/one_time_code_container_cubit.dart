@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/subscribe_to_one_time_code_use_case.dart';
+import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 part 'one_time_code_container_state.dart';
 part 'one_time_code_container_cubit.freezed.dart';
