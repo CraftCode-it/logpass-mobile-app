@@ -29,7 +29,7 @@ dependencies:
   freezed_annotation: 0.14.2
   dio: 4.0.0
   retrofit: 2.0.0
-  logger: 1.0.0
+  pretty_dio_logger: 1.2.0-beta-1
   socket_io: 1.0.0
   fimber: 0.6.1
   injectable: 1.4.0
@@ -49,6 +49,7 @@ dependencies:
   pinput: 1.2.0
   sms_autofill: 2.0.0
   clock: 1.1.0
+  local_auth: 1.1.6
 
 dev_dependencies:
   flutter_test:

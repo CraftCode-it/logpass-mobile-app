@@ -33,10 +33,23 @@
     "pending_actions_empty": "Brak oczekujących akcji",
     "past_actions": "Zobacz pozostałe"
   },
-  "otp_code": {
+  "otpCode": {
     "title": "Verify your number",
     "info": "Please insert the code that we just send\nto provided phone number",
-    "resend_info": "Did not get anything?",
-    "resend_action": "Resend code"
+    "resendInfo": "Did not get anything?",
+    "resendAction": "Resend code"
+  },
+  "loginSuccess": {
+    "info": "You successfully accessed the account."
+  },
+  "getSafer": {
+    "title": "Get safer",
+    "info": "Choose preferred login method to be sure that only you have access to this account.",
+    "biometricInfo": "Allow this device to use biometrics for login verification",
+    "biometricAction": "Use biometrics",
+    "codeInfoPrimary": "Set unique PIN code ",
+    "codeInfoSecondary": "or simply set unique PIN code ",
+    "codeAction": "Set PIN code",
+    "skipAction": "Not now"
   }
 }

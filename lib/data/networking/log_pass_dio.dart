@@ -4,14 +4,17 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/app_env.dart';
+import 'package:logpass_me/core/di/network_module.dart';
 import 'package:logpass_me/data/networking/interceptor_with_dio.dart';
-import 'package:logpass_me/data/networking/interceptors.dart';
 
 @Singleton()
 class LogPassDio extends DioMixin implements Dio {
   static const acceptHeaderValue = 'application/vnd.logpass+json';
 
-  LogPassDio(AppEnv appEnv, InterceptorListContainer interceptors) {
+  LogPassDio(
+    AppEnv appEnv,
+    List<Interceptor> interceptors,
+  ) {
     options = BaseOptions(
       baseUrl: appEnv.apiUrl,
       headers: {
@@ -20,11 +23,15 @@ class LogPassDio extends DioMixin implements Dio {
       followRedirects: false,
     );
     httpClientAdapter = DefaultHttpClientAdapter();
-    _setupInterceptors(interceptors.list);
+    _setupInterceptors(interceptors);
   }
 
   @factoryMethod
-  factory LogPassDio.create(AppEnv appEnv, LogPassInterceptors interceptors) => LogPassDio(appEnv, interceptors);
+  factory LogPassDio.create(
+    AppEnv appEnv,
+    @Named(mainInterceptors) List<Interceptor> interceptors,
+  ) =>
+      LogPassDio(appEnv, interceptors);
 
   void _setupInterceptors(List<Interceptor> interceptorList) {
     interceptorList.whereType<InterceptorWithDio>().forEach((element) => element.set(this));
@@ -36,6 +43,6 @@ class LogPassDio extends DioMixin implements Dio {
 class RefreshTokenDio extends LogPassDio {
   RefreshTokenDio(
     AppEnv appEnv,
-    RefreshTokenInterceptors interceptors,
+    @Named(refreshInterceptors) List<Interceptor> interceptors,
   ) : super(appEnv, interceptors);
 }

@@ -6,6 +6,7 @@ import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -34,7 +35,7 @@ class OTPCodePage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(LocaleKeys.otp_code_title).tr(),
+        title: const Text(LocaleKeys.otpCode_title).tr(),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.xl),
@@ -44,7 +45,7 @@ class OTPCodePage extends HookWidget {
           children: [
             const SizedBox(height: AppDimens.xl),
             const Text(
-              LocaleKeys.otp_code_info,
+              LocaleKeys.otpCode_info,
               textAlign: TextAlign.center,
             ).tr(),
             const SizedBox(height: AppDimens.xl),
@@ -53,7 +54,7 @@ class OTPCodePage extends HookWidget {
             _VerifyButton(state: state, cubit: cubit),
             const SizedBox(height: AppDimens.xl),
             const Text(
-              LocaleKeys.otp_code_resend_info,
+              LocaleKeys.otpCode_resendInfo,
               textAlign: TextAlign.center,
             ).tr(),
             const SizedBox(height: AppDimens.s),
@@ -68,9 +69,8 @@ class OTPCodePage extends HookWidget {
     state.maybeMap(
       error: (state) {}, // TODO error handling
       success: (state) {
-        // for debug purposes
         AutoRouter.of(context).pushAndPopUntil(
-          const HomePageRoute(),
+          const LoginSuccessPageRoute(),
           predicate: (route) => false,
         );
       },
@@ -93,7 +93,8 @@ class _CodeField extends StatelessWidget {
   Widget build(BuildContext context) {
     return state.maybeMap(
       idle: (state) => _buildCodeField(state.code, true),
-      processing: (state) => _buildCodeField(state.code, false),
+      verifying: (state) => _buildCodeField(state.code, false),
+      resending: (state) => _buildCodeField(state.code, false),
       orElse: () => _buildCodeField('', false),
     );
   }
@@ -118,7 +119,7 @@ class _VerifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return state.maybeMap(
-      processing: (_) => const Center(
+      verifying: (_) => const Center(
         child: CircularProgressIndicator(),
       ),
       orElse: () => _buildButton(),
@@ -155,13 +156,16 @@ class _ResendButton extends StatelessWidget {
         builder: (timePassed) => _buildButton(timePassed),
         timestamp: state.resendAvailabilityTimestamp,
       ),
+      resending: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
       orElse: () => _buildButton(false),
     );
   }
 
   Widget _buildButton(bool enabled) {
     return RoundedButton(
-      text: tr(LocaleKeys.otp_code_resend_action),
+      text: tr(LocaleKeys.otpCode_resendAction),
       onPressed: enabled ? () => cubit.resendCode() : null,
     );
   }
