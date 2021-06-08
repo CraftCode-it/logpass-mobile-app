@@ -5,8 +5,13 @@ import 'package:pinput/pin_put/pin_put.dart';
 
 class PinField extends StatelessWidget {
   final Function(String pin) onPinChanged;
+  final bool autoFocus;
 
-  const PinField({required this.onPinChanged, Key? key}) : super(key: key);
+  const PinField({
+    required this.onPinChanged,
+    this.autoFocus = true,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class PinField extends StatelessWidget {
       onChanged: onPinChanged,
       fieldsCount: appPinLength,
       fieldsAlignment: MainAxisAlignment.center,
-      autofocus: true,
+      autofocus: autoFocus,
       eachFieldMargin: const EdgeInsets.symmetric(horizontal: AppDimens.s),
       selectedFieldDecoration: _inputBorder(),
       followingFieldDecoration: _inputBorder(),
