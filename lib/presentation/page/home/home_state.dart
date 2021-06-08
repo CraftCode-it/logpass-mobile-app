@@ -7,5 +7,5 @@ class HomeState with _$HomeState {
   // TODO: refactor in accordance to backend model
   const factory HomeState.idle(List<String> pendingActions) = Idle;
 
-  const factory HomeState.error(String message) = Error;
+  const factory HomeState.error() = Error;
 }

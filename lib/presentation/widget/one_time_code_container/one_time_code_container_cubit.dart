@@ -72,6 +72,7 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
       await _loadOneTimeCodeUseCase.call(forceRefresh: true);
     } catch (e, s) {
       Fimber.e('Error with OneTimeCode refresh', ex: e, stacktrace: s);
+
       emit(const OneTimeCodeContainerState.error());
     }
   }

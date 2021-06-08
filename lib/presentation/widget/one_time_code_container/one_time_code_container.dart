@@ -10,7 +10,6 @@ import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-const _containerWidth = 304.0;
 const _progressIndicatorHeight = 5.0;
 
 class OneTimeCodeContainer extends HookWidget {
@@ -36,9 +35,8 @@ class OneTimeCodeContainer extends HookWidget {
       ),
       padding: const EdgeInsets.symmetric(
         vertical: AppDimens.xm,
-        horizontal: AppDimens.c,
+        horizontal: AppDimens.xxxl,
       ),
-      width: _containerWidth,
       child: state.maybeWhen(
         idle: (oneTimeCode, remainingProgress) => _CodeContainer(
           oneTimeCode: oneTimeCode,
@@ -105,7 +103,7 @@ class _CodeContainer extends HookWidget {
               Text(
                 LocaleKeys.home_active_info.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
                 style: appTypography.primary.copyWith(
-                  fontSize: AppDimens.xm,
+                  fontSize: AppDimens.xxm,
                   color: appColors.primaryButton,
                 ),
               ),
@@ -172,7 +170,7 @@ class _IconTextButton extends HookWidget {
               label,
               style: appTypography.primary.copyWith(
                 color: appColors.primaryButton,
-                fontSize: AppDimens.xm,
+                fontSize: AppDimens.xxm,
               ),
             ),
           ],

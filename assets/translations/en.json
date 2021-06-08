@@ -28,7 +28,10 @@
     "code_error_placeholder": "XXXXXX",
     "active_info": "Code is active for {}",
     "copy_code_label": "copy",
-    "refresh_code_label": "refresh"
+    "refresh_code_label": "refresh",
+    "pending_actions_label": "Pending actions",
+    "pending_actions_empty": "Nothing requires your action now",
+    "past_actions": "See past events"
   },
   "otp_code": {
     "title": "Verify your number",

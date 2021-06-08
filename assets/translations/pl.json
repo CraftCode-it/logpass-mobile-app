@@ -28,7 +28,10 @@
     "code_error_placeholder": "XXXXXX",
     "active_info": "Kod jest aktywny przez {}",
     "copy_code_label": "kopiuj",
-    "refresh_code_label": "odśwież"
+    "refresh_code_label": "odśwież",
+    "pending_actions_label": "Akcje oczekujące",
+    "pending_actions_empty": "Brak oczekujących akcji",
+    "past_actions": "Zobacz pozostałe"
   },
   "otp_code": {
     "title": "Verify your number",
