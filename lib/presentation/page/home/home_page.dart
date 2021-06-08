@@ -9,6 +9,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
 
+// TODO: remove after appTypography implementation
+const _customFontSize = 12.0;
+
 class HomePage extends HookWidget {
   bool _shouldBuild(HomeState state) => state is LoadInProgress || state is Idle;
 
@@ -85,9 +88,9 @@ class _PendingActions extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
           ),
-          const SizedBox(height: AppDimens.xm),
+          const SizedBox(height: AppDimens.s),
           _PastEventsButton(),
-          const SizedBox(height: AppDimens.xm),
+          const SizedBox(height: AppDimens.s),
         ],
       ),
     );
@@ -114,7 +117,7 @@ class _PendingItemsList extends HookWidget {
             itemCount: pendingActions.length,
           )
         : Text(
-            LocaleKeys.home_pending_actions_empty,
+            LocaleKeys.home_pendingActionsEmpty,
             textAlign: TextAlign.start,
             style: typography.primary.copyWith(fontSize: AppDimens.m),
           ).tr();
@@ -172,7 +175,7 @@ class _PastEventsButton extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                LocaleKeys.home_past_actions.tr(),
+                LocaleKeys.home_pastActions.tr(),
                 style: appTypography.primary,
               ),
               Icon(
@@ -203,9 +206,9 @@ class _PendingActionsIndicator extends HookWidget {
         ),
         const SizedBox(height: AppDimens.xs),
         Text(
-          LocaleKeys.home_pending_actions_label.tr(),
+          LocaleKeys.home_pendingActionsLabel.tr(),
           style: appTypography.primary.copyWith(
-            fontSize: AppDimens.xxm,
+            fontSize: _customFontSize,
           ),
         ),
       ],

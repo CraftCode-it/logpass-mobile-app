@@ -25,13 +25,13 @@
     "phoneNumberFormatError": "Wrong phone number format"
   },
   "home": {
-    "code_error_placeholder": "XXXXXX",
-    "active_info": "Code is active for {}",
-    "copy_code_label": "copy",
-    "refresh_code_label": "refresh",
-    "pending_actions_label": "Pending actions",
-    "pending_actions_empty": "Nothing requires your action now",
-    "past_actions": "See past events"
+    "codeErrorPlaceholder": "XXXXXX",
+    "activeInfo": "Code is active for {}",
+    "copyCodeLabel": "copy",
+    "refreshCodeLabel": "refresh",
+    "pendingActionsLabel": "Pending actions",
+    "pendingActionsEmpty": "Nothing requires your action now",
+    "pastActions": "See past events"
   },
   "otpCode": {
     "title": "Verify your number",

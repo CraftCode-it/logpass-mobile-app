@@ -66,7 +66,7 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
 
   Future refreshOneTimeCode() async {
     try {
-      if (_timer != null) _timer?.cancel();
+      _timer?.cancel();
       emit(const OneTimeCodeContainerState.loadInProgress());
 
       await _loadOneTimeCodeUseCase.call(forceRefresh: true);

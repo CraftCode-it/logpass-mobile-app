@@ -14,12 +14,6 @@ class AppDimens {
   ///8.0
   static const s = 8.0;
 
-  ///12.0
-  static const xm = 12.0;
-
-  ///14.0
-  static const xxm = 14.0;
-
   ///16.0
   static const m = 16.0;
 

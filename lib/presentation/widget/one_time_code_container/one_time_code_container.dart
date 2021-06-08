@@ -11,6 +11,8 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 const _progressIndicatorHeight = 5.0;
+// TODO: remove after appTypography implementation
+const _customFontSize = 12.0;
 
 class OneTimeCodeContainer extends HookWidget {
   bool _shouldBuild(OneTimeCodeContainerState state) => state is LoadInProgress || state is Idle || state is Error;
@@ -34,7 +36,7 @@ class OneTimeCodeContainer extends HookWidget {
         borderRadius: BorderRadius.circular(AppDimens.m),
       ),
       padding: const EdgeInsets.symmetric(
-        vertical: AppDimens.xm,
+        vertical: AppDimens.m,
         horizontal: AppDimens.xxxl,
       ),
       child: state.maybeWhen(
@@ -81,7 +83,7 @@ class _CodeContainer extends HookWidget {
     return Column(
       children: [
         Text(
-          oneTimeCode?.code ?? LocaleKeys.home_code_error_placeholder.tr(),
+          oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
           style: appTypography.primary.copyWith(
             fontSize: AppDimens.xxl,
             fontWeight: FontWeight.w700,
@@ -101,9 +103,9 @@ class _CodeContainer extends HookWidget {
               ),
               const SizedBox(height: AppDimens.s),
               Text(
-                LocaleKeys.home_active_info.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
+                LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
                 style: appTypography.primary.copyWith(
-                  fontSize: AppDimens.xxm,
+                  fontSize: _customFontSize,
                   color: appColors.primaryButton,
                 ),
               ),
@@ -115,7 +117,7 @@ class _CodeContainer extends HookWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _IconTextButton(
-              LocaleKeys.home_copy_code_label.tr(),
+              LocaleKeys.home_copyCodeLabel.tr(),
               Icon(
                 Icons.copy,
                 color: appColors.primaryButton,
@@ -124,7 +126,7 @@ class _CodeContainer extends HookWidget {
               isActive: !hasErrors,
             ),
             _IconTextButton(
-              LocaleKeys.home_refresh_code_label.tr(),
+              LocaleKeys.home_refreshCodeLabel.tr(),
               Icon(
                 Icons.history,
                 color: appColors.primaryButton,
@@ -170,7 +172,7 @@ class _IconTextButton extends HookWidget {
               label,
               style: appTypography.primary.copyWith(
                 color: appColors.primaryButton,
-                fontSize: AppDimens.xxm,
+                fontSize: _customFontSize,
               ),
             ),
           ],
