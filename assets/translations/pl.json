@@ -42,5 +42,13 @@
     "codeInfoSecondary": "or simply set unique PIN code ",
     "codeAction": "Set PIN code",
     "skipAction": "Not now"
+  },
+  "newPin": {
+    "title": "Set PIN code",
+    "info": "Set unique PIN code that you will use for login into application"
+  },
+  "confirmPin": {
+    "title": "Set PIN code",
+    "info": "Repeat your PIN code"
   }
 }

@@ -10,4 +10,8 @@ class GetSaferPageState with _$GetSaferPageState {
 
   @Implements(BuildState)
   factory GetSaferPageState.idle(bool withBiometrics) = _GetSaferPageStateIdle;
+
+  factory GetSaferPageState.setCodeForBiometrics() = _GetSaferPageStateSetCodeForBiometrics;
+
+  factory GetSaferPageState.success() = _GetSaferPageStateSuccess;
 }
