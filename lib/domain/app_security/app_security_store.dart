@@ -7,5 +7,5 @@ abstract class AppSecurityStore {
 
   Future<void> saveSecurityType(AppSecurityType type);
 
-  Future<AppSecurityType?> loadSecurityType();
+  Future<AppSecurityType> loadSecurityType();
 }
