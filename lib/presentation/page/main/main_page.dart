@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/presentation/page/home/home_page.dart';
 
 class MainPage extends HookWidget {
+  // TODO: fix reinit of pages
   static final _pageBuilders = [
-    () => Container(color: Colors.blueGrey),
+    () => HomePage(),
     () => Container(color: Colors.blue),
     () => Container(color: Colors.red),
     () => Container(color: Colors.amber),

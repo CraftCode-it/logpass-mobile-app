@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/domain/theme/theme_brightness.dart';
@@ -18,6 +20,7 @@ import 'package:logpass_me/presentation/utils/brightness_utils.dart';
 
 Future<void> runMain(String env) async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = SimpleBlocObserver();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   await setupCrashlytics();

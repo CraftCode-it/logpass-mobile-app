@@ -25,6 +25,15 @@
     "addNewDeviceInfo": "Already registered\nbut using different device?",
     "phoneNumberFormatError": "Nieprawidłowy format numeru telefonu"
   },
+  "home": {
+    "codeErrorPlaceholder": "XXXXXX",
+    "activeInfo": "Kod jest aktywny przez {}",
+    "copyCodeLabel": "kopiuj",
+    "refreshCodeLabel": "odśwież",
+    "pendingActionsLabel": "Akcje oczekujące",
+    "pendingActionsEmpty": "Brak oczekujących akcji",
+    "pastActions": "Zobacz pozostałe"
+  },
   "otpCode": {
     "title": "Verify your number",
     "info": "Please insert the code that we just send\nto provided phone number",
