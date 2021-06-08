@@ -6,7 +6,8 @@
     "start": "Rozpocznij",
     "prefix": "Prefix",
     "phoneNumber": "Phone number",
-    "verify": "Verify"
+    "verify": "Verify",
+    "logout": "Logout"
   },
   "onboarding": {
     "stepOneTitle": "Witaj!",
@@ -59,5 +60,12 @@
   "confirmPin": {
     "title": "Set PIN code",
     "info": "Repeat your PIN code"
+  },
+  "securedLogin": {
+    "pinCodeInfo": "Welcome again!\nEnter your pin code to proceed.",
+    "pinCodeInvalid": "Invalid pin code, try again",
+    "biometricInfo": "or use biometrics to enter",
+    "logoutInfo": "Forgot your passcode?\nLog in again to unlock your account.",
+    "needHelp": "Need help?"
   }
 }

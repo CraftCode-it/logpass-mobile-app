@@ -11,4 +11,6 @@ class EntryPageState with _$EntryPageState {
   factory EntryPageState.onboarding() = _EntryPageStateOnboarding;
 
   factory EntryPageState.home() = _EntryPageStateHome;
+
+  factory EntryPageState.securedLogin() = _EntryPageStateSecuredLogin;
 }
