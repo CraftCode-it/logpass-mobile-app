@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:clock/clock.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,7 +35,13 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   }
 
   void _listenForOneTimeCode() {
-    _oneTimeCodeSubscription = _subscribeToOneTimeCodeUseCase().listen(_onCodeChange);
+    try {
+      _oneTimeCodeSubscription = _subscribeToOneTimeCodeUseCase().listen(_onCodeChange);
+    } catch (e, s) {
+      Fimber.e('Error with OneTimeCode subscriber', ex: e, stacktrace: s);
+
+      emit(const OneTimeCodeContainerState.error());
+    }
   }
 
   void _runTimer() {
@@ -85,7 +92,7 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   double _getRemainingTime() {
     if (_oneTimeCode.isExpired) return 0.0;
 
-    final currentDuration = DateTime.now().difference(_oneTimeCode.expirationTime);
+    final currentDuration = clock.now().difference(_oneTimeCode.expirationTime);
     final ratio = currentDuration.inMilliseconds / _oneTimeCode.expirationSec.inMilliseconds;
 
     return ratio.abs();
