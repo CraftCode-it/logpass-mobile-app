@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +97,14 @@ class _Content extends HookWidget {
           keyboardVisible: keyboardVisible,
         ),
         const Spacer(flex: 2),
+        if (_shouldShowDoneKeyboardButton())
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: const Text('Done'),
+            ),
+          ),
         if (!keyboardVisible) ...[
           Text(
             LocaleKeys.securedLogin_logoutInfo,
@@ -111,6 +121,8 @@ class _Content extends HookWidget {
       ],
     );
   }
+
+  bool _shouldShowDoneKeyboardButton() => keyboardVisible && Platform.isIOS;
 }
 
 class _NeedHelpButton extends StatelessWidget {
