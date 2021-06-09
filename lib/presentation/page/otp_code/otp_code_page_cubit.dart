@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:clock/clock.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/auth/error/login_verification_error.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
@@ -43,12 +44,13 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     try {
       await _verifyOTPSignUpUseCase(_signUpVerification.verificationUrl, _code);
       emit(OTPCodePageState.success());
+    } on LoginVerificationError catch (error) {
+      _handleLoginVerificationError(error);
     } catch (e, s) {
       Fimber.e('OTP code verification failed', ex: e, stacktrace: s);
       emit(OTPCodePageState.error());
+      _emitIdleState();
     }
-
-    _emitIdleState();
   }
 
   Future<void> resendCode() async {
@@ -65,8 +67,15 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     }
   }
 
-  void _emitIdleState() {
+  void _handleLoginVerificationError(LoginVerificationError error) {
+    error.map(
+      invalidCode: (invalidCode) => _emitIdleState(error: invalidCode.message),
+      accountAlreadyCreated: (accountAlreadyCreated) => emit(OTPCodePageState.accountAlreadyExists()),
+    );
+  }
+
+  void _emitIdleState({String? error}) {
     final isValid = _code.length == otpCodeLength;
-    emit(OTPCodePageState.idle(_code, isValid, _resendTimestamp));
+    emit(OTPCodePageState.idle(_code, isValid, _resendTimestamp, codeError: error));
   }
 }

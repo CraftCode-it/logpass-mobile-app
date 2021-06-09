@@ -12,8 +12,9 @@ class OTPCodePageState with _$OTPCodePageState {
   factory OTPCodePageState.idle(
     String code,
     bool valid,
-    DateTime resendAvailabilityTimestamp,
-  ) = _OTPCodePageStateIdle;
+    DateTime resendAvailabilityTimestamp, {
+    String? codeError,
+  }) = _OTPCodePageStateIdle;
 
   @Implements(BuildState)
   factory OTPCodePageState.verifying(String code) = _OTPCodePageStateVeryfying;
@@ -22,6 +23,8 @@ class OTPCodePageState with _$OTPCodePageState {
   factory OTPCodePageState.resending(String code) = _OTPCodePageStateProcessingResending;
 
   factory OTPCodePageState.success() = _OTPCodePageStateSuccess;
+
+  factory OTPCodePageState.accountAlreadyExists() = _OTPCodePageStateAccountAlreadyExists;
 
   factory OTPCodePageState.error() = _OTPCodePageStateError;
 }

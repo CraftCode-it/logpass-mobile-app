@@ -92,14 +92,14 @@ class _CodeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return state.maybeMap(
-      idle: (state) => _buildCodeField(state.code, true),
+      idle: (state) => _buildCodeField(state.code, true, error: state.codeError),
       verifying: (state) => _buildCodeField(state.code, false),
       resending: (state) => _buildCodeField(state.code, false),
       orElse: () => _buildCodeField('', false),
     );
   }
 
-  Widget _buildCodeField(String code, bool enabled) => PinFieldAutoFill(
+  Widget _buildCodeField(String code, bool enabled, {String? error}) => PinFieldAutoFill(
         codeLength: OTPCodePageCubit.otpCodeLength,
         currentCode: code,
         onCodeChanged: enabled ? cubit.updateCode : null,
