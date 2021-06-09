@@ -1,0 +1,14 @@
+import 'package:dio/dio.dart';
+import 'package:logpass_me/data/networking/log_pass_dio.dart';
+import 'package:logpass_me/data/service/api/data/authorized_services/authorized_services_response_dto.dart';
+import 'package:retrofit/http.dart';
+
+part 'service_api_data_source.g.dart';
+
+@RestApi()
+abstract class ServiceApiDataSource {
+  factory ServiceApiDataSource(LogPassDio dio) = _ServiceApiDataSource;
+
+  @GET('/users/self/authorized-applications/')
+  Future<AuthorizedServicesResponseDTO> getServiceList();
+}
