@@ -35,6 +35,10 @@ AppThemeColors useAppThemeColors() {
 }
 
 class AppColors {
+  static const snackBarText = Color(0xFFFFFFFF);
+  static const snackBarSuccessBackground = Color(0xFF14CA89);
+  static const snackBarErrorBackground = Color(0xFFFC264C);
+
   // Light
   static const primaryLight = Color(0xFF2233AA);
   static const secondaryLight = Color(0xFFCFD0DD);
@@ -42,11 +46,13 @@ class AppColors {
   static const primaryTextLight = Color(0xFF676983);
   static const buttonEnabledLight = Color(0xFFAAABC4);
   static const buttonEnabledTextLight = Color(0xFFFAF9FC);
+  static const errorTextLight = Color(0xFFFF0000);
 
   // Dark
   static const primaryDark = Color(0xFF2233AA);
   static const backgroundDark = Color(0xFF676983);
   static const primaryTextDark = Color(0xFFFFFFFF);
+  static const errorTextDark = Color(0xFFFF0000);
 }
 
 abstract class AppThemeColors {
@@ -59,6 +65,8 @@ abstract class AppThemeColors {
   Color get primaryButton;
 
   Color get primaryButtonText;
+
+  Color get errorText;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -76,6 +84,9 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get primaryButtonText => AppColors.buttonEnabledTextLight;
+
+  @override
+  Color get errorText => AppColors.errorTextLight;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -93,4 +104,7 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get primaryButtonText => AppColors.buttonEnabledTextLight;
+
+  @override
+  Color get errorText => AppColors.errorTextDark;
 }

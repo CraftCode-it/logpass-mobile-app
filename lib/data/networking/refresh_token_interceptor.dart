@@ -23,7 +23,7 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
 
   @override
   Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.response == null) super.onError(err, handler);
+    if (err.response == null) return handler.next(err);
 
     if (err.response?.statusCode == HttpStatus.unauthorized) {
       try {
@@ -45,16 +45,16 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
 
         Fimber.e('Making requests when user is not signed in.', ex: e);
         await _forcedLogoutService.logout();
-        handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
+        return handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
       } catch (e, s) {
         dio.unlockAll();
 
         Fimber.e('Failed to retry unauthorized request.', ex: e, stacktrace: s);
-        handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
+        return handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
       }
     }
 
-    super.onError(err, handler);
+    return handler.next(err);
   }
 
   Future<void> _refreshAccessTokenAndRetryRequest(DioError err, ErrorInterceptorHandler handler) async {

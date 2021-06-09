@@ -8,8 +8,10 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/start/start_page_cubit.dart';
 import 'package:logpass_me/presentation/page/start/start_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -23,9 +25,19 @@ class StartPage extends HookWidget {
     final cubit = useCubit<StartPageCubit>();
     final state = useCubitBuilder(cubit);
     final phoneNumberController = useTextEditingController();
+    final color = useAppThemeColors();
     final typography = useAppTypography();
 
-    useCubitListener(cubit, _cubitListener);
+    useCubitListener<StartPageCubit, StartPageState>(
+      cubit,
+      (cubit, state, context) => _cubitListener(
+        cubit,
+        state,
+        context,
+        color,
+        typography,
+      ),
+    );
 
     return Scaffold(
       body: SafeArea(
@@ -81,13 +93,29 @@ class StartPage extends HookWidget {
     );
   }
 
-  void _cubitListener(StartPageCubit cubit, StartPageState state, BuildContext context) {
+  void _cubitListener(
+    StartPageCubit cubit,
+    StartPageState state,
+    BuildContext context,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) {
     state.maybeMap(
       successOTP: (state) {
         AutoRouter.of(context).push(OTPCodePageRoute(verification: state.verification));
       },
-      successSignature: (state) {}, // TODO navigate to home page as we are logged in
+      successSignature: (state) {
+        AutoRouter.of(context).replaceAll([const LoginSuccessPageRoute()]);
+      },
       error: (state) {},
+      connectionError: (state) {
+        showConnectionErrorSnackBar(
+          error: state.error,
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+      },
       orElse: () {},
     );
   }

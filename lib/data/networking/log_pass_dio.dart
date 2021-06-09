@@ -10,6 +10,7 @@ import 'package:logpass_me/data/networking/interceptor_with_dio.dart';
 @Singleton()
 class LogPassDio extends DioMixin implements Dio {
   static const acceptHeaderValue = 'application/vnd.logpass+json';
+  static const _timeouts = Duration(seconds: 15);
 
   LogPassDio(
     AppEnv appEnv,
@@ -21,6 +22,9 @@ class LogPassDio extends DioMixin implements Dio {
         HttpHeaders.acceptHeader: acceptHeaderValue,
       },
       followRedirects: false,
+      sendTimeout: _timeouts.inMilliseconds,
+      connectTimeout: _timeouts.inMilliseconds,
+      receiveTimeout: _timeouts.inMilliseconds,
     );
     httpClientAdapter = DefaultHttpClientAdapter();
     _setupInterceptors(interceptors);

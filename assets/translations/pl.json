@@ -9,6 +9,10 @@
     "verify": "Verify",
     "logout": "Logout"
   },
+  "error": {
+    "noConnection": "It seems like you have no internet connection",
+    "timeout": "Looks like the server is taking to long to respond, please try again in sometime"
+  },
   "onboarding": {
     "stepOneTitle": "Witaj!",
     "stepOneContent": "Czym jest Logpass Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodsed do eiusmod",

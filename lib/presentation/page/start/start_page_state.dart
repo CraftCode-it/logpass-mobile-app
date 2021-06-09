@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/presentation/page/start/start_page_cubit.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
@@ -21,4 +22,6 @@ class StartPageState with _$StartPageState {
   factory StartPageState.successSignature() = _StartPageStateSuccessSignature;
 
   factory StartPageState.error() = _StartPageStateError;
+
+  factory StartPageState.connectionError(GeneralConnectionError error) = _StartPageStateConnectionError;
 }

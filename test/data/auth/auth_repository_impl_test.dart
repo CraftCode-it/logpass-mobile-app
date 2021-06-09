@@ -3,7 +3,7 @@ import 'package:logpass_me/data/auth/api/auth_api_data_source.dart';
 import 'package:logpass_me/data/auth/api/initialize/initialize_login_result_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/tokens_result_dto.dart';
 import 'package:logpass_me/data/auth/auth_repository_impl.dart';
-import 'package:logpass_me/data/networking/error/dio_error_wrapper.dart';
+import 'package:logpass_me/data/networking/error/logpass_dio_error_wrapper.dart';
 import 'package:logpass_me/domain/auth/error/login_verification_error.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/token/access_token.dart';
