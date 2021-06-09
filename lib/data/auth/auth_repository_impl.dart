@@ -3,10 +3,13 @@ import 'package:logpass_me/data/auth/api/auth_api_data_source.dart';
 import 'package:logpass_me/data/auth/api/initialize/initialize_login_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/tokens_result_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/verify_login_dto.dart';
+import 'package:logpass_me/data/networking/error/dio_error_wrapper.dart';
 import 'package:logpass_me/domain/auth/auth_repository.dart';
+import 'package:logpass_me/domain/auth/error/login_verification_error.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/token/user_tokens.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
+import 'package:logpass_me/domain/networking/error/logpass_api_error_details.dart';
 
 @Singleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
@@ -41,8 +44,18 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserTokens> verifyOTPSignUp(String url, String otpCode) async {
     final request = VerifyLoginDTO(secret: otpCode);
-    final response = await _authApiDataSource.verifyLoginProcess(url, request);
 
-    return _userTokensDTOMapper(response);
+    try {
+      final response = await _authApiDataSource.verifyLoginProcess(url, request);
+      return _userTokensDTOMapper(response);
+    } on LogpassDioErrorWrapper catch (apiError) {
+      apiError.logpassApiError.maybeMap(
+        verificationFailed: (error) {
+          final codeError = error.errors.firstWhere((element) => element is LogpassApiErrorDetailsCode);
+          throw LoginVerificationError.invalidCode(codeError.message);
+        },
+        orElse: () => throw apiError.logpassApiError,
+      );
+    }
   }
 }

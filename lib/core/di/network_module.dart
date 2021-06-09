@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/auth_token_interceptor.dart';
 import 'package:logpass_me/data/networking/content_type_interceptor.dart';
+import 'package:logpass_me/data/networking/error_interceptor.dart';
 import 'package:logpass_me/data/networking/language_interceptor.dart';
 import 'package:logpass_me/data/networking/refresh_token_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -19,12 +20,14 @@ abstract class NetworkModule {
     RefreshTokenInterceptor refreshTokenInterceptor,
     LanguageInterceptor languageInterceptor,
     ContentTypeInterceptor contentTypeInterceptor,
+    ErrorInterceptor errorInterceptor,
   ) =>
       [
         languageInterceptor,
         authTokenInterceptor,
         contentTypeInterceptor,
         refreshTokenInterceptor,
+        errorInterceptor,
       ];
 
   @dev
@@ -35,6 +38,7 @@ abstract class NetworkModule {
     RefreshTokenInterceptor refreshTokenInterceptor,
     LanguageInterceptor languageInterceptor,
     ContentTypeInterceptor contentTypeInterceptor,
+    ErrorInterceptor errorInterceptor,
   ) =>
       [
         languageInterceptor,
@@ -42,6 +46,7 @@ abstract class NetworkModule {
         _logger,
         contentTypeInterceptor,
         refreshTokenInterceptor,
+        errorInterceptor,
       ];
 
   @prod
@@ -50,10 +55,12 @@ abstract class NetworkModule {
   List<Interceptor> prodRefreshInterceptors(
     LanguageInterceptor languageInterceptor,
     ContentTypeInterceptor contentTypeInterceptor,
+    ErrorInterceptor errorInterceptor,
   ) =>
       [
         languageInterceptor,
         contentTypeInterceptor,
+        errorInterceptor,
       ];
 
   @dev
@@ -62,11 +69,13 @@ abstract class NetworkModule {
   List<Interceptor> devRefreshInterceptors(
     LanguageInterceptor languageInterceptor,
     ContentTypeInterceptor contentTypeInterceptor,
+    ErrorInterceptor errorInterceptor,
   ) =>
       [
         languageInterceptor,
         contentTypeInterceptor,
         _logger,
+        errorInterceptor,
       ];
 }
 
