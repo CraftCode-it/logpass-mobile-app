@@ -113,7 +113,6 @@ void main() {
         OTPCodePageState.idle('123456', true, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
         OTPCodePageState.verifying('123456'),
         OTPCodePageState.success(),
-        OTPCodePageState.idle('123456', true, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
       ],
       verify: (cubit) {
         verify(verifyOTPSignUpUseCase(newVerification.verificationUrl, '123456'));
@@ -157,7 +156,6 @@ void main() {
         OTPCodePageState.idle('123456', true, basicResendTimestamp),
         OTPCodePageState.verifying('123456'),
         OTPCodePageState.success(),
-        OTPCodePageState.idle('123456', true, basicResendTimestamp),
       ],
     );
   });
