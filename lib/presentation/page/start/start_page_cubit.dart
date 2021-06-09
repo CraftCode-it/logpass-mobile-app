@@ -6,6 +6,7 @@ import 'package:logpass_me/domain/auth/verification_method.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/domain/model/phone_number/phone_number.dart';
 import 'package:logpass_me/domain/model/phone_number/phone_number_validator.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/presentation/page/start/start_page_state.dart';
 
 enum StartPageError { phoneValidation }
@@ -56,6 +57,8 @@ class StartPageCubit extends Cubit<StartPageState> {
           emit(StartPageState.successSignature());
           break;
       }
+    } on GeneralConnectionError catch (e) {
+      emit(StartPageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Signing up failed', ex: e, stacktrace: s);
       emit(StartPageState.error());
