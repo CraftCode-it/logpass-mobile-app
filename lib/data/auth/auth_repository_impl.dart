@@ -9,18 +9,19 @@ import 'package:logpass_me/domain/auth/error/login_verification_error.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/token/user_tokens.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
-import 'package:logpass_me/domain/networking/error/logpass_api_error_details.dart';
 
 @Singleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final AuthApiDataSource _authApiDataSource;
   final UserTokensDTOMapper _userTokensDTOMapper;
   final VerificationMethodMapper _verificationMethodMapper;
+  final LoginVerificationErrorMapper _loginVerificationErrorMapper;
 
   AuthRepositoryImpl(
     this._authApiDataSource,
     this._userTokensDTOMapper,
     this._verificationMethodMapper,
+    this._loginVerificationErrorMapper,
   );
 
   @override
@@ -49,13 +50,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _authApiDataSource.verifyLoginProcess(url, request);
       return _userTokensDTOMapper(response);
     } on LogpassDioErrorWrapper catch (apiError) {
-      apiError.logpassApiError.maybeMap(
-        verificationFailed: (error) {
-          final codeError = error.errors.firstWhere((element) => element is LogpassApiErrorDetailsCode);
-          throw LoginVerificationError.invalidCode(codeError.message);
-        },
-        orElse: () => throw apiError.logpassApiError,
-      );
+      throw _loginVerificationErrorMapper(apiError.logpassApiError);
     }
   }
 }
