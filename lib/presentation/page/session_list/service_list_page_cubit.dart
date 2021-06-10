@@ -46,7 +46,12 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   }
 
   Future<void> loadNextPage() async {
-    if (_loadedAll || _currentPage == 0) return;
+    final isLoading = state.maybeMap(
+      idle: (state) => state.loadingMore,
+      orElse: () => false,
+    );
+
+    if (_loadedAll || _currentPage == 0 || isLoading) return;
 
     emit(ServiceListPageState.idle(_activeServices, _otherServices, true));
 
