@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/session_list/service_list_page_cubit.dart';
 import 'package:logpass_me/presentation/page/session_list/service_list_page_state.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -46,7 +48,7 @@ class ServiceListPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Services'),
+        title: const Text(LocaleKeys.serviceList_title).tr(),
       ),
       body: _Content(
         cubit: cubit,
@@ -107,11 +109,11 @@ class _ContentEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'You have no connected services.',
+    return Center(
+      child: const Text(
+        LocaleKeys.serviceList_noServices,
         textAlign: TextAlign.center,
-      ),
+      ).tr(),
     );
   }
 }
@@ -138,14 +140,14 @@ class _ContentList extends StatelessWidget {
             padding: EdgeInsets.only(top: AppDimens.l),
           ),
           if (state.activeServices.isNotEmpty) ...[
-            const SliverToBoxAdapter(
-              child: _ServicesHeader(text: 'With active sessions'),
+            SliverToBoxAdapter(
+              child: _ServicesHeader(text: tr(LocaleKeys.serviceList_activeHeader)),
             ),
             _ServiceList(services: state.activeServices, active: true),
           ],
           if (state.otherServices.isNotEmpty) ...[
-            const SliverToBoxAdapter(
-              child: _ServicesHeader(text: 'Other services'),
+            SliverToBoxAdapter(
+              child: _ServicesHeader(text: tr(LocaleKeys.serviceList_otherHeader)),
             ),
             _ServiceList(services: state.otherServices, active: false),
           ],
@@ -237,10 +239,10 @@ class _ServiceRow extends StatelessWidget {
                   child: Text(service.name),
                 ),
                 if (active)
-                  Text(
-                    '${service.tokens.activeCount} sessions',
-                    style: const TextStyle(fontSize: 12),
-                  ),
+                  const Text(
+                    LocaleKeys.serviceList_session,
+                    style: TextStyle(fontSize: 12),
+                  ).plural(service.tokens.activeCount),
                 const Icon(Icons.chevron_right),
               ],
             ),
