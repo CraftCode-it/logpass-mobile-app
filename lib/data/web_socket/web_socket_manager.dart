@@ -19,16 +19,12 @@ class WebSocketManager {
     final channelUrl = _appEnv.wsUrl;
     final tokens = await _getUserTokensUseCase();
 
-    try {
-      _webSocketChannel = IOWebSocketChannel.connect(
-        Uri.parse('$channelUrl${tokens.sub}'),
-        pingInterval: const Duration(seconds: 1),
-      )..stream.listen((event) {
-          _webSocketChannelBroadcast.add(event);
-        });
-    } on Exception catch (e, s) {
-      print(e);
-    }
+    _webSocketChannel = IOWebSocketChannel.connect(
+      Uri.parse('$channelUrl${tokens.sub}'),
+      pingInterval: const Duration(seconds: 1),
+    )..stream.listen((event) {
+        _webSocketChannelBroadcast.add(event);
+      });
   }
 
   Stream<dynamic> listenForChannel() => _webSocketChannelBroadcast.stream;
