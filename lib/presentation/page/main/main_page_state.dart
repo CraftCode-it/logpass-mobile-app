@@ -8,5 +8,5 @@ class MainPageState with _$MainPageState {
   @Implements(BuildState)
   const factory MainPageState.idle() = _MainPageStateIdle;
 
-  const factory MainPageState.error() = _MainPageStateError;
+  const factory MainPageState.error(String message) = _MainPageStateError;
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
@@ -27,27 +28,51 @@ class MainPageCubit extends Cubit<MainPageState> {
   ) : super(const MainPageState.loading());
 
   Future init() async {
-    await _setupWebSocketChannelUseCase();
+    await _openWebSocketChannelConnection();
     _subscribeToIncomingActions();
 
     _emitIdleState();
   }
 
   void _subscribeToIncomingActions() {
-    // TODO: handle incoming actions
-    _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) {
-      print('Link: ${action.link}');
-    });
+    // TODO: handle incoming actions in requested manner
+    try {
+      _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) {
+        print('Link: ${action.link}');
+      });
+    } catch (e, s) {
+      Fimber.e('Closing WS channel failed', ex: e, stacktrace: s);
+
+      emit(const MainPageState.error('Error message'));
+    }
   }
 
   void _emitIdleState() {
     emit(const MainPageState.idle());
   }
 
+  Future _openWebSocketChannelConnection() async {
+    try {
+      await _setupWebSocketChannelUseCase();
+    } catch (e, s) {
+      Fimber.e('Opening WS channel failed', ex: e, stacktrace: s);
+
+      emit(const MainPageState.error('Error message'));
+    }
+  }
+
+  void _closeWebSocketChannel() {
+    try {
+      _closeWebSocketUseCase();
+    } catch (e, s) {
+      Fimber.e('Closing WS channel failed', ex: e, stacktrace: s);
+    }
+  }
+
   @override
   Future<void> close() {
     _streamSubscription.cancel();
-    _closeWebSocketUseCase();
+    _closeWebSocketChannel();
     return super.close();
   }
 }
