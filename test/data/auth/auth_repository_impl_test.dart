@@ -61,8 +61,10 @@ void main() {
       const publicKey = 'dfeg==';
 
       final apiResult = InitializeLoginResultDTO(
-        InitializeLoginResultDataDTO(
+        InitializeLoginLinksDTO(
           'https://some.url/verify',
+        ),
+        InitializeLoginResultDataDTO(
           'otp_code',
           null,
         ),
