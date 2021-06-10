@@ -10,8 +10,8 @@ class ServiceAgreement {
   final bool isRequired;
   final bool isAccepted;
   final Scope? scope;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   ServiceAgreement({
     required this.id,

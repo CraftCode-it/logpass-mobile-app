@@ -56,8 +56,8 @@ class ServiceAgreementDTOMapper implements BidirectionalDataMapper<ServiceAgreem
       data.isRequired,
       data.isAccepted,
       data.scope != null ? _scopeDTOMapper.from(data.scope!) : null,
-      data.createdAt,
-      data.updatedAt,
+      data.createdAt.toUtc().toString(),
+      data.updatedAt.toUtc().toString(),
     );
   }
 
@@ -71,8 +71,8 @@ class ServiceAgreementDTOMapper implements BidirectionalDataMapper<ServiceAgreem
       checksum: data.checksum,
       isRequired: data.isRequired,
       isAccepted: data.isAccepted,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
+      createdAt: DateTime.parse(data.createdAt).toLocal(),
+      updatedAt: DateTime.parse(data.updatedAt).toLocal(),
       scope: data.scope != null ? _scopeDTOMapper.to(data.scope!) : null,
     );
   }

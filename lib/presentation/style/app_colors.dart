@@ -47,12 +47,18 @@ class AppColors {
   static const buttonEnabledLight = Color(0xFFAAABC4);
   static const buttonEnabledTextLight = Color(0xFFFAF9FC);
   static const errorTextLight = Color(0xFFFF0000);
+  static const dividerDarkLight = Color(0xFFAAABC4);
+  static const dividerMediumLight = Color(0xFFAAABC4);
+  static const dividerLightLight = Color(0xFFCFD0DD);
 
   // Dark
   static const primaryDark = Color(0xFF2233AA);
   static const backgroundDark = Color(0xFF676983);
   static const primaryTextDark = Color(0xFFFFFFFF);
   static const errorTextDark = Color(0xFFFF0000);
+  static const dividerDarkDark = Color(0xFFAAABC4);
+  static const dividerMediumDark = Color(0xFFAAABC4);
+  static const dividerLightDark = Color(0xFFCFD0DD);
 }
 
 abstract class AppThemeColors {
@@ -67,6 +73,12 @@ abstract class AppThemeColors {
   Color get primaryButtonText;
 
   Color get errorText;
+
+  Color get dividerDark;
+
+  Color get dividerMedium;
+
+  Color get dividerLight;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -87,6 +99,15 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get errorText => AppColors.errorTextLight;
+
+  @override
+  Color get dividerDark => AppColors.dividerDarkLight;
+
+  @override
+  Color get dividerMedium => AppColors.dividerMediumLight;
+
+  @override
+  Color get dividerLight => AppColors.dividerMediumLight;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -107,4 +128,13 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get errorText => AppColors.errorTextDark;
+
+  @override
+  Color get dividerDark => AppColors.dividerDarkDark;
+
+  @override
+  Color get dividerMedium => AppColors.dividerMediumDark;
+
+  @override
+  Color get dividerLight => AppColors.dividerMediumDark;
 }
