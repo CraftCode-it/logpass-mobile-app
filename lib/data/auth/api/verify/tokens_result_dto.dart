@@ -42,6 +42,7 @@ class UserTokensDTOMapper implements DataMapper<TokensResultDTO, UserTokens> {
         type: data.data.tokenType,
       ),
       refreshToken: data.data.refreshToken,
+      sub: data.data.sub,
     );
   }
 }

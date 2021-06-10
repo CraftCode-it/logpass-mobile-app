@@ -104,6 +104,7 @@ void main() {
           type: 'otp',
         ),
         refreshToken: 'refresh',
+        sub: 'sub',
       );
 
       when(authApiDataSource.verifyLoginProcess(url, any)).thenAnswer((realInvocation) async => response);
