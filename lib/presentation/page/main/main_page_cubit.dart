@@ -19,36 +19,29 @@ class MainPageCubit extends Cubit<MainPageState> {
   final CloseWebSocketUseCase _closeWebSocketUseCase;
   final SubscribeToIncomingActionsUseCase _subscribeToIncomingActionsUseCase;
 
-  late StreamSubscription<IncomingAction> _streamSubscription;
+  StreamSubscription<IncomingAction>? _streamSubscription;
 
   MainPageCubit(
     this._setupWebSocketChannelUseCase,
     this._subscribeToIncomingActionsUseCase,
     this._closeWebSocketUseCase,
-  ) : super(const MainPageState.loading());
+  ) : super(const MainPageState.idle());
 
   Future init() async {
     await _openWebSocketChannelConnection();
     _subscribeToIncomingActions();
-
-    _emitIdleState();
   }
 
   void _subscribeToIncomingActions() {
-    // TODO: handle incoming actions in requested manner
     try {
       _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) {
-        print('Link: ${action.link}');
+        emit(const MainPageState.showAction());
       });
     } catch (e, s) {
       Fimber.e('Closing WS channel failed', ex: e, stacktrace: s);
 
       emit(const MainPageState.error('Error message'));
     }
-  }
-
-  void _emitIdleState() {
-    emit(const MainPageState.idle());
   }
 
   Future _openWebSocketChannelConnection() async {
@@ -71,7 +64,7 @@ class MainPageCubit extends Cubit<MainPageState> {
 
   @override
   Future<void> close() {
-    _streamSubscription.cancel();
+    _streamSubscription?.cancel();
     _closeWebSocketChannel();
     return super.close();
   }

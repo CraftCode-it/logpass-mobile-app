@@ -16,10 +16,22 @@ class MainPage extends HookWidget {
 
   const MainPage({Key? key}) : super(key: key);
 
+  void _cubitListener(MainPageCubit cubit, MainPageState state, BuildContext context) {
+    state.maybeWhen(
+      error: (message) {},
+      showAction: () {},
+      orElse: () {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<MainPageCubit>();
     final state = useCubitBuilder(cubit);
+    useCubitListener<MainPageCubit, MainPageState>(
+      cubit,
+      (cubit, state, context) => _cubitListener(cubit, state, context),
+    );
 
     useEffect(() {
       cubit.init();
@@ -30,14 +42,13 @@ class MainPage extends HookWidget {
     final pageStorage = useMemoized(() => <int, Widget>{});
 
     return Scaffold(
-      body: state.maybeWhen(
-        idle: () => _PageContent(
-          _getPage(pageStorage, index.value),
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        orElse: () => const SizedBox(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: _getPage(pageStorage, index.value),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -72,23 +83,5 @@ class MainPage extends HookWidget {
     storage[index] = newPage;
 
     return newPage;
-  }
-}
-
-class _PageContent extends StatelessWidget {
-  final Widget page;
-
-  const _PageContent(this.page);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          child: page,
-        ),
-      ],
-    );
   }
 }

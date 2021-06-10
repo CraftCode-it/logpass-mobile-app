@@ -35,7 +35,7 @@ void main() {
     const failureMessage = 'Error message';
 
     blocTest<MainPageCubit, MainPageState>(
-      'emits idle on successful subscriptions setup',
+      'emits [ShowAction] on received stream value',
       build: () {
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
         when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => Stream.value(incomingAction));
@@ -44,23 +44,22 @@ void main() {
       },
       act: (cubit) => cubit.init(),
       expect: () => [
-        const MainPageState.idle(),
+        const MainPageState.showAction(),
       ],
     );
 
     blocTest<MainPageCubit, MainPageState>(
-      'emits [Error, Idle] on WS channel setup failure',
+      'emits [Error] on WS channel setup failure',
       build: () {
         final expect = Exception();
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => throw expect);
-        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => Stream.value(incomingAction));
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => throw expect);
 
         return cubit;
       },
       act: (cubit) => cubit.init(),
       expect: () => [
         const MainPageState.error(failureMessage),
-        const MainPageState.idle(),
       ],
     );
   });

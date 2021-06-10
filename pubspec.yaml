@@ -50,7 +50,7 @@ dependencies:
   sms_autofill: 2.0.0
   clock: 1.1.0
   local_auth: 1.1.6
-  web_socket_channel: ^2.1.0
+  web_socket_channel: 2.1.0
 
 dev_dependencies:
   flutter_test:

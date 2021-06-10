@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/app_env.dart';
 import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
@@ -9,9 +10,10 @@ import 'package:web_socket_channel/status.dart' as status;
 class WebSocketManager {
   final GetUserTokensUseCase _getUserTokensUseCase;
   final AppEnv _appEnv;
+  final StreamController<dynamic> _webSocketChannelBroadcast = StreamController.broadcast();
 
+  StreamSubscription? _streamSubscription;
   late IOWebSocketChannel _webSocketChannel;
-  final BehaviorSubject<dynamic> _webSocketChannelBroadcast = BehaviorSubject();
 
   WebSocketManager(this._getUserTokensUseCase, this._appEnv);
 
@@ -22,14 +24,17 @@ class WebSocketManager {
     _webSocketChannel = IOWebSocketChannel.connect(
       Uri.parse('$channelUrl${tokens.sub}'),
       pingInterval: const Duration(seconds: 1),
-    )..stream.listen((event) {
-        _webSocketChannelBroadcast.add(event);
-      });
+    );
+
+    _streamSubscription = _webSocketChannel.stream.listen((event) {
+      _webSocketChannelBroadcast.add(event);
+    });
   }
 
   Stream<dynamic> listenForChannel() => _webSocketChannelBroadcast.stream;
 
   void closeChannel() {
+    _streamSubscription?.cancel();
     _webSocketChannel.sink.close(status.goingAway);
   }
 }
