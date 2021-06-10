@@ -27,12 +27,12 @@ class AuthApiDataSource extends __AuthApiDataSource implements _AuthApiDataSourc
 abstract class _AuthApiDataSource {
   factory _AuthApiDataSource(LogPassDio dio) = __AuthApiDataSource;
 
-  @POST('/auth/users/regular/login/')
+  @POST('/auth/users/login-attempts/')
   Future<InitializeLoginResultDTO> initializeLoginProcess(@Body() InitializeLoginDTO body);
 
-  @DELETE('/auth/users/regular/login/{loginAttemptId}/')
+  @DELETE('/auth/users/login-attempts/{loginAttemptId}/')
   Future<void> abortLoginProcess(@Path('loginAttemptId') String attemptId);
 
-  @DELETE('/users/self/tokens/{tokenId}/')
+  @DELETE('/users/login-attempts/{tokenId}/')
   Future<void> revokeAccessToken(@Path('tokenId') String tokenId);
 }

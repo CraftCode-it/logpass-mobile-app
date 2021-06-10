@@ -39,7 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
     return SignUpVerification(
       phoneNumber,
       _verificationMethodMapper.to(response.data.verificationMethod),
-      response.data.verificationUrl,
+      response.links.verification,
       response.data.verificationData?.toSign,
     );
   }

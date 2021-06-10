@@ -4,9 +4,11 @@ part 'initialize_login_result_dto.g.dart';
 
 @JsonSerializable()
 class InitializeLoginResultDTO {
+  @JsonKey(name: '_links')
+  final InitializeLoginLinksDTO links;
   final InitializeLoginResultDataDTO data;
 
-  InitializeLoginResultDTO(this.data);
+  InitializeLoginResultDTO(this.links, this.data);
 
   Map<String, dynamic> toJson() => _$InitializeLoginResultDTOToJson(this);
 
@@ -14,12 +16,22 @@ class InitializeLoginResultDTO {
 }
 
 @JsonSerializable()
+class InitializeLoginLinksDTO {
+  final String verification;
+
+  InitializeLoginLinksDTO(this.verification);
+
+  Map<String, dynamic> toJson() => _$InitializeLoginLinksDTOToJson(this);
+
+  factory InitializeLoginLinksDTO.fromJson(Map<String, dynamic> json) => _$InitializeLoginLinksDTOFromJson(json);
+}
+
+@JsonSerializable()
 class InitializeLoginResultDataDTO {
-  final String verificationUrl;
   final String verificationMethod;
   final InitializeLoginResultVerificationDataDTO? verificationData;
 
-  InitializeLoginResultDataDTO(this.verificationUrl, this.verificationMethod, this.verificationData);
+  InitializeLoginResultDataDTO(this.verificationMethod, this.verificationData);
 
   Map<String, dynamic> toJson() => _$InitializeLoginResultDataDTOToJson(this);
 
