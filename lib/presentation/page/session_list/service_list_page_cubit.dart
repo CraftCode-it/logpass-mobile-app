@@ -12,7 +12,7 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   final GetPageOfServicesUseCase _getPageOfServicesUseCase;
 
   bool _loadedAll = false;
-  int _currentPage = 1;
+  int _currentPage = 0;
   int _itemsCount = 0;
   List<Service> _activeServices = [];
   List<Service> _otherServices = [];
@@ -22,18 +22,20 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   Future<void> loadFirstPage() async {
     emit(ServiceListPageState.loading());
 
-    _currentPage = 1;
+    _currentPage = 0;
     _loadedAll = false;
 
     try {
-      final services = await _getPageOfServicesUseCase(_currentPage);
+      final services = await _getPageOfServicesUseCase(1);
 
       _itemsCount += services.services.length;
 
       _activeServices = _getActiveServices(services);
       _otherServices = _getOtherServices(services);
 
-      emit(ServiceListPageState.idle(_activeServices, _otherServices, _didLoadAllItems(services)));
+      emit(ServiceListPageState.idle(_activeServices, _otherServices, false));
+
+      _currentPage++;
     } on GeneralConnectionError catch (e) {
       emit(ServiceListPageState.connectionError(e));
       emit(ServiceListPageState.empty());
@@ -44,7 +46,7 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   }
 
   Future<void> loadNextPage() async {
-    if (_loadedAll) return;
+    if (_loadedAll || _currentPage == 0) return;
 
     emit(ServiceListPageState.idle(_activeServices, _otherServices, true));
 
@@ -61,7 +63,9 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
       _activeServices = List.from(_activeServices)..addAll(active);
       _otherServices = List.from(_otherServices)..addAll(other);
 
-      emit(ServiceListPageState.idle(_activeServices, _otherServices, _didLoadAllItems(services)));
+      _didLoadAllItems(services);
+
+      emit(ServiceListPageState.idle(_activeServices, _otherServices, false));
     } on GeneralConnectionError catch (e) {
       emit(ServiceListPageState.connectionError(e));
     } catch (e, s) {
@@ -78,8 +82,7 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
     return services.services.where((element) => element.tokens.activeCount == 0).toList(growable: false);
   }
 
-  bool _didLoadAllItems(ServicesBundle bundle) {
+  void _didLoadAllItems(ServicesBundle bundle) {
     _loadedAll = bundle.totalCount <= _itemsCount;
-    return _loadedAll;
   }
 }

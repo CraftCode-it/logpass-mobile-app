@@ -18,7 +18,7 @@ class ServiceDTO {
   final String url;
   final String logo;
   final String email;
-  final ServiceSupportedScopesDTO scopesSupported;
+  final List<ServiceSupportedScopesDTO> scopesSupported;
   final List<String> requiredScopes;
   final List<String> responseTypes;
   final List<String> grantTypes;
@@ -70,7 +70,7 @@ class ServiceDTOMapper implements BidirectionalDataMapper<Service, ServiceDTO> {
       data.url,
       data.logo,
       data.email,
-      _serviceSupportedScopesDTOMapper.from(data.scopesSupported),
+      data.scopesSupported.map(_serviceSupportedScopesDTOMapper.from).toList(),
       data.requiredScopes.map(_scopeDTOMapper.from).toList(),
       data.responseTypes.map(_responseTypeDTOMapper.from).toList(),
       data.grantTypes.map(_grantTypeDTOMapper.from).toList(),
@@ -87,7 +87,7 @@ class ServiceDTOMapper implements BidirectionalDataMapper<Service, ServiceDTO> {
       url: data.url,
       logo: data.logo,
       email: data.email,
-      scopesSupported: _serviceSupportedScopesDTOMapper.to(data.scopesSupported),
+      scopesSupported: data.scopesSupported.map(_serviceSupportedScopesDTOMapper.to).toList(),
       requiredScopes: data.requiredScopes.map(_scopeDTOMapper.to).toList(),
       responseTypes: data.responseTypes.map(_responseTypeDTOMapper.to).toList(),
       grantTypes: data.grantTypes.map(_grantTypeDTOMapper.to).toList(),

@@ -11,7 +11,7 @@ class Service {
   final String url;
   final String logo;
   final String email;
-  final ServiceSupportedScopes scopesSupported;
+  final List<ServiceSupportedScopes> scopesSupported;
   final List<Scope> requiredScopes;
   final List<ResponseType> responseTypes;
   final List<GrantType> grantTypes;

@@ -51,4 +51,6 @@ class AppDimens {
   static const minCodeInputWidth = 70.0;
 
   static const dividerHeight = 1.0;
+
+  static const serviceImageIconSize = 28.0;
 }

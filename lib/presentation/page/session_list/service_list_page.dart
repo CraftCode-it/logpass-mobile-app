@@ -12,6 +12,8 @@ import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 class ServiceListPage extends HookWidget {
+  static const _loadMoreOffsetDelta = 500;
+
   const ServiceListPage({Key? key}) : super(key: key);
 
   @override
@@ -29,7 +31,9 @@ class ServiceListPage extends HookWidget {
 
     useEffect(() {
       scrollController.addListener(() {
-        if (scrollController.offset > scrollController.position.maxScrollExtent - 250) {
+        final position = scrollController.position;
+
+        if (position.maxScrollExtent - position.pixels < _loadMoreOffsetDelta) {
           cubit.loadNextPage();
         }
       });
@@ -126,18 +130,34 @@ class _ContentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        if (state.activeServices.isNotEmpty) ...[
-          const _ServicesHeader(text: 'With active sessions'),
-          _ServiceList(services: state.activeServices, active: true),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+      child: CustomScrollView(
+        slivers: [
+          const SliverPadding(
+            padding: EdgeInsets.only(top: AppDimens.l),
+          ),
+          if (state.activeServices.isNotEmpty) ...[
+            const SliverToBoxAdapter(
+              child: _ServicesHeader(text: 'With active sessions'),
+            ),
+            _ServiceList(services: state.activeServices, active: true),
+          ],
+          if (state.otherServices.isNotEmpty) ...[
+            const SliverToBoxAdapter(
+              child: _ServicesHeader(text: 'Other services'),
+            ),
+            _ServiceList(services: state.otherServices, active: false),
+          ],
+          if (state.loadingMore)
+            const SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: AppDimens.m),
+              sliver: SliverToBoxAdapter(
+                child: Loader(),
+              ),
+            ),
         ],
-        if (state.otherServices.isNotEmpty) ...[
-          const _ServicesHeader(text: 'Other services'),
-          _ServiceList(services: state.otherServices, active: false),
-        ],
-        if (state.loadingMore) const SliverToBoxAdapter(child: Loader()),
-      ],
+      ),
     );
   }
 }
@@ -178,6 +198,7 @@ class _ServicesHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Separator.dark(),
+        const SizedBox(height: AppDimens.s),
         Text(text),
       ],
     );
@@ -206,7 +227,12 @@ class _ServiceRow extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(service.logo),
+                Image.network(
+                  service.logo,
+                  width: AppDimens.serviceImageIconSize,
+                  height: AppDimens.serviceImageIconSize,
+                ),
+                const SizedBox(width: AppDimens.s),
                 Expanded(
                   child: Text(service.name),
                 ),

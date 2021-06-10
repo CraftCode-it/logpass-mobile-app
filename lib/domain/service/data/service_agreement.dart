@@ -2,7 +2,7 @@ import 'package:logpass_me/domain/model/agreement_type.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 
 class ServiceAgreement {
-  final int id;
+  final String id;
   final AgreementType type;
   final String name;
   final String url;

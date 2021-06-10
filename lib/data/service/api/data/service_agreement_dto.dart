@@ -9,7 +9,7 @@ part 'service_agreement_dto.g.dart';
 
 @JsonSerializable()
 class ServiceAgreementDTO {
-  final int id;
+  final String id;
   final String type;
   final String name;
   final String url;

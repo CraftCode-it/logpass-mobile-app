@@ -107,7 +107,7 @@ class LightThemeColors implements AppThemeColors {
   Color get dividerMedium => AppColors.dividerMediumLight;
 
   @override
-  Color get dividerLight => AppColors.dividerMediumLight;
+  Color get dividerLight => AppColors.dividerLightLight;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -136,5 +136,5 @@ class DarkThemeColors implements AppThemeColors {
   Color get dividerMedium => AppColors.dividerMediumDark;
 
   @override
-  Color get dividerLight => AppColors.dividerMediumDark;
+  Color get dividerLight => AppColors.dividerLightDark;
 }
