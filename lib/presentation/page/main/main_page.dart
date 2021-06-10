@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
+import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
+import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 class MainPage extends HookWidget {
-  // TODO: fix reinit of pages
+  // TODO: fix reinit of pages since each of them is being
+  // reinitialized after tab change
   static final _pageBuilders = [
     () => HomePage(),
     () => Container(color: Colors.blue),
@@ -15,17 +18,26 @@ class MainPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = useCubit<MainPageCubit>();
+    final state = useCubitBuilder(cubit);
+
+    useEffect(() {
+      cubit.init();
+      return;
+    }, [cubit]);
+
     final index = useState(0);
     final pageStorage = useMemoized(() => <int, Widget>{});
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: _getPage(pageStorage, index.value),
-          ),
-        ],
+      body: state.maybeWhen(
+        idle: () => _PageContent(
+          _getPage(pageStorage, index.value),
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        orElse: () => const SizedBox(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -60,5 +72,23 @@ class MainPage extends HookWidget {
     storage[index] = newPage;
 
     return newPage;
+  }
+}
+
+class _PageContent extends StatelessWidget {
+  final Widget page;
+
+  const _PageContent(this.page);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: page,
+        ),
+      ],
+    );
   }
 }
