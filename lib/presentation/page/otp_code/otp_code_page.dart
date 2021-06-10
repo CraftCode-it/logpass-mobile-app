@@ -12,7 +12,6 @@ import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 class OTPCodePage extends HookWidget {
   final SignUpVerification verification;

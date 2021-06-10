@@ -71,5 +71,19 @@
     "biometricInfo": "or use biometrics to enter",
     "logoutInfo": "Forgot your passcode?\nLog in again to unlock your account.",
     "needHelp": "Need help?"
+  },
+  "serviceList": {
+    "title": "Services",
+    "activeHeader": "With active sessions",
+    "otherHeader": "Other services",
+    "session": {
+      "zero": "{} sesji",
+      "one": "{} sesja",
+      "two": "{} sesje",
+      "few": "{} sesje",
+      "many": "{} sesji",
+      "other": "{} sesji"
+    },
+    "noServices": "You have no connected services."
   }
 }
