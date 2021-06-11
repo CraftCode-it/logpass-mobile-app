@@ -55,12 +55,10 @@ abstract class NetworkModule {
   List<Interceptor> prodRefreshInterceptors(
     LanguageInterceptor languageInterceptor,
     ContentTypeInterceptor contentTypeInterceptor,
-    ErrorInterceptor errorInterceptor,
   ) =>
       [
         languageInterceptor,
         contentTypeInterceptor,
-        errorInterceptor,
       ];
 
   @dev
@@ -69,13 +67,11 @@ abstract class NetworkModule {
   List<Interceptor> devRefreshInterceptors(
     LanguageInterceptor languageInterceptor,
     ContentTypeInterceptor contentTypeInterceptor,
-    ErrorInterceptor errorInterceptor,
   ) =>
       [
         languageInterceptor,
         contentTypeInterceptor,
         _logger,
-        errorInterceptor,
       ];
 }
 
