@@ -1,15 +1,65 @@
 import 'package:bloc/bloc.dart';
+import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/use_case/get_page_of_service_sessions_use_case.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view_state.dart';
+import 'package:logpass_me/presentation/page/service_details/session_list/session_with_state.dart';
 
 @Injectable()
 class SessionListViewCubit extends Cubit<SessionListViewState> {
-  late Service _service;
+  final GetPageOfServiceSessionsUseCase _getPageOfServiceSessionsUseCase;
 
-  SessionListViewCubit() : super(SessionListViewState.loading());
+  late Service _service;
+  List<SessionWithState> _sessionsWithState = [];
+  int _currentPage = 0;
+  bool _loadedAll = false;
+
+  SessionListViewCubit(
+    this._getPageOfServiceSessionsUseCase,
+  ) : super(SessionListViewState.loading());
 
   Future<void> initialize(Service service) async {
     _service = service;
+    await loadFirstPage();
+  }
+
+  Future<void> loadFirstPage() async {
+    emit(SessionListViewState.loading());
+
+    _sessionsWithState = [];
+    _currentPage = 0;
+    _loadedAll = false;
+
+    try {
+      final sessions = await _getPageOfServiceSessionsUseCase(
+        _currentPage,
+        _service.clientId,
+        true,
+      );
+
+      if (sessions.totalCount > 0) {
+        _sessionsWithState = sessions.sessions.map((e) => SessionWithState(e, false, false)).toList();
+        _loadedAll = _sessionsWithState.length >= sessions.totalCount;
+        _currentPage++;
+
+        emit(SessionListViewState.idle(_sessionsWithState, false));
+      } else {
+        emit(SessionListViewState.empty());
+      }
+    } on GeneralConnectionError catch (e) {
+      emit(SessionListViewState.connectionError(e));
+    } catch (e, s) {
+      Fimber.e('Failed to load service sessions', ex: e, stacktrace: s);
+    }
+  }
+
+  void changeExpanded(int index, bool expanded) {
+    final updatedSession = _sessionsWithState[index].copyWith(expanded: expanded);
+    _sessionsWithState[index] = updatedSession;
+    _sessionsWithState = List.from(_sessionsWithState);
+
+    emit(SessionListViewState.idle(_sessionsWithState, false));
   }
 }

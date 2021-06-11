@@ -99,7 +99,7 @@ class _Content extends StatelessWidget {
         state: state,
         scrollController: scrollController,
       ),
-      empty: (_) => const _ContentEmpty(),
+      empty: (_) => _ContentEmpty(cubit: cubit),
       loading: (_) => const Loader(),
       orElse: () => const SizedBox(),
     );
@@ -107,15 +107,23 @@ class _Content extends StatelessWidget {
 }
 
 class _ContentEmpty extends StatelessWidget {
-  const _ContentEmpty({Key? key}) : super(key: key);
+  final ServiceListPageCubit cubit;
+
+  const _ContentEmpty({required this.cubit, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: const Text(
-        LocaleKeys.serviceList_noServices,
-        textAlign: TextAlign.center,
-      ).tr(),
+    return RefreshIndicator(
+      onRefresh: () => cubit.loadFirstPage(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Center(
+          child: const Text(
+            LocaleKeys.serviceList_noServices,
+            textAlign: TextAlign.center,
+          ).tr(),
+        ),
+      ),
     );
   }
 }
@@ -136,31 +144,35 @@ class _ContentList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-      child: CustomScrollView(
-        slivers: [
-          const SliverPadding(
-            padding: EdgeInsets.only(top: AppDimens.l),
-          ),
-          if (state.activeServices.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: _ServicesHeader(text: tr(LocaleKeys.serviceList_activeHeader)),
-            ),
-            _ServiceList(services: state.activeServices, active: true),
-          ],
-          if (state.otherServices.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: _ServicesHeader(text: tr(LocaleKeys.serviceList_otherHeader)),
-            ),
-            _ServiceList(services: state.otherServices, active: false),
-          ],
-          if (state.loadingMore)
+      child: RefreshIndicator(
+        onRefresh: () => cubit.loadFirstPage(),
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
             const SliverPadding(
-              padding: EdgeInsets.symmetric(vertical: AppDimens.m),
-              sliver: SliverToBoxAdapter(
-                child: Loader(),
-              ),
+              padding: EdgeInsets.only(top: AppDimens.l),
             ),
-        ],
+            if (state.activeServices.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: _ServicesHeader(text: tr(LocaleKeys.serviceList_activeHeader)),
+              ),
+              _ServiceList(services: state.activeServices, active: true),
+            ],
+            if (state.otherServices.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: _ServicesHeader(text: tr(LocaleKeys.serviceList_otherHeader)),
+              ),
+              _ServiceList(services: state.otherServices, active: false),
+            ],
+            if (state.loadingMore)
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(vertical: AppDimens.m),
+                sliver: SliverToBoxAdapter(
+                  child: Loader(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -224,7 +236,7 @@ class _ServiceRow extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        GestureDetector(
+        InkWell(
           onTap: () {
             AutoRouter.of(context).push(ServiceDetailsPageRoute(service: service));
           },

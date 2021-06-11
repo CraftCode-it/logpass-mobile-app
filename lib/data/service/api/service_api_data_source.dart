@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/log_pass_dio.dart';
@@ -15,12 +14,12 @@ abstract class ServiceApiDataSource {
   factory ServiceApiDataSource(LogPassDio dio) = _ServiceApiDataSource;
 
   @GET('/users/self/authorized-applications/')
-  Future<AuthorizedServicesResponseDTO> getServiceList(@QueryParam() int page);
+  Future<AuthorizedServicesResponseDTO> getServiceList(@Query('page') int page);
 
   @GET('/users/self/tokens/')
   Future<ServiceSessionListResponseDTO> getServiceTokenList(
-    @QueryParam('page_number') int pageNumber, {
-    @QueryParam('is_active') bool? isActive,
-    @QueryParam('client_id') String? clientId,
+    @Query('page_number') int pageNumber, {
+    @Query('is_active') bool? isActive,
+    @Query('client_id') String? clientId,
   });
 }

@@ -1,9 +1,9 @@
 import 'package:logpass_me/domain/model/device_type.dart';
 import 'package:logpass_me/domain/model/scope.dart';
-import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_supported_scopes.dart';
 
 class ServiceSession {
-  final String id;
+  final int id;
   final String user;
   final bool isActive;
   final DateTime expiresAt;
@@ -15,8 +15,7 @@ class ServiceSession {
   final String deviceName;
   final String operatingSystem;
   final String browser;
-  final Service application;
-  final List<Scope> scopes;
+  final List<ServiceSupportedScopes> scopes;
 
   ServiceSession({
     required this.id,
@@ -30,7 +29,6 @@ class ServiceSession {
     required this.deviceName,
     required this.operatingSystem,
     required this.browser,
-    required this.application,
     required this.scopes,
     this.ipAddress,
   });

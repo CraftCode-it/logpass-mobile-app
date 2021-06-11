@@ -3,15 +3,14 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:logpass_me/data/common/bidirectional_data_mapper.dart';
 import 'package:logpass_me/data/model/date_time_dto_mapper.dart';
 import 'package:logpass_me/data/model/enum/device_type_dto_mapper.dart';
-import 'package:logpass_me/data/model/enum/scope_dto_mapper.dart';
-import 'package:logpass_me/data/service/api/data/service_dto.dart';
+import 'package:logpass_me/data/service/api/data/service_supported_scopes_dto.dart';
 import 'package:logpass_me/domain/service/data/session/service_session.dart';
 
 part 'service_session_dto.g.dart';
 
 @JsonSerializable()
 class ServiceSessionDTO {
-  final String id;
+  final int id;
   final String user;
   final bool isActive;
   final String expiresAt;
@@ -23,8 +22,7 @@ class ServiceSessionDTO {
   final String deviceName;
   final String operatingSystem;
   final String browser;
-  final ServiceDTO application;
-  final List<String> scopes;
+  final List<ServiceSupportedScopesDTO> scopes;
 
   ServiceSessionDTO(
     this.id,
@@ -39,7 +37,6 @@ class ServiceSessionDTO {
     this.deviceName,
     this.operatingSystem,
     this.browser,
-    this.application,
     this.scopes,
   );
 
@@ -51,15 +48,13 @@ class ServiceSessionDTO {
 @Injectable()
 class ServiceSessionDTOMapper implements BidirectionalDataMapper<ServiceSession, ServiceSessionDTO> {
   final DateTimeDTOMapper _dateTimeDTOMapper;
-  final ServiceDTOMapper _serviceDTOMapper;
   final DeviceTypeDTOMapper _deviceTypeDTOMapper;
-  final ScopeDTOMapper _scopeDTOMapper;
+  final ServiceSupportedScopesDTOMapper _serviceSupportedScopesDTOMapper;
 
   ServiceSessionDTOMapper(
     this._dateTimeDTOMapper,
-    this._serviceDTOMapper,
     this._deviceTypeDTOMapper,
-    this._scopeDTOMapper,
+    this._serviceSupportedScopesDTOMapper,
   );
 
   @override
@@ -77,8 +72,7 @@ class ServiceSessionDTOMapper implements BidirectionalDataMapper<ServiceSession,
       data.deviceName,
       data.operatingSystem,
       data.browser,
-      _serviceDTOMapper.from(data.application),
-      data.scopes.map(_scopeDTOMapper.from).toList(),
+      data.scopes.map(_serviceSupportedScopesDTOMapper.from).toList(),
     );
   }
 
@@ -96,8 +90,7 @@ class ServiceSessionDTOMapper implements BidirectionalDataMapper<ServiceSession,
       deviceName: data.deviceName,
       operatingSystem: data.operatingSystem,
       browser: data.browser,
-      application: _serviceDTOMapper.to(data.application),
-      scopes: data.scopes.map(_scopeDTOMapper.to).toList(),
+      scopes: data.scopes.map(_serviceSupportedScopesDTOMapper.to).toList(),
     );
   }
 }

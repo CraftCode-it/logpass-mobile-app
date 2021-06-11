@@ -22,8 +22,11 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   Future<void> loadFirstPage() async {
     emit(ServiceListPageState.loading());
 
+    _itemsCount = 0;
     _currentPage = 0;
     _loadedAll = false;
+    _activeServices = [];
+    _otherServices = [];
 
     try {
       final services = await _getPageOfServicesUseCase(1);

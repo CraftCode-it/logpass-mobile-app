@@ -16,5 +16,10 @@ class SessionListViewState with _$SessionListViewState {
     bool loadingMore,
   ) = SessionListViewStateIdle;
 
+  @Implements(BuildState)
+  factory SessionListViewState.empty() = _SessionListViewStateEmpty;
+
+  factory SessionListViewState.endedSession() = _SessionListViewStateEndedSession;
+
   factory SessionListViewState.connectionError(GeneralConnectionError error) = _SessionListViewStateConnectionError;
 }

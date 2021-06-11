@@ -26,10 +26,10 @@ class GetSaferCubit extends Cubit<GetSaferPageState> {
     emit(GetSaferPageState.idle(_supportsBiometric));
   }
 
-    Future<void> invokeBiometricsSetup() async {
-      emit(GetSaferPageState.loading());
+  Future<void> invokeBiometricsSetup() async {
+    emit(GetSaferPageState.loading());
 
-      try {
+    try {
       final biometricAuthorized = await _authorizeWithBiometricsUseCase();
       if (biometricAuthorized) {
         emit(GetSaferPageState.setCodeForBiometrics());

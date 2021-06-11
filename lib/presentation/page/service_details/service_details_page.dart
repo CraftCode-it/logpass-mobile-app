@@ -3,10 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page_state.dart';
+import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
-import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServiceDetailsPage extends HookWidget {
@@ -30,7 +30,7 @@ class ServiceDetailsPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Service details'),
+        title: const Text('Service details'),
       ),
       body: SafeArea(
         child: state.maybeMap(
@@ -69,21 +69,23 @@ class _Content extends StatelessWidget {
         children: [
           const SizedBox(height: AppDimens.m),
           _ServiceHeader(service: state.service),
+          const SizedBox(height: AppDimens.m),
           TabBar(
             controller: tabController,
-            tabs: [],
+            tabs: const [
+              Tab(text: 'Active sessions'),
+              Tab(text: 'Agreements'),
+            ],
           ),
           Expanded(
             child: TabBarView(
               controller: tabController,
-              children: [],
+              children: [
+                SessionListViewKeepingState(service: state.service),
+                Container(),
+              ],
             ),
           ),
-          RoundedButton(
-            text: 'End all sessions',
-            onPressed: () => cubit.endAllSessions(),
-          ),
-          const SizedBox(height: AppDimens.xxxl),
         ],
       ),
     );

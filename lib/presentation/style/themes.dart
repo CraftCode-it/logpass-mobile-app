@@ -11,6 +11,10 @@ final lightTheme = ThemeData(
     selectedLabelStyle: const TextStyle(color: AppColors.primaryTextDark),
     unselectedLabelStyle: TextStyle(color: AppColors.primaryTextDark.withOpacity(0.8)),
   ),
+  tabBarTheme: const TabBarTheme(
+    labelColor: AppColors.primaryTextLight,
+    unselectedLabelColor: AppColors.primaryTextLight,
+  ),
 );
 
 final darkTheme = ThemeData(
@@ -23,5 +27,9 @@ final darkTheme = ThemeData(
     unselectedIconTheme: IconThemeData(color: AppColors.backgroundDark.withOpacity(0.8)),
     selectedLabelStyle: const TextStyle(color: AppColors.primaryTextLight),
     unselectedLabelStyle: TextStyle(color: AppColors.primaryTextLight.withOpacity(1)),
+  ),
+  tabBarTheme: const TabBarTheme(
+    labelColor: AppColors.primaryTextDark,
+    unselectedLabelColor: AppColors.primaryTextDark,
   ),
 );
