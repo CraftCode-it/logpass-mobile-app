@@ -11,10 +11,10 @@ class ServiceDetailsPageState with _$ServiceDetailsPageState {
   factory ServiceDetailsPageState.initializing() = _ServiceDetailsPageStateInitializing;
 
   @Implements(BuildState)
-  factory ServiceDetailsPageState.idle(Service service) = _ServiceDetailsPageStateIdle;
+  factory ServiceDetailsPageState.idle(Service service) = ServiceDetailsPageStateIdle;
 
   @Implements(BuildState)
-  factory ServiceDetailsPageState.endingAllSessions() = _ServiceDetailsPageStateEndingAllSessions;
+  factory ServiceDetailsPageState.endingAllSessions(Service service) = ServiceDetailsPageStateEndingAllSessions;
 
   factory ServiceDetailsPageState.connectionError(GeneralConnectionError error) = _ServiceDetailsPageStateConnectionError;
 }

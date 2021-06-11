@@ -5,7 +5,7 @@ import 'package:logpass_me/domain/networking/error/general_connection_error.dart
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_services_use_case.dart';
-import 'package:logpass_me/presentation/page/session_list/service_list_page_state.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
 
 @Injectable()
 class ServiceListPageCubit extends Cubit<ServiceListPageState> {

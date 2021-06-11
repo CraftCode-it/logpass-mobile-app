@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logpass_me/data/common/data_mapper.dart';
-import 'package:logpass_me/data/networking/model/response_metadata_dto.dart';
+import 'package:logpass_me/data/networking/model/response_pagination_metadata_dto.dart';
 import 'package:logpass_me/data/service/api/data/service_dto.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 
@@ -10,7 +10,7 @@ part 'authorized_services_response_dto.g.dart';
 @JsonSerializable()
 class AuthorizedServicesResponseDTO {
   @JsonKey(name: '_meta')
-  final ResponseMetadataDTO metadata;
+  final ResponsePaginationMetadataDTO metadata;
   final List<ServiceDTO> data;
 
   AuthorizedServicesResponseDTO(this.metadata, this.data);

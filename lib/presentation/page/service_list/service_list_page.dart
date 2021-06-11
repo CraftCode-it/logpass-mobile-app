@@ -1,10 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:logpass_me/presentation/page/session_list/service_list_page_cubit.dart';
-import 'package:logpass_me/presentation/page/session_list/service_list_page_state.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -14,8 +16,6 @@ import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 class ServiceListPage extends HookWidget {
-  static const _loadMoreOffsetDelta = 500;
-
   const ServiceListPage({Key? key}) : super(key: key);
 
   @override
@@ -26,6 +26,8 @@ class ServiceListPage extends HookWidget {
     final typography = useAppTypography();
     final scrollController = useScrollController();
 
+    final screenHeight = MediaQuery.of(context).size.height;
+
     useCubitListener<ServiceListPageCubit, ServiceListPageState>(
       cubit,
       (cubit, state, context) => _listener(cubit, state, context, color, typography),
@@ -35,7 +37,7 @@ class ServiceListPage extends HookWidget {
       scrollController.addListener(() {
         final position = scrollController.position;
 
-        if (position.maxScrollExtent - position.pixels < _loadMoreOffsetDelta) {
+        if (position.maxScrollExtent - position.pixels < screenHeight) {
           cubit.loadNextPage();
         }
       });
@@ -223,7 +225,9 @@ class _ServiceRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            AutoRouter.of(context).push(ServiceDetailsPageRoute(service: service));
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
             child: Row(

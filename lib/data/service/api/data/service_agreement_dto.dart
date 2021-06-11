@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logpass_me/data/common/bidirectional_data_mapper.dart';
+import 'package:logpass_me/data/model/date_time_dto_mapper.dart';
 import 'package:logpass_me/data/model/enum/agreement_type_dto_mapper.dart';
 import 'package:logpass_me/data/model/enum/scope_dto_mapper.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
@@ -42,8 +43,13 @@ class ServiceAgreementDTO {
 class ServiceAgreementDTOMapper implements BidirectionalDataMapper<ServiceAgreement, ServiceAgreementDTO> {
   final AgreementTypeDTOMapper _agreementTypeDTOMapper;
   final ScopeDTOMapper _scopeDTOMapper;
+  final DateTimeDTOMapper _dateTimeDTOMapper;
 
-  ServiceAgreementDTOMapper(this._agreementTypeDTOMapper, this._scopeDTOMapper);
+  ServiceAgreementDTOMapper(
+    this._agreementTypeDTOMapper,
+    this._scopeDTOMapper,
+    this._dateTimeDTOMapper,
+  );
 
   @override
   ServiceAgreementDTO from(ServiceAgreement data) {
@@ -56,8 +62,8 @@ class ServiceAgreementDTOMapper implements BidirectionalDataMapper<ServiceAgreem
       data.isRequired,
       data.isAccepted,
       data.scope != null ? _scopeDTOMapper.from(data.scope!) : null,
-      data.createdAt.toUtc().toString(),
-      data.updatedAt.toUtc().toString(),
+      _dateTimeDTOMapper.from(data.createdAt),
+      _dateTimeDTOMapper.from(data.updatedAt),
     );
   }
 
@@ -71,8 +77,8 @@ class ServiceAgreementDTOMapper implements BidirectionalDataMapper<ServiceAgreem
       checksum: data.checksum,
       isRequired: data.isRequired,
       isAccepted: data.isAccepted,
-      createdAt: DateTime.parse(data.createdAt).toLocal(),
-      updatedAt: DateTime.parse(data.updatedAt).toLocal(),
+      createdAt: _dateTimeDTOMapper.to(data.createdAt),
+      updatedAt: _dateTimeDTOMapper.to(data.updatedAt),
       scope: data.scope != null ? _scopeDTOMapper.to(data.scope!) : null,
     );
   }
