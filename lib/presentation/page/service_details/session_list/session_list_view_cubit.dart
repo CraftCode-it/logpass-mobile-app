@@ -11,6 +11,7 @@ import 'package:logpass_me/presentation/page/service_details/session_list/sessio
 class SessionListViewCubit extends Cubit<SessionListViewState> {
   final GetPageOfServiceSessionsUseCase _getPageOfServiceSessionsUseCase;
 
+  late bool _activeSessions;
   late Service _service;
   List<SessionWithState> _sessionsWithState = [];
   int _currentPage = 0;
@@ -20,7 +21,8 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
     this._getPageOfServiceSessionsUseCase,
   ) : super(SessionListViewState.loading());
 
-  Future<void> initialize(Service service) async {
+  Future<void> initialize(bool active, Service service) async {
+    _activeSessions = active;
     _service = service;
     await loadFirstPage();
   }
@@ -36,7 +38,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
       final sessions = await _getPageOfServiceSessionsUseCase(
         _currentPage,
         _service.clientId,
-        true,
+        _activeSessions,
       );
 
       if (sessions.totalCount > 0) {
@@ -44,7 +46,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
         _loadedAll = _sessionsWithState.length >= sessions.totalCount;
         _currentPage++;
 
-        emit(SessionListViewState.idle(_sessionsWithState, false));
+        emit(SessionListViewState.idle(_sessionsWithState, false, _activeSessions));
       } else {
         emit(SessionListViewState.empty());
       }
@@ -57,9 +59,11 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
 
   void changeExpanded(int index, bool expanded) {
     final updatedSession = _sessionsWithState[index].copyWith(expanded: expanded);
-    _sessionsWithState[index] = updatedSession;
-    _sessionsWithState = List.from(_sessionsWithState);
+    final newList = List<SessionWithState>.from(_sessionsWithState);
+    newList[index] = updatedSession;
 
-    emit(SessionListViewState.idle(_sessionsWithState, false));
+    _sessionsWithState = newList;
+
+    emit(SessionListViewState.idle(newList, false, _activeSessions));
   }
 }

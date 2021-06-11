@@ -44,7 +44,7 @@ class SessionRow extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: IconButton(
                         onPressed: () => onExpandedChanged(!session.expanded),
-                        icon: const Icon(Icons.arrow_drop_down_sharp),
+                        icon: Icon(session.expanded ? Icons.arrow_drop_up_sharp : Icons.arrow_drop_down_sharp),
                       ),
                     ),
                   ],
@@ -70,10 +70,13 @@ class SessionRow extends StatelessWidget {
                     label: 'valid:',
                     text: SessionDateFormatter.formatDateTime(session.session.expiresAt),
                   ),
-                  RoundedButton(
-                    text: 'End session',
-                    onPressed: () {},
-                  ),
+                  if (session.session.isActive)
+                    RoundedButton(
+                      text: 'End session',
+                      onPressed: () {},
+                    )
+                  else
+                    const SizedBox(),
                 ],
               ),
             ],

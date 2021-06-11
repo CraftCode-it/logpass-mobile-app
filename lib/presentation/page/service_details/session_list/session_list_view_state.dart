@@ -14,6 +14,7 @@ class SessionListViewState with _$SessionListViewState {
   factory SessionListViewState.idle(
     List<SessionWithState> sessions,
     bool loadingMore,
+    bool activeSessions,
   ) = SessionListViewStateIdle;
 
   @Implements(BuildState)

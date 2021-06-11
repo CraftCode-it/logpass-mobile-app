@@ -43,9 +43,25 @@ class SessionListView extends HookWidget {
     final state = useCubitBuilder(cubit);
 
     useEffect(() {
-      cubit.initialize(service);
+      cubit.initialize(true, service);
     }, [cubit]);
 
+    return SessionListBuilder(cubit: cubit, state: state);
+  }
+}
+
+class SessionListBuilder extends StatelessWidget {
+  final SessionListViewCubit cubit;
+  final SessionListViewState state;
+
+  const SessionListBuilder({
+    required this.cubit,
+    required this.state,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return state.maybeMap(
       loading: (_) => const Loader(),
       idle: (state) => _Content(cubit: cubit, state: state),
@@ -90,11 +106,13 @@ class _Content extends StatelessWidget {
             ),
           ),
         ),
-        RoundedButton(
-          text: 'End all sessions',
-          onPressed: () {},
-        ),
-        const SizedBox(height: AppDimens.xxxl),
+        if (state.activeSessions) ...[
+          RoundedButton(
+            text: 'End all sessions',
+            onPressed: () {},
+          ),
+          const SizedBox(height: AppDimens.xxxl),
+        ],
       ],
     );
   }
