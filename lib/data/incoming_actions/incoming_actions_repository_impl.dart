@@ -7,9 +7,10 @@ import 'package:logpass_me/data/push_notifications/push_notifications_manager.da
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_actions_repository.dart';
+import 'package:logpass_me/domain/common/clearable.dart';
 
 @Singleton(as: IncomingActionsRepository)
-class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
+class IncomingActionsRepositoryImpl implements IncomingActionsRepository, Clearable {
   final WebSocketManager _webSocketManager;
   final PushNotificationsManager _pushNotificationsManager;
   final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
@@ -58,8 +59,8 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
     });
   }
 
-  // TODO: invoke on logout
-  void cancelListeners() {
+  @override
+  void clear() {
     _messagesStreamSubscription?.cancel();
     _webSocketStreamSubscription?.cancel();
   }
