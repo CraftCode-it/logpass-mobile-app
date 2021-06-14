@@ -23,7 +23,7 @@ class MainPage extends HookWidget {
   ) {
     state.maybeWhen(
       error: (message) {},
-      showAction: () {
+      showAction: (action) {
         showInformationSnackBar(
           content: snackBarContent,
           context: context,

@@ -49,7 +49,7 @@ class MainPageCubit extends Cubit<MainPageState> {
   void _subscribeToIncomingActions() {
     try {
       _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) {
-        emit(const MainPageState.showAction());
+        emit(MainPageState.showAction(action));
       });
     } catch (e, s) {
       Fimber.e('Subscription to incoming actions failed', ex: e, stacktrace: s);

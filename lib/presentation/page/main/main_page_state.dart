@@ -2,7 +2,7 @@ part of 'main_page_cubit.dart';
 
 @freezed
 class MainPageState with _$MainPageState {
-  const factory MainPageState.showAction() = _MainPageStateShowAction;
+  const factory MainPageState.showAction(IncomingAction action) = _MainPageStateShowAction;
 
   @Implements(BuildState)
   const factory MainPageState.idle() = _MainPageStateIdle;
