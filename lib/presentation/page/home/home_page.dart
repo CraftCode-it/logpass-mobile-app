@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -99,7 +100,7 @@ class _PendingActions extends StatelessWidget {
 
 class _PendingItemsList extends HookWidget {
   // TODO: refactor in accordance to backend model
-  final List<String> pendingActions;
+  final List<IncomingAction> pendingActions;
 
   const _PendingItemsList(this.pendingActions);
 
@@ -112,7 +113,7 @@ class _PendingItemsList extends HookWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return _PendingItem(pendingActions[index]);
+              return _PendingItem(pendingActions[index].link);
             },
             itemCount: pendingActions.length,
           )

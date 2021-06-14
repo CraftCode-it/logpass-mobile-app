@@ -29,6 +29,10 @@
     "addNewDeviceInfo": "Already registered\nbut using different device?",
     "phoneNumberFormatError": "Wrong phone number format"
   },
+  "main": {
+    "new_action": "You have new pending action",
+    "open_action_label": "Open"
+  },
   "home": {
     "codeErrorPlaceholder": "XXXXXX",
     "activeInfo": "Code is active for {}",

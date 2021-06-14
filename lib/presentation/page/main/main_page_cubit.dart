@@ -52,7 +52,7 @@ class MainPageCubit extends Cubit<MainPageState> {
         emit(const MainPageState.showAction());
       });
     } catch (e, s) {
-      Fimber.e('Closing WS channel failed', ex: e, stacktrace: s);
+      Fimber.e('Subscription to incoming actions failed', ex: e, stacktrace: s);
 
       emit(const MainPageState.error('Error message'));
     }
