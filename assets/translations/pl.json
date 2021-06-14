@@ -103,5 +103,13 @@
     "ip": "IP:",
     "valid": "valid:",
     "endSessionAction": "End session"
+  },
+  "agreementList": {
+    "revokeAllAction": "Revoke all agreements"
+  },
+  "agreementRow": {
+    "required": "required",
+    "optional": "optional",
+    "agreedOn": "Agreed on {}"
   }
 }
