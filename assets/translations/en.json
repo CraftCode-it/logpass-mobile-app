@@ -81,5 +81,23 @@
       "other": "{} sessions"
     },
     "noServices": "You have no connected services."
+  },
+  "serviceDetails": {
+    "title": "Service details",
+    "sessionsTab": "Active sessions",
+    "agreementsTab": "Agreements"
+  },
+  "sessionListView": {
+    "endAllSessions": "End all sessions",
+    "noActiveSessions": "You have no active sessions for this service.\nGo to :ICON: to preview past ones.",
+    "noHistoricalSessions": "You have no historical sessions for this service."
+  },
+  "sessionRow": {
+    "opened": "opened:",
+    "device": "device:",
+    "localization": "localization:",
+    "ip": "IP:",
+    "valid": "valid:",
+    "endSessionAction": "End session"
   }
 }
