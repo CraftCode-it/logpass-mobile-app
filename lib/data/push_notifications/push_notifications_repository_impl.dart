@@ -28,7 +28,7 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository, Cl
     final message = await _pushNotificationsManager.handleOpeningMessage();
 
     if (message != null) {
-      // TODO: handle opening message
+      // TODO: to be handled with deep-linking service
     }
   }
 

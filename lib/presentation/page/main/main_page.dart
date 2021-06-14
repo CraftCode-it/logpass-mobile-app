@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
@@ -8,7 +7,6 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/info_snackbar.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
 
 class MainPage extends HookWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -19,40 +17,20 @@ class MainPage extends HookWidget {
     BuildContext context,
     AppThemeColors colors,
     AppTypography typography,
-    Widget snackBarContent,
   ) {
     state.maybeWhen(
       error: (message) {},
       showAction: (action) {
         showInformationSnackBar(
-          content: snackBarContent,
           context: context,
           colors: colors,
           typography: typography,
+          onTapAction: () {
+            // TODO: implement callback related with IncomingAction
+          },
         );
       },
       orElse: () {},
-    );
-  }
-
-  Widget _buildActionSnackBarContent(AppTypography typography, VoidCallback callback) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(
-          tr(LocaleKeys.main_new_action),
-          style: typography.snackBar,
-          textAlign: TextAlign.center,
-        ),
-        GestureDetector(
-          onTap: callback,
-          child: Text(
-            tr(LocaleKeys.main_open_action_label),
-            style: typography.snackBar,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
     );
   }
 
@@ -62,12 +40,10 @@ class MainPage extends HookWidget {
     final color = useAppThemeColors();
     final typography = useAppTypography();
     final index = useState(0);
-    final snackBarContent = _buildActionSnackBarContent(typography, () {
-      // TODO: implement functionality after button tap
-    });
+
     useCubitListener<MainPageCubit, MainPageState>(
       cubit,
-      (cubit, state, context) => _cubitListener(cubit, state, context, color, typography, snackBarContent),
+      (cubit, state, context) => _cubitListener(cubit, state, context, color, typography),
     );
 
     useEffect(() {

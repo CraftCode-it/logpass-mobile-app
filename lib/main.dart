@@ -59,7 +59,7 @@ Future<void> runMain(String env) async {
 void setupFimber() => Fimber.plantTree(getIt());
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // TODO: handle notification from background state
+  // TODO: to be handled with deep-linking service
   print('Handling a background message: ${message.messageId}');
 }
 
