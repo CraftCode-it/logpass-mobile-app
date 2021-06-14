@@ -5,8 +5,8 @@ import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_services_use_case.dart';
-import 'package:logpass_me/presentation/page/session_list/service_list_page_cubit.dart';
-import 'package:logpass_me/presentation/page/session_list/service_list_page_state.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 

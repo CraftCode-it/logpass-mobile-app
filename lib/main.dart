@@ -36,6 +36,10 @@ Future<void> runMain(String env) async {
     setupAppThemeColor(themeBrightness.toBrightness());
     final mainRouter = MainRouter();
 
+    // uncomment when you want to remove keychain data on iOS
+    // final storage = getIt<FlutterSecureStorage>();
+    // await storage.deleteAll();
+
     runApp(
       EasyLocalization(
         path: 'assets/translations',

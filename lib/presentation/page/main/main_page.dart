@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
-import 'package:logpass_me/presentation/page/session_list/service_list_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 class MainPage extends HookWidget {
@@ -19,7 +19,6 @@ class MainPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<MainPageCubit>();
-    final state = useCubitBuilder(cubit);
     useCubitListener<MainPageCubit, MainPageState>(
       cubit,
       (cubit, state, context) => _cubitListener(cubit, state, context),
