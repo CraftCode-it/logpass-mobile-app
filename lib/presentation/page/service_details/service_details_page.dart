@@ -10,6 +10,8 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 
 class ServiceDetailsPage extends HookWidget {
   final Service service;
@@ -32,7 +34,7 @@ class ServiceDetailsPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Service details'),
+        title: const Text(LocaleKeys.serviceDetails_title).tr(),
         actions: [
           IconButton(
             onPressed: () => AutoRouter.of(context).push(HistoricalSessionListPageRoute(service: service)),
@@ -80,9 +82,9 @@ class _Content extends StatelessWidget {
           const SizedBox(height: AppDimens.m),
           TabBar(
             controller: tabController,
-            tabs: const [
-              Tab(text: 'Active sessions'),
-              Tab(text: 'Agreements'),
+            tabs:  [
+              Tab(text: tr(LocaleKeys.serviceDetails_sessionsTab)),
+              Tab(text: tr(LocaleKeys.serviceDetails_agreementsTab)),
             ],
           ),
           Expanded(

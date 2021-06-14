@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_date_formatter.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_with_state.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 
 class SessionRow extends StatelessWidget {
   final SessionWithState session;
@@ -29,14 +31,14 @@ class SessionRow extends StatelessWidget {
             TableRow(
               children: [
                 _LabeledText(
-                  label: 'opened:',
+                  label: tr(LocaleKeys.sessionRow_opened),
                   text: SessionDateFormatter.formatDateTime(session.session.createdAt),
                 ),
                 Row(
                   children: [
                     Expanded(
                       child: _LabeledText(
-                        label: 'device:',
+                        label: tr(LocaleKeys.sessionRow_device),
                         text: session.session.deviceName,
                       ),
                     ),
@@ -55,11 +57,11 @@ class SessionRow extends StatelessWidget {
               TableRow(
                 children: [
                   _LabeledText(
-                    label: 'localization:',
+                    label: tr(LocaleKeys.sessionRow_localization),
                     text: '${session.session.city}, ${session.session.country}',
                   ),
                   _LabeledText(
-                    label: 'IP:',
+                    label: tr(LocaleKeys.sessionRow_ip),
                     text: session.session.ipAddress ?? '-',
                   ),
                 ],
@@ -67,12 +69,12 @@ class SessionRow extends StatelessWidget {
               TableRow(
                 children: [
                   _LabeledText(
-                    label: 'valid:',
+                    label: tr(LocaleKeys.sessionRow_valid),
                     text: SessionDateFormatter.formatDateTime(session.session.expiresAt),
                   ),
                   if (session.session.isActive)
                     RoundedButton(
-                      text: 'End session',
+                      text: tr(LocaleKeys.sessionRow_endSessionAction),
                       onPressed: () {},
                     )
                   else

@@ -8,6 +8,8 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 
 class SessionListViewKeepingState extends StatefulWidget {
   final Service service;
@@ -108,7 +110,7 @@ class _Content extends StatelessWidget {
         ),
         if (state.activeSessions) ...[
           RoundedButton(
-            text: 'End all sessions',
+            text: tr(LocaleKeys.sessionListView_endAllSessions),
             onPressed: () {},
           ),
           const SizedBox(height: AppDimens.xxxl),
@@ -135,10 +137,8 @@ class _Empty extends StatelessWidget {
         padding: const EdgeInsets.only(top: AppDimens.m),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: const [
-            Text('You have no active sessions for this service.'),
-            SizedBox(height: AppDimens.s),
-            Text('Go to :ICON: to preview past ones.'),
+          children: [
+            const Text(LocaleKeys.sessionListView_noActiveSessions).tr(),
           ],
         ),
       ),
