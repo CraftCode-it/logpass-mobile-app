@@ -111,5 +111,14 @@
     "required": "required",
     "optional": "optional",
     "agreedOn": "Agreed on {}"
+  },
+  "agreementDetails": {
+    "title": "Agreement details",
+    "type": "type:",
+    "typeOptional": "optional",
+    "typeRequired": "required",
+    "agreedOn": "agreed on:",
+    "revokeAction": "Revoke this agreement",
+    "confirmAction": "Confirm this agreement"
   }
 }

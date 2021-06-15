@@ -53,4 +53,6 @@ class AppDimens {
   static const dividerHeight = 1.0;
 
   static const serviceImageIconSize = 28.0;
+
+  static const aspectRatioA4 = 0.707;
 }

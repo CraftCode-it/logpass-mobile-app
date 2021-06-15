@@ -42,7 +42,7 @@ class AppColors {
   // Light
   static const primaryLight = Color(0xFF2233AA);
   static const secondaryLight = Color(0xFFCFD0DD);
-  static const backgroundLight = Color(0xFFE5E5E5);
+  static const backgroundLight = Color(0xFFFAF9FC);
   static const primaryTextLight = Color(0xFF676983);
   static const buttonEnabledLight = Color(0xFFAAABC4);
   static const buttonEnabledTextLight = Color(0xFFFAF9FC);
@@ -79,6 +79,8 @@ abstract class AppThemeColors {
   Color get dividerMedium;
 
   Color get dividerLight;
+
+  Color get background;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -108,6 +110,9 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get dividerLight => AppColors.dividerLightLight;
+
+  @override
+  Color get background => AppColors.backgroundLight;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -137,4 +142,7 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get dividerLight => AppColors.dividerLightDark;
+
+  @override
+  Color get background => AppColors.backgroundDark;
 }
