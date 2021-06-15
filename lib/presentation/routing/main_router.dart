@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
+import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
@@ -33,6 +34,7 @@ import 'package:logpass_me/presentation/page/start/start_page.dart';
     AutoRoute(page: ServiceDetailsPage),
     AutoRoute(page: HistoricalSessionListPage),
     AutoRoute(page: AuthorizePage),
+    AutoRoute(page: AgreementDetailsPage),
   ],
 )
 class $MainRouter {}
