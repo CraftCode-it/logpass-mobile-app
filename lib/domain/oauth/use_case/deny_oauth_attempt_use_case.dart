@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/domain/oauth/denied_confirmation.dart';
+import 'package:logpass_me/domain/oauth/data/denied_confirmation.dart';
 import 'package:logpass_me/domain/oauth/oauth_repository.dart';
 
 @injectable

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logpass_me/domain/oauth/client.dart';
+import 'package:logpass_me/domain/oauth/data/client.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -46,7 +46,7 @@ class AuthorizePage extends HookWidget {
         idle: (canConfirm, client) => _PageContent(
           client: client,
           canConfirm: canConfirm,
-          onConfirmCallback: () {},
+          onConfirmCallback: cubit.approveAuthorizeAttempt,
           onDenyCallback: cubit.denyAuthorizeAttempt,
         ),
         loading: () => const Loader(),
@@ -112,15 +112,14 @@ class _PageContent extends HookWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.xxl),
+        padding: const EdgeInsets.all(AppDimens.xxl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: AppDimens.xxl),
             SizedBox(
               width: double.infinity,
               child: Text(
-                'Authorize operation',
+                LocaleKeys.authorize_title,
                 textAlign: TextAlign.center,
                 style: typography.primary.copyWith(fontSize: AppDimens.ml),
               ).tr(),
@@ -131,12 +130,12 @@ class _PageContent extends HookWidget {
             Expanded(child: _AuthorizationForm()),
             const SizedBox(height: AppDimens.xl),
             RoundedButton(
-              text: 'Confirm',
-              onPressed: () {},
+              text: LocaleKeys.authorize_confirm_button.tr(),
+              onPressed: onConfirmCallback,
             ),
             const SizedBox(height: AppDimens.l),
             RoundedButton(
-              text: 'Reject',
+              text: LocaleKeys.authorize_reject_button.tr(),
               onPressed: onDenyCallback,
             ),
           ],
@@ -149,8 +148,11 @@ class _PageContent extends HookWidget {
 class _AuthorizationForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Placeholder(
-      fallbackWidth: double.infinity,
+    return const SingleChildScrollView(
+      child: Placeholder(
+        fallbackWidth: double.infinity,
+        fallbackHeight: 720,
+      ),
     );
   }
 }

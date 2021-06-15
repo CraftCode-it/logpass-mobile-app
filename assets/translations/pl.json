@@ -40,7 +40,9 @@
     "action_type_authorization": "Autoryzacja"
   },
   "authorize": {
-    "title": "Autoryzuj operację"
+    "title": "Autoryzuj operację",
+    "confirm_button": "Potwierdź",
+    "reject_button": "Odrzuć"
   },
   "main": {
     "new_action": "Masz nową akcję",

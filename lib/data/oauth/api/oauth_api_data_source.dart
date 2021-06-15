@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/log_pass_dio.dart';
+import 'package:logpass_me/data/oauth/dtos/approve_attempt_dto.dart';
+import 'package:logpass_me/data/oauth/dtos/approved_confirmation_dto.dart';
 import 'package:logpass_me/data/oauth/dtos/denied_confirmation_dto.dart';
 import 'package:logpass_me/data/oauth/dtos/oauth_application_dto.dart';
 import 'package:logpass_me/data/oauth/dtos/user_assignment_dto.dart';
@@ -21,6 +23,12 @@ abstract class OAuthApiDataSource {
   Future<void> assignToOAuthAttempt(
     @Path('authorizationAttemptId') String authorizationAttemptId,
     @Body() UserAssignmentDTO body,
+  );
+
+  @POST('/auth/o/authorization-attempts/{authorizationAttemptId}/approvals/')
+  Future<ApprovedConfirmationDTO> approveOAuthAttempt(
+    @Path('authorizationAttemptId') String authorizationAttemptId,
+    @Body() ApproveAttemptDTO body,
   );
 
   @DELETE('/auth/o/authorization-attempts/{authorizationAttemptId}/approvals/')

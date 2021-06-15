@@ -3,7 +3,7 @@ import 'package:logpass_me/data/common/data_mapper.dart';
 import 'package:logpass_me/data/model/enum/scope_dto_mapper.dart';
 import 'package:logpass_me/data/oauth/dtos/oauth_application_dto.dart';
 import 'package:logpass_me/data/oauth/mappers/client_dto_to_client_mapper.dart';
-import 'package:logpass_me/domain/oauth/oauth_application.dart';
+import 'package:logpass_me/domain/oauth/data/oauth_application.dart';
 
 @injectable
 class OAuthApplicationDTOToOAuthApplicationMapper implements DataMapper<OAuthApplicationDTO, OAuthApplication> {

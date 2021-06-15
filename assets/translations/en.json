@@ -44,7 +44,9 @@
     "action_type_authorization": "Authorization"
   },
   "authorize": {
-    "title": "Authorize operation"
+    "title": "Authorize operation",
+    "confirm_button": "Confirm",
+    "reject_button": "Reject"
   },
   "otpCode": {
     "title": "Verify your number",

@@ -3,7 +3,9 @@ import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/domain/oauth/client.dart';
+import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
+import 'package:logpass_me/domain/oauth/data/client.dart';
+import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
@@ -17,6 +19,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final GetOAuthApplicationDetailsUseCase _getOAuthApplicationDetailsUseCase;
   final AssignToOAuthAttemptUseCase _assignToOAuthAttemptUseCase;
   final DenyOAuthAttemptUseCase _denyOAuthAttemptUseCase;
+  final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
 
   late String _authorizationAttemptId;
   late bool _shouldRedirect;
@@ -28,6 +31,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getOAuthApplicationDetailsUseCase,
     this._assignToOAuthAttemptUseCase,
     this._denyOAuthAttemptUseCase,
+    this._approveOAuthAttemptUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -53,13 +57,40 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
+  Future<void> approveAuthorizeAttempt() async {
+    emit(const AuthorizePageState.loading());
+
+    // TODO: fix after implmentation of required scopes
+    final args = ApproveAttemptArgs(
+      email: 'john.smith@example.com',
+      emailVerified: false,
+      name: 'John Smith',
+    );
+    try {
+      final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId, args);
+      final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
+
+      emit(AuthorizePageState.denied(redirectUri));
+    } on GeneralConnectionError catch (e) {
+      emit(AuthorizePageState.connectionError(e));
+    } catch (e, s) {
+      Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
+    }
+  }
+
   Future<void> denyAuthorizeAttempt() async {
     emit(const AuthorizePageState.loading());
 
-    final confirmation = await _denyOAuthAttemptUseCase(_authorizationAttemptId);
-    final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
+    try {
+      final confirmation = await _denyOAuthAttemptUseCase(_authorizationAttemptId);
+      final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
-    emit(AuthorizePageState.denied(redirectUri));
+      emit(AuthorizePageState.denied(redirectUri));
+    } on GeneralConnectionError catch (e) {
+      emit(AuthorizePageState.connectionError(e));
+    } catch (e, s) {
+      Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
+    }
   }
 
   void _emitIdleState(Client client) {

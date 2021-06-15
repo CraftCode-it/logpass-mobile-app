@@ -1,5 +1,5 @@
 import 'package:logpass_me/domain/model/scope.dart';
-import 'package:logpass_me/domain/oauth/client.dart';
+import 'package:logpass_me/domain/oauth/data/client.dart';
 
 class OAuthApplication {
   final String id;

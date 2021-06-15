@@ -6,7 +6,7 @@ import 'package:logpass_me/data/model/enum/scope_dto_mapper.dart';
 import 'package:logpass_me/data/oauth/dtos/client_dto.dart';
 import 'package:logpass_me/data/service/api/data/service_agreement_dto.dart';
 import 'package:logpass_me/data/service/api/data/service_supported_scopes_dto.dart';
-import 'package:logpass_me/domain/oauth/client.dart';
+import 'package:logpass_me/domain/oauth/data/client.dart';
 
 @injectable
 class ClientDTOToClientMapper extends DataMapper<ClientDTO, Client> {

@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/domain/oauth/oauth_application.dart';
+import 'package:logpass_me/domain/oauth/data/oauth_application.dart';
 import 'package:logpass_me/domain/oauth/oauth_repository.dart';
 
 @injectable
