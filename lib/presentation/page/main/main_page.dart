@@ -3,15 +3,33 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/info_snackbar.dart';
 
 class MainPage extends HookWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  void _cubitListener(MainPageCubit cubit, MainPageState state, BuildContext context) {
+  void _cubitListener(
+    MainPageCubit cubit,
+    MainPageState state,
+    BuildContext context,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) {
     state.maybeWhen(
       error: (message) {},
-      showAction: () {},
+      showAction: (action) {
+        showInformationSnackBar(
+          context: context,
+          colors: colors,
+          typography: typography,
+          onTapAction: () {
+            // TODO: implement callback related with IncomingAction
+          },
+        );
+      },
       orElse: () {},
     );
   }
@@ -19,17 +37,19 @@ class MainPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<MainPageCubit>();
+    final color = useAppThemeColors();
+    final typography = useAppTypography();
+    final index = useState(0);
+
     useCubitListener<MainPageCubit, MainPageState>(
       cubit,
-      (cubit, state, context) => _cubitListener(cubit, state, context),
+      (cubit, state, context) => _cubitListener(cubit, state, context, color, typography),
     );
 
     useEffect(() {
       cubit.init();
       return;
     }, [cubit]);
-
-    final index = useState(0);
 
     return Scaffold(
       body: Column(

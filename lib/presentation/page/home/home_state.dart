@@ -7,7 +7,7 @@ class HomeState with _$HomeState {
 
   // TODO: refactor in accordance to backend model
   @Implements(BuildState)
-  const factory HomeState.idle(List<String> pendingActions) = Idle;
+  const factory HomeState.idle(List<IncomingAction> pendingActions) = Idle;
 
-  const factory HomeState.error() = Error;
+  const factory HomeState.error(String message) = Error;
 }

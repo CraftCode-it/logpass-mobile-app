@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
+import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
@@ -15,19 +16,28 @@ import 'main_cubit_test.mocks.dart';
     SetupWebSocketChannelUseCase,
     CloseWebSocketUseCase,
     SubscribeToIncomingActionsUseCase,
+    InitNotificationsServicesUseCase,
   ],
 )
 void main() {
   late SetupWebSocketChannelUseCase setupWebSocketChannelUseCase;
   late CloseWebSocketUseCase closeWebSocketUseCase;
   late SubscribeToIncomingActionsUseCase subscribeToIncomingActionsUseCase;
+  late InitNotificationsServicesUseCase initNotificationsServicesUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
     setupWebSocketChannelUseCase = MockSetupWebSocketChannelUseCase();
     closeWebSocketUseCase = MockCloseWebSocketUseCase();
     subscribeToIncomingActionsUseCase = MockSubscribeToIncomingActionsUseCase();
-    cubit = MainPageCubit(setupWebSocketChannelUseCase, subscribeToIncomingActionsUseCase, closeWebSocketUseCase);
+    initNotificationsServicesUseCase = MockInitNotificationsServicesUseCase();
+
+    cubit = MainPageCubit(
+      setupWebSocketChannelUseCase,
+      subscribeToIncomingActionsUseCase,
+      closeWebSocketUseCase,
+      initNotificationsServicesUseCase,
+    );
   });
 
   group('initialize', () {
@@ -44,7 +54,7 @@ void main() {
       },
       act: (cubit) => cubit.init(),
       expect: () => [
-        const MainPageState.showAction(),
+        MainPageState.showAction(incomingAction),
       ],
     );
 
