@@ -90,13 +90,13 @@ class _NextButton extends StatelessWidget {
     );
   }
 
-  RoundedButton _buildButton() {
+  CustomRectangularButton _buildButton() {
     final isActive = state.maybeMap(
       idle: (state) => state.valid,
       orElse: () => false,
     );
 
-    return RoundedButton(
+    return CustomRectangularButton.filled(
       text: tr(LocaleKeys.common_next),
       onPressed: isActive ? onPressed : null,
     );

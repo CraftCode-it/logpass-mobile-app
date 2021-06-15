@@ -5,11 +5,17 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_cubit.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/input_field.dart';
+
+const _width = 110.0;
 
 class CountryCodePicker extends HookWidget {
   final Function(CountryCode countryCode) onCountryCodeSelected;
@@ -23,6 +29,8 @@ class CountryCodePicker extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<CountryCodePickerCubit>();
     final state = useCubitBuilder(cubit);
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     useCubitListener(cubit, (CountryCodePickerCubit cubit, CountryCodePickerState state, context) {
       state.maybeWhen(
@@ -35,33 +43,54 @@ class CountryCodePicker extends HookWidget {
       cubit.initialize(_getSystemLocale());
     }, [cubit]);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Prefix'),
-        ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: AppDimens.inputHeight,
-            maxHeight: AppDimens.inputHeight,
-            minWidth: AppDimens.minCodeInputWidth,
-          ),
-          child: GestureDetector(
-            onTap: _onPressed(state, context, cubit),
-            child: Container(
-              height: AppDimens.inputHeight,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: state.maybeMap(
-                  loading: (state) => const Center(child: CircularProgressIndicator()),
-                  selected: (state) => Text('+${state.countryCode.code}'),
-                  orElse: () {},
+    return InkWell(
+      onTap: _onPressed(state, context, cubit),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              SizedBox(
+                width: _width,
+                child: TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    disabledBorder: inputFieldBorder(colors.primary40),
+                    hintStyle: typography.h9.copyWith(color: colors.primary40),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    labelText: 'Prefix',
+                  ),
                 ),
               ),
-            ),
+              Positioned.fill(
+                left: AppDimens.s,
+                right: AppDimens.s,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: state.maybeMap(
+                          loading: (state) => const Center(child: CircularProgressIndicator()),
+                          selected: (state) => _Selected(countryCode: state.countryCode),
+                          orElse: () {},
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_down_sharp,
+                      color: colors.primary100,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -92,5 +121,33 @@ String _getSystemLocale() {
   } catch (e, s) {
     Fimber.e('Getting system locale failed', ex: e, stacktrace: s);
     return 'PL';
+  }
+}
+
+class _Selected extends HookWidget {
+  final CountryCode countryCode;
+
+  const _Selected({required this.countryCode, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.network(
+          countryFlagUrl(countryCode, true),
+          width: 24,
+          height: 24,
+        ),
+        const SizedBox(width: AppDimens.xxs),
+        Text(
+          '+${countryCode.code}',
+          style: typography.body1,
+        ),
+      ],
+    );
   }
 }

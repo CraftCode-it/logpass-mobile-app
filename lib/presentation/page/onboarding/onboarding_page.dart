@@ -120,11 +120,11 @@ class _NavigationButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
       child: page != OnboardingPage._lastPageIndex
-          ? RoundedButton(
+          ? CustomRectangularButton.filled(
               text: tr(LocaleKeys.common_next),
               onPressed: nextPressed,
             )
-          : RoundedButton(
+          : CustomRectangularButton.filled(
               text: tr(LocaleKeys.common_start),
               onPressed: startPressed,
             ),

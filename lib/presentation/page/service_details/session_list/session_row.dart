@@ -74,7 +74,7 @@ class SessionRow extends StatelessWidget {
                     text: SessionDateFormatter.formatDateTime(session.session.expiresAt),
                   ),
                   if (session.session.isActive)
-                    RoundedButton(
+                    CustomRectangularButton.outlined(
                       text: tr(LocaleKeys.sessionRow_endSessionAction),
                       onPressed: () {},
                     )

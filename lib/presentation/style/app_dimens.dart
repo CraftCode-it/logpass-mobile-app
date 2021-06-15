@@ -44,8 +44,7 @@ class AppDimens {
   ///80.0
   static const xxxc = 80.0;
 
-  static const buttonBorder = 20.0;
-  static const buttonHeight = 40.0;
+  static const buttonHeight = 56.0;
 
   static const inputHeight = 40.0;
   static const minCodeInputWidth = 70.0;

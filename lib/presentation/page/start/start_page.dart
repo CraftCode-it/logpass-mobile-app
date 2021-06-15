@@ -11,10 +11,11 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class StartPage extends HookWidget {
@@ -40,24 +41,25 @@ class StartPage extends HookWidget {
     );
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Register',
+          style: typography.h4,
+        ),
+        actions: const [
+          _NeedHelpButton(),
+        ],
+      ),
       body: SafeArea(
         child: KeyboardVisibilityBuilder(
           builder: (context, isKeyboardVisible) => GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.xxl),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const _NeedHelpButton(),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        LocaleKeys.common_appName,
-                        style: typography.primary,
-                      ).tr(),
-                    ),
-                  ),
+                  const SizedBox(height: AppDimens.l),
                   _PhoneNumberInput(
                     controller: phoneNumberController,
                     cubit: cubit,
@@ -70,13 +72,16 @@ class StartPage extends HookWidget {
                     processing: (state) => const Center(
                       child: CircularProgressIndicator(),
                     ),
-                    orElse: () => RoundedButton(
+                    orElse: () => CustomRectangularButton.filled(
                       text: tr(LocaleKeys.common_next),
                       onPressed: _getNextButtonAction(state, cubit),
                     ),
                   ),
                   const SizedBox(height: AppDimens.l),
-                  if (!isKeyboardVisible) const _RegisterNewDevice(),
+                  if (!isKeyboardVisible) ...[
+                    const Spacer(),
+                    const _RegisterNewDevice(),
+                  ],
                 ],
               ),
             ),
@@ -134,7 +139,7 @@ class _NeedHelpButton extends HookWidget {
         onPressed: () {},
         child: Text(
           LocaleKeys.start_helpAction,
-          style: typography.primary,
+          style: typography.info1.copyWith(decoration: TextDecoration.underline),
         ).tr(),
       ),
     );
@@ -167,16 +172,15 @@ class _PhoneNumberInput extends StatelessWidget {
     return Row(
       children: [
         CountryCodePicker(onCountryCodeSelected: cubit.updateCountryCode),
-        const SizedBox(width: AppDimens.m),
+        const SizedBox(width: AppDimens.s),
         Expanded(
-          child: TextField(
+          child: InputField(
             controller: controller,
-            keyboardType: TextInputType.phone,
+            inputType: TextInputType.phone,
             onChanged: (value) => cubit.updatePhoneNumber(value),
-            decoration: InputDecoration(
-              labelText: tr(LocaleKeys.common_phoneNumber),
-              errorText: error,
-            ),
+            label: tr(LocaleKeys.common_phoneNumber),
+            error: error,
+            hint: '000-000-000',
           ),
         ),
       ],
@@ -203,19 +207,22 @@ class _TermsAndConditionsCheck extends HookWidget {
           onValueChanged: cubit.updateTerms,
         ),
         Flexible(
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: tr(LocaleKeys.start_termsAcceptInfo),
-                  style: typography.primary,
-                ),
-                TextSpan(
-                  text: tr(LocaleKeys.start_termsAcceptHighlight),
-                  style: typography.primary.copyWith(fontWeight: FontWeight.bold),
-                  recognizer: TapGestureRecognizer()..onTap = () {}, //TODO open help page
-                ),
-              ],
+          child: Padding(
+            padding: const EdgeInsets.only(top: AppDimens.xs),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: tr(LocaleKeys.start_termsAcceptInfo),
+                    style: typography.body1,
+                  ),
+                  TextSpan(
+                    text: tr(LocaleKeys.start_termsAcceptHighlight),
+                    style: typography.body3.copyWith(decoration: TextDecoration.underline),
+                    recognizer: TapGestureRecognizer()..onTap = () {}, //TODO open help page
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -224,23 +231,27 @@ class _TermsAndConditionsCheck extends HookWidget {
   }
 }
 
-class _RegisterNewDevice extends StatelessWidget {
+class _RegisterNewDevice extends HookWidget {
   const _RegisterNewDevice({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
+        Text(
           LocaleKeys.start_addNewDeviceInfo,
           textAlign: TextAlign.center,
+          style: typography.body1,
         ).tr(),
         const SizedBox(height: AppDimens.l),
-        RoundedButton(
+        CustomRectangularButton.outlined(
           text: tr(LocaleKeys.start_addNewDeviceAction),
           onPressed: () {}, // TODO open add new device page
         ),
+        const SizedBox(height: AppDimens.m),
       ],
     );
   }

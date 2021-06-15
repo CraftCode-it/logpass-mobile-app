@@ -44,7 +44,7 @@ class NewPinPage extends HookWidget {
               const Spacer(flex: 2),
               PinField(onPinChanged: cubit.updatePin),
               const Spacer(flex: 1),
-              RoundedButton(
+              CustomRectangularButton.filled(
                 text: tr(LocaleKeys.common_next),
                 onPressed: state.valid ? () => _goToConfirmationPage(context, state.pin) : null,
               ),

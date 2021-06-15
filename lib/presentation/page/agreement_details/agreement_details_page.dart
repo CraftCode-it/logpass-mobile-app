@@ -81,25 +81,40 @@ class _Content extends HookWidget {
             ],
           ),
           child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      agreement.isRequired ? 'required' : 'optional',
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      LabeledText(
+                        label: tr(LocaleKeys.agreementDetails_type),
+                        text: agreement.isRequired
+                            ? tr(LocaleKeys.agreementDetails_typeRequired)
+                            : tr(LocaleKeys.agreementDetails_typeOptional),
+                      ),
+                      LabeledText(
+                        label: tr(LocaleKeys.agreementDetails_agreedOn),
+                        text: agreement.isAccepted ? SessionDateFormatter.formatDateTime(agreement.updatedAt) : '-',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimens.m),
+                  if (agreement.isAccepted)
+                    CustomRectangularButton.filled(
+                      text: tr(LocaleKeys.agreementDetails_revokeAction),
+                      onPressed: () {},
+                    )
+                  else
+                    CustomRectangularButton.outlined(
+                      text: tr(LocaleKeys.agreementDetails_confirmAction),
+                      onPressed: () {},
                     ),
-                    Text(
-                      agreement.isAccepted ? SessionDateFormatter.formatDateTime(agreement.updatedAt) : '-',
-                    ),
-                  ],
-                ),
-                RoundedButton(
-                  text: 'Revoke this agreement',
-                  onPressed: () {},
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

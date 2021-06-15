@@ -25,7 +25,7 @@ class AgreementListView extends StatelessWidget {
           ),
         ),
         if (service.agreements.isNotEmpty) ...[
-          RoundedButton(
+          CustomRectangularButton.outlined(
             text: tr(LocaleKeys.agreementList_revokeAllAction),
             onPressed: () {},
           ),

@@ -112,7 +112,7 @@ class _Content extends HookWidget {
             style: typography.primary,
           ).tr(),
           const SizedBox(height: AppDimens.m),
-          RoundedButton(
+          CustomRectangularButton.outlined(
             text: tr(LocaleKeys.common_logout),
             onPressed: () {},
           ),

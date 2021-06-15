@@ -109,7 +109,7 @@ class _Content extends StatelessWidget {
           ),
         ),
         if (state.activeSessions) ...[
-          RoundedButton(
+          CustomRectangularButton.outlined(
             text: tr(LocaleKeys.sessionListView_endAllSessions),
             onPressed: () {},
           ),
