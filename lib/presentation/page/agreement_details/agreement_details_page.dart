@@ -1,0 +1,109 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page_cubit.dart';
+import 'package:logpass_me/presentation/page/service_details/session_list/session_date_formatter.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
+import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/pdf/pdf_list_view.dart';
+import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:native_pdf_renderer/native_pdf_renderer.dart';
+
+class AgreementDetailsPage extends HookWidget {
+  final ServiceAgreement serviceAgreement;
+
+  const AgreementDetailsPage({required this.serviceAgreement, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = useCubit<AgreementDetailsPageCubit>();
+    final state = useCubitBuilder(cubit);
+
+    useEffect(() {
+      cubit.initialize(serviceAgreement);
+    }, [cubit]);
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Agreement details'),
+      ),
+      body: state.maybeMap(
+        initializing: (_) => const Loader(),
+        loadingPdf: (state) => _Content(document: null, agreement: state.agreement),
+        idle: (state) => _Content(document: state.pdfDocument, agreement: state.agreement),
+        processing: (state) => _Content(
+          document: state.pdfDocument,
+          agreement: state.agreement,
+          processing: true,
+        ),
+        orElse: () => const SizedBox(),
+      ),
+    );
+  }
+}
+
+class _Content extends HookWidget {
+  final PdfDocument? document;
+  final ServiceAgreement agreement;
+  final bool processing;
+
+  const _Content({
+    required this.document,
+    required this.agreement,
+    this.processing = false,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+    final document = this.document;
+
+    return Column(
+      children: [
+        Expanded(
+          child: document == null ? const Loader() : PdfListView(document: document),
+        ),
+        Container(
+          padding: const EdgeInsets.all(AppDimens.m),
+          decoration: BoxDecoration(
+            color: colors.background,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, -1),
+                blurRadius: 5,
+                spreadRadius: 1,
+              )
+            ],
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      agreement.isRequired ? 'required' : 'optional',
+                    ),
+                    Text(
+                      agreement.isAccepted ? SessionDateFormatter.formatDateTime(agreement.updatedAt) : '-',
+                    ),
+                  ],
+                ),
+                RoundedButton(
+                  text: 'Revoke this agreement',
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
