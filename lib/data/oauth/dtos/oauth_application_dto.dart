@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logpass_me/data/oauth/dtos/client_dto.dart';
-import 'package:logpass_me/data/service/api/data/service_dto.dart';
 
 part 'oauth_application_dto.g.dart';
 

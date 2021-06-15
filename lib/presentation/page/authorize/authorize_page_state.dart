@@ -6,9 +6,11 @@ class AuthorizePageState with _$AuthorizePageState {
   const factory AuthorizePageState.loading() = _AuthorizePageStateLoading;
 
   @Implements(BuildState)
-  const factory AuthorizePageState.idle(bool canProceed) = _AuthorizePageStateIdle;
+  const factory AuthorizePageState.idle(bool canConfirm, Client client) = _AuthorizePageStateIdle;
 
-  const factory AuthorizePageState.success() = _AuthorizePageStateSuccess;
+  const factory AuthorizePageState.confirmed(String? redirectUri) = _AuthorizePageStateConfirmed;
+
+  const factory AuthorizePageState.denied(String? redirectUri) = _AuthorizePageStateDenied;
 
   const factory AuthorizePageState.connectionError(GeneralConnectionError error) = _AuthorizePageStateConnectionError;
 }
