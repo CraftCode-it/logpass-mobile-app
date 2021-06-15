@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
+import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
@@ -14,11 +15,16 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   final PushNotificationsManager _pushNotificationsManager;
   final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
   final Set<IncomingAction> _actionsInCurrentSession = {};
+  final IncomingActionDTOToIncomingActionMapper _incomingActionMapper;
 
   StreamSubscription? _messagesStreamSubscription;
   StreamSubscription? _webSocketStreamSubscription;
 
-  IncomingActionsRepositoryImpl(this._webSocketManager, this._pushNotificationsManager);
+  IncomingActionsRepositoryImpl(
+    this._webSocketManager,
+    this._pushNotificationsManager,
+    this._incomingActionMapper,
+  );
 
   @override
   Stream<IncomingAction> listenForIncomingActions() {
@@ -29,7 +35,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
 
   IncomingAction _mapIncomingActionDto(Map<String, dynamic> jsonMap) {
     final actionDto = IncomingActionDTO.fromJson(jsonMap);
-    return IncomingAction(actionDto.link);
+    return _incomingActionMapper(actionDto);
   }
 
   void _dispatchAction(IncomingAction action) {

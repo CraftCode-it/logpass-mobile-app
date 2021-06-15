@@ -36,7 +36,11 @@
     "refreshCodeLabel": "odśwież",
     "pendingActionsLabel": "Akcje oczekujące",
     "pendingActionsEmpty": "Brak oczekujących akcji",
-    "pastActions": "Zobacz pozostałe"
+    "pastActions": "Zobacz pozostałe",
+    "action_type_authorization": "Autoryzacja"
+  },
+  "authorize": {
+    "title": "Autoryzuj operację"
   },
   "main": {
     "new_action": "Masz nową akcję",
