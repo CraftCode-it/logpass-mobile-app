@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
-import 'package:logpass_me/domain/common/clearable.dart';
+
 import 'package:logpass_me/domain/push_notifications/push_notifications_repository.dart';
 
 @Singleton(as: PushNotificationsRepository)
-class PushNotificationsRepositoryImpl implements PushNotificationsRepository, Clearable {
+class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
   final PushNotificationsManager _pushNotificationsManager;
 
   StreamSubscription? _refreshTokenSubscription;
@@ -37,7 +37,7 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository, Cl
   }
 
   @override
-  void clear() {
-    _refreshTokenSubscription?.cancel();
+  Future<void> clear() async {
+    await _refreshTokenSubscription?.cancel();
   }
 }

@@ -1,3 +1,3 @@
 abstract class Clearable {
-  void clear();
+  Future<void> clear();
 }
