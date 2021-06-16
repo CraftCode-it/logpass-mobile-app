@@ -5,7 +5,7 @@ part 'logpass_api_error_details.g.dart';
 
 @Freezed(unionKey: 'code', fallbackUnion: 'undefined')
 class LogpassApiErrorDetails with _$LogpassApiErrorDetails {
-  @FreezedUnionValue('code')
+  @FreezedUnionValue('verification_failed')
   factory LogpassApiErrorDetails.code(String message, String? pointer) = LogpassApiErrorDetailsCode;
 
   @FreezedUnionValue('undefined')

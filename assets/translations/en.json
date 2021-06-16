@@ -11,7 +11,8 @@
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
-    "timeout": "Looks like the server is taking to long to respond, please try again in sometime"
+    "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
+    "somethingWentWrong": "Something went wrong. Please try again."
   },
   "onboarding": {
     "stepOneTitle": "Welcome!",
@@ -51,8 +52,10 @@
   "otpCode": {
     "title": "Verify your number",
     "info": "Please insert the code that we just send\nto provided phone number",
+    "codeLabel": "Code",
     "resendInfo": "Did not get anything?",
-    "resendAction": "Resend code"
+    "resendAction": "Resend code",
+    "codeResendSuccess": "Code resend"
   },
   "loginSuccess": {
     "info": "You successfully accessed the account."

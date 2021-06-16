@@ -171,6 +171,7 @@ class _PhoneNumberInput extends StatelessWidget {
     );
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CountryCodePicker(onCountryCodeSelected: cubit.updateCountryCode),
         const SizedBox(width: AppDimens.s),

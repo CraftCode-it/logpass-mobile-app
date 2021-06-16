@@ -7,11 +7,15 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/info_snackbar.dart';
+import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class OTPCodePage extends HookWidget {
   final SignUpVerification verification;
@@ -25,36 +29,56 @@ class OTPCodePage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<OTPCodePageCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+    final otpCodeController = useTextEditingController();
 
-    useCubitListener(cubit, _cubitListener);
+    useCubitListener<OTPCodePageCubit, OTPCodePageState>(
+      cubit,
+      (cubit, state, context) => _cubitListener(
+        cubit,
+        state,
+        context,
+        otpCodeController,
+        colors,
+        typography,
+      ),
+    );
 
     useEffect(() {
       cubit.initialize(verification);
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
-        title: const Text(LocaleKeys.otpCode_title).tr(),
+        centerTitle: true,
+        title: Text(
+          LocaleKeys.otpCode_title,
+          style: typography.h8,
+        ).tr(),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.xl),
+        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: AppDimens.xl),
-            const Text(
+            Text(
               LocaleKeys.otpCode_info,
               textAlign: TextAlign.center,
+              style: typography.body1,
             ).tr(),
             const SizedBox(height: AppDimens.xl),
             _CodeField(cubit: cubit, state: state),
             const SizedBox(height: AppDimens.xxl),
             _VerifyButton(state: state, cubit: cubit),
             const SizedBox(height: AppDimens.xl),
-            const Text(
+            Text(
               LocaleKeys.otpCode_resendInfo,
               textAlign: TextAlign.center,
+              style: typography.body1,
             ).tr(),
             const SizedBox(height: AppDimens.s),
             _ResendButton(cubit: cubit, state: state),
@@ -64,15 +88,34 @@ class OTPCodePage extends HookWidget {
     );
   }
 
-  void _cubitListener(OTPCodePageCubit cubit, OTPCodePageState state, BuildContext context) {
+  void _cubitListener(
+    OTPCodePageCubit cubit,
+    OTPCodePageState state,
+    BuildContext context,
+    TextEditingController otpController,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) {
     state.maybeMap(
-      error: (state) {}, // TODO error handling
+      connectionError: (state) => showConnectionErrorSnackBar(
+        error: state.error,
+        context: context,
+        colors: colors,
+        typography: typography,
+      ),
       success: (state) {
         AutoRouter.of(context).pushAndPopUntil(
           const LoginSuccessPageRoute(),
           predicate: (route) => false,
         );
       },
+      otpAutofill: (state) => otpController.text = state.code,
+      resendSuccess: (_) => showInformationSnackBar(
+        context: context,
+        colors: colors,
+        typography: typography,
+        message: tr(LocaleKeys.otpCode_codeResendSuccess),
+      ),
       orElse: () {},
     );
   }
@@ -91,17 +134,20 @@ class _CodeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return state.maybeMap(
-      idle: (state) => _buildCodeField(state.code, true, error: state.codeError),
-      verifying: (state) => _buildCodeField(state.code, false),
-      resending: (state) => _buildCodeField(state.code, false),
-      orElse: () => _buildCodeField('', false),
+      idle: (state) => _buildCodeField(true, error: state.codeError),
+      verifying: (state) => _buildCodeField(false),
+      resending: (state) => _buildCodeField(false),
+      orElse: () => _buildCodeField(false),
     );
   }
 
-  Widget _buildCodeField(String code, bool enabled, {String? error}) => PinFieldAutoFill(
-        codeLength: OTPCodePageCubit.otpCodeLength,
-        currentCode: code,
-        onCodeChanged: enabled ? cubit.updateCode : null,
+  Widget _buildCodeField(bool enabled, {String? error}) => InputField(
+        label: tr(LocaleKeys.otpCode_codeLabel),
+        hint: '000000',
+        onChanged: cubit.updateCode,
+        enabled: enabled,
+        inputType: TextInputType.phone,
+        error: error,
       );
 }
 

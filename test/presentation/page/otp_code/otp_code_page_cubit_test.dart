@@ -131,7 +131,7 @@ void main() {
       expect: () => [
         OTPCodePageState.idle('123', false, basicResendTimestamp),
         OTPCodePageState.resending('123'),
-        OTPCodePageState.error(),
+        OTPCodePageState.connectionError(),
         OTPCodePageState.idle('123', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
       ],
       verify: (cubit) {},
