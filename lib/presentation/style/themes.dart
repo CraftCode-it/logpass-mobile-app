@@ -4,6 +4,11 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 final lightTheme = ThemeData(
   brightness: Brightness.light,
   backgroundColor: AppColors.backgroundLight,
+  scaffoldBackgroundColor: AppColors.backgroundLight,
+  appBarTheme: const AppBarTheme(
+    color: AppColors.backgroundLight,
+    elevation: 0,
+  ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: AppColors.backgroundDark,
     selectedIconTheme: const IconThemeData(color: AppColors.backgroundLight),
@@ -20,6 +25,10 @@ final lightTheme = ThemeData(
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   backgroundColor: AppColors.backgroundDark,
+  appBarTheme: const AppBarTheme(
+    color: AppColors.backgroundDark,
+    elevation: 0,
+  ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: AppColors.backgroundLight,
     type: BottomNavigationBarType.fixed,

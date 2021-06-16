@@ -62,7 +62,7 @@ class _CountryCodeRow extends HookWidget {
       onTap: onPressed,
       child: Row(
         children: [
-          Image.network('https://www.countryflags.io/${countryCode.country.toLowerCase()}/flat/32.png'),
+          Image.network(countryFlagUrl(countryCode, true)),
           const SizedBox(width: AppDimens.m),
           Expanded(
             child: Text(
@@ -88,4 +88,9 @@ class _CountryCodeRow extends HookWidget {
       ),
     );
   }
+}
+
+String countryFlagUrl(CountryCode countryCode, bool big) {
+  final size = big ? '32' : '16';
+  return 'https://www.countryflags.io/${countryCode.country.toLowerCase()}/flat/$size.png';
 }

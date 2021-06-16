@@ -1,5 +1,4 @@
 import 'package:logpass_me/domain/model/device_type.dart';
-import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_supported_scopes.dart';
 
 class ServiceSession {

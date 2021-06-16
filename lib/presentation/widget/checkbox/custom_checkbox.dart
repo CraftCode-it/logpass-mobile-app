@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox_cubit.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 class CustomCheckbox extends HookWidget {
@@ -17,6 +19,7 @@ class CustomCheckbox extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<CustomCheckboxCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
 
     useEffect(
       () {
@@ -26,10 +29,17 @@ class CustomCheckbox extends HookWidget {
     );
 
     return state.map(
-      loading: (state) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: (state) => const Loader(),
       value: (state) => Checkbox(
+        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+          if (states.contains(MaterialState.selected)) {
+            return colors.primary100;
+          } else {
+            return colors.background;
+          }
+        }),
+        checkColor: colors.primary100,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         value: state.value,
         onChanged: (value) {
           cubit.set(value ?? initialValue);

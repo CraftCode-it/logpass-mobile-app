@@ -110,7 +110,7 @@ class _Body extends HookWidget {
               onPressed: setPinCodeCallback,
             ),
           const SizedBox(height: AppDimens.c),
-          RoundedButton(
+          CustomRectangularButton.outlined(
             text: tr(LocaleKeys.getSafer_skipAction),
             onPressed: () => AutoRouter.of(context).popUntilRoot(),
           ),
@@ -145,7 +145,7 @@ class _MethodContainer extends HookWidget {
           style: typography.primary,
         ),
         const SizedBox(height: AppDimens.m),
-        RoundedButton(
+        CustomRectangularButton.filled(
           text: action,
           onPressed: onPressed,
         ),

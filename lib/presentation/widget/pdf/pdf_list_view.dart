@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:native_pdf_renderer/native_pdf_renderer.dart';
@@ -17,7 +18,7 @@ class PdfListView extends StatelessWidget {
       itemBuilder: (context, index) => AspectRatio(
         aspectRatio: AppDimens.aspectRatioA4,
         child: _PdfPage(
-          pageLoader: () => document.getPage(index + 1),
+          pageLoader: document.getPage(index + 1),
           key: ValueKey(index),
         ),
       ),
@@ -26,50 +27,50 @@ class PdfListView extends StatelessWidget {
   }
 }
 
-class _PdfPage extends StatelessWidget {
-  final Future<PdfPage> Function() pageLoader;
+class _PdfPage extends HookWidget {
+  final Future<PdfPage> pageLoader;
 
   const _PdfPage({required this.pageLoader, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final page = useFuture(pageLoader, preserveState: false);
     final size = MediaQuery.of(context).size;
 
-    return FutureBuilder<PdfPageImage>(
-      future: _getImage(pageLoader, size),
-      builder: (context, snapshot) {
-        final data = snapshot.data;
+    final data = page.data;
 
-        if (data == null) {
-          return const Loader();
-        } else {
-          return _PageImage(
-            image: data,
-            key: ValueKey(data.id),
-          );
-        }
-      },
-    );
+    if (data == null) {
+      return const Loader();
+    } else {
+      return FutureBuilder<PdfPageImage?>(
+        future: _getImage(data, size),
+        builder: (context, snapshot) {
+          final data = snapshot.data;
+
+          if (data == null) {
+            return const Loader();
+          } else {
+            return _PageImage(
+              image: data,
+              key: ValueKey(data.id),
+            );
+          }
+        },
+      );
+    }
   }
 
-  Future<PdfPageImage> _getImage(Future<PdfPage> Function() pdfPageLoader, Size size) async {
+  Future<PdfPageImage?> _getImage(PdfPage page, Size size) async {
     return _lock.synchronized(
       () async {
-        final page = await pdfPageLoader();
+        final image = await page.render(
+          width: page.width,
+          height: page.height,
+          format: PdfPageFormat.JPEG,
+        );
+        await page.close();
 
-        try {
-          final image = await page.render(
-            width: page.width,
-            height: page.height,
-            format: PdfPageFormat.JPEG,
-          );
-
-          if (image == null) throw Exception('Loading pdf page failed');
-
-          return image;
-        } finally {
-          await page.close();
-        }
+        return image;
       },
     );
   }

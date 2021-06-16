@@ -31,7 +31,7 @@ class AgreementDetailsPage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(LocaleKeys.agreementDetails_title).tr(),
+        title: const Text('Agreement details'),
       ),
       body: state.maybeMap(
         initializing: (_) => const Loader(),
@@ -74,10 +74,10 @@ class _Content extends HookWidget {
           padding: const EdgeInsets.all(AppDimens.m),
           decoration: BoxDecoration(
             color: colors.background,
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                offset: const Offset(0, -3),
+                color: Colors.grey,
+                offset: Offset(0, -1),
                 blurRadius: 5,
                 spreadRadius: 1,
               )
@@ -107,12 +107,12 @@ class _Content extends HookWidget {
                   ),
                   const SizedBox(height: AppDimens.m),
                   if (agreement.isAccepted)
-                    RoundedButton(
+                    CustomRectangularButton.filled(
                       text: tr(LocaleKeys.agreementDetails_revokeAction),
                       onPressed: () {},
                     )
                   else
-                    RoundedButton(
+                    CustomRectangularButton.outlined(
                       text: tr(LocaleKeys.agreementDetails_confirmAction),
                       onPressed: () {},
                     ),

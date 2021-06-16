@@ -131,7 +131,7 @@ class _VerifyButton extends StatelessWidget {
       orElse: () => false,
     );
 
-    return RoundedButton(
+    return CustomRectangularButton.filled(
       text: tr(LocaleKeys.common_verify),
       onPressed: isActive ? () => cubit.verify() : null,
     );
@@ -163,7 +163,7 @@ class _ResendButton extends StatelessWidget {
   }
 
   Widget _buildButton(bool enabled) {
-    return RoundedButton(
+    return CustomRectangularButton.outlined(
       text: tr(LocaleKeys.otpCode_resendAction),
       onPressed: enabled ? () => cubit.resendCode() : null,
     );
