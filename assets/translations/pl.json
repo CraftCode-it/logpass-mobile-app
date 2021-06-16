@@ -7,7 +7,9 @@
     "prefix": "Prefix",
     "phoneNumber": "Phone number",
     "verify": "Verify",
-    "logout": "Logout"
+    "logout": "Logout",
+    "wrongCode": "Code is wrong",
+    "continue": "Continue"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
@@ -79,8 +81,12 @@
     "title": "Set PIN code",
     "info": "Repeat your PIN code"
   },
+  "pinSuccess": {
+    "header": "PIN code to the account successfully set"
+  },
   "securedLogin": {
-    "pinCodeInfo": "Welcome again!\nEnter your pin code to proceed.",
+    "header": "Welcome again!",
+    "pinCodeInfo": "Enter your pin code to proceed.",
     "pinCodeInvalid": "Invalid pin code, try again",
     "biometricInfo": "or use biometrics to enter",
     "logoutInfo": "Forgot your passcode?\nLog in again to unlock your account.",

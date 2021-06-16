@@ -5,8 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page_cubit.dart';
 import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page_state.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
@@ -25,6 +27,7 @@ class ConfirmPinPage extends HookWidget {
     final cubit = useCubit<ConfirmPinPageCubit>();
     final state = useCubitBuilder(cubit);
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     useCubitListener(cubit, _listener);
 
@@ -33,9 +36,14 @@ class ConfirmPinPage extends HookWidget {
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
+        leading: NavigationButton.back(),
         centerTitle: true,
-        title: const Text(LocaleKeys.confirmPin_title).tr(),
+        title: Text(
+          LocaleKeys.confirmPin_title,
+          style: typography.h8,
+        ).tr(),
       ),
       body: SafeArea(
         child: Padding(
@@ -43,14 +51,20 @@ class ConfirmPinPage extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Spacer(flex: 2),
+              const SizedBox(height: AppDimens.l),
               Text(
                 LocaleKeys.confirmPin_info,
                 textAlign: TextAlign.center,
-                style: typography.primary,
+                style: typography.body1,
               ).tr(),
-              const Spacer(flex: 2),
-              PinField(onPinChanged: cubit.updatePin),
+              const SizedBox(height: AppDimens.xl),
+              Align(
+                alignment: Alignment.center,
+                child: _PinField(
+                  cubit: cubit,
+                  state: state,
+                ),
+              ),
               const Spacer(flex: 1),
               _NextButton(
                 state: state,
@@ -68,6 +82,43 @@ class ConfirmPinPage extends HookWidget {
     state.maybeMap(
       pinSaved: (state) => AutoRouter.of(context).pop(true),
       orElse: () {},
+    );
+  }
+}
+
+class _PinField extends HookWidget {
+  final ConfirmPinPageState state;
+  final ConfirmPinPageCubit cubit;
+
+  const _PinField({
+    required this.state,
+    required this.cubit,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        PinField(
+          onPinChanged: cubit.updatePin,
+        ),
+        const SizedBox(height: AppDimens.s),
+        state.maybeMap(
+          idle: (state) => state.wrong
+              ? Text(
+                  LocaleKeys.common_wrongCode,
+                  style: typography.input.copyWith(color: colors.error100),
+                ).tr()
+              : const SizedBox.shrink(),
+          orElse: () => const SizedBox.shrink(),
+        ),
+      ],
     );
   }
 }

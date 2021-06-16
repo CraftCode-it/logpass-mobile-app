@@ -12,6 +12,7 @@ import 'package:logpass_me/presentation/page/onboarding/onboarding_page.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/new_pin/new_pin_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/pin_success/pin_success_page.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/historical_session_list_page.dart';
@@ -30,6 +31,7 @@ import 'package:logpass_me/presentation/page/start/start_page.dart';
     AutoRoute(page: MainPage),
     AutoRoute(page: NewPinPage),
     AutoRoute(page: ConfirmPinPage),
+    AutoRoute(page: PinSuccessPage),
     AutoRoute(page: SecuredLoginPage),
     AutoRoute(page: ServiceDetailsPage),
     AutoRoute(page: HistoricalSessionListPage),
