@@ -41,6 +41,7 @@ class StartPage extends HookWidget {
     );
 
     return Scaffold(
+      backgroundColor: color.background,
       appBar: AppBar(
         title: Text(
           'Register',
@@ -170,6 +171,7 @@ class _PhoneNumberInput extends StatelessWidget {
     );
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CountryCodePicker(onCountryCodeSelected: cubit.updateCountryCode),
         const SizedBox(width: AppDimens.s),
@@ -206,6 +208,7 @@ class _TermsAndConditionsCheck extends HookWidget {
         CustomCheckbox(
           onValueChanged: cubit.updateTerms,
         ),
+        const SizedBox(width: AppDimens.s),
         Flexible(
           child: Padding(
             padding: const EdgeInsets.only(top: AppDimens.xs),

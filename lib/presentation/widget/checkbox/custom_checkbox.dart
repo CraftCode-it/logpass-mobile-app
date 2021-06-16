@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox_cubit.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -19,7 +21,6 @@ class CustomCheckbox extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<CustomCheckboxCubit>();
     final state = useCubitBuilder(cubit);
-    final colors = useAppThemeColors();
 
     useEffect(
       () {
@@ -30,21 +31,40 @@ class CustomCheckbox extends HookWidget {
 
     return state.map(
       loading: (state) => const Loader(),
-      value: (state) => Checkbox(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
-            return colors.primary100;
-          } else {
-            return colors.background;
-          }
-        }),
-        checkColor: colors.primary100,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      value: (state) => _Checkbox(
         value: state.value,
         onChanged: (value) {
-          cubit.set(value ?? initialValue);
-          onValueChanged(value ?? initialValue);
+          cubit.set(value);
+          onValueChanged(value);
         },
+      ),
+    );
+  }
+}
+
+class _Checkbox extends StatelessWidget {
+  final bool value;
+  final Function(bool value) onChanged;
+
+  const _Checkbox({
+    required this.value,
+    required this.onChanged,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onChanged(!value),
+      child: Padding(
+        padding: const EdgeInsets.all(AppDimens.xs),
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: SvgPicture.asset(
+            value ? AppIcon.checkboxFilled : AppIcon.checkboxEmpty,
+          ),
+        ),
       ),
     );
   }

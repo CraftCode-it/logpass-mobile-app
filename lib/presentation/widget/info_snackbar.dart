@@ -8,6 +8,7 @@ void showInformationSnackBar({
   required BuildContext context,
   required AppThemeColors colors,
   required AppTypography typography,
+  required String message,
   VoidCallback? onTapAction,
 }) {
   final snackBar = SnackBar(
@@ -16,7 +17,7 @@ void showInformationSnackBar({
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(
-          tr(LocaleKeys.main_new_action),
+          message,
           style: typography.snackBar,
           textAlign: TextAlign.center,
         ),

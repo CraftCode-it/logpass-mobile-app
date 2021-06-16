@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:clock/clock.dart';
 import 'package:fimber/fimber.dart';
@@ -6,7 +8,9 @@ import 'package:logpass_me/domain/auth/error/login_verification_error.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 @Injectable()
 class OTPCodePageCubit extends Cubit<OTPCodePageState> {
@@ -15,20 +19,36 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   final VerifyOTPSignUpUseCase _verifyOTPSignUpUseCase;
   final SignUpUsingOTPCodeUseCase _signUpUsingOTPCodeUseCase;
+  final SmsAutoFill _smsAutoFill;
 
   late SignUpVerification _signUpVerification;
   late DateTime _resendTimestamp;
 
+  StreamSubscription? _codeSubscription;
   String _code = '';
 
   OTPCodePageCubit(
     this._verifyOTPSignUpUseCase,
     this._signUpUsingOTPCodeUseCase,
+    this._smsAutoFill,
   ) : super(OTPCodePageState.loading());
 
-  void initialize(SignUpVerification verification) {
+  @override
+  Future<void> close() async {
+    await _codeSubscription?.cancel();
+    await _smsAutoFill.unregisterListener();
+    return super.close();
+  }
+
+  Future<void> initialize(SignUpVerification verification) async {
     _signUpVerification = verification;
     _resendTimestamp = clock.now().add(resendDelayDuration);
+
+    await _smsAutoFill.listenForCode;
+    _codeSubscription = _smsAutoFill.code.listen((event) {
+      emit(OTPCodePageState.otpAutofill(event));
+      updateCode(event);
+    });
 
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
   }
@@ -46,9 +66,12 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
       emit(OTPCodePageState.success());
     } on LoginVerificationError catch (error) {
       _handleLoginVerificationError(error);
+    } on GeneralConnectionError catch (e) {
+      emit(OTPCodePageState.connectionError(e));
+      _emitIdleState();
     } catch (e, s) {
       Fimber.e('OTP code verification failed', ex: e, stacktrace: s);
-      emit(OTPCodePageState.error());
+      emit(OTPCodePageState.connectionError(GeneralConnectionError.somethingWentWrong()));
       _emitIdleState();
     }
   }
@@ -58,11 +81,14 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
     try {
       _signUpVerification = await _signUpUsingOTPCodeUseCase(_signUpVerification.phoneNumber);
+      _resendTimestamp = clock.now().add(resendDelayDuration);
+      emit(OTPCodePageState.resendSuccess());
+    } on GeneralConnectionError catch (e) {
+      emit(OTPCodePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Resending OTP code failed', ex: e, stacktrace: s);
-      emit(OTPCodePageState.error());
+      emit(OTPCodePageState.connectionError(GeneralConnectionError.somethingWentWrong()));
     } finally {
-      _resendTimestamp = clock.now().add(resendDelayDuration);
       _emitIdleState();
     }
   }

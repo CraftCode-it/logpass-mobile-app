@@ -14,6 +14,7 @@ void showConnectionErrorSnackBar({
   final contentText = error.when(
     noConnection: () => tr(LocaleKeys.error_noConnection),
     timeout: () => tr(LocaleKeys.error_timeout),
+    somethingWentWrong: () => tr(LocaleKeys.error_somethingWentWrong)
   );
 
   final snackBar = SnackBar(

@@ -7,6 +7,8 @@ import 'package:logpass_me/presentation/page/onboarding/onboarding_step.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_image.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -22,17 +24,26 @@ class OnboardingPage extends HookWidget {
     final onboardingSteps = useMemoized(
       () => [
         OnboardingStep(
-          image: Image.network('http://www.automotoszlif.pl/wp-content/uploads/2015/12/default-placeholder.png'),
+          image: Image.asset(
+            AppImage.placeholder,
+            alignment: Alignment.centerRight,
+          ),
           title: tr(LocaleKeys.onboarding_stepOneTitle),
           content: tr(LocaleKeys.onboarding_stepOneContent),
         ),
         OnboardingStep(
-          image: Image.network('http://www.automotoszlif.pl/wp-content/uploads/2015/12/default-placeholder.png'),
+          image: Image.asset(
+            AppImage.placeholder,
+            alignment: Alignment.centerRight,
+          ),
           title: tr(LocaleKeys.onboarding_stepTwoTitle),
           content: tr(LocaleKeys.onboarding_stepTwoContent),
         ),
         OnboardingStep(
-          image: Image.network('http://www.automotoszlif.pl/wp-content/uploads/2015/12/default-placeholder.png'),
+          image: Image.asset(
+            AppImage.placeholder,
+            alignment: Alignment.centerRight,
+          ),
           title: tr(LocaleKeys.onboarding_stepThreeTitle),
           content: tr(LocaleKeys.onboarding_stepThreeContent),
         ),
@@ -46,7 +57,10 @@ class OnboardingPage extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildSkippButton(context, index),
+              _SkipButton(
+                index: index.value,
+                onSkip: _navigateToLoginPage,
+              ),
               const SizedBox(height: AppDimens.xxl),
               Expanded(
                 child: PageView(
@@ -69,32 +83,18 @@ class OnboardingPage extends HookWidget {
                 child: SmoothPageIndicator(
                   controller: controller,
                   count: onboardingSteps.length,
-                  effect: SlideEffect(
+                  effect: ColorTransitionEffect(
                     activeDotColor: colors.secondary,
                     dotColor: colors.secondary.withOpacity(0.5),
+                    activeStrokeWidth: 1,
+                    strokeWidth: 1,
+                    paintStyle: PaintingStyle.stroke,
                   ),
                 ),
               ),
+              const SizedBox(height: AppDimens.m),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Visibility _buildSkippButton(BuildContext context, ValueNotifier<int> index) {
-    return Visibility(
-      visible: index.value != _lastPageIndex,
-      maintainSize: true,
-      maintainAnimation: true,
-      maintainState: true,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: () => _navigateToLoginPage(context),
-          child: const Text(
-            LocaleKeys.common_skip,
-          ).tr(),
         ),
       ),
     );
@@ -103,7 +103,41 @@ class OnboardingPage extends HookWidget {
   void _navigateToLoginPage(BuildContext context) => AutoRouter.of(context).replace(const StartPageRoute());
 }
 
-class _NavigationButton extends StatelessWidget {
+class _SkipButton extends HookWidget {
+  final int index;
+  final Function(BuildContext context) onSkip;
+
+  const _SkipButton({
+    required this.index,
+    required this.onSkip,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return Visibility(
+      visible: index != OnboardingPage._lastPageIndex,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+          onPressed: () => onSkip(context),
+          child: Text(
+            LocaleKeys.common_skip,
+            style: typography.body2.copyWith(color: colors.primary40),
+          ).tr(),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavigationButton extends HookWidget {
   final int page;
   final Function() nextPressed;
   final Function() startPressed;
@@ -117,16 +151,22 @@ class _NavigationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
       child: page != OnboardingPage._lastPageIndex
           ? CustomRectangularButton.filled(
               text: tr(LocaleKeys.common_next),
               onPressed: nextPressed,
+              fillColor: colors.secondary,
+              textColor: colors.primary100,
             )
           : CustomRectangularButton.filled(
               text: tr(LocaleKeys.common_start),
               onPressed: startPressed,
+              fillColor: colors.secondary,
+              textColor: colors.primary100,
             ),
     );
   }

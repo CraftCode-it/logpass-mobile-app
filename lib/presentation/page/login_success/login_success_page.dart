@@ -2,10 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
+import 'package:logpass_me/presentation/style/app_image.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 class LoginSuccessPage extends HookWidget {
   const LoginSuccessPage({Key? key}) : super(key: key);
@@ -13,6 +17,7 @@ class LoginSuccessPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     useEffect(() {
       Future.delayed(const Duration(seconds: 3)).then((_) {
@@ -26,23 +31,43 @@ class LoginSuccessPage extends HookWidget {
     }, []);
 
     return Scaffold(
+      backgroundColor: colors.success100,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Spacer(),
-            Text(
-              LocaleKeys.common_appName,
-              style: typography.primary,
-              textAlign: TextAlign.center,
-            ).tr(),
-            const Spacer(),
-            Text(
-              LocaleKeys.loginSuccess_info,
-              style: typography.primary,
-              textAlign: TextAlign.center,
-            ).tr(),
-            const SizedBox(height: AppDimens.xxl),
+            const SizedBox(height: AppDimens.xl),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+              child: Text(
+                LocaleKeys.loginSuccess_header,
+                style: typography.h2.copyWith(color: colors.secondary),
+              ).tr(),
+            ),
+            const SizedBox(height: AppDimens.l),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+              child: Text(
+                LocaleKeys.loginSuccess_info,
+                style: typography.h7.copyWith(color: colors.secondary),
+              ).tr(),
+            ),
+            Expanded(
+              child: Image.asset(
+                AppImage.placeholder,
+                alignment: Alignment.bottomRight,
+              ),
+            ),
+            const SizedBox(height: AppDimens.xc),
+            Padding(
+              padding: const EdgeInsets.only(left: AppDimens.xxl),
+              child: SvgPicture.asset(
+                AppIcon.logo,
+                height: AppDimens.logoHeight,
+              ),
+            ),
+            const SizedBox(height: AppDimens.l),
           ],
         ),
       ),

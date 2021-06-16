@@ -7,4 +7,6 @@ class GeneralConnectionError with _$GeneralConnectionError {
   factory GeneralConnectionError.noConnection() = _GeneralConnectionErrorNoConnection;
 
   factory GeneralConnectionError.timeout() = _GeneralConnectionErrorTimeout;
+
+  factory GeneralConnectionError.somethingWentWrong() = _GeneralConnectionErrorSomethingWentWrong;
 }

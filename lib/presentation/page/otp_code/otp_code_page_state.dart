@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 part 'otp_code_page_state.freezed.dart';
@@ -24,7 +25,11 @@ class OTPCodePageState with _$OTPCodePageState {
 
   factory OTPCodePageState.success() = _OTPCodePageStateSuccess;
 
+  factory OTPCodePageState.resendSuccess() = _OTPCodePageStateResendSuccess;
+
+  factory OTPCodePageState.otpAutofill(String code) = _OTPCodePageStateOTPAutofill;
+
   factory OTPCodePageState.accountAlreadyExists() = _OTPCodePageStateAccountAlreadyExists;
 
-  factory OTPCodePageState.error() = _OTPCodePageStateError;
+  factory OTPCodePageState.connectionError(GeneralConnectionError error) = _OTPCodePageStateError;
 }
