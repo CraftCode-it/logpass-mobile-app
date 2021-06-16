@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
@@ -18,6 +19,7 @@ class OnboardingStep extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -27,7 +29,7 @@ class OnboardingStep extends HookWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: typography.primary,
+          style: typography.h5.copyWith(color: colors.secondary),
         ),
         const SizedBox(height: AppDimens.l),
         Padding(
@@ -35,7 +37,7 @@ class OnboardingStep extends HookWidget {
           child: Text(
             content,
             textAlign: TextAlign.center,
-            style: typography.primary.copyWith(fontSize: 14),
+            style: typography.body1.copyWith(color: colors.secondary),
           ),
         ),
       ],

@@ -7,34 +7,46 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 class CustomRectangularButton extends HookWidget {
   final String text;
   final Function()? onPressed;
+  final Color? fillColor;
+  final Color? textColor;
   final bool filled;
 
   const CustomRectangularButton._({
     required this.text,
     required this.onPressed,
     required this.filled,
+    this.fillColor,
+    this.textColor,
     Key? key,
   }) : super(key: key);
 
   factory CustomRectangularButton.filled({
     required String text,
     required Function()? onPressed,
+    Color? fillColor,
+    Color? textColor,
   }) {
     return CustomRectangularButton._(
       text: text,
       onPressed: onPressed,
       filled: true,
+      fillColor: fillColor,
+      textColor: textColor,
     );
   }
 
   factory CustomRectangularButton.outlined({
     required String text,
     required Function()? onPressed,
+    Color? fillColor,
+    Color? textColor,
   }) {
     return CustomRectangularButton._(
       text: text,
       onPressed: onPressed,
       filled: false,
+      fillColor: fillColor,
+      textColor: textColor,
     );
   }
 
@@ -67,6 +79,9 @@ class CustomRectangularButton extends HookWidget {
   }
 
   Color _getTextColor(AppThemeColors colors) {
+    final textColor = this.textColor;
+    if (textColor != null) return textColor;
+
     if (filled) {
       return colors.secondary;
     } else {
@@ -75,6 +90,9 @@ class CustomRectangularButton extends HookWidget {
   }
 
   Color _getFillColor(AppThemeColors colors) {
+    final fillColor = this.fillColor;
+    if (fillColor != null) return fillColor;
+
     if (filled) {
       return colors.primary100;
     } else {

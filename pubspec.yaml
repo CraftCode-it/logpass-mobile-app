@@ -83,6 +83,7 @@ flutter:
     - assets/translations/
     - assets/json/
     - assets/icon/
+    - assets/image/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
