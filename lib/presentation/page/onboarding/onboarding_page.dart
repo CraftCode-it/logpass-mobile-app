@@ -19,7 +19,6 @@ class OnboardingPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
     final controller = usePageController();
     final onboardingSteps = useMemoized(
       () => [
@@ -84,8 +83,8 @@ class OnboardingPage extends HookWidget {
                   controller: controller,
                   count: onboardingSteps.length,
                   effect: ColorTransitionEffect(
-                    activeDotColor: colors.secondary,
-                    dotColor: colors.secondary.withOpacity(0.5),
+                    activeDotColor: AppColors.secondary,
+                    dotColor: AppColors.secondary.withOpacity(0.5),
                     activeStrokeWidth: 1,
                     strokeWidth: 1,
                     paintStyle: PaintingStyle.stroke,
@@ -116,7 +115,6 @@ class _SkipButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
-    final colors = useAppThemeColors();
 
     return Visibility(
       visible: index != OnboardingPage._lastPageIndex,
@@ -129,7 +127,7 @@ class _SkipButton extends HookWidget {
           onPressed: () => onSkip(context),
           child: Text(
             LocaleKeys.common_skip,
-            style: typography.body2.copyWith(color: colors.primary40),
+            style: typography.body2.copyWith(color: AppColors.lightTextDark),
           ).tr(),
         ),
       ),
@@ -137,7 +135,7 @@ class _SkipButton extends HookWidget {
   }
 }
 
-class _NavigationButton extends HookWidget {
+class _NavigationButton extends StatelessWidget {
   final int page;
   final Function() nextPressed;
   final Function() startPressed;
@@ -151,22 +149,20 @@ class _NavigationButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
       child: page != OnboardingPage._lastPageIndex
           ? CustomRectangularButton.filled(
               text: tr(LocaleKeys.common_next),
               onPressed: nextPressed,
-              fillColor: colors.secondary,
-              textColor: colors.primary100,
+              fillColor: AppColors.buttonFillDark,
+              textColor: AppColors.buttonFilledTextDark,
             )
           : CustomRectangularButton.filled(
               text: tr(LocaleKeys.common_start),
               onPressed: startPressed,
-              fillColor: colors.secondary,
-              textColor: colors.primary100,
+              fillColor: AppColors.buttonFillDark,
+              textColor: AppColors.buttonFilledTextDark,
             ),
     );
   }

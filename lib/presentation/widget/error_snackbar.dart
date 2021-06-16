@@ -14,14 +14,14 @@ void showConnectionErrorSnackBar({
   final contentText = error.when(
     noConnection: () => tr(LocaleKeys.error_noConnection),
     timeout: () => tr(LocaleKeys.error_timeout),
-    somethingWentWrong: () => tr(LocaleKeys.error_somethingWentWrong)
+    somethingWentWrong: () => tr(LocaleKeys.error_somethingWentWrong),
   );
 
   final snackBar = SnackBar(
-    backgroundColor: AppColors.snackBarErrorBackground,
+    backgroundColor: AppColors.error100,
     content: Text(
       contentText,
-      style: typography.snackBar,
+      style: typography.input.copyWith(color: colors.textSpecial),
       textAlign: TextAlign.center,
     ),
   );

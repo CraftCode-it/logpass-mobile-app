@@ -19,7 +19,7 @@ class PinSuccessPage extends HookWidget {
     final typography = useAppTypography();
 
     return Scaffold(
-      backgroundColor: colors.success100,
+      backgroundColor: AppColors.success100,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +29,7 @@ class PinSuccessPage extends HookWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
               child: Text(
                 LocaleKeys.pinSuccess_header,
-                style: typography.h7.copyWith(color: colors.secondary),
+                style: typography.h7.copyWith(color: colors.textSpecial),
               ).tr(),
             ),
             Expanded(
@@ -44,8 +44,8 @@ class PinSuccessPage extends HookWidget {
               child: CustomRectangularButton.filled(
                 text: tr(LocaleKeys.common_continue),
                 onPressed: () => AutoRouter.of(context).navigate(const MainPageRoute()),
-                fillColor: colors.secondary,
-                textColor: colors.primary100,
+                fillColor: AppColors.secondary,
+                textColor: AppColors.primary100,
               ),
             ),
           ],

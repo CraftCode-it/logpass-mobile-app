@@ -1,12 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page_cubit.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
-import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
@@ -15,7 +13,6 @@ class EntryPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<EntryPageCubit>();
     final state = useCubitBuilder(cubit);
-    final colors = useAppThemeColors();
 
     useCubitListener(cubit, _listener);
 
@@ -28,7 +25,7 @@ class EntryPage extends HookWidget {
     );
 
     return Scaffold(
-      backgroundColor: colors.primary100,
+      backgroundColor: AppColors.backgroundDark,
       body: state.maybeMap(
         idle: (_) => const _Idle(),
         orElse: () => const SizedBox(),

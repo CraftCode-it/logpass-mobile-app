@@ -18,6 +18,7 @@ class CountryCodePickerCubit extends Cubit<CountryCodePickerState> {
     final selectedCountryCode = _findDefaultCountryCode(countryCodeList, country);
 
     _countryCodeList = countryCodeList;
+    _countryCodeList.sort((codeA, codeB) => codeA.country.compareTo(codeB.country));
 
     emit(CountryCodePickerState.selectedEvent(selectedCountryCode));
     emit(CountryCodePickerState.selected(countryCodeList, selectedCountryCode));

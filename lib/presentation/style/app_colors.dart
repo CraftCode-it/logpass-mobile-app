@@ -35,140 +35,158 @@ AppThemeColors useAppThemeColors() {
 }
 
 class AppColors {
-  static const snackBarText = Color(0xFFFFFFFF);
-  static const snackBarSuccessBackground = Color(0xFF14CA89);
-  static const snackBarErrorBackground = Color(0xFFFC264C);
+  static const snackBarText = secondary;
+  static const snackBarSuccessBackground = success100;
+  static const snackBarErrorBackground = error100;
 
-  // Light
-  static const primaryLight100 = Color(0xFF191933);
-  static const primaryLight90 = Color(0xFF303047);
-  static const primaryLight80 = Color(0xFF47475C);
-  static const primaryLight70 = Color(0xFF5E5E70);
-  static const primaryLight60 = Color(0xFF757585);
-  static const primaryLight50 = Color(0xFF8C8C99);
-  static const primaryLight40 = Color(0xFFA3A3AD);
-  static const primaryLight30 = Color(0xFFBABAC2);
-  static const primaryLight20 = Color(0xFFD1D1D6);
-  static const primaryLight10 = Color(0xFFE8E8EB);
-  static const primaryLight05 = Color(0xFFF4F4F5);
-  static const primaryLight02 = Color(0xFFF9F9FA);
+  static const primary100 = Color(0xFF191933);
+  static const primary90 = Color(0xFF303047);
+  static const primary80 = Color(0xFF47475C);
+  static const primary70 = Color(0xFF5E5E70);
+  static const primary60 = Color(0xFF757585);
+  static const primary50 = Color(0xFF8C8C99);
+  static const primary40 = Color(0xFFA3A3AD);
+  static const primary30 = Color(0xFFBABAC2);
+  static const primary20 = Color(0xFFD1D1D6);
+  static const primary10 = Color(0xFFE8E8EB);
+  static const primary05 = Color(0xFFF4F4F5);
+  static const primary02 = Color(0xFFF9F9FA);
 
-  static const successLight100 = Color(0xFF14CA89);
-  static const successLight90 = Color(0xFF2CCF95);
-  static const successLight80 = Color(0xFF43D5A1);
-  static const successLight70 = Color(0xFF5BDAAC);
-  static const successLight60 = Color(0xFF72DFB8);
-  static const successLight50 = Color(0xFF8AE4C4);
-  static const successLight40 = Color(0xFF82E3C0);
-  static const successLight30 = Color(0xFFB9EFDC);
-  static const successLight20 = Color(0xFFD0F4E7);
-  static const successLight10 = Color(0xFFE8FAF3);
+  static const success100 = Color(0xFF14CA89);
+  static const success90 = Color(0xFF2CCF95);
+  static const success80 = Color(0xFF43D5A1);
+  static const success70 = Color(0xFF5BDAAC);
+  static const success60 = Color(0xFF72DFB8);
+  static const success50 = Color(0xFF8AE4C4);
+  static const success40 = Color(0xFF82E3C0);
+  static const success30 = Color(0xFFB9EFDC);
+  static const success20 = Color(0xFFD0F4E7);
+  static const success10 = Color(0xFFE8FAF3);
 
-  static const errorLight100 = Color(0xFFFC264C);
-  static const errorLight90 = Color(0xFFFC3C5E);
-  static const errorLight80 = Color(0xFFFC5170);
-  static const errorLight70 = Color(0xFFFD6782);
-  static const errorLight60 = Color(0xFFFD7D94);
-  static const errorLight50 = Color(0xFFFD92A5);
-  static const errorLight40 = Color(0xFFFEA8B7);
-  static const errorLight30 = Color(0xFFFEBEC9);
-  static const errorLight20 = Color(0xFFFED4DB);
-  static const errorLight10 = Color(0xFFFFE9ED);
+  static const error100 = Color(0xFFFC264C);
+  static const error90 = Color(0xFFFC3C5E);
+  static const error80 = Color(0xFFFC5170);
+  static const error70 = Color(0xFFFD6782);
+  static const error60 = Color(0xFFFD7D94);
+  static const error50 = Color(0xFFFD92A5);
+  static const error40 = Color(0xFFFEA8B7);
+  static const error30 = Color(0xFFFEBEC9);
+  static const error20 = Color(0xFFFED4DB);
+  static const error10 = Color(0xFFFFE9ED);
 
-  static const secondaryLight = Color(0xFFFFFFFF);
-  static const backgroundLight = Color(0xFFFFFFFF);
-  static const primaryTextLight = Color(0xFF676983);
-  static const buttonEnabledLight = Color(0xFFAAABC4);
-  static const buttonEnabledTextLight = Color(0xFFFAF9FC);
-  static const errorTextLight = Color(0xFFFF0000);
+  static const secondary = Colors.white;
+
+  // Light mode
+
+  static const backgroundLight = secondary;
+  static const primaryTextLight = primary100;
+  static const textInvertedLight = secondary;
+  static const secondaryTextLight = primary70;
+  static const inactiveTextLight = primary20;
+  static const labelTextLight = primary40;
+
+  static const inputHintLight = primary40;
+  static const inputInactiveHintLight = primary20;
+  static const inputLabelLight = primary40;
+  static const inputBorderLight = primary20;
+  static const inputFocusedBorderLight = primary100;
+  static const inputInactiveBorderLight = primary20;
+  static const inputTextLight = primary100;
+  static const inputTextInactiveLight = primary20;
+
+  static const buttonOutlinedFillLight = secondary;
+  static const buttonFillLight = primary100;
+  static const buttonFillInactiveLight = primary20;
+  static const buttonFilledTextLight = secondary;
+  static const buttonFilledInactiveTextLight = secondary;
+
+  static const buttonOutlinedLight = primary100;
+  static const buttonOutlinedInactiveLight = primary20;
+  static const buttonOutlinedTextLight = primary100;
+  static const buttonOutlinedTextInactiveLight = primary20;
+
   static const dividerDarkLight = Color(0xFFAAABC4);
   static const dividerMediumLight = Color(0xFFAAABC4);
   static const dividerLightLight = Color(0xFFCFD0DD);
 
-  // Dark
-  static const primaryDark = Color(0xFF2233AA);
-  static const backgroundDark = Color(0xFF676983);
-  static const primaryTextDark = Color(0xFFFFFFFF);
-  static const errorTextDark = Color(0xFFFF0000);
+  // Dark mode
+
+  static const backgroundDark = primary100;
+  static const primaryTextDark = primary10;
+  static const textInvertedDark = primary10;
+  static const secondaryTextDark = primary30;
+  static const lightTextDark = primary40;
+  static const labelTextDark = primary60;
+
+  static const inputHintDark = primary60;
+  static const inputInactiveHintDark = primary80;
+  static const inputLabelDark = primary60;
+  static const inputBorderDark = primary80;
+  static const inputFocusedBorderDark = primary10;
+  static const inputInactiveBorderDark = primary60;
+  static const inputTextDark = primary10;
+  static const inputTextInactiveDark = primary80;
+
+  static const buttonFillDark = primary10;
+  static const buttonFillInactiveDark = primary90;
+  static const buttonFilledTextDark = primary100;
+  static const buttonFilledInactiveTextDark = primary80;
+
+  static const buttonOutlinedFillDark = primary100;
+  static const buttonOutlinedDark = primary10;
+  static const buttonOutlinedInactiveDark = primary90;
+  static const buttonOutlinedTextDark = primary10;
+  static const buttonOutlinedTextInactiveDark = primary90;
+
   static const dividerDarkDark = Color(0xFFAAABC4);
   static const dividerMediumDark = Color(0xFFAAABC4);
   static const dividerLightDark = Color(0xFFCFD0DD);
 }
 
 abstract class AppThemeColors {
-  Color get primary100;
+  Color get text;
 
-  Color get primary90;
+  Color get textSpecial;
 
-  Color get primary80;
+  Color get secondaryText;
 
-  Color get primary70;
+  Color get lightText;
 
-  Color get primary60;
+  Color get labelText;
 
-  Color get primary50;
+  Color get inputHint;
 
-  Color get primary40;
+  Color get inputInactiveHint;
 
-  Color get primary30;
+  Color get inputLabel;
 
-  Color get primary20;
+  Color get inputBorder;
 
-  Color get primary10;
+  Color get inputFocusedBorder;
 
-  Color get primary05;
+  Color get inputInactiveBorder;
 
-  Color get primary02;
+  Color get inputText;
 
-  Color get success100;
+  Color get inputInactiveText;
 
-  Color get success90;
+  Color get buttonFill;
 
-  Color get success80;
+  Color get buttonFillInactive;
 
-  Color get success70;
+  Color get buttonFilledText;
 
-  Color get success60;
+  Color get buttonFilledInactiveText;
 
-  Color get success50;
+  Color get buttonOutlinedFill;
 
-  Color get success40;
+  Color get buttonOutlined;
 
-  Color get success30;
+  Color get buttonOutlinedInactive;
 
-  Color get success20;
+  Color get buttonOutlinedText;
 
-  Color get success10;
-
-  Color get error100;
-
-  Color get error90;
-
-  Color get error80;
-
-  Color get error70;
-
-  Color get error60;
-
-  Color get error50;
-
-  Color get error40;
-
-  Color get error30;
-
-  Color get error20;
-
-  Color get error10;
-
-  Color get secondary;
-
-  Color get primaryText;
-
-  Color get primaryButton;
-
-  Color get primaryButtonText;
-
-  Color get errorText;
+  Color get buttonOutlinedInactiveText;
 
   Color get dividerDark;
 
@@ -181,115 +199,70 @@ abstract class AppThemeColors {
 
 class LightThemeColors implements AppThemeColors {
   @override
-  Color get primary100 => AppColors.primaryLight100;
+  Color get text => AppColors.primaryTextLight;
 
   @override
-  Color get primary90 => AppColors.primaryLight90;
+  Color get textSpecial => AppColors.textInvertedLight;
 
   @override
-  Color get primary80 => AppColors.primaryLight80;
+  Color get secondaryText => AppColors.secondaryTextLight;
 
   @override
-  Color get primary70 => AppColors.primaryLight70;
+  Color get lightText => AppColors.inactiveTextLight;
 
   @override
-  Color get primary60 => AppColors.primaryLight60;
+  Color get labelText => AppColors.labelTextLight;
 
   @override
-  Color get primary50 => AppColors.primaryLight50;
+  Color get inputHint => AppColors.inputHintLight;
 
   @override
-  Color get primary40 => AppColors.primaryLight40;
+  Color get inputInactiveHint => AppColors.inputInactiveHintLight;
 
   @override
-  Color get primary30 => AppColors.primaryLight30;
+  Color get inputLabel => AppColors.inputLabelLight;
 
   @override
-  Color get primary20 => AppColors.primaryLight20;
+  Color get inputBorder => AppColors.inputBorderLight;
 
   @override
-  Color get primary10 => AppColors.primaryLight10;
+  Color get inputFocusedBorder => AppColors.inputFocusedBorderLight;
 
   @override
-  Color get primary05 => AppColors.primaryLight05;
+  Color get inputInactiveBorder => AppColors.inputInactiveBorderLight;
 
   @override
-  Color get primary02 => AppColors.primaryLight02;
+  Color get inputText => AppColors.inputTextLight;
 
   @override
-  Color get success100 => AppColors.successLight100;
+  Color get inputInactiveText => AppColors.inputTextInactiveLight;
 
   @override
-  Color get success90 => AppColors.successLight90;
+  Color get buttonFill => AppColors.buttonFillLight;
 
   @override
-  Color get success80 => AppColors.successLight80;
+  Color get buttonFillInactive => AppColors.buttonFillInactiveLight;
 
   @override
-  Color get success70 => AppColors.successLight70;
+  Color get buttonFilledText => AppColors.buttonFilledTextLight;
 
   @override
-  Color get success60 => AppColors.successLight60;
+  Color get buttonFilledInactiveText => AppColors.buttonFilledInactiveTextLight;
 
   @override
-  Color get success50 => AppColors.successLight50;
+  Color get buttonOutlinedFill => AppColors.buttonOutlinedFillLight;
 
   @override
-  Color get success40 => AppColors.successLight40;
+  Color get buttonOutlined => AppColors.buttonOutlinedLight;
 
   @override
-  Color get success30 => AppColors.successLight30;
+  Color get buttonOutlinedInactive => AppColors.buttonOutlinedInactiveLight;
 
   @override
-  Color get success20 => AppColors.successLight20;
+  Color get buttonOutlinedText => AppColors.buttonOutlinedTextLight;
 
   @override
-  Color get success10 => AppColors.successLight10;
-
-  @override
-  Color get error100 => AppColors.errorLight100;
-
-  @override
-  Color get error90 => AppColors.errorLight90;
-
-  @override
-  Color get error80 => AppColors.errorLight80;
-
-  @override
-  Color get error70 => AppColors.errorLight70;
-
-  @override
-  Color get error60 => AppColors.errorLight60;
-
-  @override
-  Color get error50 => AppColors.errorLight50;
-
-  @override
-  Color get error40 => AppColors.errorLight40;
-
-  @override
-  Color get error30 => AppColors.errorLight30;
-
-  @override
-  Color get error20 => AppColors.errorLight20;
-
-  @override
-  Color get error10 => AppColors.errorLight10;
-
-  @override
-  Color get secondary => AppColors.secondaryLight;
-
-  @override
-  Color get primaryText => AppColors.primaryTextLight;
-
-  @override
-  Color get primaryButton => AppColors.buttonEnabledLight;
-
-  @override
-  Color get primaryButtonText => AppColors.buttonEnabledTextLight;
-
-  @override
-  Color get errorText => AppColors.errorTextLight;
+  Color get buttonOutlinedInactiveText => AppColors.buttonOutlinedTextInactiveLight;
 
   @override
   Color get dividerDark => AppColors.dividerDarkLight;
@@ -306,115 +279,70 @@ class LightThemeColors implements AppThemeColors {
 
 class DarkThemeColors implements AppThemeColors {
   @override
-  Color get primary100 => AppColors.primaryLight100;
+  Color get text => AppColors.primaryTextDark;
 
   @override
-  Color get primary90 => AppColors.primaryLight90;
+  Color get textSpecial => AppColors.textInvertedDark;
 
   @override
-  Color get primary80 => AppColors.primaryLight80;
+  Color get secondaryText => AppColors.secondaryTextDark;
 
   @override
-  Color get primary70 => AppColors.primaryLight70;
+  Color get lightText => AppColors.lightTextDark;
 
   @override
-  Color get primary60 => AppColors.primaryLight60;
+  Color get labelText => AppColors.labelTextDark;
 
   @override
-  Color get primary50 => AppColors.primaryLight50;
+  Color get inputHint => AppColors.inputHintDark;
 
   @override
-  Color get primary40 => AppColors.primaryLight40;
+  Color get inputInactiveHint => AppColors.inputInactiveHintDark;
 
   @override
-  Color get primary30 => AppColors.primaryLight30;
+  Color get inputLabel => AppColors.inputLabelDark;
 
   @override
-  Color get primary20 => AppColors.primaryLight20;
+  Color get inputBorder => AppColors.inputBorderDark;
 
   @override
-  Color get primary10 => AppColors.primaryLight10;
+  Color get inputFocusedBorder => AppColors.inputFocusedBorderDark;
 
   @override
-  Color get primary05 => AppColors.primaryLight05;
+  Color get inputInactiveBorder => AppColors.inputInactiveBorderDark;
 
   @override
-  Color get primary02 => AppColors.primaryLight02;
+  Color get inputText => AppColors.inputTextDark;
 
   @override
-  Color get success100 => AppColors.successLight100;
+  Color get inputInactiveText => AppColors.inputTextInactiveDark;
 
   @override
-  Color get success90 => AppColors.successLight90;
+  Color get buttonFill => AppColors.buttonFillDark;
 
   @override
-  Color get success80 => AppColors.successLight80;
+  Color get buttonFillInactive => AppColors.buttonFillInactiveDark;
 
   @override
-  Color get success70 => AppColors.successLight70;
+  Color get buttonFilledText => AppColors.buttonFilledTextDark;
 
   @override
-  Color get success60 => AppColors.successLight60;
+  Color get buttonFilledInactiveText => AppColors.buttonFilledInactiveTextDark;
 
   @override
-  Color get success50 => AppColors.successLight50;
+  Color get buttonOutlinedFill => AppColors.buttonOutlinedFillDark;
 
   @override
-  Color get success40 => AppColors.successLight40;
+  Color get buttonOutlined => AppColors.buttonOutlinedDark;
 
   @override
-  Color get success30 => AppColors.successLight30;
+  Color get buttonOutlinedInactive => AppColors.buttonOutlinedInactiveDark;
 
   @override
-  Color get success20 => AppColors.successLight20;
+  Color get buttonOutlinedText => AppColors.buttonOutlinedTextDark;
 
   @override
-  Color get success10 => AppColors.successLight10;
-
-  @override
-  Color get error100 => AppColors.errorLight100;
-
-  @override
-  Color get error90 => AppColors.errorLight90;
-
-  @override
-  Color get error80 => AppColors.errorLight80;
-
-  @override
-  Color get error70 => AppColors.errorLight70;
-
-  @override
-  Color get error60 => AppColors.errorLight60;
-
-  @override
-  Color get error50 => AppColors.errorLight50;
-
-  @override
-  Color get error40 => AppColors.errorLight40;
-
-  @override
-  Color get error30 => AppColors.errorLight30;
-
-  @override
-  Color get error20 => AppColors.errorLight20;
-
-  @override
-  Color get error10 => AppColors.errorLight10;
-
-  @override
-  Color get secondary => AppColors.secondaryLight;
-
-  @override
-  Color get primaryText => AppColors.primaryTextDark;
-
-  @override
-  Color get primaryButton => AppColors.buttonEnabledLight;
-
-  @override
-  Color get primaryButtonText => AppColors.buttonEnabledTextLight;
-
-  @override
-  Color get errorText => AppColors.errorTextDark;
+  Color get buttonOutlinedInactiveText => AppColors.buttonOutlinedTextInactiveDark;
 
   @override
   Color get dividerDark => AppColors.dividerDarkDark;

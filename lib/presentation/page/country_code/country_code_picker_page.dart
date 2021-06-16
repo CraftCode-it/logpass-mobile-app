@@ -2,8 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
+import 'package:logpass_me/presentation/widget/separator.dart';
 
 class CountryCodePickerPage extends HookWidget {
   final List<CountryCode> countryCodeList;
@@ -17,18 +20,29 @@ class CountryCodePickerPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text('Select your country'),
+        leading: NavigationButton.back(),
+        title: Text(
+          'Select your country',
+          style: typography.h8,
+        ),
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         padding: const EdgeInsets.only(
           bottom: AppDimens.xc,
-          left: AppDimens.xxl,
-          right: AppDimens.xxl,
+          left: AppDimens.l,
+          right: AppDimens.l,
         ),
         itemCount: countryCodeList.length,
+        separatorBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppDimens.s),
+          child: Separator.light(),
+        ),
         itemBuilder: (context, index) {
           final countryCode = countryCodeList[index];
           return _CountryCodeRow(
@@ -57,24 +71,30 @@ class _CountryCodeRow extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
-    return GestureDetector(
+    return InkWell(
       onTap: onPressed,
       child: Row(
         children: [
-          Image.network(countryFlagUrl(countryCode, true)),
+          Image.network(
+            countryFlagUrl(countryCode, true),
+            width: 36,
+          ),
           const SizedBox(width: AppDimens.m),
           Expanded(
+            flex: 1,
             child: Text(
               '+${countryCode.code}',
-              style: typography.primary,
+              style: typography.info2.copyWith(color: colors.labelText),
             ),
           ),
           const SizedBox(width: AppDimens.xxl),
           Expanded(
+            flex: 3,
             child: Text(
               countryCode.country,
-              style: typography.primary,
+              style: typography.body1,
             ),
           ),
           Visibility(
