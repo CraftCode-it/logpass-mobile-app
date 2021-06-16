@@ -41,6 +41,7 @@ class StartPage extends HookWidget {
     );
 
     return Scaffold(
+      backgroundColor: color.background,
       appBar: AppBar(
         title: Text(
           'Register',
@@ -206,6 +207,7 @@ class _TermsAndConditionsCheck extends HookWidget {
         CustomCheckbox(
           onValueChanged: cubit.updateTerms,
         ),
+        const SizedBox(width: AppDimens.s),
         Flexible(
           child: Padding(
             padding: const EdgeInsets.only(top: AppDimens.xs),
