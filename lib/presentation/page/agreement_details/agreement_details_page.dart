@@ -1,12 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_date_formatter.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/labeled_text.dart';
 import 'package:logpass_me/presentation/widget/pdf/pdf_list_view.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:native_pdf_renderer/native_pdf_renderer.dart';
