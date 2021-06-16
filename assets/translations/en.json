@@ -58,6 +58,7 @@
     "codeResendSuccess": "Code resend"
   },
   "loginSuccess": {
+    "header": "Done!",
     "info": "You successfully accessed the account."
   },
   "getSafer": {

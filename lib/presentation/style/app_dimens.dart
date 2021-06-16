@@ -54,4 +54,6 @@ class AppDimens {
   static const serviceImageIconSize = 28.0;
 
   static const aspectRatioA4 = 0.707;
+
+  static const logoHeight = 30.0;
 }
