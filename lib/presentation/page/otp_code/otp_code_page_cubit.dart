@@ -19,6 +19,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   final VerifyOTPSignUpUseCase _verifyOTPSignUpUseCase;
   final SignUpUsingOTPCodeUseCase _signUpUsingOTPCodeUseCase;
+  final SmsAutoFill _smsAutoFill;
 
   late SignUpVerification _signUpVerification;
   late DateTime _resendTimestamp;
@@ -29,12 +30,13 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   OTPCodePageCubit(
     this._verifyOTPSignUpUseCase,
     this._signUpUsingOTPCodeUseCase,
+    this._smsAutoFill,
   ) : super(OTPCodePageState.loading());
 
   @override
   Future<void> close() async {
     await _codeSubscription?.cancel();
-    await SmsAutoFill().unregisterListener();
+    await _smsAutoFill.unregisterListener();
     return super.close();
   }
 
@@ -42,8 +44,8 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     _signUpVerification = verification;
     _resendTimestamp = clock.now().add(resendDelayDuration);
 
-    await SmsAutoFill().listenForCode;
-    _codeSubscription = SmsAutoFill().code.listen((event) {
+    await _smsAutoFill.listenForCode;
+    _codeSubscription = _smsAutoFill.code.listen((event) {
       emit(OTPCodePageState.otpAutofill(event));
       updateCode(event);
     });

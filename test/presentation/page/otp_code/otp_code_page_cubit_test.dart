@@ -1,16 +1,29 @@
-import 'package:bloc_test/bloc_test.dart' hide when, verify;
+import 'package:bloc_test/bloc_test.dart' hide when, verify, any;
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import 'otp_code_page_cubit_test.mocks.dart';
+
+class FakeSmsAutofill extends Fake implements SmsAutoFill {
+  @override
+  Stream<String> get code => const Stream.empty();
+
+  @override
+  Future<void> unregisterListener() => Future.value();
+
+  @override
+  Future<void> get listenForCode => Future.value();
+}
 
 @GenerateMocks(
   [
@@ -19,14 +32,14 @@ import 'otp_code_page_cubit_test.mocks.dart';
   ],
 )
 void main() {
-  late VerifyOTPSignUpUseCase verifyOTPSignUpUseCase;
-  late SignUpUsingOTPCodeUseCase signUpUsingOTPCodeUseCase;
+  late MockVerifyOTPSignUpUseCase verifyOTPSignUpUseCase;
+  late MockSignUpUsingOTPCodeUseCase signUpUsingOTPCodeUseCase;
   late OTPCodePageCubit cubit;
 
   setUp(() {
     verifyOTPSignUpUseCase = MockVerifyOTPSignUpUseCase();
     signUpUsingOTPCodeUseCase = MockSignUpUsingOTPCodeUseCase();
-    cubit = OTPCodePageCubit(verifyOTPSignUpUseCase, signUpUsingOTPCodeUseCase);
+    cubit = OTPCodePageCubit(verifyOTPSignUpUseCase, signUpUsingOTPCodeUseCase, FakeSmsAutofill());
   });
 
   final nowDateTime = DateTime(2021);
@@ -90,6 +103,7 @@ void main() {
       expect: () => [
         OTPCodePageState.idle('123', false, basicResendTimestamp),
         OTPCodePageState.resending('123'),
+        OTPCodePageState.resendSuccess(),
         OTPCodePageState.idle('123', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
       ],
     );
@@ -109,6 +123,7 @@ void main() {
       },
       expect: () => [
         OTPCodePageState.resending(''),
+        OTPCodePageState.resendSuccess(),
         OTPCodePageState.idle('', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
         OTPCodePageState.idle('123456', true, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
         OTPCodePageState.verifying('123456'),
@@ -122,6 +137,7 @@ void main() {
     blocTest<OTPCodePageCubit, OTPCodePageState>(
       'emits [Processing, Error, Idle] states on error',
       build: () {
+        when(signUpUsingOTPCodeUseCase(any)).thenAnswer((realInvocation) => throw GeneralConnectionError.timeout());
         return cubit;
       },
       act: (cubit) {
@@ -131,8 +147,8 @@ void main() {
       expect: () => [
         OTPCodePageState.idle('123', false, basicResendTimestamp),
         OTPCodePageState.resending('123'),
-        OTPCodePageState.connectionError(),
-        OTPCodePageState.idle('123', false, basicResendTimestamp.add(OTPCodePageCubit.resendDelayDuration)),
+        OTPCodePageState.connectionError(GeneralConnectionError.timeout()),
+        OTPCodePageState.idle('123', false, basicResendTimestamp),
       ],
       verify: (cubit) {},
     );
