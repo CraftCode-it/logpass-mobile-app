@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,6 +10,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 // TODO: remove after appTypography implementation
 const _customFontSize = 12.0;
@@ -99,7 +101,6 @@ class _PendingActions extends StatelessWidget {
 }
 
 class _PendingItemsList extends HookWidget {
-  // TODO: refactor in accordance to backend model
   final List<IncomingAction> pendingActions;
 
   const _PendingItemsList(this.pendingActions);
@@ -113,7 +114,7 @@ class _PendingItemsList extends HookWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return _PendingItem(pendingActions[index].link);
+              return _PendingItem(pendingActions[index]);
             },
             itemCount: pendingActions.length,
           )
@@ -126,28 +127,54 @@ class _PendingItemsList extends HookWidget {
 }
 
 class _PendingItem extends HookWidget {
-  final String value;
+  final IncomingAction action;
 
-  const _PendingItem(this.value);
+  const _PendingItem(this.action);
 
   @override
   Widget build(BuildContext context) {
     final appTypography = useAppTypography();
     final appColors = useAppThemeColors();
 
-    return Container(
-      height: AppDimens.xc,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: appColors.primaryText,
+    return GestureDetector(
+      onTap: () {
+        action.actionType.when(
+          authorize: () => AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId)),
+          confirm: () {},
+          updateAccount: () {},
+        );
+      },
+      child: Container(
+        height: AppDimens.xc,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: appColors.primaryText,
+            ),
           ),
         ),
-      ),
-      child: Center(
-        child: Text(
-          value,
-          style: appTypography.primary,
+        child: Row(
+          children: [
+            Container(
+              width: AppDimens.m,
+              height: AppDimens.m,
+              color: appColors.primaryButton,
+            ),
+            const SizedBox(width: AppDimens.m),
+            Expanded(
+              child: Text(
+                action.actionType.maybeWhen(
+                  authorize: () => LocaleKeys.home_action_type_authorization.tr(),
+                  orElse: () => 'Unknown',
+                ),
+                style: appTypography.primary,
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: appColors.primaryButton,
+            ),
+          ],
         ),
       ),
     );

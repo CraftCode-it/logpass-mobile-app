@@ -30,7 +30,7 @@ class HomeCubit extends Cubit<HomeState> {
   void _subscribeToIncomingActions() {
     try {
       _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) async {
-        // TODO: fetch pending actions from API
+        // TODO: fetch pending actions from API instead of adding value from stream manually
         _pendingActions.add(action);
         await _getActions();
       });

@@ -40,7 +40,13 @@
     "refreshCodeLabel": "refresh",
     "pendingActionsLabel": "Pending actions",
     "pendingActionsEmpty": "Nothing requires your action now",
-    "pastActions": "See past events"
+    "pastActions": "See past events",
+    "action_type_authorization": "Authorization"
+  },
+  "authorize": {
+    "title": "Authorize operation",
+    "confirm_button": "Confirm",
+    "reject_button": "Reject"
   },
   "otpCode": {
     "title": "Verify your number",

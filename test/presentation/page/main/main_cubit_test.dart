@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
@@ -41,7 +42,7 @@ void main() {
   });
 
   group('initialize', () {
-    final incomingAction = IncomingAction('link');
+    final incomingAction = IncomingAction(ActionType.authorize(), 'link');
     const failureMessage = 'Error message';
 
     blocTest<MainPageCubit, MainPageState>(
