@@ -6,11 +6,14 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_cubit.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:logpass_me/presentation/widget/separator.dart';
 
 class GetSaferPage extends HookWidget {
   const GetSaferPage({Key? key}) : super(key: key);
@@ -19,6 +22,9 @@ class GetSaferPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<GetSaferCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+
     useCubitListener(cubit, _listener);
 
     useEffect(() {
@@ -26,9 +32,14 @@ class GetSaferPage extends HookWidget {
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
+        leading: NavigationButton.close(),
         centerTitle: true,
-        title: const Text(LocaleKeys.getSafer_title).tr(),
+        title: Text(
+          LocaleKeys.getSafer_title,
+          style: typography.h8,
+        ).tr(),
       ),
       body: SafeArea(
         child: state.maybeMap(
@@ -56,7 +67,7 @@ class GetSaferPage extends HookWidget {
   void _listener(GetSaferCubit cubit, GetSaferPageState state, BuildContext context) {
     state.maybeMap(
       setCodeForBiometrics: (_) => _setPinCode(context, cubit.setBiometricsSecurity),
-      success: (_) => AutoRouter.of(context).popUntilRoot(),
+      success: (_) => AutoRouter.of(context).push(const PinSuccessPageRoute()),
       orElse: () {},
     );
   }
@@ -87,20 +98,24 @@ class _Body extends HookWidget {
           Text(
             LocaleKeys.getSafer_info,
             textAlign: TextAlign.center,
-            style: typography.primary,
+            style: typography.body2,
           ).tr(),
+          const SizedBox(height: AppDimens.xxl),
+          Separator.dark(),
           const Spacer(),
           if (withBiometrics) ...[
             _MethodContainer(
               info: tr(LocaleKeys.getSafer_biometricInfo),
               action: tr(LocaleKeys.getSafer_biometricAction),
               onPressed: verifyBiometricsCallback,
+              filledButton: true,
             ),
             const SizedBox(height: AppDimens.xl),
             _MethodContainer(
               info: tr(LocaleKeys.getSafer_codeInfoSecondary),
               action: tr(LocaleKeys.getSafer_codeAction),
               onPressed: setPinCodeCallback,
+              filledButton: false,
             ),
           ],
           if (!withBiometrics)
@@ -108,11 +123,15 @@ class _Body extends HookWidget {
               info: tr(LocaleKeys.getSafer_codeInfoPrimary),
               action: tr(LocaleKeys.getSafer_codeAction),
               onPressed: setPinCodeCallback,
+              filledButton: true,
             ),
           const SizedBox(height: AppDimens.c),
-          CustomRectangularButton.outlined(
-            text: tr(LocaleKeys.getSafer_skipAction),
+          TextButton(
             onPressed: () => AutoRouter.of(context).popUntilRoot(),
+            child: Text(
+              tr(LocaleKeys.getSafer_skipAction),
+              style: typography.body3.copyWith(decoration: TextDecoration.underline),
+            ),
           ),
         ],
       ),
@@ -124,11 +143,13 @@ class _MethodContainer extends HookWidget {
   final String info;
   final String action;
   final Function() onPressed;
+  final bool filledButton;
 
   const _MethodContainer({
     required this.info,
     required this.action,
     required this.onPressed,
+    required this.filledButton,
     Key? key,
   }) : super(key: key);
 
@@ -137,18 +158,25 @@ class _MethodContainer extends HookWidget {
     final typography = useAppTypography();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           info,
           textAlign: TextAlign.center,
-          style: typography.primary,
+          style: typography.body1,
         ),
         const SizedBox(height: AppDimens.m),
-        CustomRectangularButton.filled(
-          text: action,
-          onPressed: onPressed,
-        ),
+        if (filledButton)
+          CustomRectangularButton.filled(
+            text: action,
+            onPressed: onPressed,
+          )
+        else
+          CustomRectangularButton.outlined(
+            text: action,
+            onPressed: onPressed,
+          ),
       ],
     );
   }

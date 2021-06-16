@@ -56,4 +56,5 @@ class AppDimens {
   static const aspectRatioA4 = 0.707;
 
   static const logoHeight = 30.0;
+  static const biometricIconSize = 50.0;
 }

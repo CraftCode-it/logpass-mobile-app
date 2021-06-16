@@ -1,5 +1,9 @@
 class AppIcon {
   static const logo = 'assets/icon/logo.svg';
+  static const biometric = 'assets/icon/biometric.svg';
+
+  static const back = 'assets/icon/back.svg';
+  static const close = 'assets/icon/close.svg';
 
   static const checkboxEmpty = 'assets/icon/checkbox_empty.svg';
   static const checkboxError = 'assets/icon/checkbox_error.svg';

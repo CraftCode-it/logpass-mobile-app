@@ -5,12 +5,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/app_security/app_security_type.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_cubit.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -24,6 +27,7 @@ class SecuredLoginPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<SecuredLoginPageCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
     final pinFieldController = useTextEditingController();
 
     useCubitListener<SecuredLoginPageCubit, SecuredLoginPageState>(
@@ -35,6 +39,17 @@ class SecuredLoginPage extends HookWidget {
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: AppDimens.l),
+          child: SvgPicture.asset(AppIcon.logo),
+        ),
+        leadingWidth: 100,
+        actions: const [
+          _NeedHelpButton(),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -83,14 +98,14 @@ class _Content extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _NeedHelpButton(),
         const Spacer(flex: 3),
-        Text(
-          LocaleKeys.common_appName,
-          textAlign: TextAlign.center,
-          style: typography.primary,
-        ).tr(),
         const SizedBox(height: AppDimens.xl),
+        Text(
+          LocaleKeys.securedLogin_header,
+          textAlign: TextAlign.center,
+          style: typography.h4,
+        ).tr(),
+        const Spacer(flex: 3),
         _AuthorizationOptionsContainer(
           state: state,
           cubit: cubit,
@@ -102,17 +117,20 @@ class _Content extends HookWidget {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: const Text('Done'),
+              child: Text(
+                'Done',
+                style: typography.info1,
+              ),
             ),
           ),
         if (!keyboardVisible) ...[
           Text(
             LocaleKeys.securedLogin_logoutInfo,
             textAlign: TextAlign.center,
-            style: typography.primary,
+            style: typography.body1,
           ).tr(),
           const SizedBox(height: AppDimens.m),
-          CustomRectangularButton.outlined(
+          CustomRectangularButton.filled(
             text: tr(LocaleKeys.common_logout),
             onPressed: () {},
           ),
@@ -125,16 +143,21 @@ class _Content extends HookWidget {
   bool _shouldShowDoneKeyboardButton() => keyboardVisible && Platform.isIOS;
 }
 
-class _NeedHelpButton extends StatelessWidget {
+class _NeedHelpButton extends HookWidget {
   const _NeedHelpButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {},
-        child: const Text(LocaleKeys.securedLogin_needHelp).tr(),
+        child: Text(
+          LocaleKeys.securedLogin_needHelp,
+          style: typography.info1.copyWith(decoration: TextDecoration.underline),
+        ).tr(),
       ),
     );
   }
@@ -167,6 +190,7 @@ class _AuthorizationOptionsContainer extends HookWidget {
     );
 
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -174,9 +198,9 @@ class _AuthorizationOptionsContainer extends HookWidget {
         Text(
           LocaleKeys.securedLogin_pinCodeInfo,
           textAlign: TextAlign.center,
-          style: typography.primary,
+          style: typography.body1,
         ).tr(),
-        const SizedBox(height: AppDimens.c),
+        const SizedBox(height: AppDimens.l),
         PinField(
           onPinChanged: cubit.updatePinCode,
           autoFocus: type == AppSecurityType.code,
@@ -186,7 +210,7 @@ class _AuthorizationOptionsContainer extends HookWidget {
           Text(
             pinError,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.redAccent),
+            style: typography.input.copyWith(color: colors.error100),
           ),
         ],
         const SizedBox(height: AppDimens.xl),
@@ -216,12 +240,15 @@ class _OptionalBiometricsContainer extends HookWidget {
         Text(
           LocaleKeys.securedLogin_biometricInfo,
           textAlign: TextAlign.center,
-          style: typography.primary,
+          style: typography.body1,
         ).tr(),
         const SizedBox(height: AppDimens.s),
         IconButton(
+          iconSize: AppDimens.biometricIconSize,
           onPressed: cubit.useBiometrics,
-          icon: const Icon(Icons.fingerprint),
+          icon: SvgPicture.asset(
+            AppIcon.biometric,
+          ),
         ),
       ],
     );

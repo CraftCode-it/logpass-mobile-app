@@ -5,8 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/pin_setup/new_pin/new_pin_page_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -18,15 +20,19 @@ class NewPinPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<NewPingPageCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
     final typography = useAppTypography();
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(LocaleKeys.newPin_title).tr(),
-        leading: IconButton(
-          onPressed: () => AutoRouter.of(context).popUntilRoot(),
-          icon: const Icon(Icons.close),
+        title: Text(
+          LocaleKeys.newPin_title,
+          style: typography.h8,
+        ).tr(),
+        leading: NavigationButton.close(
+          customAction: () => AutoRouter.of(context).popUntilRoot(),
         ),
       ),
       body: SafeArea(
@@ -35,13 +41,13 @@ class NewPinPage extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Spacer(flex: 2),
+              const SizedBox(height: AppDimens.l),
               Text(
                 LocaleKeys.newPin_info,
                 textAlign: TextAlign.center,
-                style: typography.primary,
+                style: typography.body1,
               ).tr(),
-              const Spacer(flex: 2),
+              const SizedBox(height: AppDimens.xl),
               PinField(onPinChanged: cubit.updatePin),
               const Spacer(flex: 1),
               CustomRectangularButton.filled(
