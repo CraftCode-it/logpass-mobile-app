@@ -57,6 +57,7 @@ dependencies:
   path: 1.8.0
   path_provider: 2.0.2
   synchronized: 3.0.0
+  flutter_svg: 0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,7 @@ flutter:
   assets:
     - assets/translations/
     - assets/json/
+    - assets/icon/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

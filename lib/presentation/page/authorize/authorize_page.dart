@@ -129,12 +129,12 @@ class _PageContent extends HookWidget {
             const SizedBox(height: AppDimens.xl),
             Expanded(child: _AuthorizationForm()),
             const SizedBox(height: AppDimens.xl),
-            RoundedButton(
+            CustomRectangularButton.filled(
               text: LocaleKeys.authorize_confirm_button.tr(),
               onPressed: onConfirmCallback,
             ),
             const SizedBox(height: AppDimens.l),
-            RoundedButton(
+            CustomRectangularButton.outlined(
               text: LocaleKeys.authorize_reject_button.tr(),
               onPressed: onDenyCallback,
             ),
