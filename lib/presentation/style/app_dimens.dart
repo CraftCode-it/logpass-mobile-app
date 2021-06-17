@@ -45,16 +45,25 @@ class AppDimens {
   static const xxxc = 80.0;
 
   static const buttonHeight = 56.0;
+  static const smallButtonHeight = 32.0;
 
   static const inputHeight = 40.0;
   static const minCodeInputWidth = 70.0;
 
   static const dividerHeight = 1.0;
 
-  static const serviceImageIconSize = 28.0;
+  static const serviceImageIconSize = 24.0;
 
   static const aspectRatioA4 = 0.707;
 
   static const logoHeight = 30.0;
+  static const appBarLogoWidth = 100.0;
   static const biometricIconSize = 50.0;
+
+  static const oneTimeCodeSizeFactor = 0.7;
+  static const oneTimeCodeProgressWidth = 4.38;
+
+  static const tabBarIndicatorSize = 34.0;
+  static const tabBarIndicatorWeight = 2.0;
+  static const tabBarUnderlineWeight = 1.5;
 }

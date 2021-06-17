@@ -16,6 +16,12 @@
     "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
     "somethingWentWrong": "Something went wrong. Please try again."
   },
+  "bottomBarNavigation": {
+    "home": "Home",
+    "services": "Services",
+    "data": "Your data",
+    "settings": "Settings"
+  },
   "onboarding": {
     "stepOneTitle": "Welcome!",
     "stepOneContent": "Czym jest Logpass Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodsed do eiusmod",
@@ -109,8 +115,13 @@
   },
   "sessionListView": {
     "endAllSessions": "End all sessions",
-    "noActiveSessions": "You have no active sessions for this service.\nGo to :ICON: to preview past ones.",
-    "noHistoricalSessions": "You have no historical sessions for this service."
+    "noActiveSessionsStart": "You have no active sessions for this service.\nGo to ",
+    "noActiveSessionsEnd": " to preview past ones.",
+    "noHistoricalSessions": "You have no historical sessions for this service.",
+    "sessionEnded": "Session ended"
+  },
+  "pastSessionsList": {
+    "title": "Past sessions"
   },
   "sessionRow": {
     "opened": "opened:",

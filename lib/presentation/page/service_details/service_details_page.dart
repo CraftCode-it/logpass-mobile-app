@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/service_details/agreement_list/agreement_list_view.dart';
@@ -9,7 +10,11 @@ import 'package:logpass_me/presentation/page/service_details/service_details_pag
 import 'package:logpass_me/presentation/page/service_details/service_details_page_state.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,19 +32,30 @@ class ServiceDetailsPage extends HookWidget {
     final cubit = useCubit<ServiceDetailsPageCubit>();
     final state = useCubitBuilder(cubit);
     final tabController = useTabController(initialLength: 2);
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
 
     useEffect(() {
       cubit.initialize(service);
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
+        backgroundColor: colors.secondaryBackground,
+        leading: NavigationButton.back(),
         centerTitle: true,
-        title: const Text(LocaleKeys.serviceDetails_title).tr(),
+        title: Text(
+          LocaleKeys.serviceDetails_title,
+          style: typography.h8,
+        ).tr(),
         actions: [
           IconButton(
             onPressed: () => AutoRouter.of(context).push(HistoricalSessionListPageRoute(service: service)),
-            icon: const Icon(Icons.history),
+            icon: SvgPicture.asset(
+              AppIcon.history,
+              color: colors.buttonFill,
+            ),
           ),
         ],
       ),
@@ -59,7 +75,7 @@ class ServiceDetailsPage extends HookWidget {
   }
 }
 
-class _Content extends StatelessWidget {
+class _Content extends HookWidget {
   final ServiceDetailsPageCubit cubit;
   final ServiceDetailsPageStateIdle state;
   final TabController tabController;
@@ -73,26 +89,54 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final tabSize = (screenWidth - AppDimens.l * 2) / 2;
+    final tabIndicatorPadding = (tabSize - AppDimens.tabBarIndicatorSize) / 2;
+    final colors = useAppThemeColors();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: AppDimens.m),
-              _ServiceHeader(service: state.service),
-              const SizedBox(height: AppDimens.m),
-              TabBar(
-                controller: tabController,
-                tabs: [
-                  Tab(text: tr(LocaleKeys.serviceDetails_sessionsTab)),
-                  Tab(text: tr(LocaleKeys.serviceDetails_agreementsTab)),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _ServiceHeader(service: state.service),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: AppDimens.xxl,
+              ),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    height: AppDimens.tabBarUnderlineWeight,
+                    color: colors.tabBarUnderline,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                    child: TabBar(
+                      controller: tabController,
+                      indicator: UnderlineTabIndicator(
+                        borderSide: const BorderSide(
+                          width: AppDimens.tabBarIndicatorWeight,
+                          color: AppColors.success100,
+                        ),
+                        insets: EdgeInsets.symmetric(horizontal: tabIndicatorPadding),
+                      ),
+                      tabs: [
+                        Tab(
+                          text: tr(LocaleKeys.serviceDetails_sessionsTab),
+                        ),
+                        Tab(
+                          text: tr(LocaleKeys.serviceDetails_agreementsTab),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
         Expanded(
           child: TabBarView(
@@ -124,23 +168,19 @@ class _EndingSessionsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: AppDimens.m),
-          _ServiceHeader(service: state.service),
-          const Expanded(
-            child: Loader(),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _ServiceHeader(service: state.service),
+        const Expanded(
+          child: Loader(),
+        ),
+      ],
     );
   }
 }
 
-class _ServiceHeader extends StatelessWidget {
+class _ServiceHeader extends HookWidget {
   final Service service;
 
   const _ServiceHeader({
@@ -150,24 +190,40 @@ class _ServiceHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+
     return GestureDetector(
       onTap: () async {
         await launch(service.url);
       },
       child: Container(
-        height: 52,
-        decoration: ShapeDecoration(
-          shape: Border.all(
-            color: Colors.grey,
-          ),
+        width: double.infinity,
+        padding: const EdgeInsets.only(
+          top: AppDimens.xxxc,
+          bottom: AppDimens.xxl,
+          left: AppDimens.l,
+          right: AppDimens.l,
         ),
-        padding: const EdgeInsets.all(AppDimens.s),
+        color: colors.secondaryBackground,
         child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(service.logo),
+            Image.network(
+              service.logo,
+              width: 40,
+              height: 40,
+            ),
             const SizedBox(width: AppDimens.m),
-            Text(service.name),
+            Expanded(
+              child: Text(
+                service.name,
+                style: typography.h2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),

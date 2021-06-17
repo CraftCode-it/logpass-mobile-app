@@ -29,6 +29,7 @@ class AgreementListView extends StatelessWidget {
             text: tr(LocaleKeys.agreementList_revokeAllAction),
             onPressed: () {},
           ),
+          const SizedBox(height: AppDimens.xl),
         ],
       ],
     );

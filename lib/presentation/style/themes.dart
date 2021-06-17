@@ -10,16 +10,11 @@ final lightTheme = ThemeData(
     color: AppColors.backgroundLight,
     elevation: 0,
   ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: AppColors.backgroundDark,
-    selectedIconTheme: const IconThemeData(color: AppColors.backgroundLight),
-    unselectedIconTheme: IconThemeData(color: AppColors.backgroundLight.withOpacity(0.8)),
-    selectedLabelStyle: const TextStyle(color: AppColors.primaryTextDark),
-    unselectedLabelStyle: TextStyle(color: AppColors.primaryTextDark.withOpacity(0.8)),
-  ),
-  tabBarTheme: const TabBarTheme(
-    labelColor: AppColors.primaryTextLight,
-    unselectedLabelColor: AppColors.primaryTextLight,
+  tabBarTheme: TabBarTheme(
+    labelStyle: _tabBarSelectedTypography(),
+    unselectedLabelStyle: _tabBarUnselectedTypography(),
+    labelColor: AppColors.primary100,
+    unselectedLabelColor: AppColors.primary20,
   ),
 );
 
@@ -31,16 +26,26 @@ final darkTheme = ThemeData(
     color: AppColors.backgroundDark,
     elevation: 0,
   ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: AppColors.backgroundLight,
-    type: BottomNavigationBarType.fixed,
-    selectedIconTheme: const IconThemeData(color: AppColors.backgroundDark),
-    unselectedIconTheme: IconThemeData(color: AppColors.backgroundDark.withOpacity(0.8)),
-    selectedLabelStyle: const TextStyle(color: AppColors.primaryTextLight),
-    unselectedLabelStyle: TextStyle(color: AppColors.primaryTextLight.withOpacity(1)),
-  ),
-  tabBarTheme: const TabBarTheme(
-    labelColor: AppColors.primaryTextDark,
-    unselectedLabelColor: AppColors.primaryTextDark,
+  tabBarTheme: TabBarTheme(
+    labelStyle: _tabBarSelectedTypography(),
+    unselectedLabelStyle: _tabBarUnselectedTypography(),
+    labelColor: AppColors.primary10,
+    unselectedLabelColor: AppColors.primary80,
   ),
 );
+
+TextStyle _tabBarSelectedTypography() {
+  return const TextStyle(
+    fontSize: 16,
+    letterSpacing: 0,
+    fontWeight: FontWeight.w600,
+  );
+}
+
+TextStyle _tabBarUnselectedTypography() {
+  return const TextStyle(
+    fontSize: 16,
+    letterSpacing: 0,
+    fontWeight: FontWeight.w400,
+  );
+}

@@ -10,6 +10,8 @@ class CustomRectangularButton extends HookWidget {
   final Color? fillColor;
   final Color? textColor;
   final bool filled;
+  final double? height;
+  final TextStyle? textStyle;
 
   const CustomRectangularButton._({
     required this.text,
@@ -17,6 +19,8 @@ class CustomRectangularButton extends HookWidget {
     required this.filled,
     this.fillColor,
     this.textColor,
+    this.height,
+    this.textStyle,
     Key? key,
   }) : super(key: key);
 
@@ -25,6 +29,8 @@ class CustomRectangularButton extends HookWidget {
     required Function()? onPressed,
     Color? fillColor,
     Color? textColor,
+    double? height,
+    TextStyle? textStyle,
   }) {
     return CustomRectangularButton._(
       text: text,
@@ -32,6 +38,8 @@ class CustomRectangularButton extends HookWidget {
       filled: true,
       fillColor: fillColor,
       textColor: textColor,
+      height: height,
+      textStyle: textStyle,
     );
   }
 
@@ -40,6 +48,8 @@ class CustomRectangularButton extends HookWidget {
     required Function()? onPressed,
     Color? fillColor,
     Color? textColor,
+    double? height,
+    TextStyle? textStyle,
   }) {
     return CustomRectangularButton._(
       text: text,
@@ -47,6 +57,8 @@ class CustomRectangularButton extends HookWidget {
       filled: false,
       fillColor: fillColor,
       textColor: textColor,
+      height: height,
+      textStyle: textStyle,
     );
   }
 
@@ -54,6 +66,8 @@ class CustomRectangularButton extends HookWidget {
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
+
+    final style = textStyle ?? typography.h8;
 
     return MaterialButton(
       shape: RoundedRectangleBorder(
@@ -65,14 +79,15 @@ class CustomRectangularButton extends HookWidget {
       ),
       elevation: 0,
       disabledTextColor: filled ? colors.buttonFilledInactiveText : colors.buttonOutlinedInactiveText,
-      height: AppDimens.buttonHeight,
+      height: height ?? AppDimens.buttonHeight,
       onPressed: onPressed,
       color: _getFillColor(colors),
       disabledColor: _getDisabledFillColor(colors),
       child: Text(
         text,
-        style: typography.h8.copyWith(
+        style: style.copyWith(
           color: _getTextColor(colors),
+          height: 1.0,
         ),
       ),
     );

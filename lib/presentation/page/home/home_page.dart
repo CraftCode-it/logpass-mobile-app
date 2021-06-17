@@ -2,13 +2,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
 
@@ -38,60 +41,92 @@ class _HomePageContent extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimens.xxl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: AppDimens.xxl),
-              SizedBox(
-                width: double.infinity,
-                child: Text(
-                  LocaleKeys.common_appName,
-                  textAlign: TextAlign.center,
-                  style: typography.h2,
-                ).tr(),
-              ),
-              const SizedBox(height: AppDimens.xxl),
-              OneTimeCodeContainer(),
-              const SizedBox(height: AppDimens.ml),
-              Expanded(
-                child: _PendingActions(state),
-              ),
-            ],
+      backgroundColor: colors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundDark,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: AppDimens.l),
+          child: SvgPicture.asset(
+            AppIcon.logo,
+            color: colors.logoSpecial,
           ),
         ),
+        leadingWidth: AppDimens.appBarLogoWidth,
+        actions: const [
+          _RefreshButton(),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          OneTimeCodeContainer(),
+          const SizedBox(height: AppDimens.xxl),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+              child: _PendingActions(state),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _PendingActions extends StatelessWidget {
+class _PendingActions extends HookWidget {
   final HomeState state;
 
   const _PendingActions(this.state);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _PendingActionsIndicator(),
-          const SizedBox(height: AppDimens.m),
+          Text(
+            LocaleKeys.home_pendingActionsLabel.tr(),
+            style: typography.h8,
+          ),
+          const SizedBox(height: AppDimens.l),
           state.maybeWhen(
             idle: (pendingActions) => _PendingItemsList(pendingActions),
             orElse: () => const SizedBox.shrink(),
-            loadInProgress: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loadInProgress: () => const Loader(),
           ),
           const SizedBox(height: AppDimens.s),
           _PastEventsButton(),
           const SizedBox(height: AppDimens.s),
         ],
+      ),
+    );
+  }
+}
+
+class _RefreshButton extends HookWidget {
+  const _RefreshButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return Align(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: () {},
+        child: Text(
+          LocaleKeys.home_refreshCodeLabel,
+          style: typography.info1.copyWith(
+            decoration: TextDecoration.underline,
+            color: colors.textSpecial,
+          ),
+        ).tr(),
       ),
     );
   }
@@ -190,7 +225,7 @@ class _PastEventsButton extends HookWidget {
       height: AppDimens.c,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(appColors.buttonOutlined),
+          backgroundColor: MaterialStateProperty.all<Color>(appColors.buttonOutlinedFill),
         ),
         onPressed: () {
           // TODO: handle navigation to past events
@@ -212,30 +247,6 @@ class _PastEventsButton extends HookWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _PendingActionsIndicator extends HookWidget {
-  @override
-  Widget build(BuildContext context) {
-    final appTypography = useAppTypography();
-    final appColors = useAppThemeColors();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: AppDimens.one,
-          color: appColors.text,
-        ),
-        const SizedBox(height: AppDimens.xs),
-        Text(
-          LocaleKeys.home_pendingActionsLabel.tr(),
-          style: appTypography.h8,
-        ),
-      ],
     );
   }
 }

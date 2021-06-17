@@ -48,12 +48,14 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
 
         emit(SessionListViewState.idle(_sessionsWithState, false, _activeSessions));
       } else {
-        emit(SessionListViewState.empty());
+        emit(SessionListViewState.empty(_activeSessions));
       }
     } on GeneralConnectionError catch (e) {
       emit(SessionListViewState.connectionError(e));
+      emit(SessionListViewState.empty(_activeSessions));
     } catch (e, s) {
       Fimber.e('Failed to load service sessions', ex: e, stacktrace: s);
+      emit(SessionListViewState.empty(_activeSessions));
     }
   }
 

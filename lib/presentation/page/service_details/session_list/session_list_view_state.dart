@@ -18,7 +18,7 @@ class SessionListViewState with _$SessionListViewState {
   ) = SessionListViewStateIdle;
 
   @Implements(BuildState)
-  factory SessionListViewState.empty() = _SessionListViewStateEmpty;
+  factory SessionListViewState.empty(bool activeSessions) = _SessionListViewStateEmpty;
 
   factory SessionListViewState.endedSession() = _SessionListViewStateEndedSession;
 
