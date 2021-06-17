@@ -142,6 +142,7 @@ class _Content extends StatelessWidget {
                       key: ValueKey(state.sessions[index]),
                       session: state.sessions[index],
                       onExpandedChanged: (expanded) => cubit.changeExpanded(index, expanded),
+                      onEndSession: () => cubit.endSession(state.sessions[index]),
                     ),
                     childCount: state.sessions.length,
                   ),
