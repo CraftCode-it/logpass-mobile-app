@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_image.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 class LoginSuccessPage extends HookWidget {
   const LoginSuccessPage({Key? key}) : super(key: key);
@@ -65,6 +65,7 @@ class LoginSuccessPage extends HookWidget {
               child: SvgPicture.asset(
                 AppIcon.logo,
                 height: AppDimens.logoHeight,
+                color: colors.logoSpecial,
               ),
             ),
             const SizedBox(height: AppDimens.l),

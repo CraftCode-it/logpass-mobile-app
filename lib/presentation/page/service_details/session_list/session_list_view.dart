@@ -1,15 +1,21 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view_cubit.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view_state.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_row.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/info_snackbar.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
 
 class SessionListViewKeepingState extends StatefulWidget {
   final Service service;
@@ -43,12 +49,48 @@ class SessionListView extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<SessionListViewCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+    useCubitListener<SessionListViewCubit, SessionListViewState>(
+      cubit,
+      (cubit, state, context) => _listener(
+        cubit,
+        state,
+        context,
+        colors,
+        typography,
+      ),
+    );
 
     useEffect(() {
       cubit.initialize(true, service);
     }, [cubit]);
 
     return SessionListBuilder(cubit: cubit, state: state);
+  }
+
+  void _listener(
+    SessionListViewCubit cubit,
+    SessionListViewState state,
+    BuildContext context,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) {
+    state.maybeMap(
+      endedSession: (_) => showInformationSnackBar(
+        context: context,
+        colors: colors,
+        typography: typography,
+        message: tr(LocaleKeys.sessionListView_sessionEnded),
+      ),
+      connectionError: (state) => showConnectionErrorSnackBar(
+        error: state.error,
+        context: context,
+        colors: colors,
+        typography: typography,
+      ),
+      orElse: () {},
+    );
   }
 }
 
@@ -67,7 +109,7 @@ class SessionListBuilder extends StatelessWidget {
     return state.maybeMap(
       loading: (_) => const Loader(),
       idle: (state) => _Content(cubit: cubit, state: state),
-      empty: (_) => _Empty(cubit: cubit),
+      empty: (state) => _Empty(cubit: cubit, activeSessions: state.activeSessions),
       orElse: () => const SizedBox(),
     );
   }
@@ -113,32 +155,64 @@ class _Content extends StatelessWidget {
             text: tr(LocaleKeys.sessionListView_endAllSessions),
             onPressed: () {},
           ),
-          const SizedBox(height: AppDimens.xxxl),
+          const SizedBox(height: AppDimens.xl),
         ],
       ],
     );
   }
 }
 
-class _Empty extends StatelessWidget {
+class _Empty extends HookWidget {
   final SessionListViewCubit cubit;
+  final bool activeSessions;
 
   const _Empty({
     required this.cubit,
+    required this.activeSessions,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
     return RefreshIndicator(
       onRefresh: () => cubit.loadFirstPage(),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(top: AppDimens.m),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(LocaleKeys.sessionListView_noActiveSessions).tr(),
+            if (activeSessions)
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: typography.body1.copyWith(color: colors.secondaryText),
+                  children: [
+                    TextSpan(
+                      text: tr(LocaleKeys.sessionListView_noActiveSessionsStart),
+                    ),
+                    WidgetSpan(
+                      child: SvgPicture.asset(
+                        AppIcon.history,
+                        color: colors.secondaryText,
+                      ),
+                    ),
+                    TextSpan(
+                      text: tr(LocaleKeys.sessionListView_noActiveSessionsEnd),
+                    ),
+                  ],
+                ),
+              )
+            else
+              Text(
+                LocaleKeys.sessionListView_noHistoricalSessions,
+                style: typography.body1.copyWith(color: colors.secondaryText),
+                textAlign: TextAlign.center,
+              ).tr(),
           ],
         ),
       ),

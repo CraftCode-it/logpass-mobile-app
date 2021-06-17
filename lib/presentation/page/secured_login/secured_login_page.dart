@@ -43,9 +43,12 @@ class SecuredLoginPage extends HookWidget {
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.only(left: AppDimens.l),
-          child: SvgPicture.asset(AppIcon.logo),
+          child: SvgPicture.asset(
+            AppIcon.logo,
+            color: colors.logo,
+          ),
         ),
-        leadingWidth: 100,
+        leadingWidth: AppDimens.appBarLogoWidth,
         actions: const [
           _NeedHelpButton(),
         ],

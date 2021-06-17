@@ -1,11 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/info_snackbar.dart';
@@ -40,13 +42,13 @@ class MainPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<MainPageCubit>();
-    final color = useAppThemeColors();
+    final colors = useAppThemeColors();
     final typography = useAppTypography();
     final index = useState(0);
 
     useCubitListener<MainPageCubit, MainPageState>(
       cubit,
-      (cubit, state, context) => _cubitListener(cubit, state, context, color, typography),
+      (cubit, state, context) => _cubitListener(cubit, state, context, colors, typography),
     );
 
     useEffect(() {
@@ -72,22 +74,56 @@ class MainPage extends HookWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        backgroundColor: colors.bottomBarBackground,
+        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: typography.info2.copyWith(color: colors.bottomBarActiveText),
+        unselectedLabelStyle: typography.info2.copyWith(color: colors.bottomBarInactiveText),
+        selectedItemColor: colors.bottomBarActiveText,
+        unselectedItemColor: colors.bottomBarInactiveText,
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: SvgPicture.asset(
+              AppIcon.home,
+              color: colors.bottomBarInactiveText,
+            ),
+            activeIcon: SvgPicture.asset(
+              AppIcon.home,
+              color: colors.bottomBarActiveText,
+            ),
+            label: tr(LocaleKeys.bottomBarNavigation_home),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.wifi),
-            label: 'Services',
+            icon: SvgPicture.asset(
+              AppIcon.services,
+              color: colors.bottomBarInactiveText,
+            ),
+            activeIcon: SvgPicture.asset(
+              AppIcon.services,
+              color: colors.bottomBarActiveText,
+            ),
+            label: tr(LocaleKeys.bottomBarNavigation_services),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'Your data',
+            icon: SvgPicture.asset(
+              AppIcon.yourData,
+              color: colors.bottomBarInactiveText,
+            ),
+            activeIcon: SvgPicture.asset(
+              AppIcon.yourData,
+              color: colors.bottomBarActiveText,
+            ),
+            label: tr(LocaleKeys.bottomBarNavigation_data),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: SvgPicture.asset(
+              AppIcon.settings,
+              color: colors.bottomBarInactiveText,
+            ),
+            activeIcon: SvgPicture.asset(
+              AppIcon.settings,
+              color: colors.bottomBarActiveText,
+            ),
+            label: tr(LocaleKeys.bottomBarNavigation_settings),
           ),
         ],
         currentIndex: index.value,

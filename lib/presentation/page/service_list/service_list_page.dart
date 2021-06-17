@@ -22,7 +22,7 @@ class ServiceListPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<ServiceListPageCubit>();
     final state = useCubitBuilder(cubit);
-    final color = useAppThemeColors();
+    final colors = useAppThemeColors();
     final typography = useAppTypography();
     final scrollController = useScrollController();
 
@@ -30,7 +30,7 @@ class ServiceListPage extends HookWidget {
 
     useCubitListener<ServiceListPageCubit, ServiceListPageState>(
       cubit,
-      (cubit, state, context) => _listener(cubit, state, context, color, typography),
+      (cubit, state, context) => _listener(cubit, state, context, colors, typography),
     );
 
     useEffect(() {
@@ -48,9 +48,12 @@ class ServiceListPage extends HookWidget {
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text(LocaleKeys.serviceList_title).tr(),
+        title: Text(
+          LocaleKeys.serviceList_title,
+          style: typography.h4,
+        ).tr(),
       ),
       body: _Content(
         cubit: cubit,
@@ -106,21 +109,25 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _ContentEmpty extends StatelessWidget {
+class _ContentEmpty extends HookWidget {
   final ServiceListPageCubit cubit;
 
   const _ContentEmpty({required this.cubit, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
     return RefreshIndicator(
       onRefresh: () => cubit.loadFirstPage(),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Center(
-          child: const Text(
+          child: Text(
             LocaleKeys.serviceList_noServices,
             textAlign: TextAlign.center,
+            style: typography.body1.copyWith(color: colors.secondaryText),
           ).tr(),
         ),
       ),
@@ -202,26 +209,24 @@ class _ServiceList extends StatelessWidget {
   }
 }
 
-class _ServicesHeader extends StatelessWidget {
+class _ServicesHeader extends HookWidget {
   final String text;
 
   const _ServicesHeader({required this.text, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Separator.dark(),
-        const SizedBox(height: AppDimens.s),
-        Text(text),
-      ],
+    final typography = useAppTypography();
+
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+      style: typography.h8,
     );
   }
 }
 
-class _ServiceRow extends StatelessWidget {
+class _ServiceRow extends HookWidget {
   final Service service;
   final bool active;
 
@@ -233,6 +238,8 @@ class _ServiceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -250,15 +257,26 @@ class _ServiceRow extends StatelessWidget {
                   width: AppDimens.serviceImageIconSize,
                   height: AppDimens.serviceImageIconSize,
                 ),
-                const SizedBox(width: AppDimens.s),
+                const SizedBox(width: AppDimens.l),
                 Expanded(
-                  child: Text(service.name),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        service.name,
+                        style: typography.body3,
+                      ),
+                      if (active) ...[
+                        const SizedBox(height: AppDimens.xs),
+                        Text(
+                          LocaleKeys.serviceList_session,
+                          style: typography.info2.copyWith(color: AppColors.success100),
+                        ).plural(service.tokens.activeCount),
+                      ],
+                    ],
+                  ),
                 ),
-                if (active)
-                  const Text(
-                    LocaleKeys.serviceList_session,
-                    style: TextStyle(fontSize: 12),
-                  ).plural(service.tokens.activeCount),
                 const Icon(Icons.chevron_right),
               ],
             ),

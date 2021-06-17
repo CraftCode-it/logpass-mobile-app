@@ -40,6 +40,8 @@ class AppColors {
   static const snackBarErrorBackground = error100;
 
   static const primary100 = Color(0xFF191933);
+  static const primary97 = Color(0xFF1F1F38);
+  static const primary95 = Color(0xFF25253D);
   static const primary90 = Color(0xFF303047);
   static const primary80 = Color(0xFF47475C);
   static const primary70 = Color(0xFF5E5E70);
@@ -195,6 +197,22 @@ abstract class AppThemeColors {
   Color get dividerLight;
 
   Color get background;
+
+  Color get secondaryBackground;
+
+  Color get bottomBarBackground;
+
+  Color get bottomBarActiveText;
+
+  Color get bottomBarInactiveText;
+
+  Color get logo;
+
+  Color get logoSpecial;
+
+  Color get tabBarUnderline;
+
+  Color get darkBackground;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -275,6 +293,30 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get background => AppColors.backgroundLight;
+
+  @override
+  Color get secondaryBackground => AppColors.primary02;
+
+  @override
+  Color get bottomBarBackground => AppColors.primary02;
+
+  @override
+  Color get bottomBarActiveText => AppColors.primary100;
+
+  @override
+  Color get bottomBarInactiveText => AppColors.primary40;
+
+  @override
+  Color get logo => AppColors.primary100;
+
+  @override
+  Color get logoSpecial => AppColors.secondary;
+
+  @override
+  Color get tabBarUnderline => AppColors.primary05;
+
+  @override
+  Color get darkBackground => AppColors.primary100;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -355,4 +397,28 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get background => AppColors.backgroundDark;
+
+  @override
+  Color get secondaryBackground => AppColors.primary97;
+
+  @override
+  Color get bottomBarBackground => AppColors.primary97;
+
+  @override
+  Color get bottomBarActiveText => AppColors.primary10;
+
+  @override
+  Color get bottomBarInactiveText => AppColors.primary60;
+
+  @override
+  Color get logo => AppColors.primary10;
+
+  @override
+  Color get logoSpecial => AppColors.primary10;
+
+  @override
+  Color get tabBarUnderline => AppColors.primary95;
+
+  @override
+  Color get darkBackground => AppColors.primary97;
 }

@@ -3,7 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view_cubit.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 class HistoricalSessionListPage extends HookWidget {
@@ -15,19 +18,29 @@ class HistoricalSessionListPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<SessionListViewCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
 
     useEffect(() {
       cubit.initialize(false, service);
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(
+        leading: NavigationButton.back(),
         centerTitle: true,
-        title: const Text('Past sessions'),
+        title: Text(
+          'Past sessions',
+          style: typography.h8,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-        child: SessionListBuilder(cubit: cubit, state: state),
+        child: SessionListBuilder(
+          cubit: cubit,
+          state: state,
+        ),
       ),
     );
   }

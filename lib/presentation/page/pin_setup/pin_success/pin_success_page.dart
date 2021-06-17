@@ -48,6 +48,7 @@ class PinSuccessPage extends HookWidget {
                 textColor: AppColors.primary100,
               ),
             ),
+            const SizedBox(height: AppDimens.l),
           ],
         ),
       ),

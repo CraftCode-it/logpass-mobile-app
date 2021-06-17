@@ -7,6 +7,8 @@ import 'package:logpass_me/presentation/page/agreement_details/agreement_details
 import 'package:logpass_me/presentation/page/service_details/session_list/session_date_formatter.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/labeled_text.dart';
@@ -23,15 +25,21 @@ class AgreementDetailsPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<AgreementDetailsPageCubit>();
     final state = useCubitBuilder(cubit);
+    final typography = useAppTypography();
 
     useEffect(() {
       cubit.initialize(serviceAgreement);
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
+        leading: NavigationButton.back(),
         centerTitle: true,
-        title: const Text('Agreement details'),
+        title: Text(
+          LocaleKeys.agreementDetails_title,
+          style: typography.h8,
+        ).tr(),
       ),
       body: state.maybeMap(
         initializing: (_) => const Loader(),
@@ -72,17 +80,7 @@ class _Content extends HookWidget {
         ),
         Container(
           padding: const EdgeInsets.all(AppDimens.m),
-          decoration: BoxDecoration(
-            color: colors.background,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0, -1),
-                blurRadius: 5,
-                spreadRadius: 1,
-              )
-            ],
-          ),
+          color: colors.secondaryBackground,
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -107,12 +105,12 @@ class _Content extends HookWidget {
                   ),
                   const SizedBox(height: AppDimens.m),
                   if (agreement.isAccepted)
-                    CustomRectangularButton.filled(
+                    CustomRectangularButton.outlined(
                       text: tr(LocaleKeys.agreementDetails_revokeAction),
                       onPressed: () {},
                     )
                   else
-                    CustomRectangularButton.outlined(
+                    CustomRectangularButton.filled(
                       text: tr(LocaleKeys.agreementDetails_confirmAction),
                       onPressed: () {},
                     ),

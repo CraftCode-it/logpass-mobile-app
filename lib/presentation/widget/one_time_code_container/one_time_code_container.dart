@@ -7,51 +7,52 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/date_time_utils.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
-
-const _progressIndicatorHeight = 5.0;
 
 class OneTimeCodeContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<OneTimeCodeContainerCubit>();
     final state = useCubitBuilder(cubit);
-    final appColors = useAppThemeColors();
+    final colors = useAppThemeColors();
 
     useEffect(() {
       cubit.init();
       return;
     }, [cubit]);
 
+    final size = MediaQuery.of(context).size.width * AppDimens.oneTimeCodeSizeFactor;
+
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: appColors.buttonFill,
-        ),
-        borderRadius: BorderRadius.circular(AppDimens.m),
-      ),
-      padding: const EdgeInsets.symmetric(
-        vertical: AppDimens.m,
-        horizontal: AppDimens.xxxl,
-      ),
+      width: double.infinity,
+      color: colors.darkBackground,
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.xxl),
       child: state.maybeWhen(
         idle: (oneTimeCode, remainingProgress) => _CodeContainer(
           oneTimeCode: oneTimeCode,
           remainingProgress: remainingProgress,
           onRefreshAction: cubit.refreshOneTimeCode,
           onCopyAction: cubit.copyOneTimeCodeToClipboard,
+          progressSize: size,
         ),
-        loadInProgress: () => const Center(
-          child: CircularProgressIndicator(),
+        loadInProgress: () => SizedBox(
+          width: size,
+          height: size,
+          child: const Loader(),
         ),
         error: () => _CodeContainer(
           oneTimeCode: null,
           remainingProgress: null,
           onRefreshAction: cubit.refreshOneTimeCode,
           onCopyAction: cubit.copyOneTimeCodeToClipboard,
+          progressSize: size,
         ),
-        orElse: () => const SizedBox.shrink(),
+        orElse: () => SizedBox(
+          width: size,
+          height: size,
+        ),
       ),
     );
   }
@@ -63,10 +64,12 @@ class _CodeContainer extends HookWidget {
   final VoidCallback onRefreshAction;
   final VoidCallback onCopyAction;
   final bool hasErrors;
+  final double progressSize;
 
   const _CodeContainer({
     required this.onRefreshAction,
     required this.onCopyAction,
+    required this.progressSize,
     this.oneTimeCode,
     this.remainingProgress,
   }) : hasErrors = oneTimeCode == null;
@@ -74,58 +77,77 @@ class _CodeContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final appTypography = useAppTypography();
-    final appColors = useAppThemeColors();
+    final colors = useAppThemeColors();
 
-    return Column(
+    return Stack(
+      fit: StackFit.loose,
+      alignment: Alignment.center,
       children: [
-        Text(
-          oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
-          style: appTypography.h1.copyWith(color: appColors.textSpecial),
+        SizedBox(
+          width: progressSize,
+          height: progressSize,
+          child: CircularProgressIndicator(
+            value: 1.0,
+            strokeWidth: AppDimens.oneTimeCodeProgressWidth,
+            color: AppColors.secondary.withOpacity(0.15),
+          ),
         ),
-        Visibility(
-          visible: !hasErrors,
+        SizedBox(
+          width: progressSize,
+          height: progressSize,
+          child: RotatedBox(
+            quarterTurns: 2,
+            child: CircularProgressIndicator(
+              value: remainingProgress,
+              strokeWidth: AppDimens.oneTimeCodeProgressWidth,
+              color: AppColors.success100,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: progressSize,
+          height: progressSize,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: AppDimens.xs),
-              LinearProgressIndicator(
-                value: remainingProgress,
-                backgroundColor: AppColors.primary100,
-                valueColor: AlwaysStoppedAnimation(appColors.buttonFill),
-                minHeight: _progressIndicatorHeight,
+              Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.s),
+                      child: Text(
+                        LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
+                        style: appTypography.info2.copyWith(color: colors.textSpecial),
+                      ),
+                    ),
+                    const SizedBox(height: AppDimens.m),
+                    Text(
+                      oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
+                      style: appTypography.h1.copyWith(color: colors.textSpecial),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: AppDimens.s),
-              Text(
-                LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
-                style: appTypography.info2.copyWith(color: appColors.textSpecial),
+              Expanded(
+                flex: 4,
+                child: Center(
+                  child: _IconTextButton(
+                    LocaleKeys.home_copyCodeLabel.tr(),
+                    Icon(
+                      Icons.copy,
+                      color: colors.logoSpecial,
+                    ),
+                    onTapAction: onCopyAction,
+                    isActive: !hasErrors,
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: AppDimens.m),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _IconTextButton(
-              LocaleKeys.home_copyCodeLabel.tr(),
-              Icon(
-                Icons.copy,
-                color: appColors.buttonFill,
-              ),
-              onTapAction: onCopyAction,
-              isActive: !hasErrors,
-            ),
-            _IconTextButton(
-              LocaleKeys.home_refreshCodeLabel.tr(),
-              Icon(
-                Icons.history,
-                color: appColors.buttonFill,
-              ),
-              onTapAction: onRefreshAction,
-              isActive: !hasErrors,
-            ),
-          ],
-        )
       ],
     );
   }
@@ -160,7 +182,10 @@ class _IconTextButton extends HookWidget {
             const SizedBox(width: AppDimens.xs),
             Text(
               label,
-              style: appTypography.info2.copyWith(color: appColors.textSpecial),
+              style: appTypography.info2.copyWith(
+                color: appColors.textSpecial,
+                decoration: TextDecoration.underline,
+              ),
             ),
           ],
         ),
