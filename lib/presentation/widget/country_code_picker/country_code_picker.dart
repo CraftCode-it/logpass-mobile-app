@@ -56,8 +56,8 @@ class CountryCodePicker extends HookWidget {
                 child: TextField(
                   enabled: false,
                   decoration: InputDecoration(
-                    disabledBorder: inputFieldBorder(colors.primary40),
-                    hintStyle: typography.h9.copyWith(color: colors.primary40),
+                    disabledBorder: inputFieldBorder(colors.inputInactiveBorder),
+                    hintStyle: typography.h9.copyWith(color: colors.inputHint),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     labelText: 'Prefix',
                   ),
@@ -82,7 +82,7 @@ class CountryCodePicker extends HookWidget {
                     ),
                     Icon(
                       Icons.keyboard_arrow_down_sharp,
-                      color: colors.primary100,
+                      color: colors.buttonOutlined,
                     ),
                   ],
                 ),

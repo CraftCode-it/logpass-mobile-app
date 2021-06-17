@@ -190,7 +190,6 @@ class _AuthorizationOptionsContainer extends HookWidget {
     );
 
     final typography = useAppTypography();
-    final colors = useAppThemeColors();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -210,7 +209,7 @@ class _AuthorizationOptionsContainer extends HookWidget {
           Text(
             pinError,
             textAlign: TextAlign.center,
-            style: typography.input.copyWith(color: colors.error100),
+            style: typography.input.copyWith(color: AppColors.error100),
           ),
         ],
         const SizedBox(height: AppDimens.xl),

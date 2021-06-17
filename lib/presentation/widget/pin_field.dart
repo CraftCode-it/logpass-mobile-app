@@ -40,7 +40,7 @@ class PinField extends HookWidget {
   BoxDecoration _inputBorder(AppThemeColors colors) {
     return BoxDecoration(
       border: Border.all(
-        color: colors.primary70,
+        color: colors.inputFocusedBorder,
         width: 1.0,
       ),
     );

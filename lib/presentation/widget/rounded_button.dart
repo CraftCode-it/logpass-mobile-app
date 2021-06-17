@@ -59,12 +59,12 @@ class CustomRectangularButton extends HookWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.zero,
         side: BorderSide(
-          color: onPressed == null ? colors.primary40 : (fillColor ?? colors.primary100),
+          color: onPressed == null ? colors.buttonOutlinedInactive : (fillColor ?? colors.buttonOutlined),
           width: 1.5,
         ),
       ),
       elevation: 0,
-      disabledTextColor: colors.primary20,
+      disabledTextColor: filled ? colors.buttonFilledInactiveText : colors.buttonOutlinedInactiveText,
       height: AppDimens.buttonHeight,
       onPressed: onPressed,
       color: _getFillColor(colors),
@@ -83,10 +83,9 @@ class CustomRectangularButton extends HookWidget {
     if (textColor != null) return textColor;
 
     if (filled) {
-      return colors.secondary;
+      return onPressed == null ? colors.buttonFilledInactiveText : colors.buttonFilledText;
     } else {
-      if (onPressed == null) return colors.primary40;
-      return colors.primary100;
+      return onPressed == null ? colors.buttonOutlinedInactiveText : colors.buttonOutlinedText;
     }
   }
 
@@ -95,17 +94,17 @@ class CustomRectangularButton extends HookWidget {
     if (fillColor != null) return fillColor;
 
     if (filled) {
-      return colors.primary100;
+      return colors.buttonFill;
     } else {
-      return colors.background;
+      return colors.buttonOutlinedFill;
     }
   }
 
   Color _getDisabledFillColor(AppThemeColors colors) {
     if (filled) {
-      return colors.primary40;
+      return colors.buttonFillInactive;
     } else {
-      return colors.background;
+      return colors.buttonOutlinedFill;
     }
   }
 }

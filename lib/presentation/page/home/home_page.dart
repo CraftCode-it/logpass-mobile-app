@@ -5,15 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
-
-// TODO: remove after appTypography implementation
-const _customFontSize = 12.0;
 
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -55,7 +52,7 @@ class _HomePageContent extends HookWidget {
                 child: Text(
                   LocaleKeys.common_appName,
                   textAlign: TextAlign.center,
-                  style: typography.primary.copyWith(fontSize: AppDimens.l),
+                  style: typography.h2,
                 ).tr(),
               ),
               const SizedBox(height: AppDimens.xxl),
@@ -108,6 +105,7 @@ class _PendingItemsList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return pendingActions.isNotEmpty
         ? ListView.builder(
@@ -121,7 +119,7 @@ class _PendingItemsList extends HookWidget {
         : Text(
             LocaleKeys.home_pendingActionsEmpty,
             textAlign: TextAlign.start,
-            style: typography.primary.copyWith(fontSize: AppDimens.m),
+            style: typography.body1.copyWith(color: colors.secondaryText),
           ).tr();
   }
 }
@@ -149,7 +147,7 @@ class _PendingItem extends HookWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: appColors.primaryText,
+              color: appColors.text,
             ),
           ),
         ),
@@ -158,7 +156,7 @@ class _PendingItem extends HookWidget {
             Container(
               width: AppDimens.m,
               height: AppDimens.m,
-              color: appColors.primaryButton,
+              color: appColors.buttonFill,
             ),
             const SizedBox(width: AppDimens.m),
             Expanded(
@@ -167,12 +165,12 @@ class _PendingItem extends HookWidget {
                   authorize: () => LocaleKeys.home_action_type_authorization.tr(),
                   orElse: () => 'Unknown',
                 ),
-                style: appTypography.primary,
+                style: appTypography.body3,
               ),
             ),
             Icon(
               Icons.arrow_forward_ios,
-              color: appColors.primaryButton,
+              color: appColors.buttonFill,
             ),
           ],
         ),
@@ -192,7 +190,7 @@ class _PastEventsButton extends HookWidget {
       height: AppDimens.c,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(appColors.secondary),
+          backgroundColor: MaterialStateProperty.all<Color>(appColors.buttonOutlined),
         ),
         onPressed: () {
           // TODO: handle navigation to past events
@@ -204,11 +202,11 @@ class _PastEventsButton extends HookWidget {
             children: [
               Text(
                 LocaleKeys.home_pastActions.tr(),
-                style: appTypography.primary,
+                style: appTypography.h9.copyWith(color: appColors.text),
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                color: appColors.primaryText,
+                color: appColors.text,
               ),
             ],
           ),
@@ -230,14 +228,12 @@ class _PendingActionsIndicator extends HookWidget {
       children: [
         Container(
           height: AppDimens.one,
-          color: appColors.primaryText,
+          color: appColors.text,
         ),
         const SizedBox(height: AppDimens.xs),
         Text(
           LocaleKeys.home_pendingActionsLabel.tr(),
-          style: appTypography.primary.copyWith(
-            fontSize: _customFontSize,
-          ),
+          style: appTypography.h8,
         ),
       ],
     );

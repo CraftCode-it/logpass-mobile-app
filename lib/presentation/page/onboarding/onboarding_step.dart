@@ -19,7 +19,6 @@ class OnboardingStep extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
-    final colors = useAppThemeColors();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -29,7 +28,7 @@ class OnboardingStep extends HookWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: typography.h5.copyWith(color: colors.secondary),
+          style: typography.h5.copyWith(color: AppColors.primaryTextDark),
         ),
         const SizedBox(height: AppDimens.l),
         Padding(
@@ -37,7 +36,7 @@ class OnboardingStep extends HookWidget {
           child: Text(
             content,
             textAlign: TextAlign.center,
-            style: typography.body1.copyWith(color: colors.secondary),
+            style: typography.body1.copyWith(color: AppColors.primaryTextDark),
           ),
         ),
       ],

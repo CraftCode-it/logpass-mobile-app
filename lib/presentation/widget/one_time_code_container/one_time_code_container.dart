@@ -1,18 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
-import 'package:logpass_me/presentation/utils/date_time_utils.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 const _progressIndicatorHeight = 5.0;
-// TODO: remove after appTypography implementation
-const _customFontSize = 12.0;
 
 class OneTimeCodeContainer extends HookWidget {
   @override
@@ -29,7 +27,7 @@ class OneTimeCodeContainer extends HookWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: appColors.primaryButton,
+          color: appColors.buttonFill,
         ),
         borderRadius: BorderRadius.circular(AppDimens.m),
       ),
@@ -82,10 +80,7 @@ class _CodeContainer extends HookWidget {
       children: [
         Text(
           oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
-          style: appTypography.primary.copyWith(
-            fontSize: AppDimens.xxl,
-            fontWeight: FontWeight.w700,
-          ),
+          style: appTypography.h1.copyWith(color: appColors.textSpecial),
         ),
         Visibility(
           visible: !hasErrors,
@@ -95,17 +90,14 @@ class _CodeContainer extends HookWidget {
               const SizedBox(height: AppDimens.xs),
               LinearProgressIndicator(
                 value: remainingProgress,
-                backgroundColor: appColors.secondary.withOpacity(0.7),
-                valueColor: AlwaysStoppedAnimation(appColors.primaryButton),
+                backgroundColor: AppColors.primary100,
+                valueColor: AlwaysStoppedAnimation(appColors.buttonFill),
                 minHeight: _progressIndicatorHeight,
               ),
               const SizedBox(height: AppDimens.s),
               Text(
                 LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
-                style: appTypography.primary.copyWith(
-                  fontSize: _customFontSize,
-                  color: appColors.primaryButton,
-                ),
+                style: appTypography.info2.copyWith(color: appColors.textSpecial),
               ),
             ],
           ),
@@ -118,7 +110,7 @@ class _CodeContainer extends HookWidget {
               LocaleKeys.home_copyCodeLabel.tr(),
               Icon(
                 Icons.copy,
-                color: appColors.primaryButton,
+                color: appColors.buttonFill,
               ),
               onTapAction: onCopyAction,
               isActive: !hasErrors,
@@ -127,7 +119,7 @@ class _CodeContainer extends HookWidget {
               LocaleKeys.home_refreshCodeLabel.tr(),
               Icon(
                 Icons.history,
-                color: appColors.primaryButton,
+                color: appColors.buttonFill,
               ),
               onTapAction: onRefreshAction,
               isActive: !hasErrors,
@@ -168,10 +160,7 @@ class _IconTextButton extends HookWidget {
             const SizedBox(width: AppDimens.xs),
             Text(
               label,
-              style: appTypography.primary.copyWith(
-                color: appColors.primaryButton,
-                fontSize: _customFontSize,
-              ),
+              style: appTypography.info2.copyWith(color: appColors.textSpecial),
             ),
           ],
         ),

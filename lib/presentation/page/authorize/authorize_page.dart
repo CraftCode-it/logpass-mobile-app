@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/oauth/data/client.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -121,7 +121,7 @@ class _PageContent extends HookWidget {
               child: Text(
                 LocaleKeys.authorize_title,
                 textAlign: TextAlign.center,
-                style: typography.primary.copyWith(fontSize: AppDimens.ml),
+                style: typography.h8.copyWith(),
               ).tr(),
             ),
             const SizedBox(height: AppDimens.xl),

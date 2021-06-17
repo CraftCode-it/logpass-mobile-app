@@ -3,9 +3,9 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 
 final lightTheme = ThemeData(
   brightness: Brightness.light,
-  backgroundColor: AppColors.primaryLight100,
+  backgroundColor: AppColors.backgroundDark,
   // otherwise transition from native splash screen to flutter blinks with white color
-  scaffoldBackgroundColor: AppColors.primaryLight100,
+  scaffoldBackgroundColor: AppColors.backgroundDark,
   appBarTheme: const AppBarTheme(
     color: AppColors.backgroundLight,
     elevation: 0,
@@ -26,6 +26,7 @@ final lightTheme = ThemeData(
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   backgroundColor: AppColors.backgroundDark,
+  scaffoldBackgroundColor: AppColors.backgroundDark,
   appBarTheme: const AppBarTheme(
     color: AppColors.backgroundDark,
     elevation: 0,

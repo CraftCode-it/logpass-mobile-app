@@ -31,7 +31,7 @@ class LoginSuccessPage extends HookWidget {
     }, []);
 
     return Scaffold(
-      backgroundColor: colors.success100,
+      backgroundColor: AppColors.success100,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +42,7 @@ class LoginSuccessPage extends HookWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
               child: Text(
                 LocaleKeys.loginSuccess_header,
-                style: typography.h2.copyWith(color: colors.secondary),
+                style: typography.h2.copyWith(color: colors.textSpecial),
               ).tr(),
             ),
             const SizedBox(height: AppDimens.l),
@@ -50,7 +50,7 @@ class LoginSuccessPage extends HookWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
               child: Text(
                 LocaleKeys.loginSuccess_info,
-                style: typography.h7.copyWith(color: colors.secondary),
+                style: typography.h7.copyWith(color: colors.textSpecial),
               ).tr(),
             ),
             Expanded(

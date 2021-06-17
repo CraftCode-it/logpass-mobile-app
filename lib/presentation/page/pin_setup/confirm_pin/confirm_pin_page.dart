@@ -99,7 +99,6 @@ class _PinField extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
-    final colors = useAppThemeColors();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,7 +112,7 @@ class _PinField extends HookWidget {
           idle: (state) => state.wrong
               ? Text(
                   LocaleKeys.common_wrongCode,
-                  style: typography.input.copyWith(color: colors.error100),
+                  style: typography.input.copyWith(color: AppColors.error100),
                 ).tr()
               : const SizedBox.shrink(),
           orElse: () => const SizedBox.shrink(),
