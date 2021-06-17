@@ -18,6 +18,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
   List<SessionWithState> _sessionsWithState = [];
   int _currentPage = 0;
   bool _loadedAll = false;
+  bool _loadingMore = false;
 
   SessionListViewCubit(
     this._getPageOfServiceSessionsUseCase,
@@ -62,25 +63,60 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
     }
   }
 
+  Future<void> loadNextPage() async {
+    if (_loadedAll || _currentPage == 0 || _loadingMore) return;
+
+    _loadingMore = true;
+    emit(SessionListViewState.idle(_sessionsWithState, true, _activeSessions));
+
+    try {
+      final services = await _getPageOfServiceSessionsUseCase(
+        _currentPage,
+        _service.clientId,
+        _activeSessions,
+      );
+
+      final newSessions = services.sessions.map((e) => SessionWithState(e, false, false)).toList();
+
+      _sessionsWithState = List.from(_sessionsWithState)..addAll(newSessions);
+      _loadedAll = services.totalCount <= _sessionsWithState.length;
+
+      emit(SessionListViewState.idle(_sessionsWithState, false, _activeSessions));
+    } on GeneralConnectionError catch (e) {
+      emit(SessionListViewState.connectionError(e));
+    } catch (e, s) {
+      Fimber.e('Fetching service list failed', ex: e, stacktrace: s);
+      emit(SessionListViewState.idle(_sessionsWithState, false, _activeSessions));
+    } finally {
+      _loadingMore = false;
+    }
+  }
+
   Future<void> endSession(SessionWithState session) async {
     final sessionToEnd = _sessionsWithState.firstWhere((element) => element.session.id == session.session.id);
     final endingSession = sessionToEnd.copyWith(endingSessionInProgress: true);
 
     try {
-      _emitIdleWithUpdatedSession(endingSession, false);
+      _emitIdleWithUpdatedSession(endingSession);
       await _endSessionUseCase(endingSession.session);
 
       final newList = List<SessionWithState>.from(_sessionsWithState);
       newList.removeWhere((element) => element.session.id == endingSession.session.id);
+      _sessionsWithState = newList;
 
       emit(SessionListViewState.endedSession());
-      emit(SessionListViewState.idle(newList, false, _activeSessions));
+
+      if (newList.isEmpty) {
+        emit(SessionListViewState.empty(_activeSessions));
+      } else {
+        emit(SessionListViewState.idle(newList, false, _activeSessions));
+      }
     } on GeneralConnectionError catch (e) {
       emit(SessionListViewState.connectionError(e));
-      _emitIdleWithUpdatedSession(sessionToEnd, false);
+      _emitIdleWithUpdatedSession(sessionToEnd);
     } catch (e, s) {
       Fimber.e('Failed to end session', ex: e, stacktrace: s);
-      _emitIdleWithUpdatedSession(sessionToEnd, false);
+      _emitIdleWithUpdatedSession(sessionToEnd);
     }
   }
 
@@ -94,14 +130,14 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
     emit(SessionListViewState.idle(newList, false, _activeSessions));
   }
 
-  void _emitIdleWithUpdatedSession(SessionWithState updatedSession, bool loadingMore) {
+  void _emitIdleWithUpdatedSession(SessionWithState updatedSession) {
     final newList = List<SessionWithState>.from(_sessionsWithState);
     final index = newList.indexWhere((element) => element.session.id == updatedSession.session.id);
 
     if (index != -1) {
       newList[index] = updatedSession;
       _sessionsWithState = newList;
-      emit(SessionListViewState.idle(newList, loadingMore, _activeSessions));
+      emit(SessionListViewState.idle(newList, _loadingMore, _activeSessions));
     }
   }
 }

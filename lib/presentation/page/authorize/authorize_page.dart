@@ -23,7 +23,7 @@ class AuthorizePage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<AuthorizePageCubit>();
     final state = useCubitBuilder(cubit);
-    final color = useAppThemeColors();
+    final colors = useAppThemeColors();
     final typography = useAppTypography();
 
     useCubitListener<AuthorizePageCubit, AuthorizePageState>(
@@ -32,7 +32,7 @@ class AuthorizePage extends HookWidget {
         cubit,
         state,
         context,
-        color,
+        colors,
         typography,
       ),
     );
@@ -42,6 +42,7 @@ class AuthorizePage extends HookWidget {
     }, [cubit]);
 
     return Scaffold(
+      backgroundColor: colors.background,
       body: state.maybeWhen(
         idle: (canConfirm, client) => _PageContent(
           client: client,

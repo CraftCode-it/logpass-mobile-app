@@ -51,6 +51,7 @@ class SessionListView extends HookWidget {
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
     final typography = useAppTypography();
+    final scrollController = useScrollController();
     useCubitListener<SessionListViewCubit, SessionListViewState>(
       cubit,
       (cubit, state, context) => _listener(
@@ -61,6 +62,18 @@ class SessionListView extends HookWidget {
         typography,
       ),
     );
+
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    useEffect(() {
+      scrollController.addListener(() {
+        final position = scrollController.position;
+
+        if (position.maxScrollExtent - position.pixels < screenHeight) {
+          cubit.loadNextPage();
+        }
+      });
+    }, [scrollController]);
 
     useEffect(() {
       cubit.initialize(true, service);
