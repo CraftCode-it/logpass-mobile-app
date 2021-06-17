@@ -211,6 +211,8 @@ abstract class AppThemeColors {
   Color get logoSpecial;
 
   Color get tabBarUnderline;
+
+  Color get darkBackground;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -312,6 +314,9 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get tabBarUnderline => AppColors.primary05;
+
+  @override
+  Color get darkBackground => AppColors.primary100;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -413,4 +418,7 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get tabBarUnderline => AppColors.primary95;
+
+  @override
+  Color get darkBackground => AppColors.primary97;
 }

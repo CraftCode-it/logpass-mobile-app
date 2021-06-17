@@ -40,13 +40,12 @@ class _HomePageContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final typography = useAppTypography();
     final colors = useAppThemeColors();
 
     return Scaffold(
       backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundDark,
+        backgroundColor: colors.darkBackground,
         leading: Padding(
           padding: const EdgeInsets.only(left: AppDimens.l),
           child: SvgPicture.asset(

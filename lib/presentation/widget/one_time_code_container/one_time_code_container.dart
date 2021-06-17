@@ -16,6 +16,7 @@ class OneTimeCodeContainer extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<OneTimeCodeContainerCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
 
     useEffect(() {
       cubit.init();
@@ -26,7 +27,7 @@ class OneTimeCodeContainer extends HookWidget {
 
     return Container(
       width: double.infinity,
-      color: AppColors.backgroundDark,
+      color: colors.darkBackground,
       padding: const EdgeInsets.symmetric(vertical: AppDimens.xxl),
       child: state.maybeWhen(
         idle: (oneTimeCode, remainingProgress) => _CodeContainer(
