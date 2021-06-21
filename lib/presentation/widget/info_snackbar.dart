@@ -23,7 +23,10 @@ void showInformationSnackBar({
         ),
         if (onTapAction != null)
           GestureDetector(
-            onTap: onTapAction,
+            onTap: () {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              onTapAction();
+            },
             child: Text(
               tr(LocaleKeys.main_open_action_label),
               style: typography.input.copyWith(color: colors.textSpecial),
