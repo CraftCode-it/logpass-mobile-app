@@ -58,6 +58,7 @@ dependencies:
   path_provider: 2.0.2
   synchronized: 3.0.0
   flutter_svg: 0.22.0
+  google_fonts: 2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
     - assets/json/
     - assets/icon/
     - assets/image/
+    - assets/fonts/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
