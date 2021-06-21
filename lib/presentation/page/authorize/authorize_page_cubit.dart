@@ -9,10 +9,11 @@ import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
-part 'authorize_page_state.dart';
 part 'authorize_page_cubit.freezed.dart';
+part 'authorize_page_state.dart';
 
 @injectable
 class AuthorizePageCubit extends Cubit<AuthorizePageState> {
@@ -20,6 +21,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final AssignToOAuthAttemptUseCase _assignToOAuthAttemptUseCase;
   final DenyOAuthAttemptUseCase _denyOAuthAttemptUseCase;
   final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
+  final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
 
   late String _authorizationAttemptId;
   late bool _shouldRedirect;
@@ -32,6 +34,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._assignToOAuthAttemptUseCase,
     this._denyOAuthAttemptUseCase,
     this._approveOAuthAttemptUseCase,
+    this._loadOneTimeCodeUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -70,11 +73,13 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
-      emit(AuthorizePageState.denied(redirectUri));
+      emit(AuthorizePageState.confirmed(redirectUri));
     } on GeneralConnectionError catch (e) {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
+    } finally {
+      await _loadOneTimeCodeUseCase();
     }
   }
 
@@ -90,6 +95,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
+    } finally {
+      await _loadOneTimeCodeUseCase();
     }
   }
 

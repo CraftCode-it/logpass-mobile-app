@@ -22,4 +22,7 @@ abstract class ServiceApiDataSource {
     @Query('is_active') bool? isActive,
     @Query('client_id') String? clientId,
   });
+
+  @DELETE('/users/self/tokens/{tokenId}/')
+  Future<void> endSession(@Path('tokenId') int token);
 }

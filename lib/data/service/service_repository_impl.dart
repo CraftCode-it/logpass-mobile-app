@@ -4,6 +4,7 @@ import 'package:logpass_me/data/service/api/data/authorized_services/authorized_
 import 'package:logpass_me/data/service/api/data/session/service_session_list_response_dto.dart';
 import 'package:logpass_me/data/service/api/service_api_data_source.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
+import 'package:logpass_me/domain/service/data/session/service_session.dart';
 import 'package:logpass_me/domain/service/data/session/service_sessions_bundle.dart';
 import 'package:logpass_me/domain/service/service_repository.dart';
 
@@ -33,5 +34,12 @@ class ServiceRepositoryImpl implements ServiceRepository {
     );
     final sessionsBundle = _serviceSessionsBundleDTOMapper(responseDTO);
     return sessionsBundle;
+  }
+
+  @override
+  Future<void> endSession(ServiceSession session) async {
+    await callWithDioErrorResolver(
+      () => _serviceApiDataSource.endSession(session.id),
+    );
   }
 }

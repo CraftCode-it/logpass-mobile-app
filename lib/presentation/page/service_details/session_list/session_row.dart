@@ -9,6 +9,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/labeled_text.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
@@ -16,16 +17,17 @@ import 'package:logpass_me/presentation/widget/separator.dart';
 class SessionRow extends HookWidget {
   final SessionWithState session;
   final Function(bool expanded) onExpandedChanged;
+  final Function() onEndSession;
 
   const SessionRow({
     required this.session,
     required this.onExpandedChanged,
+    required this.onEndSession,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final typography = useAppTypography();
     final colors = useAppThemeColors();
 
     return Column(
@@ -85,14 +87,9 @@ class SessionRow extends HookWidget {
                     text: SessionDateFormatter.formatDateTime(session.session.expiresAt),
                   ),
                   if (session.session.isActive)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: CustomRectangularButton.outlined(
-                        text: tr(LocaleKeys.sessionRow_endSessionAction),
-                        onPressed: () {},
-                        height: AppDimens.smallButtonHeight,
-                        textStyle: typography.body2,
-                      ),
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.fill,
+                      child: _EndSessionCell(sessionWithState: session, onEndSession: onEndSession),
                     )
                   else
                     const SizedBox(),
@@ -108,5 +105,43 @@ class SessionRow extends HookWidget {
         ],
       ],
     );
+  }
+}
+
+class _EndSessionCell extends HookWidget {
+  final SessionWithState sessionWithState;
+  final Function() onEndSession;
+
+  const _EndSessionCell({
+    required this.sessionWithState,
+    required this.onEndSession,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+
+    if (sessionWithState.endingSessionInProgress) {
+      return Container(
+        child: const Align(
+          alignment: Alignment.topCenter,
+          child: Loader(
+            size: AppDimens.m,
+            width: AppDimens.xxs,
+          ),
+        ),
+      );
+    } else {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: CustomRectangularButton.outlined(
+          text: tr(LocaleKeys.sessionRow_endSessionAction),
+          onPressed: onEndSession,
+          height: AppDimens.smallButtonHeight,
+          textStyle: typography.body2,
+        ),
+      );
+    }
   }
 }
