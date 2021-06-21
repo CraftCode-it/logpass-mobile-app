@@ -2,15 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
@@ -44,19 +43,10 @@ class _HomePageContent extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        backgroundColor: colors.darkBackground,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: AppDimens.l),
-          child: SvgPicture.asset(
-            AppIcon.logo,
-            color: colors.logoSpecial,
-          ),
-        ),
-        leadingWidth: AppDimens.appBarLogoWidth,
-        actions: const [
-          _RefreshButton(),
-        ],
+      appBar: CustomAppBar.smallLogo(
+        logoColor: colors.logoSpecial,
+      ).copyWith(
+        predefinedBackground: colors.darkBackground,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

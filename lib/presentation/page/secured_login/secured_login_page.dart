@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
@@ -40,18 +41,9 @@ class SecuredLoginPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: AppDimens.l),
-          child: SvgPicture.asset(
-            AppIcon.logo,
-            color: colors.logo,
-          ),
-        ),
-        leadingWidth: AppDimens.appBarLogoWidth,
-        actions: const [
-          _NeedHelpButton(),
-        ],
+      appBar: CustomAppBar.smallLogo(
+        logoColor: colors.logo,
+        trailing: const _NeedHelpButton(),
       ),
       body: SafeArea(
         child: Padding(

@@ -5,8 +5,7 @@ import 'package:logpass_me/presentation/page/service_details/session_list/sessio
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 class HistoricalSessionListPage extends HookWidget {
@@ -19,7 +18,6 @@ class HistoricalSessionListPage extends HookWidget {
     final cubit = useCubit<SessionListViewCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
 
     useEffect(() {
       cubit.initialize(false, service);
@@ -27,13 +25,8 @@ class HistoricalSessionListPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        leading: NavigationButton.back(),
-        centerTitle: true,
-        title: Text(
-          'Past sessions',
-          style: typography.h8,
-        ),
+      appBar: CustomAppBar.smallTitleWithBack(
+        title: 'Past sessions',
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
