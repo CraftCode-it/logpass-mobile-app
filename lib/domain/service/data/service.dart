@@ -16,7 +16,6 @@ class Service {
   final List<ResponseType> responseTypes;
   final List<GrantType> grantTypes;
   final List<ServiceAgreement> agreements;
-  final ServiceTokens tokens;
 
   Service({
     required this.clientId,
@@ -29,6 +28,5 @@ class Service {
     required this.responseTypes,
     required this.grantTypes,
     required this.agreements,
-    required this.tokens,
   });
 }

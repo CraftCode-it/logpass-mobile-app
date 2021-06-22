@@ -62,7 +62,7 @@ class ServiceDetailsPage extends HookWidget {
             state: state,
             tabController: tabController,
           ),
-          endingAllSessions: (state) => _EndingSessionsContent(state: state),
+          processing: (state) => _ProcessingContent(state: state),
           orElse: () => const SizedBox(),
         ),
       ),
@@ -143,7 +143,12 @@ class _Content extends HookWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                child: AgreementListView(service: state.service),
+                child: AgreementListView(
+                  service: state.service,
+                  onBackFromDetails: () {
+                    cubit.refreshServiceData();
+                  },
+                ),
               ),
             ],
           ),
@@ -153,10 +158,10 @@ class _Content extends HookWidget {
   }
 }
 
-class _EndingSessionsContent extends StatelessWidget {
-  final ServiceDetailsPageStateEndingAllSessions state;
+class _ProcessingContent extends StatelessWidget {
+  final ServiceDetailsPageStateProcessing state;
 
-  const _EndingSessionsContent({
+  const _ProcessingContent({
     required this.state,
     Key? key,
   }) : super(key: key);

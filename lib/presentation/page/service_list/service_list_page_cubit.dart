@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
+import 'package:logpass_me/domain/data_changed_notifier/use_case/listen_for_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_services_use_case.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
@@ -10,14 +14,34 @@ import 'package:logpass_me/presentation/page/service_list/service_list_page_stat
 @Injectable()
 class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   final GetPageOfServicesUseCase _getPageOfServicesUseCase;
+  final ListenForDataChangedUseCase _listenForDataChangedUseCase;
+
+  StreamSubscription? _dataChangedSubscription;
 
   bool _loadedAll = false;
   int _currentPage = 0;
   int _itemsCount = 0;
-  List<Service> _activeServices = [];
-  List<Service> _otherServices = [];
+  List<ServiceWithTokens> _activeServices = [];
+  List<ServiceWithTokens> _otherServices = [];
 
-  ServiceListPageCubit(this._getPageOfServicesUseCase) : super(ServiceListPageState.loading());
+  ServiceListPageCubit(
+    this._getPageOfServicesUseCase,
+    this._listenForDataChangedUseCase,
+  ) : super(ServiceListPageState.loading());
+
+  @override
+  Future<void> close() async {
+    await _dataChangedSubscription?.cancel();
+    return super.close();
+  }
+
+  Future<void> initialize() async {
+    _dataChangedSubscription = _listenForDataChangedUseCase(DataChangedType.service).listen((event) {
+      loadFirstPage();
+    });
+
+    await loadFirstPage();
+  }
 
   Future<void> loadFirstPage() async {
     emit(ServiceListPageState.loading());
@@ -82,11 +106,11 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
     }
   }
 
-  List<Service> _getActiveServices(ServicesBundle services) {
+  List<ServiceWithTokens> _getActiveServices(ServicesBundle services) {
     return services.services.where((element) => element.tokens.activeCount != 0).toList(growable: false);
   }
 
-  List<Service> _getOtherServices(ServicesBundle services) {
+  List<ServiceWithTokens> _getOtherServices(ServicesBundle services) {
     return services.services.where((element) => element.tokens.activeCount == 0).toList(growable: false);
   }
 

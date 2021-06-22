@@ -9,7 +9,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/language/language_code.dart';

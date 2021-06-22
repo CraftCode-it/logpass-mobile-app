@@ -8,8 +8,13 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class AgreementListView extends StatelessWidget {
   final Service service;
+  final Function()? onBackFromDetails;
 
-  const AgreementListView({required this.service, Key? key}) : super(key: key);
+  const AgreementListView({
+    required this.service,
+    this.onBackFromDetails,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,10 @@ class AgreementListView extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.only(top: AppDimens.m),
-            itemBuilder: (context, index) => AgreementRow(agreement: service.agreements[index]),
+            itemBuilder: (context, index) => AgreementRow(
+              agreement: service.agreements[index],
+              onBackFromDetails: onBackFromDetails,
+            ),
             separatorBuilder: (context, index) => const SizedBox(height: AppDimens.m),
             itemCount: service.agreements.length,
           ),

@@ -1,8 +1,10 @@
 import 'package:bloc_test/bloc_test.dart' hide verify, when, verifyNever, any;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
+import 'package:logpass_me/domain/data_changed_notifier/use_case/listen_for_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_tokens.dart';
+import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_services_use_case.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
@@ -12,7 +14,7 @@ import 'package:mockito/mockito.dart';
 
 import 'service_list_page_cubit_test.mocks.dart';
 
-class FakeService extends Fake implements Service {
+class FakeService extends Fake implements ServiceWithTokens {
   final int count;
 
   FakeService(this.count);
@@ -24,15 +26,18 @@ class FakeService extends Fake implements Service {
 @GenerateMocks(
   [
     GetPageOfServicesUseCase,
+    ListenForDataChangedUseCase,
   ],
 )
 void main() {
   late MockGetPageOfServicesUseCase getPageOfServicesUseCase;
+  late MockListenForDataChangedUseCase listenForDataChangedUseCase;
   late ServiceListPageCubit cubit;
 
   setUp(() {
     getPageOfServicesUseCase = MockGetPageOfServicesUseCase();
-    cubit = ServiceListPageCubit(getPageOfServicesUseCase);
+    listenForDataChangedUseCase = MockListenForDataChangedUseCase();
+    cubit = ServiceListPageCubit(getPageOfServicesUseCase, listenForDataChangedUseCase);
   });
 
   final serviceBundle = ServicesBundle(
@@ -55,6 +60,55 @@ void main() {
       FakeService(0),
     ],
   );
+
+  group('initialize', () {
+    blocTest<ServiceListPageCubit, ServiceListPageState>(
+      'loads first page',
+      build: () {
+        when(getPageOfServicesUseCase(1)).thenAnswer((realInvocation) async => serviceBundle);
+        when(listenForDataChangedUseCase(DataChangedType.service)).thenAnswer((realInvocation) => const Stream.empty());
+        return cubit;
+      },
+      act: (cubit) => cubit.initialize(),
+      expect: () => [
+        ServiceListPageState.loading(),
+        ServiceListPageState.idle(
+          serviceBundle.services.getRange(0, 3).toList(),
+          serviceBundle.services.getRange(3, serviceBundle.services.length).toList(),
+          false,
+        ),
+      ],
+    );
+
+    blocTest<ServiceListPageCubit, ServiceListPageState>(
+      'reloads first page when data changed notifier emits',
+      build: () {
+        when(getPageOfServicesUseCase(1)).thenAnswer((realInvocation) async => serviceBundle);
+        when(listenForDataChangedUseCase(DataChangedType.service)).thenAnswer(
+          (realInvocation) => Stream.fromFuture(
+            Future.delayed(const Duration(milliseconds: 500), () => DataChangedType.service),
+          ),
+        );
+        return cubit;
+      },
+      act: (cubit) => cubit.initialize(),
+      wait: const Duration(seconds: 1),
+      expect: () => [
+        ServiceListPageState.loading(),
+        ServiceListPageState.idle(
+          serviceBundle.services.getRange(0, 3).toList(),
+          serviceBundle.services.getRange(3, serviceBundle.services.length).toList(),
+          false,
+        ),
+        ServiceListPageState.loading(),
+        ServiceListPageState.idle(
+          serviceBundle.services.getRange(0, 3).toList(),
+          serviceBundle.services.getRange(3, serviceBundle.services.length).toList(),
+          false,
+        ),
+      ],
+    );
+  });
 
   group('loadFirstPage', () {
     final connectionError = GeneralConnectionError.noConnection();
@@ -118,7 +172,8 @@ void main() {
     group('when initialized', () {
       setUp(() async {
         when(getPageOfServicesUseCase(1)).thenAnswer((realInvocation) async => serviceBundle);
-        await cubit.loadFirstPage();
+        when(listenForDataChangedUseCase(DataChangedType.service)).thenAnswer((realInvocation) => const Stream.empty());
+        await cubit.initialize();
       });
 
       blocTest<ServiceListPageCubit, ServiceListPageState>(

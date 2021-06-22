@@ -14,7 +14,7 @@ class ServiceDetailsPageState with _$ServiceDetailsPageState {
   factory ServiceDetailsPageState.idle(Service service) = ServiceDetailsPageStateIdle;
 
   @Implements(BuildState)
-  factory ServiceDetailsPageState.endingAllSessions(Service service) = ServiceDetailsPageStateEndingAllSessions;
+  factory ServiceDetailsPageState.processing(Service service) = ServiceDetailsPageStateProcessing;
 
   factory ServiceDetailsPageState.connectionError(GeneralConnectionError error) = _ServiceDetailsPageStateConnectionError;
 }

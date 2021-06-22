@@ -22,6 +22,10 @@ class AgreementDetailsPageState with _$AgreementDetailsPageState {
   factory AgreementDetailsPageState.processing(PdfDocument? pdfDocument, ServiceAgreement agreement) =
       _AgreementDetailsPageStateProcessing;
 
+  factory AgreementDetailsPageState.confirmed() = _AgreementDetailsPageStateConfirmed;
+
+  factory AgreementDetailsPageState.revoked() = _AgreementDetailsPageStateRevoked;
+
   factory AgreementDetailsPageState.connectionError(GeneralConnectionError error) =
       _AgreementDetailsPageStateConnectionError;
 }

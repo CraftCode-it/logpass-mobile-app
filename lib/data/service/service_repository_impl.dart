@@ -1,8 +1,10 @@
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/error/dio_error_resolver.dart';
 import 'package:logpass_me/data/service/api/data/authorized_services/authorized_services_response_dto.dart';
+import 'package:logpass_me/data/service/api/data/service_dto.dart';
 import 'package:logpass_me/data/service/api/data/session/service_session_list_response_dto.dart';
 import 'package:logpass_me/data/service/api/service_api_data_source.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/data/session/service_session.dart';
 import 'package:logpass_me/domain/service/data/session/service_sessions_bundle.dart';
@@ -13,11 +15,13 @@ class ServiceRepositoryImpl implements ServiceRepository {
   final ServiceApiDataSource _serviceApiDataSource;
   final ServiceBundleDTOMapper _serviceBundleDTOMapper;
   final ServiceSessionsBundleDTOMapper _serviceSessionsBundleDTOMapper;
+  final ServiceDTOMapper _serviceDTOMapper;
 
   ServiceRepositoryImpl(
     this._serviceApiDataSource,
     this._serviceBundleDTOMapper,
     this._serviceSessionsBundleDTOMapper,
+    this._serviceDTOMapper,
   );
 
   @override
@@ -41,5 +45,14 @@ class ServiceRepositoryImpl implements ServiceRepository {
     await callWithDioErrorResolver(
       () => _serviceApiDataSource.endSession(session.id),
     );
+  }
+
+  @override
+  Future<Service> getServiceDetails(String clientId) async {
+    final response = await callWithDioErrorResolver(
+      () => _serviceApiDataSource.getServiceDetails(clientId),
+    );
+
+    return _serviceDTOMapper.to(response.data);
   }
 }

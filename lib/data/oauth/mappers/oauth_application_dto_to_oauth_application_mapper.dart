@@ -2,15 +2,15 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/common/data_mapper.dart';
 import 'package:logpass_me/data/model/enum/scope_dto_mapper.dart';
 import 'package:logpass_me/data/oauth/dtos/oauth_application_dto.dart';
-import 'package:logpass_me/data/oauth/mappers/client_dto_to_client_mapper.dart';
+import 'package:logpass_me/data/service/api/data/service_dto.dart';
 import 'package:logpass_me/domain/oauth/data/oauth_application.dart';
 
 @injectable
 class OAuthApplicationDTOToOAuthApplicationMapper implements DataMapper<OAuthApplicationDTO, OAuthApplication> {
   final ScopeDTOMapper _scopeDTOMapper;
-  final ClientDTOToClientMapper _clientDTOToClientMapper;
+  final ServiceDTOMapper _serviceDTOMapper;
 
-  OAuthApplicationDTOToOAuthApplicationMapper(this._scopeDTOMapper, this._clientDTOToClientMapper);
+  OAuthApplicationDTOToOAuthApplicationMapper(this._scopeDTOMapper, this._serviceDTOMapper);
 
   @override
   OAuthApplication call(OAuthApplicationDTO data) {
@@ -26,7 +26,7 @@ class OAuthApplicationDTOToOAuthApplicationMapper implements DataMapper<OAuthApp
       country: data.data.country,
       isRemote: data.data.isRemote,
       scopesRequested: data.data.scopesRequested.map(_scopeDTOMapper.to).toList(),
-      client: _clientDTOToClientMapper(data.data.clientDTO),
+      client: _serviceDTOMapper.to(data.data.client),
     );
   }
 }
