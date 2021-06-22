@@ -10,6 +10,7 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
@@ -49,11 +50,8 @@ class ServiceListPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        title: Text(
-          LocaleKeys.serviceList_title,
-          style: typography.h4,
-        ).tr(),
+      appBar: CustomAppBar.bigTitle(
+        title: LocaleKeys.serviceList_title.tr(),
       ),
       body: _Content(
         cubit: cubit,

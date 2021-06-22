@@ -11,12 +11,14 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class StartPage extends HookWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -42,14 +44,9 @@ class StartPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: color.background,
-      appBar: AppBar(
-        title: Text(
-          'Register',
-          style: typography.h4,
-        ),
-        actions: const [
-          _NeedHelpButton(),
-        ],
+      appBar: CustomAppBar.bigTitle(
+        title: 'Register',
+        trailing: const _NeedHelpButton(),
       ),
       body: SafeArea(
         child: KeyboardVisibilityBuilder(
@@ -133,6 +130,7 @@ class _NeedHelpButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Align(
       alignment: Alignment.centerRight,
@@ -140,8 +138,8 @@ class _NeedHelpButton extends HookWidget {
         onPressed: () {},
         child: Text(
           LocaleKeys.start_helpAction,
-          style: typography.info1.copyWith(decoration: TextDecoration.underline),
-        ).tr(),
+          style: typography.info1,
+        ).tr().withUnderline(colors.text),
       ),
     );
   }

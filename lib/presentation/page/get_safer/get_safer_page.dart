@@ -9,11 +9,13 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class GetSaferPage extends HookWidget {
   const GetSaferPage({Key? key}) : super(key: key);
@@ -23,7 +25,6 @@ class GetSaferPage extends HookWidget {
     final cubit = useCubit<GetSaferCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
 
     useCubitListener(cubit, _listener);
 
@@ -33,13 +34,9 @@ class GetSaferPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        leading: NavigationButton.close(),
-        centerTitle: true,
-        title: Text(
-          LocaleKeys.getSafer_title,
-          style: typography.h8,
-        ).tr(),
+      appBar: CustomAppBar.smallTitle(
+        title: LocaleKeys.getSafer_title.tr(),
+        leading: NavigationButton.back(),
       ),
       body: SafeArea(
         child: state.maybeMap(
@@ -88,6 +85,7 @@ class _Body extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -130,8 +128,8 @@ class _Body extends HookWidget {
             onPressed: () => AutoRouter.of(context).popUntilRoot(),
             child: Text(
               tr(LocaleKeys.getSafer_skipAction),
-              style: typography.body3.copyWith(decoration: TextDecoration.underline),
-            ),
+              style: typography.body3,
+            ).withUnderline(colors.text),
           ),
         ],
       ),

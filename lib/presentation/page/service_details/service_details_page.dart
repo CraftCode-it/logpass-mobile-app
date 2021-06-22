@@ -14,6 +14,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -33,7 +34,6 @@ class ServiceDetailsPage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final tabController = useTabController(initialLength: 2);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
 
     useEffect(() {
       cubit.initialize(service);
@@ -41,23 +41,18 @@ class ServiceDetailsPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        backgroundColor: colors.secondaryBackground,
+      appBar: CustomAppBar.smallTitle(
+        title: LocaleKeys.serviceDetails_title.tr(),
         leading: NavigationButton.back(),
-        centerTitle: true,
-        title: Text(
-          LocaleKeys.serviceDetails_title,
-          style: typography.h8,
-        ).tr(),
-        actions: [
-          IconButton(
-            onPressed: () => AutoRouter.of(context).push(HistoricalSessionListPageRoute(service: service)),
-            icon: SvgPicture.asset(
-              AppIcon.history,
-              color: colors.buttonFill,
-            ),
+        trailing: IconButton(
+          onPressed: () => AutoRouter.of(context).push(HistoricalSessionListPageRoute(service: service)),
+          icon: SvgPicture.asset(
+            AppIcon.history,
+            color: colors.buttonFill,
           ),
-        ],
+        ),
+      ).copyWith(
+        predefinedBackground: colors.secondaryBackground,
       ),
       body: SafeArea(
         child: state.maybeMap(

@@ -7,7 +7,7 @@ import 'package:logpass_me/presentation/page/agreement_details/agreement_details
 import 'package:logpass_me/presentation/page/service_details/session_list/session_date_formatter.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -25,7 +25,6 @@ class AgreementDetailsPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<AgreementDetailsPageCubit>();
     final state = useCubitBuilder(cubit);
-    final typography = useAppTypography();
 
     useEffect(() {
       cubit.initialize(serviceAgreement);
@@ -33,13 +32,9 @@ class AgreementDetailsPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
+      appBar: CustomAppBar.smallTitle(
+        title: LocaleKeys.agreementDetails_title.tr(),
         leading: NavigationButton.back(),
-        centerTitle: true,
-        title: Text(
-          LocaleKeys.agreementDetails_title,
-          style: typography.h8,
-        ).tr(),
       ),
       body: state.maybeMap(
         initializing: (_) => const Loader(),

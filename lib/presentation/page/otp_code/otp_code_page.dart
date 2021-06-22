@@ -10,6 +10,7 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
@@ -52,12 +53,8 @@ class OTPCodePage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          LocaleKeys.otpCode_title,
-          style: typography.h8,
-        ).tr(),
+      appBar: CustomAppBar.smallTitle(
+        title: LocaleKeys.otpCode_title.tr(),
         leading: NavigationButton.back(),
       ),
       body: SingleChildScrollView(

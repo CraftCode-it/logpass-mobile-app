@@ -5,6 +5,7 @@ import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
@@ -21,16 +22,12 @@ class CountryCodePickerPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
+      appBar: CustomAppBar.smallTitle(
+        title: 'Select your country',
         leading: NavigationButton.back(),
-        title: Text(
-          'Select your country',
-          style: typography.h8,
-        ),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.only(

@@ -8,6 +8,7 @@ import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_p
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -37,13 +38,9 @@ class ConfirmPinPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
+      appBar: CustomAppBar.smallTitle(
+        title: LocaleKeys.confirmPin_title.tr(),
         leading: NavigationButton.back(),
-        centerTitle: true,
-        title: Text(
-          LocaleKeys.confirmPin_title,
-          style: typography.h8,
-        ).tr(),
       ),
       body: SafeArea(
         child: Padding(
