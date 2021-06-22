@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/info_snackbar.dart';
 import 'package:logpass_me/presentation/widget/labeled_text.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/pdf/pdf_list_view.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:native_pdf_renderer/native_pdf_renderer.dart';
@@ -118,6 +119,7 @@ class _Content extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
+    final typography = useAppTypography();
     final document = this.document;
 
     return Column(
@@ -156,7 +158,7 @@ class _Content extends HookWidget {
                   else if (agreement.isAccepted)
                     CustomRectangularButton.outlined(
                       text: tr(LocaleKeys.agreementDetails_revokeAction),
-                      onPressed: cubit.revokeAgreement,
+                      onPressed: () => _revokeAgreement(context, typography, colors),
                     )
                   else
                     CustomRectangularButton.filled(
@@ -170,5 +172,24 @@ class _Content extends HookWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _revokeAgreement(BuildContext context, AppTypography typography, AppThemeColors colors) async {
+    if (agreement.isRequired) {
+      final revokeAccepted = await showTwoOptionsDialog(
+        context,
+        LocaleKeys.agreementDetails_revokeAgreementDialogTitle,
+        LocaleKeys.agreementDetails_revokeAgreementDialogContent,
+        LocaleKeys.agreementDetails_revokeAgreementDialogTopAction,
+        LocaleKeys.agreementDetails_revokeAgreementDialogBottomAction,
+        typography,
+        colors,
+      );
+      if (revokeAccepted) {
+        await cubit.revokeAgreement();
+      }
+    } else {
+      await cubit.revokeAgreement();
+    }
   }
 }

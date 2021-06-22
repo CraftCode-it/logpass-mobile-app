@@ -153,6 +153,10 @@
     "revokeAction": "Revoke this agreement",
     "confirmAction": "Confirm this agreement",
     "agreementConfirmed": "Agreement confirmed",
-    "agreementRevoked": "Agreement revoked"
+    "agreementRevoked": "Agreement revoked",
+    "revokeAgreementDialogTitle": "Revoke this agreement",
+    "revokeAgreementDialogContent": "Are you sure you want to revoke this agreement?\n\nAs this one is required, you will be automatically logged out of all sessions.",
+    "revokeAgreementDialogTopAction": "Revoke",
+    "revokeAgreementDialogBottomAction": "Back"
   }
 }
