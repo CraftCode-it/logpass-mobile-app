@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
@@ -184,7 +185,7 @@ class _ContentList extends StatelessWidget {
 }
 
 class _ServiceList extends StatelessWidget {
-  final List<Service> services;
+  final List<ServiceWithTokens> services;
   final bool active;
 
   const _ServiceList({
@@ -225,7 +226,7 @@ class _ServicesHeader extends HookWidget {
 }
 
 class _ServiceRow extends HookWidget {
-  final Service service;
+  final ServiceWithTokens service;
   final bool active;
 
   const _ServiceRow({
@@ -243,7 +244,7 @@ class _ServiceRow extends HookWidget {
       children: [
         InkWell(
           onTap: () {
-            AutoRouter.of(context).push(ServiceDetailsPageRoute(service: service));
+            AutoRouter.of(context).push(ServiceDetailsPageRoute(service: service.service));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
@@ -251,7 +252,7 @@ class _ServiceRow extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.network(
-                  service.logo,
+                  service.service.logo,
                   width: AppDimens.serviceImageIconSize,
                   height: AppDimens.serviceImageIconSize,
                 ),
@@ -262,7 +263,7 @@ class _ServiceRow extends HookWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        service.name,
+                        service.service.name,
                         style: typography.body3,
                       ),
                       if (active) ...[

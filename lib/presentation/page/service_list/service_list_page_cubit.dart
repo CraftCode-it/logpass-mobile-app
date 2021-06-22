@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_services_use_case.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
@@ -14,8 +14,8 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   bool _loadedAll = false;
   int _currentPage = 0;
   int _itemsCount = 0;
-  List<Service> _activeServices = [];
-  List<Service> _otherServices = [];
+  List<ServiceWithTokens> _activeServices = [];
+  List<ServiceWithTokens> _otherServices = [];
 
   ServiceListPageCubit(this._getPageOfServicesUseCase) : super(ServiceListPageState.loading());
 
@@ -82,11 +82,11 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
     }
   }
 
-  List<Service> _getActiveServices(ServicesBundle services) {
+  List<ServiceWithTokens> _getActiveServices(ServicesBundle services) {
     return services.services.where((element) => element.tokens.activeCount != 0).toList(growable: false);
   }
 
-  List<Service> _getOtherServices(ServicesBundle services) {
+  List<ServiceWithTokens> _getOtherServices(ServicesBundle services) {
     return services.services.where((element) => element.tokens.activeCount == 0).toList(growable: false);
   }
 

@@ -23,7 +23,6 @@ class ServiceDTO {
   final List<String> responseTypes;
   final List<String> grantTypes;
   final List<ServiceAgreementDTO> agreements;
-  final ServiceTokensDTO tokens;
 
   ServiceDTO(
     this.clientId,
@@ -36,7 +35,6 @@ class ServiceDTO {
     this.responseTypes,
     this.grantTypes,
     this.agreements,
-    this.tokens,
   );
 
   factory ServiceDTO.fromJson(Map<String, dynamic> json) => _$ServiceDTOFromJson(json);
@@ -51,7 +49,6 @@ class ServiceDTOMapper implements BidirectionalDataMapper<Service, ServiceDTO> {
   final ResponseTypeDTOMapper _responseTypeDTOMapper;
   final GrantTypeDTOMapper _grantTypeDTOMapper;
   final ServiceAgreementDTOMapper _serviceAgreementDTOMapper;
-  final ServiceTokensDTOMapper _serviceTokensDTOMapper;
 
   ServiceDTOMapper(
     this._serviceSupportedScopesDTOMapper,
@@ -59,7 +56,6 @@ class ServiceDTOMapper implements BidirectionalDataMapper<Service, ServiceDTO> {
     this._responseTypeDTOMapper,
     this._grantTypeDTOMapper,
     this._serviceAgreementDTOMapper,
-    this._serviceTokensDTOMapper,
   );
 
   @override
@@ -75,7 +71,6 @@ class ServiceDTOMapper implements BidirectionalDataMapper<Service, ServiceDTO> {
       data.responseTypes.map(_responseTypeDTOMapper.from).toList(),
       data.grantTypes.map(_grantTypeDTOMapper.from).toList(),
       data.agreements.map(_serviceAgreementDTOMapper.from).toList(),
-      _serviceTokensDTOMapper.from(data.tokens),
     );
   }
 
@@ -92,7 +87,6 @@ class ServiceDTOMapper implements BidirectionalDataMapper<Service, ServiceDTO> {
       responseTypes: data.responseTypes.map(_responseTypeDTOMapper.to).toList(),
       grantTypes: data.grantTypes.map(_grantTypeDTOMapper.to).toList(),
       agreements: data.agreements.map(_serviceAgreementDTOMapper.to).toList(),
-      tokens: _serviceTokensDTOMapper.to(data.tokens),
     );
   }
 }

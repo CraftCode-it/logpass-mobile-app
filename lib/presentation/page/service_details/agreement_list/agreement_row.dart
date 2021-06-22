@@ -14,8 +14,13 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 
 class AgreementRow extends HookWidget {
   final ServiceAgreement agreement;
+  final Function()? onBackFromDetails;
 
-  const AgreementRow({required this.agreement, Key? key}) : super(key: key);
+  const AgreementRow({
+    required this.agreement,
+    this.onBackFromDetails,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,10 @@ class AgreementRow extends HookWidget {
     final typography = useAppTypography();
 
     return InkWell(
-      onTap: () => AutoRouter.of(context).push(AgreementDetailsPageRoute(serviceAgreement: agreement)),
+      onTap: () async {
+        await AutoRouter.of(context).push(AgreementDetailsPageRoute(serviceAgreement: agreement));
+        onBackFromDetails?.call();
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

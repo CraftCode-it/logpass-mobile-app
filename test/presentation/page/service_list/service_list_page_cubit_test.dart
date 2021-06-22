@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart' hide verify, when, verifyNever, any;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_tokens.dart';
+import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_services_use_case.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
@@ -12,7 +12,7 @@ import 'package:mockito/mockito.dart';
 
 import 'service_list_page_cubit_test.mocks.dart';
 
-class FakeService extends Fake implements Service {
+class FakeService extends Fake implements ServiceWithTokens {
   final int count;
 
   FakeService(this.count);

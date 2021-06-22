@@ -40,7 +40,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
 
     try {
       final sessions = await _getPageOfServiceSessionsUseCase(
-        _currentPage,
+        1,
         _service.clientId,
         _activeSessions,
       );
@@ -68,6 +68,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
 
     _loadingMore = true;
     emit(SessionListViewState.idle(_sessionsWithState, true, _activeSessions));
+    _currentPage++;
 
     try {
       final services = await _getPageOfServiceSessionsUseCase(

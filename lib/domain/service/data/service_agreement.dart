@@ -25,4 +25,19 @@ class ServiceAgreement {
     required this.updatedAt,
     required this.scope,
   });
+
+  ServiceAgreement copyWith({bool? isAccepted}) {
+    return ServiceAgreement(
+      name: name,
+      scope: scope,
+      type: type,
+      checksum: checksum,
+      createdAt: createdAt,
+      id: id,
+      isAccepted: isAccepted ?? this.isAccepted,
+      isRequired: isRequired,
+      updatedAt: updatedAt,
+      url: url,
+    );
+  }
 }

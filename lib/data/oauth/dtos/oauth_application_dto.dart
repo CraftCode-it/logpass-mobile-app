@@ -1,10 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logpass_me/data/oauth/dtos/client_dto.dart';
+import 'package:logpass_me/data/service/api/data/service_dto.dart';
 
 part 'oauth_application_dto.g.dart';
 
 const _linksKey = '_links';
-const _serviceKey = 'client';
 
 @JsonSerializable()
 class OAuthApplicationDTO {
@@ -34,8 +33,7 @@ class OAuthApplicationDataDTO {
   final List<String> scopesRequested;
   @JsonKey(name: _linksKey)
   final OAuthApplicationDataLinksDTO links;
-  @JsonKey(name: _serviceKey)
-  final ClientDTO clientDTO;
+  final ServiceDTO client;
 
   OAuthApplicationDataDTO(
     this.id,
@@ -50,7 +48,7 @@ class OAuthApplicationDataDTO {
     this.isRemote,
     this.scopesRequested,
     this.links,
-    this.clientDTO,
+    this.client,
   );
 
   Map<String, dynamic> toJson() => _$OAuthApplicationDataDTOToJson(this);

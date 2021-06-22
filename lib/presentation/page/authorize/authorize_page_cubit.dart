@@ -4,12 +4,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
-import 'package:logpass_me/domain/oauth/data/client.dart';
 import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 part 'authorize_page_cubit.freezed.dart';
@@ -100,7 +100,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
-  void _emitIdleState(Client client) {
+  void _emitIdleState(Service client) {
     emit(AuthorizePageState.idle(_canConfirm, client));
   }
 }

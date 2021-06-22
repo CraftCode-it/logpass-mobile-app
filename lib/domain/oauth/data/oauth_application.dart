@@ -1,5 +1,5 @@
 import 'package:logpass_me/domain/model/scope.dart';
-import 'package:logpass_me/domain/oauth/data/client.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
 
 class OAuthApplication {
   final String id;
@@ -13,7 +13,7 @@ class OAuthApplication {
   final String country;
   final bool isRemote;
   final List<Scope> scopesRequested;
-  final Client client;
+  final Service client;
 
   OAuthApplication({
     required this.id,

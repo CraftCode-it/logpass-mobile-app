@@ -6,7 +6,7 @@ class AuthorizePageState with _$AuthorizePageState {
   const factory AuthorizePageState.loading() = _AuthorizePageStateLoading;
 
   @Implements(BuildState)
-  const factory AuthorizePageState.idle(bool canConfirm, Client client) = _AuthorizePageStateIdle;
+  const factory AuthorizePageState.idle(bool canConfirm, Service client) = _AuthorizePageStateIdle;
 
   const factory AuthorizePageState.confirmed(String? redirectUri) = _AuthorizePageStateConfirmed;
 

@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logpass_me/domain/oauth/data/client.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -95,7 +95,7 @@ class AuthorizePage extends HookWidget {
 }
 
 class _PageContent extends HookWidget {
-  final Client client;
+  final Service client;
   final bool canConfirm;
   final VoidCallback onConfirmCallback;
   final VoidCallback onDenyCallback;
@@ -159,7 +159,7 @@ class _AuthorizationForm extends StatelessWidget {
 }
 
 class _ClientHeader extends StatelessWidget {
-  final Client client;
+  final Service client;
 
   const _ClientHeader({
     required this.client,

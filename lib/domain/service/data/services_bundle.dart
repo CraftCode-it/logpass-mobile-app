@@ -1,8 +1,8 @@
-import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 
 class ServicesBundle {
   final int totalCount;
-  final List<Service> services;
+  final List<ServiceWithTokens> services;
 
   ServicesBundle(this.totalCount, this.services);
 }
