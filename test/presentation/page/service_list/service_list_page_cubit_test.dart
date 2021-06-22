@@ -1,5 +1,7 @@
 import 'package:bloc_test/bloc_test.dart' hide verify, when, verifyNever, any;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
+import 'package:logpass_me/domain/data_changed_notifier/use_case/listen_for_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service_tokens.dart';
 import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
@@ -24,15 +26,18 @@ class FakeService extends Fake implements ServiceWithTokens {
 @GenerateMocks(
   [
     GetPageOfServicesUseCase,
+    ListenForDataChangedUseCase,
   ],
 )
 void main() {
   late MockGetPageOfServicesUseCase getPageOfServicesUseCase;
+  late MockListenForDataChangedUseCase listenForDataChangedUseCase;
   late ServiceListPageCubit cubit;
 
   setUp(() {
     getPageOfServicesUseCase = MockGetPageOfServicesUseCase();
-    cubit = ServiceListPageCubit(getPageOfServicesUseCase);
+    listenForDataChangedUseCase = MockListenForDataChangedUseCase();
+    cubit = ServiceListPageCubit(getPageOfServicesUseCase, listenForDataChangedUseCase);
   });
 
   final serviceBundle = ServicesBundle(
@@ -118,7 +123,8 @@ void main() {
     group('when initialized', () {
       setUp(() async {
         when(getPageOfServicesUseCase(1)).thenAnswer((realInvocation) async => serviceBundle);
-        await cubit.loadFirstPage();
+        when(listenForDataChangedUseCase(DataChangedType.service)).thenAnswer((realInvocation) => const Stream.empty());
+        await cubit.initialize();
       });
 
       blocTest<ServiceListPageCubit, ServiceListPageState>(
