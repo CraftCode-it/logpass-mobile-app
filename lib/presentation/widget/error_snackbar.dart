@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
 void showConnectionErrorSnackBar({
@@ -18,11 +19,16 @@ void showConnectionErrorSnackBar({
   );
 
   final snackBar = SnackBar(
-    backgroundColor: AppColors.error100,
-    content: Text(
-      contentText,
-      style: typography.input.copyWith(color: colors.textSpecial),
-      textAlign: TextAlign.center,
+    backgroundColor: Colors.transparent,
+    padding: const EdgeInsets.all(AppDimens.zero),
+    content: Container(
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.m, horizontal: AppDimens.l),
+      color: AppColors.error100,
+      child: Text(
+        contentText,
+        style: typography.input.copyWith(color: colors.textSpecial),
+        textAlign: TextAlign.center,
+      ),
     ),
   );
 

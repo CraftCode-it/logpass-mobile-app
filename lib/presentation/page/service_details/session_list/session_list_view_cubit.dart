@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
+import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/use_case/end_sessions_use_case.dart';
@@ -12,6 +14,7 @@ import 'package:logpass_me/presentation/page/service_details/session_list/sessio
 class SessionListViewCubit extends Cubit<SessionListViewState> {
   final GetPageOfServiceSessionsUseCase _getPageOfServiceSessionsUseCase;
   final EndSessionUseCase _endSessionUseCase;
+  final NotifyDataChangedUseCase _notifyDataChangedUseCase;
 
   late bool _activeSessions;
   late Service _service;
@@ -23,6 +26,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
   SessionListViewCubit(
     this._getPageOfServiceSessionsUseCase,
     this._endSessionUseCase,
+    this._notifyDataChangedUseCase,
   ) : super(SessionListViewState.loading());
 
   Future<void> initialize(bool active, Service service) async {
@@ -106,6 +110,8 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
       _sessionsWithState = newList;
 
       emit(SessionListViewState.endedSession());
+
+      await _notifyDataChangedUseCase(DataChangedType.service);
 
       if (newList.isEmpty) {
         emit(SessionListViewState.empty(_activeSessions));

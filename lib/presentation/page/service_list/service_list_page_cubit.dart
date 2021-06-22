@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
+import 'package:logpass_me/domain/data_changed_notifier/use_case/listen_for_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
@@ -10,6 +14,9 @@ import 'package:logpass_me/presentation/page/service_list/service_list_page_stat
 @Injectable()
 class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   final GetPageOfServicesUseCase _getPageOfServicesUseCase;
+  final ListenForDataChangedUseCase _listenForDataChangedUseCase;
+
+  StreamSubscription? _dataChangedSubscription;
 
   bool _loadedAll = false;
   int _currentPage = 0;
@@ -17,7 +24,24 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   List<ServiceWithTokens> _activeServices = [];
   List<ServiceWithTokens> _otherServices = [];
 
-  ServiceListPageCubit(this._getPageOfServicesUseCase) : super(ServiceListPageState.loading());
+  ServiceListPageCubit(
+    this._getPageOfServicesUseCase,
+    this._listenForDataChangedUseCase,
+  ) : super(ServiceListPageState.loading());
+
+  @override
+  Future<void> close() async {
+    await _dataChangedSubscription?.cancel();
+    return super.close();
+  }
+
+  Future<void> initialize() async {
+    _dataChangedSubscription = _listenForDataChangedUseCase(DataChangedType.service).listen((event) {
+      loadFirstPage();
+    });
+
+    await loadFirstPage();
+  }
 
   Future<void> loadFirstPage() async {
     emit(ServiceListPageState.loading());
