@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/settings/settings_navigation_row.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -21,29 +23,29 @@ class SettingsPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: CustomAppBar.bigTitle(title: 'Settings'),
+      appBar: CustomAppBar.bigTitle(title: LocaleKeys.settings_title.tr()),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SettingsNavigationRow.withIcon(AppIcon.device, 'Your devices', () {}),
+              SettingsNavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
               const _Divider(),
-              SettingsNavigationRow.withIcon(AppIcon.security, 'Security', () {}),
+              SettingsNavigationRow.withIcon(AppIcon.security, LocaleKeys.settings_security.tr(), () {}),
               const _Divider(),
               const SizedBox(height: AppDimens.xc),
               const DarkModeSwitchRow(),
               const _Divider(),
-              SettingsNavigationRow.titled('Language', () {}),
+              SettingsNavigationRow.titled(LocaleKeys.settings_language.tr(), () {}),
               const _Divider(),
-              SettingsNavigationRow.titled('Terms&Condition', () {}),
+              SettingsNavigationRow.titled(LocaleKeys.settings_terms.tr(), () {}),
               const _Divider(),
-              SettingsNavigationRow.titled('Help', () {}),
+              SettingsNavigationRow.titled(LocaleKeys.settings_help.tr(), () {}),
               const _Divider(),
               const SizedBox(height: AppDimens.xc),
               CustomRectangularButton.outlined(
-                text: 'Log out',
+                text: LocaleKeys.settings_logout.tr(),
                 onPressed: () => cubit.logOut(),
               ),
             ],
@@ -60,7 +62,7 @@ class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.s),
       child: Separator.light(),
     );
   }

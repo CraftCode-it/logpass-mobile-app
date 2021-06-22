@@ -154,5 +154,15 @@
     "revokeAgreementDialogContent": "Are you sure you want to revoke this agreement?\n\nAs this one is required, you will be automatically logged out of all sessions.",
     "revokeAgreementDialogTopAction": "Revoke",
     "revokeAgreementDialogBottomAction": "Back"
+  },
+  "settings": {
+    "title": "Settings",
+    "devices": "Your devices",
+    "security": "Security",
+    "darkMode": "Dark mode",
+    "language": "Language",
+    "terms": "Terms&Condition",
+    "help": "Help",
+    "logout": "Log out"
   }
 }
