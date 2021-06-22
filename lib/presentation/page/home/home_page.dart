@@ -2,17 +2,23 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
+
+const _arrowIconSize = 24.0;
+const _pendingItemIconSize = 20.0;
+const _buttonBorderWidth = 1.5;
 
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -52,7 +58,6 @@ class _HomePageContent extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           OneTimeCodeContainer(),
-          const SizedBox(height: AppDimens.xxl),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -78,6 +83,7 @@ class _PendingActions extends HookWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: AppDimens.xxl),
           Text(
             LocaleKeys.home_pendingActionsLabel.tr(),
             style: typography.h8,
@@ -88,34 +94,10 @@ class _PendingActions extends HookWidget {
             orElse: () => const SizedBox.shrink(),
             loadInProgress: () => const Loader(),
           ),
-          const SizedBox(height: AppDimens.s),
+          const SizedBox(height: AppDimens.xxl),
           _PastEventsButton(),
-          const SizedBox(height: AppDimens.s),
+          const SizedBox(height: AppDimens.xl),
         ],
-      ),
-    );
-  }
-}
-
-class _RefreshButton extends HookWidget {
-  const _RefreshButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = useAppTypography();
-    final colors = useAppThemeColors();
-
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {},
-        child: Text(
-          LocaleKeys.home_refreshCodeLabel,
-          style: typography.info1.copyWith(
-            decoration: TextDecoration.underline,
-            color: colors.textSpecial,
-          ),
-        ).tr(),
       ),
     );
   }
@@ -155,8 +137,8 @@ class _PendingItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appTypography = useAppTypography();
-    final appColors = useAppThemeColors();
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return GestureDetector(
       onTap: () {
@@ -167,34 +149,64 @@ class _PendingItem extends HookWidget {
         );
       },
       child: Container(
-        height: AppDimens.xc,
+        padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: appColors.text,
+              color: colors.lightText,
             ),
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // TODO: replace with service's logo
             Container(
-              width: AppDimens.m,
-              height: AppDimens.m,
-              color: appColors.buttonFill,
+              width: AppDimens.l,
+              height: AppDimens.l,
+              color: colors.buttonFill,
             ),
-            const SizedBox(width: AppDimens.m),
+            const SizedBox(width: AppDimens.l),
             Expanded(
-              child: Text(
-                action.actionType.maybeWhen(
-                  authorize: () => LocaleKeys.home_action_type_authorization.tr(),
-                  orElse: () => 'Unknown',
-                ),
-                style: appTypography.body3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.lock,
+                        color: colors.secondaryText,
+                        width: _pendingItemIconSize,
+                        height: _pendingItemIconSize,
+                      ),
+                      const SizedBox(width: AppDimens.l),
+                      Expanded(
+                        child: Text(
+                          action.actionType.maybeWhen(
+                            authorize: () => LocaleKeys.home_actionTypeAuthorization.tr(),
+                            orElse: () => 'Unknown',
+                          ),
+                          style: typography.body3,
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.chevronRight,
+                        color: colors.text,
+                        width: _arrowIconSize,
+                        height: _arrowIconSize,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimens.s),
+                  // TODO: replace it with remaining time value
+                  Text(
+                    LocaleKeys.home_pendingItemTimeLeft.tr(args: ['5:00 min']),
+                    style: typography.info2,
+                  ),
+                ],
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: appColors.buttonFill,
             ),
           ],
         ),
@@ -206,15 +218,24 @@ class _PendingItem extends HookWidget {
 class _PastEventsButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final appTypography = useAppTypography();
-    final appColors = useAppThemeColors();
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return SizedBox(
       width: double.infinity,
       height: AppDimens.c,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(appColors.buttonOutlinedFill),
+          backgroundColor: MaterialStateProperty.all<Color>(colors.buttonOutlinedFill),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+              side: BorderSide(
+                color: colors.buttonOutlined,
+                width: _buttonBorderWidth,
+              ),
+            ),
+          ),
         ),
         onPressed: () {
           // TODO: handle navigation to past events
@@ -226,11 +247,13 @@ class _PastEventsButton extends HookWidget {
             children: [
               Text(
                 LocaleKeys.home_pastActions.tr(),
-                style: appTypography.h9.copyWith(color: appColors.text),
+                style: typography.h9.copyWith(color: colors.text),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: appColors.text,
+              SvgPicture.asset(
+                AppIcon.chevronRight,
+                color: colors.text,
+                width: _arrowIconSize,
+                height: _arrowIconSize,
               ),
             ],
           ),

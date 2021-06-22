@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class SecuredLoginPage extends HookWidget {
   const SecuredLoginPage({Key? key}) : super(key: key);
@@ -144,6 +145,7 @@ class _NeedHelpButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Align(
       alignment: Alignment.centerRight,
@@ -151,8 +153,8 @@ class _NeedHelpButton extends HookWidget {
         onPressed: () {},
         child: Text(
           LocaleKeys.securedLogin_needHelp,
-          style: typography.info1.copyWith(decoration: TextDecoration.underline),
-        ).tr(),
+          style: typography.info1,
+        ).tr().withUnderline(colors.text),
       ),
     );
   }

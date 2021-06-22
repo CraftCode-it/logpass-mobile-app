@@ -50,7 +50,8 @@
     "pendingActionsLabel": "Pending actions",
     "pendingActionsEmpty": "Nothing requires your action now",
     "pastActions": "See past events",
-    "action_type_authorization": "Authorization"
+    "actionTypeAuthorization": "Authorization",
+    "pendingItemTimeLeft": "Closes in {}"
   },
   "authorize": {
     "title": "Authorize operation",

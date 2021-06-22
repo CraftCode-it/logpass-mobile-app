@@ -46,7 +46,8 @@
     "pendingActionsLabel": "Akcje oczekujące",
     "pendingActionsEmpty": "Brak oczekujących akcji",
     "pastActions": "Zobacz pozostałe",
-    "action_type_authorization": "Autoryzacja"
+    "actionTypeAuthorization": "Autoryzacja",
+    "pendingItemTimeLeft": "Aktywne przez {}"
   },
   "authorize": {
     "title": "Autoryzuj operację",

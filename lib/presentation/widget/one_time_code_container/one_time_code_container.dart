@@ -10,6 +10,9 @@ import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
+
+const _copyIconSize = 20.0;
 
 class OneTimeCodeContainer extends HookWidget {
   @override
@@ -78,6 +81,14 @@ class _CodeContainer extends HookWidget {
   Widget build(BuildContext context) {
     final appTypography = useAppTypography();
     final colors = useAppThemeColors();
+    final inactiveColor = colors.textSpecial.withOpacity(0.15);
+    final controller = useAnimationController(duration: oneTimeCode?.expirationSec);
+    final animation = ColorTween(begin: AppColors.success100, end: AppColors.error100).animate(controller);
+    useAnimation(animation);
+
+    useMemoized(() {
+      controller.forward();
+    });
 
     return Stack(
       fit: StackFit.loose,
@@ -92,18 +103,19 @@ class _CodeContainer extends HookWidget {
             color: AppColors.secondary.withOpacity(0.15),
           ),
         ),
-        SizedBox(
-          width: progressSize,
-          height: progressSize,
-          child: RotatedBox(
-            quarterTurns: 2,
-            child: CircularProgressIndicator(
-              value: remainingProgress,
-              strokeWidth: AppDimens.oneTimeCodeProgressWidth,
-              color: AppColors.success100,
+        if (!hasErrors)
+          SizedBox(
+            width: progressSize,
+            height: progressSize,
+            child: RotatedBox(
+              quarterTurns: 2,
+              child: CircularProgressIndicator(
+                value: remainingProgress,
+                strokeWidth: AppDimens.oneTimeCodeProgressWidth,
+                valueColor: animation,
+              ),
             ),
           ),
-        ),
         SizedBox(
           width: progressSize,
           height: progressSize,
@@ -111,38 +123,50 @@ class _CodeContainer extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                flex: 6,
+                flex: 4,
+                child: TextButton(
+                  onPressed: onRefreshAction,
+                  child: Text(
+                    LocaleKeys.home_refreshCodeLabel,
+                    style: appTypography.info1.copyWith(
+                      color: hasErrors ? inactiveColor : colors.textSpecial,
+                    ),
+                  ).tr().withUnderline(hasErrors ? inactiveColor : colors.textSpecial),
+                ),
+              ),
+              Expanded(
+                flex: 7,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.s),
-                      child: Text(
-                        LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
-                        style: appTypography.info2.copyWith(color: colors.textSpecial),
+                    if (!hasErrors)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppDimens.s),
+                        child: Text(
+                          LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
+                          style: appTypography.info2.copyWith(color: colors.textSpecial),
+                        ),
                       ),
-                    ),
                     const SizedBox(height: AppDimens.m),
                     Text(
                       oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
-                      style: appTypography.h1.copyWith(color: colors.textSpecial),
+                      style: appTypography.h1.copyWith(color: hasErrors ? inactiveColor : colors.textSpecial),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                flex: 4,
-                child: Center(
-                  child: _IconTextButton(
-                    LocaleKeys.home_copyCodeLabel.tr(),
-                    Icon(
-                      Icons.copy,
-                      color: colors.logoSpecial,
-                    ),
-                    onTapAction: onCopyAction,
-                    isActive: !hasErrors,
+                flex: 5,
+                child: _IconTextButton(
+                  LocaleKeys.home_copyCodeLabel.tr(),
+                  Icon(
+                    Icons.copy,
+                    color: hasErrors ? inactiveColor : colors.logoSpecial,
+                    size: _copyIconSize,
                   ),
+                  onTapAction: onCopyAction,
+                  isActive: !hasErrors,
                 ),
               ),
             ],
@@ -170,6 +194,7 @@ class _IconTextButton extends HookWidget {
   Widget build(BuildContext context) {
     final appTypography = useAppTypography();
     final appColors = useAppThemeColors();
+    final color = isActive ? appColors.textSpecial : appColors.textSpecial.withOpacity(0.15);
 
     return InkWell(
       onTap: isActive ? onTapAction : null,
@@ -182,11 +207,11 @@ class _IconTextButton extends HookWidget {
             const SizedBox(width: AppDimens.xs),
             Text(
               label,
-              style: appTypography.info2.copyWith(
-                color: appColors.textSpecial,
-                decoration: TextDecoration.underline,
+              style: appTypography.info1.copyWith(
+                color: color,
+                // decoration: TextDecoration.underline,
               ),
-            ),
+            ).withUnderline(color),
           ],
         ),
       ),

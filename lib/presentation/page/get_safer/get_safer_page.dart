@@ -14,6 +14,7 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class GetSaferPage extends HookWidget {
   const GetSaferPage({Key? key}) : super(key: key);
@@ -82,6 +83,7 @@ class _Body extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -124,8 +126,8 @@ class _Body extends HookWidget {
             onPressed: () => AutoRouter.of(context).popUntilRoot(),
             child: Text(
               tr(LocaleKeys.getSafer_skipAction),
-              style: typography.body3.copyWith(decoration: TextDecoration.underline),
-            ),
+              style: typography.body3,
+            ).withUnderline(colors.text),
           ),
         ],
       ),

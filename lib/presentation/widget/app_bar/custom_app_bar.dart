@@ -97,9 +97,12 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     return AppBar(
       centerTitle: centerTitle,
       backgroundColor: predefinedBackground ?? colors.background,
-      title: Text(
-        title,
-        style: isBigTitle ? typography.h4 : typography.h8,
+      title: Padding(
+        padding: EdgeInsets.only(left: isBigTitle ? AppDimens.s : AppDimens.zero),
+        child: Text(
+          title,
+          style: isBigTitle ? typography.h4 : typography.h8,
+        ),
       ),
       elevation: 0,
       leading: leadingElement,

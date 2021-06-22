@@ -10,6 +10,7 @@ class AppIcon {
   static const back = 'assets/icon/back.svg';
   static const close = 'assets/icon/close.svg';
   static const history = 'assets/icon/history.svg';
+  static const lock = 'assets/icon/lock.svg';
 
   static const checkboxEmpty = 'assets/icon/checkbox_empty.svg';
   static const checkboxError = 'assets/icon/checkbox_error.svg';
