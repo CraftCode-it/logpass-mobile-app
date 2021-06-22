@@ -107,9 +107,12 @@ class AppColors {
   static const buttonOutlinedTextLight = primary100;
   static const buttonOutlinedTextInactiveLight = primary20;
 
-  static const dividerDarkLight = Color(0xFFAAABC4);
-  static const dividerMediumLight = Color(0xFFAAABC4);
-  static const dividerLightLight = Color(0xFFCFD0DD);
+  static const switchToggleLight = secondary;
+  static const switchInactiveTrackLight = primary20;
+
+  static const dividerDarkLight = primary20;
+  static const dividerMediumLight = primary10;
+  static const dividerLightLight = primary05;
 
   // Dark mode
 
@@ -140,9 +143,12 @@ class AppColors {
   static const buttonOutlinedTextDark = primary10;
   static const buttonOutlinedTextInactiveDark = primary90;
 
-  static const dividerDarkDark = Color(0xFFAAABC4);
-  static const dividerMediumDark = Color(0xFFAAABC4);
-  static const dividerLightDark = Color(0xFFCFD0DD);
+  static const switchToggleDark = primary10;
+  static const switchInactiveTrackDark = primary80;
+
+  static const dividerDarkDark = primary80;
+  static const dividerMediumDark = primary90;
+  static const dividerLightDark = primary95;
 }
 
 abstract class AppThemeColors {
@@ -213,6 +219,10 @@ abstract class AppThemeColors {
   Color get tabBarUnderline;
 
   Color get darkBackground;
+
+  Color get switchToggle;
+
+  Color get switchInactiveTrack;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -317,6 +327,12 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get darkBackground => AppColors.primary100;
+
+  @override
+  Color get switchToggle => AppColors.switchToggleLight;
+
+  @override
+  Color get switchInactiveTrack => AppColors.switchInactiveTrackLight;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -421,4 +437,10 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get darkBackground => AppColors.primary97;
+
+  @override
+  Color get switchToggle => AppColors.switchToggleDark;
+
+  @override
+  Color get switchInactiveTrack => AppColors.switchInactiveTrackDark;
 }

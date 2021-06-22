@@ -7,6 +7,7 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
+import 'package:logpass_me/presentation/page/settings/settings_page.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -69,7 +70,7 @@ class MainPage extends HookWidget {
                 const HomePage(),
                 const ServiceListPage(),
                 Container(color: Colors.red),
-                Container(color: Colors.amber),
+                const SettingsPage(),
               ],
             ),
           ),
