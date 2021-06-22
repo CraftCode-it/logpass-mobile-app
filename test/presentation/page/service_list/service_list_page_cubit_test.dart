@@ -61,6 +61,55 @@ void main() {
     ],
   );
 
+  group('initialize', () {
+    blocTest<ServiceListPageCubit, ServiceListPageState>(
+      'loads first page',
+      build: () {
+        when(getPageOfServicesUseCase(1)).thenAnswer((realInvocation) async => serviceBundle);
+        when(listenForDataChangedUseCase(DataChangedType.service)).thenAnswer((realInvocation) => const Stream.empty());
+        return cubit;
+      },
+      act: (cubit) => cubit.initialize(),
+      expect: () => [
+        ServiceListPageState.loading(),
+        ServiceListPageState.idle(
+          serviceBundle.services.getRange(0, 3).toList(),
+          serviceBundle.services.getRange(3, serviceBundle.services.length).toList(),
+          false,
+        ),
+      ],
+    );
+
+    blocTest<ServiceListPageCubit, ServiceListPageState>(
+      'reloads first page when data changed notifier emits',
+      build: () {
+        when(getPageOfServicesUseCase(1)).thenAnswer((realInvocation) async => serviceBundle);
+        when(listenForDataChangedUseCase(DataChangedType.service)).thenAnswer(
+          (realInvocation) => Stream.fromFuture(
+            Future.delayed(const Duration(milliseconds: 500), () => DataChangedType.service),
+          ),
+        );
+        return cubit;
+      },
+      act: (cubit) => cubit.initialize(),
+      wait: const Duration(seconds: 1),
+      expect: () => [
+        ServiceListPageState.loading(),
+        ServiceListPageState.idle(
+          serviceBundle.services.getRange(0, 3).toList(),
+          serviceBundle.services.getRange(3, serviceBundle.services.length).toList(),
+          false,
+        ),
+        ServiceListPageState.loading(),
+        ServiceListPageState.idle(
+          serviceBundle.services.getRange(0, 3).toList(),
+          serviceBundle.services.getRange(3, serviceBundle.services.length).toList(),
+          false,
+        ),
+      ],
+    );
+  });
+
   group('loadFirstPage', () {
     final connectionError = GeneralConnectionError.noConnection();
 
