@@ -23,4 +23,7 @@ class AppIcon {
   static const chevronDown = 'assets/icon/chevron_down.svg';
   static const chevronUp = 'assets/icon/chevron_up.svg';
   static const chevronRight = 'assets/icon/chevron_right.svg';
+
+  static const device = 'assets/icon/device.svg';
+  static const security = 'assets/icon/security.svg';
 }
