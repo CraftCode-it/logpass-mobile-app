@@ -8,6 +8,7 @@ import 'package:logpass_me/presentation/page/service_details/session_list/sessio
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/labeled_text.dart';
@@ -31,8 +32,9 @@ class AgreementDetailsPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
-      appBar: CustomAppBar.smallTitleWithBack(
+      appBar: CustomAppBar.smallTitle(
         title: LocaleKeys.agreementDetails_title.tr(),
+        leading: NavigationButton.back(),
       ),
       body: state.maybeMap(
         initializing: (_) => const Loader(),

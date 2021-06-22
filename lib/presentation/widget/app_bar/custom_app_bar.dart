@@ -47,28 +47,15 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         rightElements: trailing != null ? [trailing] : [],
       );
 
-  factory CustomAppBar.smallTitleWithClose({
+  factory CustomAppBar.smallTitle({
     String? title,
-    Function()? customAction,
-  }) =>
-      CustomAppBar(
-        title: title ?? '',
-        leadingElement: NavigationButton.close(
-          customAction: customAction,
-        ),
-      );
-
-  factory CustomAppBar.smallTitleWithBack({
-    String? title,
+    Widget? leading,
     Widget? trailing,
-    Function()? customAction,
   }) =>
       CustomAppBar(
         title: title ?? '',
         rightElements: trailing != null ? [trailing] : [],
-        leadingElement: NavigationButton.back(
-          customAction: customAction,
-        ),
+        leadingElement: leading,
       );
 
   factory CustomAppBar.bigTitle({
