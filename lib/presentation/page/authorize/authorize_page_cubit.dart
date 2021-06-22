@@ -12,7 +12,10 @@ import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dar
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
+import 'package:logpass_me/presentation/page/authorize/scope_renderer.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
 
 part 'authorize_page_cubit.freezed.dart';
 part 'authorize_page_state.dart';
@@ -25,12 +28,16 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
+  final ScopeRenderer _scopeRenderer;
+
+  bool _shouldRedirect = false;
+  List<ScopeElement> _scopeElements = [];
+  List<ServiceAgreement> _agreements = [];
+  Service? _service;
 
   late String _authorizationAttemptId;
-  late bool _shouldRedirect;
 
-  // TODO: should be true after filled required fields (scopes)
-  bool get _canConfirm => true;
+  bool get _canConfirm => _scopeElements.every((e) => e.isEligible);
 
   AuthorizePageCubit(
     this._getOAuthApplicationDetailsUseCase,
@@ -39,6 +46,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._approveOAuthAttemptUseCase,
     this._loadOneTimeCodeUseCase,
     this._notifyDataChangedUseCase,
+    this._scopeRenderer,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -51,12 +59,15 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     try {
       final oAuthApplication = await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId);
       await _assignToOAuthAttemptUseCase(_authorizationAttemptId);
-      // TODO: map oAuthApplication.client.requiredScopes for form-widgets like service rules, email etc
-      // and determine (based on scopes) which widget should be shown on AuthorizePageState.idle() state;
-      // it has been left for debugging purposes
 
+      _service = oAuthApplication.service;
+      _scopeElements = _scopeRenderer.renderScopes(
+        oAuthApplication.scopesRequested,
+        oAuthApplication.service.scopesSupported,
+      );
       _shouldRedirect = !oAuthApplication.isRemote;
-      _emitIdleState(oAuthApplication.client);
+
+      _emitIdleState();
     } on GeneralConnectionError catch (e) {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
@@ -105,7 +116,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
-  void _emitIdleState(Service client) {
-    emit(AuthorizePageState.idle(_canConfirm, client));
+  void _emitIdleState() {
+    emit(AuthorizePageState.idle(_canConfirm, _service!, _scopeElements, _agreements));
   }
 }

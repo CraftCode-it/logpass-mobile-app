@@ -38,6 +38,7 @@ class AppColors {
   static const snackBarText = secondary;
   static const snackBarSuccessBackground = success100;
   static const snackBarErrorBackground = error100;
+  static const requiredElementColor = error100;
 
   static const primary100 = Color(0xFF191933);
   static const primary97 = Color(0xFF1F1F38);

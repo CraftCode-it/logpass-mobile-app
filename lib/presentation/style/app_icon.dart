@@ -26,4 +26,9 @@ class AppIcon {
 
   static const device = 'assets/icon/device.svg';
   static const security = 'assets/icon/security.svg';
+
+  static const address = 'assets/icon/address.svg';
+  static const email = 'assets/icon/email.svg';
+  static const serviceRules = 'assets/icon/service_rules.svg';
+  static const invoiceData = 'assets/icon/invoice_data.svg';
 }

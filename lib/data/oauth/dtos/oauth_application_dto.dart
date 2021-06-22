@@ -33,7 +33,7 @@ class OAuthApplicationDataDTO {
   final List<String> scopesRequested;
   @JsonKey(name: _linksKey)
   final OAuthApplicationDataLinksDTO links;
-  final ServiceDTO client;
+  final ServiceDTO service;
 
   OAuthApplicationDataDTO(
     this.id,
@@ -48,7 +48,7 @@ class OAuthApplicationDataDTO {
     this.isRemote,
     this.scopesRequested,
     this.links,
-    this.client,
+    this.service,
   );
 
   Map<String, dynamic> toJson() => _$OAuthApplicationDataDTOToJson(this);
