@@ -2,8 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometrics_use_case.dart';
+import 'package:logpass_me/domain/app_security/use_case/is_biometric_available_use_case.dart';
 import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
 import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_changed_use_case.dart';
+import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
 import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.dart';
@@ -29,14 +32,18 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
   final ScopeRenderer _scopeRenderer;
+  final IsBiometricAvailableUseCase _isBiometricAvailableUseCase;
+  final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
 
   bool _shouldRedirect = false;
   List<ScopeElement> _scopeElements = [];
   List<ServiceAgreement> _agreements = [];
   Service? _service;
+  bool _biometricCheckNeeded = false;
 
   late String _authorizationAttemptId;
 
+  // TODO: add check for required agreements when page will be ready
   bool get _canConfirm => _scopeElements.every((e) => e.isEligible);
 
   AuthorizePageCubit(
@@ -47,6 +54,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._loadOneTimeCodeUseCase,
     this._notifyDataChangedUseCase,
     this._scopeRenderer,
+    this._isBiometricAvailableUseCase,
+    this._authorizeWithBiometricsUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -66,6 +75,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
         oAuthApplication.service.scopesSupported,
       );
       _shouldRedirect = !oAuthApplication.isRemote;
+      _biometricCheckNeeded = oAuthApplication.scopesRequested.contains(Scope.verificationBiometric);
 
       _emitIdleState();
     } on GeneralConnectionError catch (e) {
@@ -75,16 +85,36 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
-  Future<void> approveAuthorizeAttempt() async {
-    emit(const AuthorizePageState.loading());
+  Future<bool> _preAuthorizeWithBiometric() async {
+    // TODO: handle case where biometric is needed, is available but is not set
+    if (_biometricCheckNeeded) {
+      final isBiometricAvailable = await _isBiometricAvailableUseCase();
+      if (isBiometricAvailable) {
+        return await _authorizeWithBiometricsUseCase();
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
 
-    // TODO: fix after implmentation of required scopes
+  Future<void> approveAuthorizeAttempt() async {
+    // TODO: fix after implmentation of pages for required scopes
     final args = ApproveAttemptArgs(
       email: 'john.smith@example.com',
       emailVerified: false,
       name: 'John Smith',
     );
     try {
+      final verified = await _preAuthorizeWithBiometric();
+      if (!verified) {
+        emit(const AuthorizePageState.biometricVerificationFailed());
+        return;
+      }
+
+      emit(const AuthorizePageState.loading());
+
       final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 

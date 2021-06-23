@@ -18,6 +18,33 @@ void showConnectionErrorSnackBar({
     somethingWentWrong: () => tr(LocaleKeys.error_somethingWentWrong),
   );
 
+  _showSnackBar(
+    contentText: contentText,
+    context: context,
+    colors: colors,
+    typography: typography,
+  );
+}
+
+void showLocalErrorSnackBar({
+  required String contentText,
+  required BuildContext context,
+  required AppThemeColors colors,
+  required AppTypography typography,
+}) =>
+    _showSnackBar(
+      contentText: contentText,
+      context: context,
+      colors: colors,
+      typography: typography,
+    );
+
+void _showSnackBar({
+  required String contentText,
+  required BuildContext context,
+  required AppThemeColors colors,
+  required AppTypography typography,
+}) {
   final snackBar = SnackBar(
     backgroundColor: Colors.transparent,
     padding: const EdgeInsets.all(AppDimens.zero),

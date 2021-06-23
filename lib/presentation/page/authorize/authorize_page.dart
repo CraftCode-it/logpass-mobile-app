@@ -93,6 +93,14 @@ class AuthorizePage extends HookWidget {
         await _redirect(state.redirectUri);
         await AutoRouter.of(context).pop();
       },
+      biometricVerificationFailed: (state) async {
+        showLocalErrorSnackBar(
+          contentText: LocaleKeys.authorize_biometricVerificationFailed.tr(),
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+      },
       connectionError: (state) async {
         showConnectionErrorSnackBar(
           error: state.error,
@@ -193,8 +201,21 @@ class _Form extends StatelessWidget {
             },
             itemCount: scopeElements.length,
           ),
+          _TrustLevelElement(),
         ],
       ),
+    );
+  }
+}
+
+class _TrustLevelElement extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: LocaleKeys.authorize_trustLevelName.tr(),
+      content: LocaleKeys.authorize_trustLevelDescription.tr(),
+      imagePath: AppIcon.lock,
+      contentHasError: false,
     );
   }
 }
@@ -278,14 +299,14 @@ class _FormElement extends HookWidget {
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
-    return GestureDetector(
+    return InkWell(
       onTap: onTapAction,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: colors.lightText,
+              color: colors.dividerLight,
             ),
           ),
         ),

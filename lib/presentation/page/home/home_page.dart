@@ -140,7 +140,7 @@ class _PendingItem extends HookWidget {
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId)),
@@ -153,7 +153,7 @@ class _PendingItem extends HookWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: colors.lightText,
+              color: colors.dividerLight,
             ),
           ),
         ),

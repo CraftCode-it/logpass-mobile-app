@@ -63,7 +63,10 @@
     "emailScopeHint": "Select email data",
     "invoiceScopeName": "Invoice data",
     "invoiceScopeHint": "Select invoice data",
-    "serviceRules": "Service rules"
+    "serviceRules": "Service rules",
+    "trustLevelName": "Trust level",
+    "trustLevelDescription": "No additional confirmation required",
+    "biometricVerificationFailed": "Biometric verification failed"
   },
   "otpCode": {
     "title": "Verify your number",

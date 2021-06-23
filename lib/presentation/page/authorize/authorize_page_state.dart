@@ -18,4 +18,6 @@ class AuthorizePageState with _$AuthorizePageState {
   const factory AuthorizePageState.denied(String? redirectUri) = _AuthorizePageStateDenied;
 
   const factory AuthorizePageState.connectionError(GeneralConnectionError error) = _AuthorizePageStateConnectionError;
+
+  const factory AuthorizePageState.biometricVerificationFailed() = _AuthorizePageStateBiometricVerificationFailed;
 }
