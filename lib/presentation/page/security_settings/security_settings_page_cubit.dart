@@ -51,6 +51,10 @@ class SecuritySettingsPageCubit extends Cubit<SecuritySettingsPageState> {
     emit(SecuritySettingsPageState.idle(_securityType));
   }
 
+  void cancelAction() {
+    emit(SecuritySettingsPageState.idle(_securityType));
+  }
+
   Future<void> _turnOnBiometrics() async {
     try {
       final authorized = await _authorizeWithBiometricsUseCase();

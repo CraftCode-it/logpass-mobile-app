@@ -17,6 +17,7 @@ import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_switch.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 class SecuritySettingsPage extends HookWidget {
@@ -27,7 +28,18 @@ class SecuritySettingsPage extends HookWidget {
     final cubit = useCubit<SecuritySettingsPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    useCubitListener(cubit, _listener);
+    final typography = useAppTypography();
+
+    useCubitListener<SecuritySettingsPageCubit, SecuritySettingsPageState>(
+      cubit,
+      (cubit, state, context) => _listener(
+        cubit,
+        state,
+        context,
+        colors,
+        typography,
+      ),
+    );
 
     useEffect(() {
       cubit.initialize();
@@ -51,10 +63,16 @@ class SecuritySettingsPage extends HookWidget {
     );
   }
 
-  void _listener(SecuritySettingsPageCubit cubit, SecuritySettingsPageState state, BuildContext context) {
+  void _listener(
+    SecuritySettingsPageCubit cubit,
+    SecuritySettingsPageState state,
+    BuildContext context,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) {
     state.maybeMap(
       setCode: (state) => _setCode(cubit, context, state.type),
-      confirmWithCode: (state) => _confirmWithCode(cubit, context, state.type),
+      confirmWithCode: (state) => _confirmWithCode(cubit, context, state.type, colors, typography),
       orElse: () {},
     );
   }
@@ -66,11 +84,35 @@ class SecuritySettingsPage extends HookWidget {
     }
   }
 
-  Future<void> _confirmWithCode(SecuritySettingsPageCubit cubit, BuildContext context, AppSecurityType type) async {
+  Future<void> _confirmWithCode(
+    SecuritySettingsPageCubit cubit,
+    BuildContext context,
+    AppSecurityType type,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) async {
+    if (type == AppSecurityType.none) {
+      final deactivate = await showTwoOptionsDialog(
+        context,
+        LocaleKeys.securitySettings_turnOffSecurity_title.tr(),
+        LocaleKeys.securitySettings_turnOffSecurity_content.tr(),
+        LocaleKeys.securitySettings_turnOffSecurity_action.tr(),
+        LocaleKeys.common_back.tr(),
+        typography,
+        colors,
+      );
+      if (!deactivate) {
+        cubit.cancelAction();
+        return;
+      }
+    }
+
     final success = await AutoRouter.of(context).push(
       ConfirmWithPinPageRoute(
-        title: 'Deactivate PIN code',
-        button: 'Deactivate',
+        title: type == AppSecurityType.none
+            ? LocaleKeys.securitySettings_deactivatePinTitle.tr()
+            : LocaleKeys.securitySettings_deactivateBiometricsTitle.tr(),
+        button: LocaleKeys.common_deactivate.tr(),
       ),
     );
     if (success == true) {
