@@ -9,13 +9,13 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
-import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
-import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class GetSaferPage extends HookWidget {
   const GetSaferPage({Key? key}) : super(key: key);
@@ -36,7 +36,6 @@ class GetSaferPage extends HookWidget {
       backgroundColor: colors.background,
       appBar: CustomAppBar.smallTitle(
         title: LocaleKeys.getSafer_title.tr(),
-        leading: NavigationButton.back(),
       ),
       body: SafeArea(
         child: state.maybeMap(
@@ -125,7 +124,7 @@ class _Body extends HookWidget {
             ),
           const SizedBox(height: AppDimens.c),
           TextButton(
-            onPressed: () => AutoRouter.of(context).popUntilRoot(),
+            onPressed: () => _skip(context, colors, typography),
             child: Text(
               tr(LocaleKeys.getSafer_skipAction),
               style: typography.body3,
@@ -134,6 +133,21 @@ class _Body extends HookWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _skip(BuildContext context, AppThemeColors colors, AppTypography typography) async {
+    final shouldSkip = await showTwoOptionsDialog(
+      context,
+      LocaleKeys.getSafer_skipDialog_title.tr(),
+      LocaleKeys.getSafer_skipDialog_content.tr(),
+      LocaleKeys.getSafer_skipDialog_action.tr(),
+      LocaleKeys.getSafer_skipDialog_backAction.tr(),
+      typography,
+      colors,
+    );
+    if (shouldSkip) {
+      AutoRouter.of(context).popUntilRoot();
+    }
   }
 }
 

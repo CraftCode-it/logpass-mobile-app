@@ -90,7 +90,13 @@
     "codeInfoPrimary": "Set unique PIN code ",
     "codeInfoSecondary": "or simply set unique PIN code ",
     "codeAction": "Set PIN code",
-    "skipAction": "Not now"
+    "skipAction": "Not now",
+    "skipDialog": {
+      "title": "Skip step",
+      "content": "Are you sure you do not need extra access validation?",
+      "action": "Yes, skip",
+      "backAction": "Go back"
+    }
   },
   "newPin": {
     "title": "Set PIN code",
