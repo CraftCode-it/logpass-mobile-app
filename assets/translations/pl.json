@@ -11,7 +11,8 @@
     "wrongCode": "Code is wrong",
     "continue": "Continue",
     "deactivate": "Deactivate",
-    "back": "Back"
+    "back": "Back",
+    "save": "Save"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
@@ -198,6 +199,10 @@
       "title": "Turn off security",
       "content": "Are you sure you want to turn this option off?\n\nIt will leave your login process without authentication.",
       "action": "Turn off"
+    },
+    "changePinCode": {
+      "title": "Change PIN code",
+      "action": "Next"
     }
   }
 }
