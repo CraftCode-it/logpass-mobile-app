@@ -59,7 +59,8 @@ class OAuthRepositoryImpl implements OAuthRepository {
     String tokenSub,
     ApproveAttemptArgs args,
   ) async {
-    final userInfoDTO = ApproveAttemptUserInfoDTO(tokenSub, args.email, args.emailVerified, args.name);
+    final mappedScopes = args.extraScopes.map((e) => e.toString().split('.').last).toList();
+    final userInfoDTO = ApproveAttemptUserInfoDTO(tokenSub, args.email, args.emailVerified, args.name, mappedScopes);
     final requestBody = ApproveAttemptDTO(userInfoDTO);
 
     final responseDTO = await callWithDioErrorResolver(

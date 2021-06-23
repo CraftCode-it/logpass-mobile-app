@@ -38,6 +38,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   bool _shouldRedirect = false;
   List<ScopeElement> _scopeElements = [];
   List<ServiceAgreement> _agreements = [];
+  List<Scope> _scopeRequested = [];
   Service? _service;
   bool _biometricCheckNeeded = false;
 
@@ -70,6 +71,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       await _assignToOAuthAttemptUseCase(_authorizationAttemptId);
 
       _service = oAuthApplication.service;
+      _scopeRequested = oAuthApplication.scopesRequested;
       _scopeElements = _scopeRenderer.renderScopes(
         oAuthApplication.scopesRequested,
         oAuthApplication.service.scopesSupported,
@@ -105,6 +107,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       email: 'john.smith@example.com',
       emailVerified: false,
       name: 'John Smith',
+      extraScopes: _scopeRequested,
     );
     try {
       final verified = await _preAuthorizeWithBiometric();
