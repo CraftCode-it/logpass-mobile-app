@@ -5,6 +5,7 @@ import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/utils/country_flag.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
@@ -75,7 +76,7 @@ class _CountryCodeRow extends HookWidget {
       child: Row(
         children: [
           Image.network(
-            countryFlagUrl(countryCode, true),
+            countryFlagUrl(countryCode.country, true),
             width: 36,
           ),
           const SizedBox(width: AppDimens.m),
@@ -105,9 +106,4 @@ class _CountryCodeRow extends HookWidget {
       ),
     );
   }
-}
-
-String countryFlagUrl(CountryCode countryCode, bool big) {
-  final size = big ? '32' : '16';
-  return 'https://www.countryflags.io/${countryCode.country.toLowerCase()}/flat/$size.png';
 }

@@ -207,5 +207,12 @@
     "emails": "Emails",
     "addresses": "Addresses",
     "invoiceData": "Invoice data"
+  },
+  "language": {
+    "title": "Select your language",
+    "supportedLanguages": {
+      "english": "English",
+      "polish": "Polski"
+    }
   }
 }
