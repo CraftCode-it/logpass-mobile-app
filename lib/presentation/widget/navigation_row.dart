@@ -6,24 +6,24 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
-class SettingsNavigationRow extends HookWidget {
+class NavigationRow extends HookWidget {
   final String? icon;
   final String title;
   final Function() onPressed;
 
-  const SettingsNavigationRow._({
+  const NavigationRow._({
     required this.title,
     required this.onPressed,
     this.icon,
     Key? key,
   }) : super(key: key);
 
-  factory SettingsNavigationRow.withIcon(String icon, String title, Function() onPressed) {
-    return SettingsNavigationRow._(title: title, onPressed: onPressed, icon: icon);
+  factory NavigationRow.withIcon(String icon, String title, Function() onPressed) {
+    return NavigationRow._(title: title, onPressed: onPressed, icon: icon);
   }
 
-  factory SettingsNavigationRow.titled(String title, Function() onPressed) {
-    return SettingsNavigationRow._(title: title, onPressed: onPressed);
+  factory NavigationRow.titled(String title, Function() onPressed) {
+    return NavigationRow._(title: title, onPressed: onPressed);
   }
 
   @override
@@ -36,7 +36,7 @@ class SettingsNavigationRow extends HookWidget {
     return InkWell(
       onTap: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
+        padding: const EdgeInsets.symmetric(vertical: AppDimens.l),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
