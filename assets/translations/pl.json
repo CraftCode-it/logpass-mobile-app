@@ -178,5 +178,11 @@
     "terms": "Terms&Condition",
     "help": "Help",
     "logout": "Log out"
+  },
+  "securitySettings": {
+    "title": "Security",
+    "biometrics": "Biometrics login",
+    "pin": "PIN code",
+    "changePin": "Change PIN code"
   }
 }

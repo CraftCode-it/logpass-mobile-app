@@ -1,7 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
-import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
+import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
@@ -11,9 +11,11 @@ import 'package:logpass_me/presentation/page/main/main_page.dart';
 import 'package:logpass_me/presentation/page/onboarding/onboarding_page.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/confirm_with_pin/confirm_with_pin_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/new_pin/new_pin_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/pin_success/pin_success_page.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page.dart';
+import 'package:logpass_me/presentation/page/security_settings/security_settings_page.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/historical_session_list_page.dart';
 import 'package:logpass_me/presentation/page/start/start_page.dart';
@@ -37,6 +39,8 @@ import 'package:logpass_me/presentation/page/start/start_page.dart';
     AutoRoute(page: HistoricalSessionListPage),
     AutoRoute(page: AuthorizePage),
     AutoRoute(page: AgreementDetailsPage),
+    AutoRoute(page: SecuritySettingsPage),
+    AutoRoute(page: ConfirmWithPinPage),
   ],
 )
 class $MainRouter {}

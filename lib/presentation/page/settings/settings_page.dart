@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/settings/settings_navigation_row.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_cubit.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -32,7 +34,11 @@ class SettingsPage extends HookWidget {
             children: [
               SettingsNavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
               const _Divider(),
-              SettingsNavigationRow.withIcon(AppIcon.security, LocaleKeys.settings_security.tr(), () {}),
+              SettingsNavigationRow.withIcon(
+                AppIcon.security,
+                LocaleKeys.settings_security.tr(),
+                () => AutoRouter.of(context).push(const SecuritySettingsPageRoute()),
+              ),
               const _Divider(),
               const SizedBox(height: AppDimens.xc),
               const DarkModeSwitchRow(),

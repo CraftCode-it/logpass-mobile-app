@@ -139,7 +139,7 @@ class _NextButton extends StatelessWidget {
 
   CustomRectangularButton _buildButton() {
     final isActive = state.maybeMap(
-      idle: (state) => state.valid,
+      idle: (state) => state.valid && !state.wrong,
       orElse: () => false,
     );
 
