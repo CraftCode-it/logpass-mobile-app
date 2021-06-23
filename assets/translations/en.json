@@ -56,7 +56,17 @@
   "authorize": {
     "title": "Authorize operation",
     "confirm_button": "Confirm",
-    "reject_button": "Reject"
+    "reject_button": "Reject",
+    "addressScopeName": "Address",
+    "addressScopeHint": "Select address data",
+    "emailScopeName": "Email",
+    "emailScopeHint": "Select email data",
+    "invoiceScopeName": "Invoice data",
+    "invoiceScopeHint": "Select invoice data",
+    "serviceRules": "Service rules",
+    "trustLevelName": "Trust level",
+    "trustLevelDescription": "No additional confirmation required",
+    "biometricVerificationFailed": "Biometric verification failed"
   },
   "otpCode": {
     "title": "Verify your number",

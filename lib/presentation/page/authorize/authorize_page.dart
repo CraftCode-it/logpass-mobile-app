@@ -3,16 +3,26 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/domain/model/scope.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
+import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+const _serviceLogoSize = 40.0;
+const _arrowIconSize = 24.0;
+const _elemenetIconSize = 20.0;
 
 class AuthorizePage extends HookWidget {
   final String authorizationAttemptId;
@@ -43,12 +53,23 @@ class AuthorizePage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
+      appBar: CustomAppBar.smallTitleOnly(
+        title: LocaleKeys.authorize_title.tr(),
+      ),
       body: state.maybeWhen(
-        idle: (canConfirm, client) => _PageContent(
-          client: client,
+        idle: (
+          canConfirm,
+          service,
+          scopes,
+          agreements,
+        ) =>
+            _PageContent(
+          service: service,
           canConfirm: canConfirm,
           onConfirmCallback: cubit.approveAuthorizeAttempt,
           onDenyCallback: cubit.denyAuthorizeAttempt,
+          scopeElements: scopes,
+          agreementList: agreements,
         ),
         loading: () => const Loader(),
         orElse: () => const SizedBox(),
@@ -72,6 +93,14 @@ class AuthorizePage extends HookWidget {
         await _redirect(state.redirectUri);
         await AutoRouter.of(context).pop();
       },
+      biometricVerificationFailed: (state) async {
+        showLocalErrorSnackBar(
+          contentText: LocaleKeys.authorize_biometricVerificationFailed.tr(),
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+      },
       connectionError: (state) async {
         showConnectionErrorSnackBar(
           error: state.error,
@@ -94,51 +123,229 @@ class AuthorizePage extends HookWidget {
   }
 }
 
-class _PageContent extends HookWidget {
-  final Service client;
+class _PageContent extends StatelessWidget {
+  final Service service;
   final bool canConfirm;
   final VoidCallback onConfirmCallback;
   final VoidCallback onDenyCallback;
+  final List<ScopeElement> scopeElements;
+  final List<ServiceAgreement> agreementList;
 
   const _PageContent({
-    required this.client,
+    required this.service,
     required this.canConfirm,
     required this.onConfirmCallback,
     required this.onDenyCallback,
+    required this.scopeElements,
+    required this.agreementList,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        children: [
+          _ServiceHeader(service: service),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _Form(
+                      scopeElements,
+                      agreementList,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+                  CustomRectangularButton.filled(
+                    text: LocaleKeys.authorize_confirm_button.tr(),
+                    onPressed: canConfirm ? onConfirmCallback : null,
+                  ),
+                  const SizedBox(height: AppDimens.l),
+                  CustomRectangularButton.outlined(
+                    text: LocaleKeys.authorize_reject_button.tr(),
+                    onPressed: onDenyCallback,
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Form extends StatelessWidget {
+  final List<ScopeElement> scopeElements;
+  final List<ServiceAgreement> agreements;
+
+  const _Form(this.scopeElements, this.agreements);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _ServiceRulesElement(agreements),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return _ScopeFormElement(
+                scopeElements[index],
+              );
+            },
+            itemCount: scopeElements.length,
+          ),
+          _TrustLevelElement(),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrustLevelElement extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: LocaleKeys.authorize_trustLevelName.tr(),
+      content: LocaleKeys.authorize_trustLevelDescription.tr(),
+      imagePath: AppIcon.lock,
+      contentHasError: false,
+    );
+  }
+}
+
+class _ServiceRulesElement extends StatelessWidget {
+  final List<ServiceAgreement> agreements;
+
+  const _ServiceRulesElement(this.agreements);
+
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: LocaleKeys.authorize_serviceRules.tr(),
+      imagePath: AppIcon.serviceRules,
+      onTapAction: () {
+        // TODO: handle navigation to service rules
+      },
+    );
+  }
+}
+
+class _ScopeFormElement extends StatelessWidget {
+  final ScopeElement element;
+
+  const _ScopeFormElement(this.element);
+
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: element.name,
+      imagePath: element.imagePath,
+      onTapAction: _getOnTapAction(context),
+      content: _getItemDescription(element),
+      contentHasError: !element.isEligible,
+    );
+  }
+
+  String _getItemDescription(ScopeElement element) {
+    if (element.filledDescription != null) return element.filledDescription!;
+
+    return (element.isEligible) ? element.hint : element.requiredHint;
+  }
+
+  VoidCallback? _getOnTapAction(BuildContext context) {
+    switch (element.scope) {
+      case Scope.address:
+        return () {
+          // TODO: add navigation to adresses
+        };
+      case Scope.email:
+        return () {
+          // TODO: add navigation to email
+        };
+      case Scope.invoice:
+        return () {
+          // TODO: add navigation to invoice
+        };
+      default:
+        break;
+    }
+  }
+}
+
+class _FormElement extends HookWidget {
+  final String title;
+  final String imagePath;
+  final VoidCallback? onTapAction;
+  final String? content;
+  final bool? contentHasError;
+
+  const _FormElement({
+    required this.title,
+    required this.imagePath,
+    this.onTapAction,
+    this.content,
+    this.contentHasError,
   });
 
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+    final colors = useAppThemeColors();
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimens.xxl),
+    return InkWell(
+      onTap: onTapAction,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: colors.dividerLight,
+            ),
+          ),
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                LocaleKeys.authorize_title,
-                textAlign: TextAlign.center,
-                style: typography.h8.copyWith(),
-              ).tr(),
+            Row(
+              children: [
+                SvgPicture.asset(
+                  imagePath,
+                  color: colors.secondaryText,
+                  width: _elemenetIconSize,
+                  height: _elemenetIconSize,
+                ),
+                const SizedBox(width: AppDimens.l),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: typography.body3,
+                  ),
+                ),
+                SvgPicture.asset(
+                  AppIcon.chevronRight,
+                  color: colors.text,
+                  width: _arrowIconSize,
+                  height: _arrowIconSize,
+                ),
+              ],
             ),
-            const SizedBox(height: AppDimens.xl),
-            _ClientHeader(client: client),
-            const SizedBox(height: AppDimens.xl),
-            Expanded(child: _AuthorizationForm()),
-            const SizedBox(height: AppDimens.xl),
-            CustomRectangularButton.filled(
-              text: LocaleKeys.authorize_confirm_button.tr(),
-              onPressed: onConfirmCallback,
-            ),
-            const SizedBox(height: AppDimens.l),
-            CustomRectangularButton.outlined(
-              text: LocaleKeys.authorize_reject_button.tr(),
-              onPressed: onDenyCallback,
-            ),
+            if (content != null && contentHasError != null) ...[
+              const SizedBox(height: AppDimens.s),
+              Text(
+                content!,
+                style: typography.info2.copyWith(
+                  color: contentHasError! ? AppColors.requiredElementColor : colors.text,
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -146,46 +353,50 @@ class _PageContent extends HookWidget {
   }
 }
 
-class _AuthorizationForm extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      child: Placeholder(
-        fallbackWidth: double.infinity,
-        fallbackHeight: 720,
-      ),
-    );
-  }
-}
+class _ServiceHeader extends HookWidget {
+  final Service service;
 
-class _ClientHeader extends StatelessWidget {
-  final Service client;
-
-  const _ClientHeader({
-    required this.client,
+  const _ServiceHeader({
+    required this.service,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
     return GestureDetector(
       onTap: () async {
-        await launch(client.url);
+        await launch(service.url);
       },
       child: Container(
-        height: AppDimens.c,
-        decoration: ShapeDecoration(
-          shape: Border.all(
-            color: Colors.grey,
-          ),
+        width: double.infinity,
+        padding: const EdgeInsets.only(
+          top: AppDimens.xxl,
+          bottom: AppDimens.xxl,
+          left: AppDimens.l,
+          right: AppDimens.l,
         ),
-        padding: const EdgeInsets.all(AppDimens.s),
+        color: colors.secondaryBackground,
         child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(client.logo),
+            Image.network(
+              service.logo,
+              width: _serviceLogoSize,
+              height: _serviceLogoSize,
+            ),
             const SizedBox(width: AppDimens.m),
-            Text(client.name),
+            Expanded(
+              child: Text(
+                service.name,
+                style: typography.h2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),

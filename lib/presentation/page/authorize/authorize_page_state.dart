@@ -6,11 +6,18 @@ class AuthorizePageState with _$AuthorizePageState {
   const factory AuthorizePageState.loading() = _AuthorizePageStateLoading;
 
   @Implements(BuildState)
-  const factory AuthorizePageState.idle(bool canConfirm, Service client) = _AuthorizePageStateIdle;
+  const factory AuthorizePageState.idle(
+    bool canConfirm,
+    Service service,
+    List<ScopeElement> scopeElements,
+    List<ServiceAgreement> agreements,
+  ) = _AuthorizePageStateIdle;
 
   const factory AuthorizePageState.confirmed(String? redirectUri) = _AuthorizePageStateConfirmed;
 
   const factory AuthorizePageState.denied(String? redirectUri) = _AuthorizePageStateDenied;
 
   const factory AuthorizePageState.connectionError(GeneralConnectionError error) = _AuthorizePageStateConnectionError;
+
+  const factory AuthorizePageState.biometricVerificationFailed() = _AuthorizePageStateBiometricVerificationFailed;
 }

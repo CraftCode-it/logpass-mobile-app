@@ -11,7 +11,6 @@ class ApproveAttemptDTO {
   // TODO: extend model with objects:
   // Address address
   // Invoice invoice
-  // List<String> extraScoped
 
   Map<String, dynamic> toJson() => _$ApproveAttemptDTOToJson(this);
 }
@@ -22,12 +21,14 @@ class ApproveAttemptUserInfoDTO {
   final String email;
   final bool emailVerified;
   final String name;
+  final List<String> extraScopes;
 
   ApproveAttemptUserInfoDTO(
     this.sub,
     this.email,
     this.emailVerified,
     this.name,
+    this.extraScopes,
   );
 
   Map<String, dynamic> toJson() => _$ApproveAttemptUserInfoDTOToJson(this);

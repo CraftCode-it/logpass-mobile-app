@@ -13,7 +13,7 @@ class OAuthApplication {
   final String country;
   final bool isRemote;
   final List<Scope> scopesRequested;
-  final Service client;
+  final Service service;
 
   OAuthApplication({
     required this.id,
@@ -27,6 +27,6 @@ class OAuthApplication {
     required this.country,
     required this.isRemote,
     required this.scopesRequested,
-    required this.client,
+    required this.service,
   });
 }

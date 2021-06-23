@@ -52,7 +52,17 @@
   "authorize": {
     "title": "Autoryzuj operację",
     "confirm_button": "Potwierdź",
-    "reject_button": "Odrzuć"
+    "reject_button": "Odrzuć",
+    "addressScopeName": "Adres",
+    "addressScopeHint": "Wybierz adres",
+    "emailScopeName": "Email",
+    "emailScopeHint": "Wybierz email",
+    "invoiceScopeName": "Dane do faktury",
+    "invoiceScopeHint": "Wybierz dane do faktury",
+    "serviceRules": "Service rules",
+    "trustLevelName": "Trust level",
+    "trustLevelDescription": "No additional confirmation required",
+    "biometricVerificationFailed": "Biometric verification failed"
   },
   "main": {
     "new_action": "Masz nową akcję",

@@ -57,8 +57,17 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
     );
   }
 
+  void _cancelTimerIfActive() {
+    final isActive = _timer?.isActive ?? false;
+    if (isActive) {
+      emit(const OneTimeCodeContainerState.loadInProgress());
+      _timer?.cancel();
+    }
+  }
+
   void _onCodeChange(OneTimeCode? oneTimeCode) {
     if (oneTimeCode != null) {
+      _cancelTimerIfActive();
       _oneTimeCode = oneTimeCode;
       _runTimer();
     } else {

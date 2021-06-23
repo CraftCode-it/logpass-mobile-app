@@ -4,6 +4,7 @@ import 'package:logpass_me/data/service/api/data/service_dto.dart';
 part 'oauth_application_dto.g.dart';
 
 const _linksKey = '_links';
+const _serviceKey = 'client';
 
 @JsonSerializable()
 class OAuthApplicationDTO {
@@ -33,7 +34,8 @@ class OAuthApplicationDataDTO {
   final List<String> scopesRequested;
   @JsonKey(name: _linksKey)
   final OAuthApplicationDataLinksDTO links;
-  final ServiceDTO client;
+  @JsonKey(name: _serviceKey)
+  final ServiceDTO service;
 
   OAuthApplicationDataDTO(
     this.id,
@@ -48,7 +50,7 @@ class OAuthApplicationDataDTO {
     this.isRemote,
     this.scopesRequested,
     this.links,
-    this.client,
+    this.service,
   );
 
   Map<String, dynamic> toJson() => _$OAuthApplicationDataDTOToJson(this);

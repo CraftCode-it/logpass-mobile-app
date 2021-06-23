@@ -6,7 +6,6 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 
 class CustomAppBar extends HookWidget with PreferredSizeWidget {
   @override
@@ -92,6 +91,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         ),
       ),
       elevation: 0,
+      automaticallyImplyLeading: false,
       leading: leadingElement,
       leadingWidth: leadingWidth,
       actions: rightElements,
