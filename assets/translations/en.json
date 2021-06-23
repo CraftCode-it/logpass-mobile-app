@@ -66,7 +66,8 @@
     "serviceRules": "Service rules",
     "trustLevelName": "Trust level",
     "trustLevelDescription": "No additional confirmation required",
-    "biometricVerificationFailed": "Biometric verification failed"
+    "biometricVerificationFailed": "Biometric verification failed",
+    "selectEmailTitle": "Select email"
   },
   "otpCode": {
     "title": "Verify your number",

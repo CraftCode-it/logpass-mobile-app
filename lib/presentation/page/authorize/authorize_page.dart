@@ -6,6 +6,7 @@ import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
@@ -18,9 +19,10 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:logpass_me/presentation/widget/service_header.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
-const _serviceLogoSize = 40.0;
 const _arrowIconSize = 24.0;
 const _elemenetIconSize = 20.0;
 
@@ -145,7 +147,11 @@ class _PageContent extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          _ServiceHeader(service: service),
+          ServiceHeader(
+            name: service.name,
+            logoPath: service.logo,
+            serviceUrl: service.url,
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -154,6 +160,7 @@ class _PageContent extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _Form(
+                      service,
                       scopeElements,
                       agreementList,
                     ),
@@ -180,10 +187,11 @@ class _PageContent extends StatelessWidget {
 }
 
 class _Form extends StatelessWidget {
+  final Service service;
   final List<ScopeElement> scopeElements;
   final List<ServiceAgreement> agreements;
 
-  const _Form(this.scopeElements, this.agreements);
+  const _Form(this.service, this.scopeElements, this.agreements);
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +205,7 @@ class _Form extends StatelessWidget {
             itemBuilder: (context, index) {
               return _ScopeFormElement(
                 scopeElements[index],
+                service,
               );
             },
             itemCount: scopeElements.length,
@@ -239,15 +248,16 @@ class _ServiceRulesElement extends StatelessWidget {
 
 class _ScopeFormElement extends StatelessWidget {
   final ScopeElement element;
+  final Service service;
 
-  const _ScopeFormElement(this.element);
+  const _ScopeFormElement(this.element, this.service);
 
   @override
   Widget build(BuildContext context) {
     return _FormElement(
       title: element.name,
       imagePath: element.imagePath,
-      onTapAction: _getOnTapAction(context),
+      onTapAction: _getOnTapAction(context, service),
       content: _getItemDescription(element),
       contentHasError: !element.isEligible,
     );
@@ -259,15 +269,18 @@ class _ScopeFormElement extends StatelessWidget {
     return (element.isEligible) ? element.hint : element.requiredHint;
   }
 
-  VoidCallback? _getOnTapAction(BuildContext context) {
+  VoidCallback? _getOnTapAction(BuildContext context, Service service) {
     switch (element.scope) {
       case Scope.address:
         return () {
           // TODO: add navigation to adresses
         };
       case Scope.email:
-        return () {
-          // TODO: add navigation to email
+        return () async {
+          final result = await AutoRouter.of(context).push<Email>(EmailSelectionPageRoute(service: service));
+          if (result != null) {
+            // TODO: handle picked email
+          }
         };
       case Scope.invoice:
         return () {
@@ -346,57 +359,6 @@ class _FormElement extends HookWidget {
                 ),
               ),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ServiceHeader extends HookWidget {
-  final Service service;
-
-  const _ServiceHeader({
-    required this.service,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = useAppTypography();
-    final colors = useAppThemeColors();
-
-    return GestureDetector(
-      onTap: () async {
-        await launch(service.url);
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(
-          top: AppDimens.xxl,
-          bottom: AppDimens.xxl,
-          left: AppDimens.l,
-          right: AppDimens.l,
-        ),
-        color: colors.secondaryBackground,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network(
-              service.logo,
-              width: _serviceLogoSize,
-              height: _serviceLogoSize,
-            ),
-            const SizedBox(width: AppDimens.m),
-            Expanded(
-              child: Text(
-                service.name,
-                style: typography.h2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
           ],
         ),
       ),

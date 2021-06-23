@@ -62,7 +62,8 @@
     "serviceRules": "Service rules",
     "trustLevelName": "Trust level",
     "trustLevelDescription": "No additional confirmation required",
-    "biometricVerificationFailed": "Biometric verification failed"
+    "biometricVerificationFailed": "Biometric verification failed",
+    "selectEmailTitle": "Select email"
   },
   "main": {
     "new_action": "Masz nową akcję",
