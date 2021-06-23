@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:logpass_me/presentation/page/settings/settings_navigation_row.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -12,6 +11,7 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/dark_mode_switch/dark_mode_switch_row.dart';
+import 'package:logpass_me/presentation/widget/navigation_row.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
@@ -32,23 +32,23 @@ class SettingsPage extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SettingsNavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
-              const _Divider(),
-              SettingsNavigationRow.withIcon(
+              NavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
+              Separator.light(),
+              NavigationRow.withIcon(
                 AppIcon.security,
                 LocaleKeys.settings_security.tr(),
                 () => AutoRouter.of(context).push(const SecuritySettingsPageRoute()),
               ),
-              const _Divider(),
+              Separator.light(),
               const SizedBox(height: AppDimens.xc),
               const DarkModeSwitchRow(),
-              const _Divider(),
-              SettingsNavigationRow.titled(LocaleKeys.settings_language.tr(), () {}),
-              const _Divider(),
-              SettingsNavigationRow.titled(LocaleKeys.settings_terms.tr(), () {}),
-              const _Divider(),
-              SettingsNavigationRow.titled(LocaleKeys.settings_help.tr(), () {}),
-              const _Divider(),
+              Separator.light(),
+              NavigationRow.titled(LocaleKeys.settings_language.tr(), () {}),
+              Separator.light(),
+              NavigationRow.titled(LocaleKeys.settings_terms.tr(), () {}),
+              Separator.light(),
+              NavigationRow.titled(LocaleKeys.settings_help.tr(), () {}),
+              Separator.light(),
               const SizedBox(height: AppDimens.xc),
               CustomRectangularButton.outlined(
                 text: LocaleKeys.settings_logout.tr(),
@@ -58,18 +58,6 @@ class SettingsPage extends HookWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Divider extends StatelessWidget {
-  const _Divider({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppDimens.s),
-      child: Separator.light(),
     );
   }
 }

@@ -200,5 +200,12 @@
       "title": "Change PIN code",
       "action": "Next"
     }
+  },
+  "yourData": {
+    "title": "Your data",
+    "personalData": "Personal data",
+    "emails": "Emails",
+    "addresses": "Addresses",
+    "invoiceData": "Invoice data"
   }
 }

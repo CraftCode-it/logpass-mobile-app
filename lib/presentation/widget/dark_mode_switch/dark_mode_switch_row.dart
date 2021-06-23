@@ -40,7 +40,7 @@ class DarkModeSwitchRow extends HookWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.l),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
