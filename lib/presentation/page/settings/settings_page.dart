@@ -70,7 +70,10 @@ class SettingsPage extends HookWidget {
                 () => AutoRouter.of(context).push(const LanguagePageRoute()),
               ),
               Separator.light(),
-              NavigationRow.titled(LocaleKeys.settings_terms.tr(), () {}),
+              NavigationRow.titled(
+                LocaleKeys.settings_terms.tr(),
+                () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
+              ),
               Separator.light(),
               NavigationRow.titled(LocaleKeys.settings_help.tr(), () {}),
               Separator.light(),
