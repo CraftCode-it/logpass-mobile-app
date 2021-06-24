@@ -1,4 +1,6 @@
 PODS:
+  - country_codes (0.0.1):
+    - Flutter
   - device_info (0.0.1):
     - Flutter
   - Firebase/CoreOnly (8.0.0):
@@ -105,6 +107,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - country_codes (from `.symlinks/plugins/country_codes/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -136,6 +139,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  country_codes:
+    :path: ".symlinks/plugins/country_codes/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   firebase_core:
@@ -174,6 +179,7 @@ CHECKOUT OPTIONS:
     :tag: 8.0.0
 
 SPEC CHECKSUMS:
+  country_codes: b0900f46ad686281d5dab438e354e44ad10f5941
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Firebase: 73c3e3b216ec1ecbc54d2ffdd4670c65c749edb1
   firebase_core: cda81ae37eda6df2bc2d16027fda527987c4bd33
