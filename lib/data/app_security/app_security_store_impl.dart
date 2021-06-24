@@ -41,4 +41,9 @@ class AppSecurityStoreImpl implements AppSecurityStore {
     final entity = _mapper.from(type);
     await _appSecurityDatabase.saveSecurityType(entity);
   }
+
+  @override
+  Future<void> clear() async {
+    await _appSecurityDatabase.clear();
+  }
 }

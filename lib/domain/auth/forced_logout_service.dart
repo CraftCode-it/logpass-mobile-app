@@ -1,15 +1,31 @@
 import 'dart:async';
 
+import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/auth/logout_service.dart';
+import 'package:logpass_me/domain/common/clearable.dart';
 
-@LazySingleton()
-class ForcedLogoutService {
+@LazySingleton(as: LogoutService)
+class ForcedLogoutService implements LogoutService {
+  final List<Clearable> _clearables;
+
   final StreamController _logoutEventStreamController = StreamController.broadcast();
 
+  ForcedLogoutService(this._clearables);
+
+  @override
   Stream<void> get logoutEventStream => _logoutEventStreamController.stream;
 
+  @override
   Future<void> logout() async {
-    //TODO logout logic
+    for (final clearable in _clearables) {
+      try {
+        await clearable.clear();
+      } catch (e, s) {
+        Fimber.e('Failed to clear ${clearable.runtimeType}', ex: e, stacktrace: s);
+      }
+    }
+
     _logoutEventStreamController.sink.add(Object());
   }
 }

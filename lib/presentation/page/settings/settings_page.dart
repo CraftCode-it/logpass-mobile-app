@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_cubit.dart';
+import 'package:logpass_me/presentation/page/settings/settings_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/dark_mode_switch/dark_mode_switch_row.dart';
 import 'package:logpass_me/presentation/widget/navigation_row.dart';
@@ -22,6 +24,26 @@ class SettingsPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<SettingsPageCubit>();
     final colors = useAppThemeColors();
+
+    useCubitListener<SettingsPageCubit, SettingsPageState>(cubit, (cubit, state, context) {
+      state.maybeMap(
+        loggingOut: (_) {
+          showDialog(
+            context: context,
+            builder: (context) => Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: const Material(
+                color: Colors.white24,
+                child: Loader(),
+              ),
+            ),
+            barrierDismissible: false,
+          );
+        },
+        orElse: () {},
+      );
+    });
 
     return Scaffold(
       backgroundColor: colors.background,

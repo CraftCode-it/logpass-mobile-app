@@ -7,10 +7,9 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/date_time_utils.dart';
-import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
-import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 const _copyIconSize = 20.0;
 
@@ -34,16 +33,19 @@ class OneTimeCodeContainer extends HookWidget {
       padding: const EdgeInsets.symmetric(vertical: AppDimens.xxl),
       child: state.maybeWhen(
         idle: (oneTimeCode, remainingProgress) => _CodeContainer(
+          key: ValueKey(oneTimeCode),
           oneTimeCode: oneTimeCode,
           remainingProgress: remainingProgress,
           onRefreshAction: cubit.refreshOneTimeCode,
           onCopyAction: cubit.copyOneTimeCodeToClipboard,
           progressSize: size,
         ),
-        loadInProgress: () => SizedBox(
-          width: size,
-          height: size,
-          child: const Loader(),
+        loadInProgress: () => _CodeContainer(
+          oneTimeCode: null,
+          remainingProgress: null,
+          onRefreshAction: null,
+          onCopyAction: null,
+          progressSize: size,
         ),
         error: () => _CodeContainer(
           oneTimeCode: null,
@@ -64,8 +66,8 @@ class OneTimeCodeContainer extends HookWidget {
 class _CodeContainer extends HookWidget {
   final OneTimeCode? oneTimeCode;
   final double? remainingProgress;
-  final VoidCallback onRefreshAction;
-  final VoidCallback onCopyAction;
+  final VoidCallback? onRefreshAction;
+  final VoidCallback? onCopyAction;
   final bool hasErrors;
   final double progressSize;
 
@@ -75,14 +77,17 @@ class _CodeContainer extends HookWidget {
     required this.progressSize,
     this.oneTimeCode,
     this.remainingProgress,
-  }) : hasErrors = oneTimeCode == null;
+    Key? key,
+  })  : hasErrors = oneTimeCode == null,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final appTypography = useAppTypography();
     final colors = useAppThemeColors();
     final inactiveColor = colors.textSpecial.withOpacity(0.15);
-    final controller = useAnimationController(duration: oneTimeCode?.expirationSec);
+
+    final controller = useAnimationController(duration: oneTimeCode?.expirationSec ?? Duration.zero);
     final animation = ColorTween(begin: AppColors.success100, end: AppColors.error100).animate(controller);
     useAnimation(animation);
 
@@ -103,19 +108,23 @@ class _CodeContainer extends HookWidget {
             color: AppColors.secondary.withOpacity(0.15),
           ),
         ),
-        if (!hasErrors)
-          SizedBox(
-            width: progressSize,
-            height: progressSize,
-            child: RotatedBox(
-              quarterTurns: 2,
-              child: CircularProgressIndicator(
-                value: remainingProgress,
-                strokeWidth: AppDimens.oneTimeCodeProgressWidth,
-                valueColor: animation,
-              ),
-            ),
+        SizedBox(
+          width: progressSize,
+          height: progressSize,
+          child: RotatedBox(
+            quarterTurns: 2,
+            child: oneTimeCode == null
+                ? const CircularProgressIndicator(
+                    strokeWidth: AppDimens.oneTimeCodeProgressWidth,
+                    color: AppColors.success100,
+                  )
+                : CircularProgressIndicator(
+                    value: remainingProgress,
+                    strokeWidth: AppDimens.oneTimeCodeProgressWidth,
+                    valueColor: animation,
+                  ),
           ),
+        ),
         SizedBox(
           width: progressSize,
           height: progressSize,
@@ -180,7 +189,7 @@ class _CodeContainer extends HookWidget {
 class _IconTextButton extends HookWidget {
   final String label;
   final Widget icon;
-  final VoidCallback onTapAction;
+  final VoidCallback? onTapAction;
   final bool isActive;
 
   const _IconTextButton(
