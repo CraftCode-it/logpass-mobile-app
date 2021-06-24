@@ -34,6 +34,7 @@
     "stepThreeContent": "Jakie dane mogą być przechowywane/ używane Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
   },
   "start": {
+    "title": "Register",
     "termsAcceptInfo": "By registering to the application, I accept ",
     "termsAcceptHighlight": "Terms&Conditions of use",
     "helpAction": "Need help?",

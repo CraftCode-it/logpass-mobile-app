@@ -11,6 +11,7 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';
@@ -18,7 +19,6 @@ import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class StartPage extends HookWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class StartPage extends HookWidget {
     return Scaffold(
       backgroundColor: color.background,
       appBar: CustomAppBar.bigTitle(
-        title: 'Register',
+        title: LocaleKeys.start_title.tr(),
         trailing: const _NeedHelpButton(),
       ),
       body: SafeArea(
@@ -220,7 +220,8 @@ class _TermsAndConditionsCheck extends HookWidget {
                   TextSpan(
                     text: tr(LocaleKeys.start_termsAcceptHighlight),
                     style: typography.body3.copyWith(decoration: TextDecoration.underline),
-                    recognizer: TapGestureRecognizer()..onTap = () {}, //TODO open help page
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
                   ),
                 ],
               ),
