@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -96,13 +97,19 @@ class AuthorizePage extends HookWidget {
         await _redirect(state.redirectUri);
         await AutoRouter.of(context).pop();
       },
-      biometricVerificationFailed: (state) async {
-        showLocalErrorSnackBar(
-          contentText: LocaleKeys.authorize_biometricVerificationFailed.tr(),
-          context: context,
-          colors: colors,
-          typography: typography,
+      biometricVerificationNeeded: (state) async {
+        final allowed = await showTwoOptionsDialog(
+          context,
+          LocaleKeys.authorize_biometricCheckDialogTitle.tr(),
+          LocaleKeys.authorize_biometricCheckDialogContent.tr(),
+          LocaleKeys.authorize_biometricCheckDialogTopAction.tr(),
+          LocaleKeys.authorize_biometricCheckDialogBottomAction.tr(),
+          typography,
+          colors,
         );
+        if (allowed) {
+          await cubit.approveAuthorizeAttemptWithBiometric();
+        }
       },
       connectionError: (state) async {
         showConnectionErrorSnackBar(

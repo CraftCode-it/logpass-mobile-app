@@ -112,12 +112,12 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     );
   }
 
-  Future<bool> _preAuthorizeWithBiometric() async {
-    // TODO: handle case where biometric is needed, is available but is not set
-    if (_biometricCheckNeeded) {
+  Future<bool> _preAuthorizeWithBiometric(bool biometricConfirmed) async {
+    if (_biometricCheckNeeded && !biometricConfirmed) {
       final isBiometricAvailable = await _isBiometricAvailableUseCase();
       if (isBiometricAvailable) {
-        return await _authorizeWithBiometricsUseCase();
+        emit(const AuthorizePageState.biometricVerificationNeeded());
+        return false;
       } else {
         return true;
       }
@@ -149,13 +149,15 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     );
   }
 
-  Future<void> approveAuthorizeAttempt() async {
+  Future<void> approveAuthorizeAttemptWithBiometric() async {
+    final confirmed = await _authorizeWithBiometricsUseCase();
+    if (confirmed) await approveAuthorizeAttempt(biometricConfirmed: true);
+  }
+
+  Future<void> approveAuthorizeAttempt({bool biometricConfirmed = false}) async {
     try {
-      final verified = await _preAuthorizeWithBiometric();
-      if (!verified) {
-        emit(const AuthorizePageState.biometricVerificationFailed());
-        return;
-      }
+      final verified = await _preAuthorizeWithBiometric(biometricConfirmed);
+      if (!verified) return;
 
       emit(const AuthorizePageState.loading());
 
