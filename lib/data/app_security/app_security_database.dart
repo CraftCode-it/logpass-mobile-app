@@ -26,4 +26,9 @@ class AppSecurityDatabase {
   Future<String?> loadSecurityType() async {
     return _storage.read(key: _typeKey, iOptions: _iosOptions);
   }
+
+  Future<void> clear() async {
+    await _storage.delete(key: _codeKey);
+    await _storage.delete(key: _typeKey);
+  }
 }

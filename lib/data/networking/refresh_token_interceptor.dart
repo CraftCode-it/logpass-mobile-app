@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/interceptor_with_dio.dart';
 import 'package:logpass_me/domain/auth/auth_exception.dart';
 import 'package:logpass_me/domain/auth/forced_logout_service.dart';
+import 'package:logpass_me/domain/auth/logout_service.dart';
 import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/refresh_access_token_use_case.dart';
 
@@ -13,12 +14,12 @@ import 'package:logpass_me/domain/auth/use_case/refresh_access_token_use_case.da
 class RefreshTokenInterceptor extends InterceptorWithDio {
   final GetUserTokensUseCase _getUserTokensUseCase;
   final RefreshAccessTokenUseCase _refreshAccessTokenUseCase;
-  final ForcedLogoutService _forcedLogoutService;
+  final LogoutService _logoutService;
 
   RefreshTokenInterceptor(
     this._getUserTokensUseCase,
     this._refreshAccessTokenUseCase,
-    this._forcedLogoutService,
+    this._logoutService,
   );
 
   @override
@@ -44,7 +45,7 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
         dio.unlockAll();
 
         Fimber.e('Making requests when user is not signed in.', ex: e);
-        await _forcedLogoutService.logout();
+        await _logoutService.logout();
         return handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
       } catch (e, s) {
         dio.unlockAll();
@@ -63,7 +64,7 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
         await _refreshAccessTokenUseCase();
       } on AuthException {
         Fimber.d('Refresh token has expired, logging out.');
-        await _forcedLogoutService.logout();
+        await _logoutService.logout();
         handler.reject(err);
       }
 

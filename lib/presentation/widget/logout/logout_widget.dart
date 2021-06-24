@@ -16,6 +16,10 @@ class LogoutWidget extends HookWidget {
     final cubit = useCubit<LogoutCubit>();
     useCubitListener(cubit, _logoutCubitListener, listenWhen: (state) => state is LogoutStateLogout);
 
+    useEffect(() {
+      cubit.init();
+    }, [cubit]);
+
     return child;
   }
 
@@ -27,7 +31,6 @@ class LogoutWidget extends HookWidget {
   }
 
   void _navigateOnLogout(BuildContext context) {
-    //TODO change to proper logout page
-    AutoRouter.of(context).pushAndPopUntil(const EntryPageRoute(), predicate: (route) => false);
+    AutoRouter.of(context).replaceAll([const StartPageRoute()]);
   }
 }
