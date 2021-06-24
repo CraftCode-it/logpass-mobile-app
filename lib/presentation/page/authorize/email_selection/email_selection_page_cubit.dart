@@ -21,7 +21,9 @@ class EmailSelectionPageCubit extends Cubit<EmailSelectionPageState> {
     this._getUserEmailsUseCase,
   ) : super(EmailSelectionPageState.loading());
 
-  Future<void> init() async {
+  Future<void> init(Email? email) async {
+    _selectedEmail = email;
+
     await _loadUserEmails();
   }
 
@@ -33,7 +35,7 @@ class EmailSelectionPageCubit extends Cubit<EmailSelectionPageState> {
   Future<void> _loadUserEmails() async {
     try {
       _emails = await _getUserEmailsUseCase();
-      _selectedEmail = _emails?.first;
+      _selectedEmail ??= _emails?.first;
 
       _emitIdleState();
     } on GeneralConnectionError catch (e) {

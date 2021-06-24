@@ -19,9 +19,11 @@ import 'package:logpass_me/presentation/widget/service_header.dart';
 
 class EmailSelectionPage extends HookWidget {
   final Service service;
+  final Email? email;
 
   const EmailSelectionPage({
     required this.service,
+    this.email,
   });
 
   @override
@@ -43,7 +45,7 @@ class EmailSelectionPage extends HookWidget {
     );
 
     useEffect(() {
-      cubit.init();
+      cubit.init(email);
     }, [cubit]);
 
     return Scaffold(
