@@ -286,8 +286,11 @@ class _ScopeFormElement extends StatelessWidget {
           }
         };
       case Scope.invoice:
-        return () {
-          // TODO: add navigation to invoice
+        return () async {
+          final result = await AutoRouter.of(context).push<Email>(InvoiceDataSelectionPageRoute(service: service));
+          if (result != null) {
+            // TODO: handle picked invoice data
+          }
         };
       default:
         break;

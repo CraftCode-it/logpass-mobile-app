@@ -4,6 +4,7 @@ import 'package:logpass_me/presentation/page/authorize/address_selection/address
 import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
 import 'package:logpass_me/presentation/page/authorize/email_selection/email_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
@@ -41,6 +42,7 @@ import 'package:logpass_me/presentation/page/start/start_page.dart';
     AutoRoute(page: AgreementDetailsPage),
     AutoRoute(page: EmailSelectionPage),
     AutoRoute(page: AddressSelectionPage),
+    AutoRoute(page: InvoiceDataSelectionPage),
   ],
 )
 class $MainRouter {}
