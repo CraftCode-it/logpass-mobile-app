@@ -1,4 +1,5 @@
 class InvoiceData {
+  // TODO: add translation for tax ID
   final String? taxId;
   final String name;
   final String surname;
@@ -20,4 +21,41 @@ class InvoiceData {
     this.apartmentNumber,
     this.taxId,
   });
+
+  @override
+  String toString() {
+    if (apartmentNumber != null) {
+      return '$name $surname\n$street $buildingNumber/$apartmentNumber\n$postCode $city';
+    }
+    return '$name $surname\n$street $buildingNumber\n$postCode $city';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is InvoiceData &&
+        other.taxId == taxId &&
+        other.name == name &&
+        other.surname == surname &&
+        other.street == street &&
+        other.buildingNumber == buildingNumber &&
+        other.apartmentNumber == apartmentNumber &&
+        other.postCode == postCode &&
+        other.city == city &&
+        other.isDefault == isDefault;
+  }
+
+  @override
+  int get hashCode {
+    return taxId.hashCode ^
+        name.hashCode ^
+        surname.hashCode ^
+        street.hashCode ^
+        buildingNumber.hashCode ^
+        apartmentNumber.hashCode ^
+        postCode.hashCode ^
+        city.hashCode ^
+        isDefault.hashCode;
+  }
 }

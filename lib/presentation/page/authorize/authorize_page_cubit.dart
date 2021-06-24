@@ -9,12 +9,16 @@ import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_cha
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
+import 'package:logpass_me/domain/oauth/data/oauth_application.dart';
 import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_user_email_use_case.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_renderer.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -29,11 +33,16 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final AssignToOAuthAttemptUseCase _assignToOAuthAttemptUseCase;
   final DenyOAuthAttemptUseCase _denyOAuthAttemptUseCase;
   final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
+
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
   final ScopeRenderer _scopeRenderer;
   final IsBiometricAvailableUseCase _isBiometricAvailableUseCase;
   final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
+
+  final GetDefaultInvoiceDataUseCase _getDefaultInvoiceDataUseCase;
+  final GetDefaultUserAddressUseCase _getDefaultUserAddressUseCase;
+  final GetDefaultUserEmailUseCase _getDefaultUserEmailUseCase;
 
   bool _shouldRedirect = false;
   List<ScopeElement> _scopeElements = [];
@@ -57,6 +66,9 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._scopeRenderer,
     this._isBiometricAvailableUseCase,
     this._authorizeWithBiometricsUseCase,
+    this._getDefaultInvoiceDataUseCase,
+    this._getDefaultUserAddressUseCase,
+    this._getDefaultUserEmailUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -72,10 +84,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
       _service = oAuthApplication.service;
       _scopeRequested = oAuthApplication.scopesRequested;
-      _scopeElements = _scopeRenderer.renderScopes(
-        oAuthApplication.scopesRequested,
-        oAuthApplication.service.scopesSupported,
-      );
+      _scopeElements = await _getScopeElements(oAuthApplication);
       _shouldRedirect = !oAuthApplication.isRemote;
       _biometricCheckNeeded = oAuthApplication.scopesRequested.contains(Scope.verificationBiometric);
 
@@ -85,6 +94,20 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     } catch (e, s) {
       Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
     }
+  }
+
+  Future<List<ScopeElement>> _getScopeElements(OAuthApplication application) async {
+    final defaultEmail = await _getDefaultUserEmailUseCase();
+    final defaultAddress = await _getDefaultUserAddressUseCase();
+    final defaultInvoiceData = await _getDefaultInvoiceDataUseCase();
+
+    return _scopeRenderer.renderScopes(
+      application.scopesRequested,
+      application.service.scopesSupported,
+      userEmail: defaultEmail,
+      userAddress: defaultAddress,
+      invoiceData: defaultInvoiceData,
+    );
   }
 
   Future<bool> _preAuthorizeWithBiometric() async {
@@ -99,6 +122,11 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     } else {
       return true;
     }
+  }
+
+  void updateScopes(ScopeElement element) {
+    _scopeElements = _scopeElements.map((e) => (e.scope == element.scope) ? element : e).toList();
+    _emitIdleState();
   }
 
   Future<void> approveAuthorizeAttempt() async {

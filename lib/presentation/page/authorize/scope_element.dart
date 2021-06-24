@@ -6,9 +6,9 @@ class ScopeElement {
   final String hint;
   final String imagePath;
   final bool isRequired;
-  final String? filledDescription;
+  final Object? scopeObject;
 
-  bool get isEligible => !isRequired || isRequired && filledDescription != null;
+  bool get isEligible => !isRequired || isRequired && scopeObject != null;
   String get requiredHint => '*$hint';
 
   ScopeElement({
@@ -17,6 +17,24 @@ class ScopeElement {
     required this.isRequired,
     required this.imagePath,
     required this.hint,
-    this.filledDescription,
+    this.scopeObject,
   });
+
+  ScopeElement copyWith({
+    Scope? scope,
+    String? name,
+    String? hint,
+    String? imagePath,
+    bool? isRequired,
+    Object? scopeObject,
+  }) {
+    return ScopeElement(
+      scope: scope ?? this.scope,
+      name: name ?? this.name,
+      hint: hint ?? this.hint,
+      imagePath: imagePath ?? this.imagePath,
+      isRequired: isRequired ?? this.isRequired,
+      scopeObject: scopeObject ?? this.scopeObject,
+    );
+  }
 }

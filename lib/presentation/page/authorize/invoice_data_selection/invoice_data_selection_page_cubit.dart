@@ -12,13 +12,13 @@ part 'invoice_data_selection_page_cubit.freezed.dart';
 
 @injectable
 class InvoiceDataSelectionPageCubit extends Cubit<InvoiceDataSelectionPageState> {
-  final GetInvoiceDataUseCase _getInvoiceDataUseCase;
+  final GetInvoiceDatasUseCase _getInvoiceDatasUseCase;
 
   List<InvoiceData>? _invoiceDatas;
   InvoiceData? _selectedInvoiceData;
 
   InvoiceDataSelectionPageCubit(
-    this._getInvoiceDataUseCase,
+    this._getInvoiceDatasUseCase,
   ) : super(InvoiceDataSelectionPageState.loading());
 
   Future<void> init(InvoiceData? invoiceData) async {
@@ -34,7 +34,7 @@ class InvoiceDataSelectionPageCubit extends Cubit<InvoiceDataSelectionPageState>
 
   Future<void> _loadInvoiceDatas() async {
     try {
-      _invoiceDatas = await _getInvoiceDataUseCase();
+      _invoiceDatas = await _getInvoiceDatasUseCase();
       _selectedInvoiceData ??= _invoiceDatas?.first;
 
       _emitIdleState();

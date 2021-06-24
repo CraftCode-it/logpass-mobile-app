@@ -6,7 +6,9 @@ import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
@@ -68,10 +70,9 @@ class AuthorizePage extends HookWidget {
             _PageContent(
           service: service,
           canConfirm: canConfirm,
-          onConfirmCallback: cubit.approveAuthorizeAttempt,
-          onDenyCallback: cubit.denyAuthorizeAttempt,
           scopeElements: scopes,
           agreementList: agreements,
+          cubit: cubit,
         ),
         loading: () => const Loader(),
         orElse: () => const SizedBox(),
@@ -126,20 +127,18 @@ class AuthorizePage extends HookWidget {
 }
 
 class _PageContent extends StatelessWidget {
+  final AuthorizePageCubit cubit;
   final Service service;
   final bool canConfirm;
-  final VoidCallback onConfirmCallback;
-  final VoidCallback onDenyCallback;
   final List<ScopeElement> scopeElements;
   final List<ServiceAgreement> agreementList;
 
   const _PageContent({
     required this.service,
     required this.canConfirm,
-    required this.onConfirmCallback,
-    required this.onDenyCallback,
     required this.scopeElements,
     required this.agreementList,
+    required this.cubit,
   });
 
   @override
@@ -163,17 +162,18 @@ class _PageContent extends StatelessWidget {
                       service,
                       scopeElements,
                       agreementList,
+                      cubit.updateScopes,
                     ),
                   ),
                   const SizedBox(height: AppDimens.xl),
                   CustomRectangularButton.filled(
                     text: LocaleKeys.authorize_confirm_button.tr(),
-                    onPressed: canConfirm ? onConfirmCallback : null,
+                    onPressed: canConfirm ? cubit.approveAuthorizeAttempt : null,
                   ),
                   const SizedBox(height: AppDimens.l),
                   CustomRectangularButton.outlined(
                     text: LocaleKeys.authorize_reject_button.tr(),
-                    onPressed: onDenyCallback,
+                    onPressed: cubit.denyAuthorizeAttempt,
                   ),
                   const SizedBox(height: AppDimens.xl),
                 ],
@@ -190,8 +190,14 @@ class _Form extends StatelessWidget {
   final Service service;
   final List<ScopeElement> scopeElements;
   final List<ServiceAgreement> agreements;
+  final Function(ScopeElement) onScopeElementChange;
 
-  const _Form(this.service, this.scopeElements, this.agreements);
+  const _Form(
+    this.service,
+    this.scopeElements,
+    this.agreements,
+    this.onScopeElementChange,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +212,7 @@ class _Form extends StatelessWidget {
               return _ScopeFormElement(
                 scopeElements[index],
                 service,
+                onScopeElementChange,
               );
             },
             itemCount: scopeElements.length,
@@ -249,8 +256,9 @@ class _ServiceRulesElement extends StatelessWidget {
 class _ScopeFormElement extends StatelessWidget {
   final ScopeElement element;
   final Service service;
+  final Function(ScopeElement) onScopeElementChange;
 
-  const _ScopeFormElement(this.element, this.service);
+  const _ScopeFormElement(this.element, this.service, this.onScopeElementChange);
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +272,7 @@ class _ScopeFormElement extends StatelessWidget {
   }
 
   String _getItemDescription(ScopeElement element) {
-    if (element.filledDescription != null) return element.filledDescription!;
+    if (element.scopeObject != null) return element.scopeObject.toString();
 
     return (element.isEligible) ? element.hint : element.requiredHint;
   }
@@ -273,23 +281,28 @@ class _ScopeFormElement extends StatelessWidget {
     switch (element.scope) {
       case Scope.address:
         return () async {
-          final result = await AutoRouter.of(context).push<Email>(EmailSelectionPageRoute(service: service));
+          final address = element.scopeObject as Address?;
+          final result =
+              await AutoRouter.of(context).push(AddressSelectionPageRoute(service: service, address: address));
           if (result != null) {
-            // TODO: handle picked address
+            onScopeElementChange(element.copyWith(scopeObject: result));
           }
         };
       case Scope.email:
         return () async {
-          final result = await AutoRouter.of(context).push<Email>(EmailSelectionPageRoute(service: service));
+          final email = element.scopeObject as Email?;
+          final result = await AutoRouter.of(context).push(EmailSelectionPageRoute(service: service, email: email));
           if (result != null) {
-            // TODO: handle picked email
+            onScopeElementChange(element.copyWith(scopeObject: result));
           }
         };
       case Scope.invoice:
         return () async {
-          final result = await AutoRouter.of(context).push<Email>(InvoiceDataSelectionPageRoute(service: service));
+          final invoiceData = element.scopeObject as InvoiceData?;
+          final result = await AutoRouter.of(context)
+              .push(InvoiceDataSelectionPageRoute(service: service, invoiceData: invoiceData));
           if (result != null) {
-            // TODO: handle picked invoice data
+            onScopeElementChange(element.copyWith(scopeObject: result));
           }
         };
       default:
@@ -329,42 +342,49 @@ class _FormElement extends HookWidget {
             ),
           ),
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                SvgPicture.asset(
-                  imagePath,
-                  color: colors.secondaryText,
-                  width: _elemenetIconSize,
-                  height: _elemenetIconSize,
-                ),
-                const SizedBox(width: AppDimens.l),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: typography.body3,
-                  ),
-                ),
-                SvgPicture.asset(
-                  AppIcon.chevronRight,
-                  color: colors.text,
-                  width: _arrowIconSize,
-                  height: _arrowIconSize,
-                ),
-              ],
+            SvgPicture.asset(
+              imagePath,
+              color: colors.secondaryText,
+              width: _elemenetIconSize,
+              height: _elemenetIconSize,
             ),
-            if (content != null && contentHasError != null) ...[
-              const SizedBox(height: AppDimens.s),
-              Text(
-                content!,
-                style: typography.info2.copyWith(
-                  color: contentHasError! ? AppColors.requiredElementColor : colors.text,
-                ),
+            const SizedBox(width: AppDimens.l),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: typography.body3,
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.chevronRight,
+                        color: colors.text,
+                        width: _arrowIconSize,
+                        height: _arrowIconSize,
+                      ),
+                    ],
+                  ),
+                  if (content != null && contentHasError != null) ...[
+                    const SizedBox(height: AppDimens.s),
+                    Text(
+                      content!,
+                      style: typography.info2.copyWith(
+                        color: contentHasError! ? AppColors.requiredElementColor : colors.text,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-            ],
+            ),
           ],
         ),
       ),
