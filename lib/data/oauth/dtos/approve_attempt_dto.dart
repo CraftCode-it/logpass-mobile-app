@@ -8,7 +8,7 @@ class ApproveAttemptDTO {
 
   ApproveAttemptDTO(this.userInfo);
 
-  // TODO: extend model with objects:
+  // TODO: extend model with objects after backend implementation
   // Address address
   // Invoice invoice
 

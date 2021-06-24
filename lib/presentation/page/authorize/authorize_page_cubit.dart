@@ -16,6 +16,8 @@ import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dar
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_email_use_case.dart';
@@ -129,14 +131,25 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     _emitIdleState();
   }
 
-  Future<void> approveAuthorizeAttempt() async {
-    // TODO: fix after implmentation of pages for required scopes
-    final args = ApproveAttemptArgs(
-      email: 'john.smith@example.com',
+  ApproveAttemptArgs _prepareApproveAttemptArgs() {
+    final email = _scopeElements.where((e) => e.scope == Scope.email).firstOrNull?.scopeObject?.toString() ??
+        'john.smith@example.com';
+    final address = _scopeElements.where((e) => e.scope == Scope.address).firstOrNull?.scopeObject as Address?;
+    final invoiceData = _scopeElements.where((e) => e.scope == Scope.invoice).firstOrNull?.scopeObject as InvoiceData?;
+    // TODO: handle after backend's implementation
+    final personalData = 'John Smith';
+
+    return ApproveAttemptArgs(
+      email: email,
       emailVerified: false,
-      name: 'John Smith',
+      name: personalData,
       extraScopes: _scopeRequested,
+      address: address,
+      invoice: invoiceData,
     );
+  }
+
+  Future<void> approveAuthorizeAttempt() async {
     try {
       final verified = await _preAuthorizeWithBiometric();
       if (!verified) {
@@ -146,6 +159,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
       emit(const AuthorizePageState.loading());
 
+      final args = _prepareApproveAttemptArgs();
       final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
