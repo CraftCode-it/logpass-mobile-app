@@ -43,7 +43,10 @@ class SettingsPage extends HookWidget {
               const SizedBox(height: AppDimens.xc),
               const DarkModeSwitchRow(),
               Separator.light(),
-              NavigationRow.titled(LocaleKeys.settings_language.tr(), () {}),
+              NavigationRow.titled(
+                LocaleKeys.settings_language.tr(),
+                () => AutoRouter.of(context).push(const LanguagePageRoute()),
+              ),
               Separator.light(),
               NavigationRow.titled(LocaleKeys.settings_terms.tr(), () {}),
               Separator.light(),

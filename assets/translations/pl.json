@@ -211,5 +211,12 @@
     "emails": "Emails",
     "addresses": "Addresses",
     "invoiceData": "Invoice data"
+  },
+  "language": {
+    "title": "Wybierz twój język",
+    "supportedLanguages": {
+      "english": "English",
+      "polish": "Polski"
+    }
   }
 }

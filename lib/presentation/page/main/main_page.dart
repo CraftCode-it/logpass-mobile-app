@@ -55,12 +55,16 @@ class MainPage extends HookWidget {
       (cubit, state, context) => _cubitListener(cubit, state, context, colors, typography),
     );
 
+    final locale = EasyLocalization.of(context)?.locale;
+    final key = ValueKey(locale);
+
     useEffect(() {
       cubit.init();
       return;
     }, [cubit]);
 
     return Scaffold(
+      key: key,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
