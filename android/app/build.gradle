@@ -78,10 +78,12 @@ android {
         dev {
             dimension "env"
             applicationIdSuffix ".dev"
+            resValue "string", "app_name", "LogPass Dev"
         }
 
         prod {
             dimension "env"
+            resValue "string", "app_name", "LogPass"
         }
     }
 }

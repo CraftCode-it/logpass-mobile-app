@@ -1,11 +1,11 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/domain/auth/forced_logout_service.dart';
+import 'package:logpass_me/domain/auth/logout_service.dart';
 
 @Injectable()
 class ListenForLogoutEventUseCase {
-  final ForcedLogoutService _forcedLogoutService;
+  final LogoutService _logoutService;
 
-  ListenForLogoutEventUseCase(this._forcedLogoutService);
+  ListenForLogoutEventUseCase(this._logoutService);
 
-  Stream<void> call() => _forcedLogoutService.logoutEventStream;
+  Stream<void> call() => _logoutService.logoutEventStream;
 }

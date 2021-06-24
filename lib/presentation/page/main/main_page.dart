@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/info_snackbar.dart';
+import 'package:logpass_me/presentation/widget/logout/logout_widget.dart';
 
 class MainPage extends HookWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -65,21 +66,23 @@ class MainPage extends HookWidget {
 
     return Scaffold(
       key: key,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: IndexedStack(
-              index: index.value,
-              children: const [
-                HomePage(),
-                ServiceListPage(),
-                YourDataPage(),
-                SettingsPage(),
-              ],
+      body: LogoutWidget(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: IndexedStack(
+                index: index.value,
+                children: const [
+                  HomePage(),
+                  ServiceListPage(),
+                  YourDataPage(),
+                  SettingsPage(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: colors.bottomBarBackground,

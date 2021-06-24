@@ -25,4 +25,9 @@ class AuthStoreImpl implements AuthStore {
     final entity = _userTokensEntityMapper.from(tokens);
     await _authSecureDatabase.saveTokens(entity);
   }
+
+  @override
+  Future<void> clear() async {
+    await _authSecureDatabase.clear();
+  }
 }
