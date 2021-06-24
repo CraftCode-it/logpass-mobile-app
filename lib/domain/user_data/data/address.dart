@@ -1,5 +1,3 @@
-import 'package:logpass_me/domain/country_code/country_code.dart';
-
 class Address {
   final String name;
   final String street;
@@ -7,7 +5,7 @@ class Address {
   final String? apartmentNumber;
   final String postCode;
   final String city;
-  final CountryCode countryCode;
+  final String country;
   final bool isDefault;
 
   Address({
@@ -16,7 +14,7 @@ class Address {
     required this.buildingNumber,
     required this.postCode,
     required this.city,
-    required this.countryCode,
+    required this.country,
     this.isDefault = false,
     this.apartmentNumber,
   });

@@ -272,8 +272,11 @@ class _ScopeFormElement extends StatelessWidget {
   VoidCallback? _getOnTapAction(BuildContext context, Service service) {
     switch (element.scope) {
       case Scope.address:
-        return () {
-          // TODO: add navigation to adresses
+        return () async {
+          final result = await AutoRouter.of(context).push<Email>(EmailSelectionPageRoute(service: service));
+          if (result != null) {
+            // TODO: handle picked address
+          }
         };
       case Scope.email:
         return () async {

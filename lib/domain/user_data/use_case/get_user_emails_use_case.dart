@@ -7,7 +7,7 @@ class GetUserEmailsUseCase {
   Future<List<Email>> call() async => Future.value(
         [
           Email('test1@iteo.com'),
-          Email('test2@iteo.com'),
+          Email('test2@iteo.com', isDefault: true),
           Email('test3@iteo.com'),
         ],
       );

@@ -63,7 +63,9 @@
     "trustLevelName": "Trust level",
     "trustLevelDescription": "No additional confirmation required",
     "biometricVerificationFailed": "Biometric verification failed",
-    "selectEmailTitle": "Select email"
+    "selectEmailTitle": "Select email",
+    "selectAddressTitle": "Select address",
+    "selectInvoiceData": "Select invoice data"
   },
   "main": {
     "new_action": "Masz nową akcję",
