@@ -28,7 +28,7 @@ class YourDataPage extends HookWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            NavigationRow.withIcon(AppIcon.yourData, LocaleKeys.yourData_personalData.tr(), () {}),
+            NavigationRow.withIcon(AppIcon.personalData, LocaleKeys.yourData_personalData.tr(), () {}),
             Separator.light(),
             NavigationRow.withIcon(AppIcon.email, LocaleKeys.yourData_emails.tr(), () {}),
             Separator.light(),

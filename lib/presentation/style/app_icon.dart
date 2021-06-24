@@ -30,6 +30,7 @@ class AppIcon {
   static const biometricSmall = 'assets/icon/biometric_small.svg';
   static const pinCode = 'assets/icon/security.svg';
 
+  static const personalData = 'assets/icon/personal_data.svg';
   static const address = 'assets/icon/address.svg';
   static const email = 'assets/icon/email.svg';
   static const serviceRules = 'assets/icon/service_rules.svg';
