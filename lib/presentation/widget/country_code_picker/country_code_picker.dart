@@ -5,11 +5,11 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
-import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/utils/country_flag.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_cubit.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -138,7 +138,7 @@ class _Selected extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.network(
-          countryFlagUrl(countryCode, true),
+          countryFlagUrl(countryCode.country, true),
           width: 24,
           height: 24,
         ),

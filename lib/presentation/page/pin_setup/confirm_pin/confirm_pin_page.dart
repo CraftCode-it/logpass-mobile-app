@@ -63,7 +63,7 @@ class ConfirmPinPage extends HookWidget {
                 ),
               ),
               const Spacer(flex: 1),
-              _NextButton(
+              _SaveButton(
                 state: state,
                 onPressed: cubit.savePin,
               ),
@@ -119,11 +119,11 @@ class _PinField extends HookWidget {
   }
 }
 
-class _NextButton extends StatelessWidget {
+class _SaveButton extends StatelessWidget {
   final ConfirmPinPageState state;
   final Function() onPressed;
 
-  const _NextButton({
+  const _SaveButton({
     required this.state,
     required this.onPressed,
     Key? key,
@@ -139,12 +139,12 @@ class _NextButton extends StatelessWidget {
 
   CustomRectangularButton _buildButton() {
     final isActive = state.maybeMap(
-      idle: (state) => state.valid,
+      idle: (state) => state.valid && !state.wrong,
       orElse: () => false,
     );
 
     return CustomRectangularButton.filled(
-      text: tr(LocaleKeys.common_next),
+      text: tr(LocaleKeys.common_save),
       onPressed: isActive ? onPressed : null,
     );
   }

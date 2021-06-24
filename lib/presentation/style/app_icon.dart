@@ -23,9 +23,12 @@ class AppIcon {
   static const chevronDown = 'assets/icon/chevron_down.svg';
   static const chevronUp = 'assets/icon/chevron_up.svg';
   static const chevronRight = 'assets/icon/chevron_right.svg';
+  static const check = 'assets/icon/check.svg';
 
   static const device = 'assets/icon/device.svg';
   static const security = 'assets/icon/security.svg';
+  static const biometricSmall = 'assets/icon/biometric_small.svg';
+  static const pinCode = 'assets/icon/security.svg';
 
   static const address = 'assets/icon/address.svg';
   static const email = 'assets/icon/email.svg';

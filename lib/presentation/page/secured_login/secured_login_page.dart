@@ -18,9 +18,9 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:logpass_me/presentation/utils/text_utils.dart';
 
 class SecuredLoginPage extends HookWidget {
   const SecuredLoginPage({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class SecuredLoginPage extends HookWidget {
       backgroundColor: colors.background,
       appBar: CustomAppBar.smallLogo(
         logoColor: colors.logo,
-        trailing: const _NeedHelpButton(),
+        trailing: const NeedHelpButton(),
       ),
       body: SafeArea(
         child: Padding(
@@ -137,27 +137,6 @@ class _Content extends HookWidget {
   }
 
   bool _shouldShowDoneKeyboardButton() => keyboardVisible && Platform.isIOS;
-}
-
-class _NeedHelpButton extends HookWidget {
-  const _NeedHelpButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = useAppTypography();
-    final colors = useAppThemeColors();
-
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {},
-        child: Text(
-          LocaleKeys.securedLogin_needHelp,
-          style: typography.info1,
-        ).tr().withUnderline(colors.text),
-      ),
-    );
-  }
 }
 
 class _AuthorizationOptionsContainer extends HookWidget {

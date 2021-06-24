@@ -9,7 +9,10 @@
     "verify": "Verify",
     "logout": "Logout",
     "wrongCode": "Code is wrong",
-    "continue": "Continue"
+    "continue": "Continue",
+    "deactivate": "Deactivate",
+    "back": "Back",
+    "save": "Save"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
@@ -91,7 +94,13 @@
     "codeInfoPrimary": "Set unique PIN code ",
     "codeInfoSecondary": "or simply set unique PIN code ",
     "codeAction": "Set PIN code",
-    "skipAction": "Not now"
+    "skipAction": "Not now",
+    "skipDialog": {
+      "title": "Skip step",
+      "content": "Are you sure you do not need extra access validation?",
+      "action": "Yes, skip",
+      "backAction": "Go back"
+    }
   },
   "newPin": {
     "title": "Set PIN code",
@@ -177,5 +186,36 @@
     "terms": "Terms&Condition",
     "help": "Help",
     "logout": "Log out"
+  },
+  "securitySettings": {
+    "title": "Security",
+    "biometrics": "Biometrics login",
+    "pin": "PIN code",
+    "changePin": "Change PIN code",
+    "deactivateBiometricsTitle": "Deactivate biometrics",
+    "deactivatePinTitle": "Deactivate PIN code",
+    "turnOffSecurity": {
+      "title": "Turn off security",
+      "content": "Are you sure you want to turn this option off?\n\nIt will leave your login process without authentication.",
+      "action": "Turn off"
+    },
+    "changePinCode": {
+      "title": "Change PIN code",
+      "action": "Next"
+    }
+  },
+  "yourData": {
+    "title": "Your data",
+    "personalData": "Personal data",
+    "emails": "Emails",
+    "addresses": "Addresses",
+    "invoiceData": "Invoice data"
+  },
+  "language": {
+    "title": "Select your language",
+    "supportedLanguages": {
+      "english": "English",
+      "polish": "Polski"
+    }
   }
 }
