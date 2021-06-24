@@ -14,12 +14,13 @@ class CountryCodeRepositoryImpl implements CountryCodeRepository {
   CountryCodeRepositoryImpl(this._dataSource, this._mapper);
 
   @override
-  Future<List<CountryCode>> load() async {
+  Future<List<CountryCode>> load(String languageCode) async {
     final cache = _countryCodeListCache;
     if (cache != null) return cache;
 
     final entityList = await _dataSource.load();
-    final countryCodeList = entityList.map<CountryCode>(_mapper).toList(growable: false);
+    final countryCodeList =
+        entityList.map<CountryCode>((entity) => _mapper(entity, languageCode)).toList(growable: false);
 
     _countryCodeListCache = countryCodeList;
 

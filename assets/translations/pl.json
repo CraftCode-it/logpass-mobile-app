@@ -25,6 +25,9 @@
     "data": "Dane",
     "settings": "Opcje"
   },
+  "countryCodePicker": {
+    "title": "Select your country"
+  },
   "onboarding": {
     "stepOneTitle": "Witaj!",
     "stepOneContent": "Czym jest Logpass Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodsed do eiusmod",

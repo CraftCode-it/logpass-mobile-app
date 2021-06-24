@@ -1,6 +1,7 @@
+import 'package:country_codes/country_codes.dart';
+import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/common/data_mapper.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 
 part 'country_code_entity.g.dart';
@@ -18,12 +19,29 @@ class CountryCodeEntity {
 }
 
 @Injectable()
-class CountryCodeFromEntityMapper implements DataMapper<CountryCodeEntity, CountryCode> {
-  @override
-  CountryCode call(CountryCodeEntity data) {
+class CountryCodeFromEntityMapper {
+  CountryCode call(CountryCodeEntity data, String languageCode) {
+    final countryName = _countryName(languageCode, data.country);
+
     return CountryCode(
       data.code,
       data.country,
+      countryName,
     );
+  }
+
+  String _countryName(String languageCode, String countryCode) {
+    try {
+
+      final country = CountryCodes.detailsForLocale(
+        Locale(
+          languageCode,
+          countryCode,
+        ),
+      );
+      return country.localizedName ?? countryCode;
+    } catch (e) {
+      return countryCode;
+    }
   }
 }
