@@ -132,18 +132,14 @@ class _Content extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(AppDimens.l),
-              child: SingleChildScrollView(
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => RadioButtonTile(
-                    title: addresses[index].name,
-                    content: _buildTileContent(addresses[index]),
-                    isSelected: addresses[index] == selectedAddress,
-                    onTapAction: () => cubit.selectAddress(addresses[index]),
-                  ),
-                  itemCount: addresses.length,
+              child: ListView.builder(
+                itemBuilder: (context, index) => RadioButtonTile(
+                  title: addresses[index].name,
+                  content: _buildTileContent(addresses[index]),
+                  isSelected: addresses[index] == selectedAddress,
+                  onTapAction: () => cubit.selectAddress(addresses[index]),
                 ),
+                itemCount: addresses.length,
               ),
             ),
           ),
