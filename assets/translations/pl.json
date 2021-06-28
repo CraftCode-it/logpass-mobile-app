@@ -231,5 +231,15 @@
   },
   "termsAndConditions": {
     "title": "Terms & conditions"
+  },
+  "addNewDevice": {
+    "title": "Dodaj nowe urządzenie",
+    "header": "How to link this device with your Logpass account",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "codeInstruction": "On already linked device, please go to",
+    "codeInstructionNavigation": "Settings > Your devices > Add new",
+    "codeInsert": "and enter below presented code",
+    "codeLabel": "Code",
+    "codeHint": "000-000"
   }
 }

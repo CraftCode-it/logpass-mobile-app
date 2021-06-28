@@ -251,7 +251,7 @@ class _RegisterNewDevice extends HookWidget {
         const SizedBox(height: AppDimens.l),
         CustomRectangularButton.outlined(
           text: tr(LocaleKeys.start_addNewDeviceAction),
-          onPressed: () {}, // TODO open add new device page
+          onPressed: () => AutoRouter.of(context).push(const AddNewDevicePageRoute()),
         ),
         const SizedBox(height: AppDimens.m),
       ],
