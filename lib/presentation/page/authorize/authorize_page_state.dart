@@ -19,5 +19,5 @@ class AuthorizePageState with _$AuthorizePageState {
 
   const factory AuthorizePageState.connectionError(GeneralConnectionError error) = _AuthorizePageStateConnectionError;
 
-  const factory AuthorizePageState.biometricVerificationFailed() = _AuthorizePageStateBiometricVerificationFailed;
+  const factory AuthorizePageState.biometricVerificationNeeded() = _AuthorizePageStateBiometricVerificationNeeded;
 }

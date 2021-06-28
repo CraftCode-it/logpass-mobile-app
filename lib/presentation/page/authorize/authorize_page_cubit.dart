@@ -9,12 +9,18 @@ import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_cha
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
+import 'package:logpass_me/domain/oauth/data/oauth_application.dart';
 import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_user_email_use_case.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_renderer.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -29,11 +35,16 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final AssignToOAuthAttemptUseCase _assignToOAuthAttemptUseCase;
   final DenyOAuthAttemptUseCase _denyOAuthAttemptUseCase;
   final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
+
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
   final ScopeRenderer _scopeRenderer;
   final IsBiometricAvailableUseCase _isBiometricAvailableUseCase;
   final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
+
+  final GetDefaultInvoiceDataUseCase _getDefaultInvoiceDataUseCase;
+  final GetDefaultUserAddressUseCase _getDefaultUserAddressUseCase;
+  final GetDefaultUserEmailUseCase _getDefaultUserEmailUseCase;
 
   bool _shouldRedirect = false;
   List<ScopeElement> _scopeElements = [];
@@ -45,7 +56,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   late String _authorizationAttemptId;
 
   // TODO: add check for required agreements when page will be ready
-  bool get _canConfirm => _scopeElements.every((e) => e.isEligible);
+  bool get _canConfirm => _scopeElements.every((e) => e.isEligible());
 
   AuthorizePageCubit(
     this._getOAuthApplicationDetailsUseCase,
@@ -57,6 +68,9 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._scopeRenderer,
     this._isBiometricAvailableUseCase,
     this._authorizeWithBiometricsUseCase,
+    this._getDefaultInvoiceDataUseCase,
+    this._getDefaultUserAddressUseCase,
+    this._getDefaultUserEmailUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -72,10 +86,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
       _service = oAuthApplication.service;
       _scopeRequested = oAuthApplication.scopesRequested;
-      _scopeElements = _scopeRenderer.renderScopes(
-        oAuthApplication.scopesRequested,
-        oAuthApplication.service.scopesSupported,
-      );
+      _scopeElements = await _getScopeElements(oAuthApplication);
       _shouldRedirect = !oAuthApplication.isRemote;
       _biometricCheckNeeded = oAuthApplication.scopesRequested.contains(Scope.verificationBiometric);
 
@@ -87,12 +98,26 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
-  Future<bool> _preAuthorizeWithBiometric() async {
-    // TODO: handle case where biometric is needed, is available but is not set
-    if (_biometricCheckNeeded) {
+  Future<List<ScopeElement>> _getScopeElements(OAuthApplication application) async {
+    final defaultEmail = await _getDefaultUserEmailUseCase();
+    final defaultAddress = await _getDefaultUserAddressUseCase();
+    final defaultInvoiceData = await _getDefaultInvoiceDataUseCase();
+
+    return _scopeRenderer.renderScopes(
+      application.scopesRequested,
+      application.service.scopesSupported,
+      userEmail: defaultEmail,
+      userAddress: defaultAddress,
+      invoiceData: defaultInvoiceData,
+    );
+  }
+
+  Future<bool> _preAuthorizeWithBiometric(bool biometricConfirmed) async {
+    if (_biometricCheckNeeded && !biometricConfirmed) {
       final isBiometricAvailable = await _isBiometricAvailableUseCase();
       if (isBiometricAvailable) {
-        return await _authorizeWithBiometricsUseCase();
+        emit(const AuthorizePageState.biometricVerificationNeeded());
+        return false;
       } else {
         return true;
       }
@@ -101,23 +126,50 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
-  Future<void> approveAuthorizeAttempt() async {
-    // TODO: fix after implmentation of pages for required scopes
-    final args = ApproveAttemptArgs(
-      email: 'john.smith@example.com',
+  void updateScopes(ScopeElement element) {
+    _scopeElements = _scopeElements.map((e) => (e.scope == element.scope) ? element : e).toList();
+    _emitIdleState();
+  }
+
+  ApproveAttemptArgs _prepareApproveAttemptArgs() {
+    String? _email;
+    Address? _address;
+    InvoiceData? _invoiceData;
+
+    for (final element in _scopeElements) {
+      element.maybeMap(
+        email: (state) => _email = state.email?.value,
+        address: (state) => _address = state.address,
+        invoice: (state) => _invoiceData = state.invoiceData,
+        orElse: () {},
+      );
+    }
+    // TODO: handle after backend's implementation
+    final personalData = 'John Smith';
+
+    return ApproveAttemptArgs(
+      email: _email ?? 'john.smith@example.com',
       emailVerified: false,
-      name: 'John Smith',
+      name: personalData,
       extraScopes: _scopeRequested,
+      address: _address,
+      invoice: _invoiceData,
     );
+  }
+
+  Future<void> approveAuthorizeAttemptWithBiometric() async {
+    final confirmed = await _authorizeWithBiometricsUseCase();
+    if (confirmed) await approveAuthorizeAttempt(biometricConfirmed: true);
+  }
+
+  Future<void> approveAuthorizeAttempt({bool biometricConfirmed = false}) async {
     try {
-      final verified = await _preAuthorizeWithBiometric();
-      if (!verified) {
-        emit(const AuthorizePageState.biometricVerificationFailed());
-        return;
-      }
+      final verified = await _preAuthorizeWithBiometric(biometricConfirmed);
+      if (!verified) return;
 
       emit(const AuthorizePageState.loading());
 
+      final args = _prepareApproveAttemptArgs();
       final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 

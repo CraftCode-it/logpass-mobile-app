@@ -73,7 +73,13 @@
     "serviceRules": "Service rules",
     "trustLevelName": "Trust level",
     "trustLevelDescription": "No additional confirmation required",
-    "biometricVerificationFailed": "Biometric verification failed"
+    "selectEmailTitle": "Select email",
+    "selectAddressTitle": "Select address",
+    "selectInvoiceData": "Select invoice data",
+    "biometricCheckDialogTitle": "Biometrics needed",
+    "biometricCheckDialogContent": "This operation requires additional verification via Touch / Face ID\n\nPlease add your biometric to proceed",
+    "biometricCheckDialogTopAction": "Allow biometrics",
+    "biometricCheckDialogBottomAction": "Reject operation"
   },
   "otpCode": {
     "title": "Verify your number",
