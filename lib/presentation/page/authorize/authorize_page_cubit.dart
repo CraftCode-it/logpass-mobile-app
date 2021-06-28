@@ -165,7 +165,6 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       email: _email ?? 'john.smith@example.com',
       emailVerified: false,
       name: personalData,
-      // TODO: update extra scopes with optional agreements
       extraScopes: _prepareExtraScopeList(),
       address: _address,
       invoice: _invoiceData,
