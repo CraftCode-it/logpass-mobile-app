@@ -42,17 +42,17 @@ class ScopeElement with _$ScopeElement {
 
 extension SubmitCheck on ScopeElement {
   bool isEligible() {
-    return maybeMap(
+    final hasData = map(
       email: (state) {
-        return !isRequired || isRequired && state.email != null;
+        return state.email != null;
       },
       address: (state) {
-        return !isRequired || isRequired && state.address != null;
+        return state.address != null;
       },
       invoice: (state) {
-        return !isRequired || isRequired && state.invoiceData != null;
+        return state.invoiceData != null;
       },
-      orElse: () => !isRequired,
     );
+    return !isRequired || isRequired && hasData;
   }
 }
