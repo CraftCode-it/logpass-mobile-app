@@ -169,6 +169,7 @@ class _PageContent extends StatelessWidget {
                       scopeElements,
                       agreementList,
                       cubit.updateScopes,
+                      cubit.updateAgreements,
                     ),
                   ),
                   const SizedBox(height: AppDimens.xl),
@@ -197,12 +198,14 @@ class _Form extends StatelessWidget {
   final List<ScopeElement> scopeElements;
   final List<ServiceAgreement> agreements;
   final Function(ScopeElement) onScopeElementChange;
+  final Function(List<ServiceAgreement>) onAgreementsChange;
 
   const _Form(
     this.service,
     this.scopeElements,
     this.agreements,
     this.onScopeElementChange,
+    this.onAgreementsChange,
   );
 
   @override
@@ -210,7 +213,7 @@ class _Form extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _ServiceRulesElement(agreements),
+          _ServiceRulesElement(agreements, service, onAgreementsChange),
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -244,16 +247,22 @@ class _TrustLevelElement extends StatelessWidget {
 
 class _ServiceRulesElement extends StatelessWidget {
   final List<ServiceAgreement> agreements;
+  final Service service;
+  final Function(List<ServiceAgreement>) onAgreementsChange;
 
-  const _ServiceRulesElement(this.agreements);
+  const _ServiceRulesElement(this.agreements, this.service, this.onAgreementsChange);
 
   @override
   Widget build(BuildContext context) {
     return _FormElement(
       title: LocaleKeys.authorize_serviceRules.tr(),
       imagePath: AppIcon.serviceRules,
-      onTapAction: () {
-        // TODO: handle navigation to service rules
+      onTapAction: () async {
+        final result = await AutoRouter.of(context)
+            .push<List<ServiceAgreement>>(ServiceRulesPageRoute(agreements: agreements, service: service));
+        if (result != null) {
+          onAgreementsChange(result);
+        }
       },
     );
   }

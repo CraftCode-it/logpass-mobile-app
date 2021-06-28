@@ -55,8 +55,9 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
   late String _authorizationAttemptId;
 
-  // TODO: add check for required agreements when page will be ready
-  bool get _canConfirm => _scopeElements.every((e) => e.isEligible());
+  bool get _canConfirm => _areScopesEligible && _areRequiredAgreementsAccepted;
+  bool get _areScopesEligible => _scopeElements.every((e) => e.isEligible());
+  bool get _areRequiredAgreementsAccepted => _agreements.where((e) => e.isRequired).every((e) => e.isAccepted);
 
   AuthorizePageCubit(
     this._getOAuthApplicationDetailsUseCase,
@@ -85,6 +86,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       await _assignToOAuthAttemptUseCase(_authorizationAttemptId);
 
       _service = oAuthApplication.service;
+      _agreements = oAuthApplication.service.agreements;
       _scopeRequested = oAuthApplication.scopesRequested;
       _scopeElements = await _getScopeElements(oAuthApplication);
       _shouldRedirect = !oAuthApplication.isRemote;
@@ -131,6 +133,11 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     _emitIdleState();
   }
 
+  void updateAgreements(List<ServiceAgreement> agreements) {
+    _agreements = agreements;
+    _emitIdleState();
+  }
+
   ApproveAttemptArgs _prepareApproveAttemptArgs() {
     String? _email;
     Address? _address;
@@ -151,6 +158,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       email: _email ?? 'john.smith@example.com',
       emailVerified: false,
       name: personalData,
+      // TODO: update extra scopes with optional agreements
       extraScopes: _scopeRequested,
       address: _address,
       invoice: _invoiceData,
