@@ -138,6 +138,13 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     _emitIdleState();
   }
 
+  List<Scope> _prepareExtraScopeList() {
+    final acceptedOptionalAgreements =
+        _agreements.where((e) => !e.isRequired && e.isAccepted).map((e) => e.scope).whereType<Scope>().toList();
+
+    return [..._scopeRequested, ...acceptedOptionalAgreements];
+  }
+
   ApproveAttemptArgs _prepareApproveAttemptArgs() {
     String? _email;
     Address? _address;
@@ -159,7 +166,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       emailVerified: false,
       name: personalData,
       // TODO: update extra scopes with optional agreements
-      extraScopes: _scopeRequested,
+      extraScopes: _prepareExtraScopeList(),
       address: _address,
       invoice: _invoiceData,
     );
