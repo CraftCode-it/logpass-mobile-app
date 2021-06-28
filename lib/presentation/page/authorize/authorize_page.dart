@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
@@ -274,47 +273,46 @@ class _ScopeFormElement extends StatelessWidget {
       imagePath: element.imagePath,
       onTapAction: _getOnTapAction(context, service),
       content: _getItemDescription(element),
-      contentHasError: !element.isEligible,
+      contentHasError: !element.isEligible(),
     );
   }
 
   String _getItemDescription(ScopeElement element) {
-    if (element.scopeObject != null) return element.scopeObject.toString();
+    final placeholder = element.isEligible() ? element.hint : element.requiredHint;
 
-    return (element.isEligible) ? element.hint : element.requiredHint;
+    return element.maybeMap(
+      address: (state) => (state.address != null) ? state.address.toString() : placeholder,
+      email: (state) => (state.email != null) ? state.email.toString() : placeholder,
+      invoice: (state) => (state.invoiceData != null) ? state.invoiceData.toString() : placeholder,
+      orElse: () => placeholder,
+    );
   }
 
   VoidCallback? _getOnTapAction(BuildContext context, Service service) {
-    switch (element.scope) {
-      case Scope.address:
-        return () async {
-          final address = element.scopeObject as Address?;
-          final result =
-              await AutoRouter.of(context).push(AddressSelectionPageRoute(service: service, address: address));
-          if (result != null) {
-            onScopeElementChange(element.copyWith(scopeObject: result));
-          }
-        };
-      case Scope.email:
-        return () async {
-          final email = element.scopeObject as Email?;
-          final result = await AutoRouter.of(context).push(EmailSelectionPageRoute(service: service, email: email));
-          if (result != null) {
-            onScopeElementChange(element.copyWith(scopeObject: result));
-          }
-        };
-      case Scope.invoice:
-        return () async {
-          final invoiceData = element.scopeObject as InvoiceData?;
-          final result = await AutoRouter.of(context)
-              .push(InvoiceDataSelectionPageRoute(service: service, invoiceData: invoiceData));
-          if (result != null) {
-            onScopeElementChange(element.copyWith(scopeObject: result));
-          }
-        };
-      default:
-        break;
-    }
+    return element.maybeMap(
+      address: (state) => () async {
+        final result = await AutoRouter.of(context)
+            .push<Address?>(AddressSelectionPageRoute(service: service, address: state.address));
+        if (result != null) {
+          onScopeElementChange(state.copyWith(address: result));
+        }
+      },
+      email: (state) => () async {
+        final result =
+            await AutoRouter.of(context).push<Email?>(EmailSelectionPageRoute(service: service, email: state.email));
+        if (result != null) {
+          onScopeElementChange(state.copyWith(email: result));
+        }
+      },
+      invoice: (state) => () async {
+        final result = await AutoRouter.of(context)
+            .push<InvoiceData?>(InvoiceDataSelectionPageRoute(service: service, invoiceData: state.invoiceData));
+        if (result != null) {
+          onScopeElementChange(state.copyWith(invoiceData: result));
+        }
+      },
+      orElse: () {},
+    );
   }
 }
 

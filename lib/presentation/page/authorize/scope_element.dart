@@ -1,40 +1,58 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logpass_me/domain/model/scope.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
-class ScopeElement {
-  final Scope scope;
-  final String name;
-  final String hint;
-  final String imagePath;
-  final bool isRequired;
-  final Object? scopeObject;
+part 'scope_element.freezed.dart';
 
-  bool get isEligible => !isRequired || isRequired && scopeObject != null;
+@freezed
+class ScopeElement with _$ScopeElement {
+  const ScopeElement._();
+
   String get requiredHint => '*$hint';
 
-  ScopeElement({
-    required this.scope,
-    required this.name,
-    required this.isRequired,
-    required this.imagePath,
-    required this.hint,
-    this.scopeObject,
-  });
+  const factory ScopeElement.email(
+    Scope scope,
+    String name,
+    String hint,
+    String imagePath,
+    bool isRequired, {
+    Email? email,
+  }) = ScopeElementEmail;
 
-  ScopeElement copyWith({
-    Scope? scope,
-    String? name,
-    String? hint,
-    String? imagePath,
-    bool? isRequired,
-    Object? scopeObject,
-  }) {
-    return ScopeElement(
-      scope: scope ?? this.scope,
-      name: name ?? this.name,
-      hint: hint ?? this.hint,
-      imagePath: imagePath ?? this.imagePath,
-      isRequired: isRequired ?? this.isRequired,
-      scopeObject: scopeObject ?? this.scopeObject,
+  const factory ScopeElement.invoice(
+    Scope scope,
+    String name,
+    String hint,
+    String imagePath,
+    bool isRequired, {
+    InvoiceData? invoiceData,
+  }) = ScopeElementInvoice;
+
+  const factory ScopeElement.address(
+    Scope scope,
+    String name,
+    String hint,
+    String imagePath,
+    bool isRequired, {
+    Address? address,
+  }) = ScopeElementAddress;
+}
+
+extension SubmitCheck on ScopeElement {
+  bool isEligible() {
+    return maybeMap(
+      email: (state) {
+        return !isRequired || isRequired && state.email != null;
+      },
+      address: (state) {
+        return !isRequired || isRequired && state.address != null;
+      },
+      invoice: (state) {
+        return !isRequired || isRequired && state.invoiceData != null;
+      },
+      orElse: () => !isRequired,
     );
   }
 }

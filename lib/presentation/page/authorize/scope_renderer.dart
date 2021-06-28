@@ -22,31 +22,31 @@ class ScopeRenderer {
         .map((e) {
           switch (e.scope) {
             case Scope.address:
-              return ScopeElement(
-                scope: e.scope,
-                name: LocaleKeys.authorize_addressScopeName.tr(),
-                hint: LocaleKeys.authorize_addressScopeHint.tr(),
-                imagePath: AppIcon.address,
-                isRequired: requestedScopes.contains(e.scope),
-                scopeObject: userAddress,
+              return ScopeElement.address(
+                e.scope,
+                LocaleKeys.authorize_addressScopeName.tr(),
+                LocaleKeys.authorize_addressScopeHint.tr(),
+                AppIcon.address,
+                requestedScopes.contains(e.scope),
+                address: userAddress,
               );
             case Scope.email:
-              return ScopeElement(
-                scope: e.scope,
-                name: LocaleKeys.authorize_emailScopeName.tr(),
-                hint: LocaleKeys.authorize_emailScopeHint.tr(),
-                imagePath: AppIcon.email,
-                isRequired: requestedScopes.contains(e.scope),
-                scopeObject: userEmail,
+              return ScopeElement.email(
+                e.scope,
+                LocaleKeys.authorize_emailScopeName.tr(),
+                LocaleKeys.authorize_emailScopeHint.tr(),
+                AppIcon.email,
+                requestedScopes.contains(e.scope),
+                email: userEmail,
               );
             case Scope.invoice:
-              return ScopeElement(
-                scope: e.scope,
-                name: LocaleKeys.authorize_invoiceScopeName.tr(),
-                hint: LocaleKeys.authorize_invoiceScopeHint.tr(),
-                imagePath: AppIcon.invoiceData,
-                isRequired: requestedScopes.contains(e.scope),
-                scopeObject: invoiceData,
+              return ScopeElement.invoice(
+                e.scope,
+                LocaleKeys.authorize_invoiceScopeName.tr(),
+                LocaleKeys.authorize_invoiceScopeHint.tr(),
+                AppIcon.invoiceData,
+                requestedScopes.contains(e.scope),
+                invoiceData: invoiceData,
               );
             default:
               break;

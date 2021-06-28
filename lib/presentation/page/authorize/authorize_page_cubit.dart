@@ -56,7 +56,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   late String _authorizationAttemptId;
 
   // TODO: add check for required agreements when page will be ready
-  bool get _canConfirm => _scopeElements.every((e) => e.isEligible);
+  bool get _canConfirm => _scopeElements.every((e) => e.isEligible());
 
   AuthorizePageCubit(
     this._getOAuthApplicationDetailsUseCase,
@@ -132,20 +132,28 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   }
 
   ApproveAttemptArgs _prepareApproveAttemptArgs() {
-    final email = _scopeElements.where((e) => e.scope == Scope.email).firstOrNull?.scopeObject?.toString() ??
-        'john.smith@example.com';
-    final address = _scopeElements.where((e) => e.scope == Scope.address).firstOrNull?.scopeObject as Address?;
-    final invoiceData = _scopeElements.where((e) => e.scope == Scope.invoice).firstOrNull?.scopeObject as InvoiceData?;
+    String? _email;
+    Address? _address;
+    InvoiceData? _invoiceData;
+
+    for (final element in _scopeElements) {
+      element.maybeMap(
+        email: (state) => _email = state.email?.value,
+        address: (state) => _address = state.address,
+        invoice: (state) => _invoiceData = state.invoiceData,
+        orElse: () {},
+      );
+    }
     // TODO: handle after backend's implementation
     final personalData = 'John Smith';
 
     return ApproveAttemptArgs(
-      email: email,
+      email: _email ?? 'john.smith@example.com',
       emailVerified: false,
       name: personalData,
       extraScopes: _scopeRequested,
-      address: address,
-      invoice: invoiceData,
+      address: _address,
+      invoice: _invoiceData,
     );
   }
 
