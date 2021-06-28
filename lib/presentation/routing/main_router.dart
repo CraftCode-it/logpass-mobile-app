@@ -1,11 +1,12 @@
 import 'package:auto_route/annotations.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
+import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
-import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
 import 'package:logpass_me/presentation/page/authorize/email_selection/email_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
@@ -33,6 +34,7 @@ import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_cond
     AutoRoute(page: EntryPage, initial: true),
     AutoRoute(page: OnboardingPage),
     AutoRoute(page: StartPage),
+    AutoRoute(page: AddNewDevicePage),
     AutoRoute<CountryCode?>(page: CountryCodePickerPage),
     AutoRoute(page: OTPCodePage),
     AutoRoute(page: HomePage),

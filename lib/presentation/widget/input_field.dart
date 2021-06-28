@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -11,6 +12,8 @@ class InputField extends HookWidget {
   final TextEditingController? controller;
   final Function(String text) onChanged;
   final TextInputType? inputType;
+  final FocusNode? focusNode;
+  final List<TextInputFormatter>? formatters;
 
   const InputField({
     required this.label,
@@ -20,6 +23,8 @@ class InputField extends HookWidget {
     this.error,
     this.controller,
     this.inputType,
+    this.focusNode,
+    this.formatters,
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +39,8 @@ class InputField extends HookWidget {
       onChanged: onChanged,
       keyboardType: inputType,
       style: typography.h9.copyWith(color: enabled ? colors.inputText : colors.inputInactiveText),
+      focusNode: focusNode,
+      inputFormatters: formatters,
       decoration: InputDecoration(
         errorStyle: typography.input.copyWith(color: AppColors.error100),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
