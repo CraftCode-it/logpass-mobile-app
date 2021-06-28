@@ -7,6 +7,7 @@ import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/agreement_content_preview/agreement_content_preview_page.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
 import 'package:logpass_me/presentation/page/authorize/email_selection/email_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
@@ -59,6 +60,7 @@ import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_cond
     AutoRoute(page: LanguagePage),
     AutoRoute(page: TermsAndConditionsPage),
     AutoRoute<List<ServiceAgreement>>(page: ServiceRulesPage),
+    AutoRoute(page: AgreementContentPreviewPage),
   ],
 )
 class $MainRouter {}

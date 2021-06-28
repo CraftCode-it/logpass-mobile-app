@@ -3,7 +3,6 @@ import 'package:logpass_me/domain/model/response_type.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/domain/service/data/service_supported_scopes.dart';
-import 'package:logpass_me/domain/service/data/service_tokens.dart';
 
 class Service {
   final String clientId;
