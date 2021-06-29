@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
+import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
@@ -14,7 +15,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   final WebSocketManager _webSocketManager;
   final PushNotificationsManager _pushNotificationsManager;
   final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
-  final Set<IncomingAction> _actionsInCurrentSession = {};
+  final IncomingActionsValidator _incomingActionsValidator;
   final IncomingActionDTOToIncomingActionMapper _incomingActionMapper;
 
   StreamSubscription? _messagesStreamSubscription;
@@ -24,6 +25,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
     this._webSocketManager,
     this._pushNotificationsManager,
     this._incomingActionMapper,
+    this._incomingActionsValidator,
   );
 
   @override
@@ -39,8 +41,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   }
 
   void _dispatchAction(IncomingAction action) {
-    if (!_actionsInCurrentSession.contains(action)) {
-      _actionsInCurrentSession.add(action);
+    if (_incomingActionsValidator.canInvoke(action)) {
       _incomingActionsBroadcast.add(action);
     }
   }

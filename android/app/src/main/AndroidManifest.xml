@@ -48,7 +48,7 @@
                     android:host="authorize" />
                 <data
                     android:scheme="@string/deep_link_scheme"
-                    android:host="update" />
+                    android:host="updateaccount" />
             </intent-filter>
 
             <!-- App Links -->
@@ -58,7 +58,16 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="@strng/app_link_host" />
+                    android:host="@string/app_link_host"
+                    android:pathPrefix="/confirm"/>
+                <data
+                    android:scheme="https"
+                    android:host="@string/app_link_host"
+                    android:pathPrefix="/authorize"/>
+                <data
+                    android:scheme="https"
+                    android:host="@string/app_link_host"
+                    android:pathPrefix="/updateaccount"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

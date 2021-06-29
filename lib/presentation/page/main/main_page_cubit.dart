@@ -5,14 +5,17 @@ import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_action_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
-part 'main_page_state.dart';
 part 'main_page_cubit.freezed.dart';
+part 'main_page_state.dart';
 
 @injectable
 class MainPageCubit extends Cubit<MainPageState> {
@@ -20,23 +23,51 @@ class MainPageCubit extends Cubit<MainPageState> {
   final CloseWebSocketUseCase _closeWebSocketUseCase;
   final SubscribeToIncomingActionsUseCase _subscribeToIncomingActionsUseCase;
   final InitNotificationsServicesUseCase _initNotificationsServicesUseCase;
+  final SwitchPreLoginActionHandlerUseCase _switchPreLoginActionHandlerUseCase;
+  final SubscribeToIncomingActionsFromLinkUseCase _subscribeToIncomingActionsFromLinkUseCase;
+  final GetQueuedIncomingActionUseCase _getQueuedIncomingActionUseCase;
 
-  StreamSubscription<IncomingAction>? _streamSubscription;
+  StreamSubscription<IncomingAction>? _incomingActionsFromLinkSubscription;
+  StreamSubscription<IncomingAction>? _incomingActionsSubscription;
 
   MainPageCubit(
     this._setupWebSocketChannelUseCase,
     this._subscribeToIncomingActionsUseCase,
     this._closeWebSocketUseCase,
     this._initNotificationsServicesUseCase,
+    this._switchPreLoginActionHandlerUseCase,
+    this._subscribeToIncomingActionsFromLinkUseCase,
+    this._getQueuedIncomingActionUseCase,
   ) : super(const MainPageState.idle());
 
-  Future init() async {
+  Future<void> init() async {
     await _openWebSocketChannelConnection();
     await _initNotificationsServices();
+    await _initializeActionHandlers();
+  }
+
+  Future<void> _initializeActionHandlers() async {
+    await _switchPreLoginActionHandlerUseCase(false);
+    await _handleQueuedAction();
+
+    _subscribeToIncomingActionsFromLink();
     _subscribeToIncomingActions();
   }
 
-  Future _initNotificationsServices() async {
+  void _subscribeToIncomingActionsFromLink() {
+    _incomingActionsFromLinkSubscription = _subscribeToIncomingActionsFromLinkUseCase().listen((event) {
+      emit(MainPageState.openAction(event));
+    });
+  }
+
+  Future<void> _handleQueuedAction() async {
+    final queuedAction = await _getQueuedIncomingActionUseCase();
+    if (queuedAction != null) {
+      emit(MainPageState.openAction(queuedAction));
+    }
+  }
+
+  Future<void> _initNotificationsServices() async {
     try {
       await _initNotificationsServicesUseCase();
     } catch (e, s) {
@@ -48,7 +79,7 @@ class MainPageCubit extends Cubit<MainPageState> {
 
   void _subscribeToIncomingActions() {
     try {
-      _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) {
+      _incomingActionsSubscription = _subscribeToIncomingActionsUseCase().listen((action) {
         emit(MainPageState.showAction(action));
       });
     } catch (e, s) {
@@ -77,8 +108,10 @@ class MainPageCubit extends Cubit<MainPageState> {
   }
 
   @override
-  Future<void> close() {
-    _streamSubscription?.cancel();
+  Future<void> close() async {
+    await _incomingActionsFromLinkSubscription?.cancel();
+    await _incomingActionsSubscription?.cancel();
+    await _switchPreLoginActionHandlerUseCase(true);
     _closeWebSocketChannel();
     return super.close();
   }
