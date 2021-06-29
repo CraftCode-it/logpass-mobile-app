@@ -8,6 +8,7 @@ class ServiceRulesPageState with _$ServiceRulesPageState {
   @Implements(BuildState)
   const factory ServiceRulesPageState.idle(
     List<ServiceAgreement> requiredAgreements,
-    List<ServiceAgreement> optionAgreements,
+    List<ServiceAgreement> optionalAgreements,
+    bool allAccepted,
   ) = _ServiceRulesPageStateIdle;
 }

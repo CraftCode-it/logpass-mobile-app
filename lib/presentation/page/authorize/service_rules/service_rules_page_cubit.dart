@@ -10,6 +10,7 @@ part 'service_rules_page_cubit.freezed.dart';
 @injectable
 class ServiceRulesPageCubit extends Cubit<ServiceRulesPageState> {
   late List<ServiceAgreement> _agreements;
+  bool get _allAccepted => _agreements.every((e) => e.isAccepted);
 
   ServiceRulesPageCubit() : super(const ServiceRulesPageState.loading());
 
@@ -21,12 +22,18 @@ class ServiceRulesPageCubit extends Cubit<ServiceRulesPageState> {
   void updateAgreements(ServiceAgreement agreement, bool acceptedValue) {
     final updatedAgreement = agreement.copyWith(isAccepted: acceptedValue);
     _agreements = _agreements.map((e) => (e.id == agreement.id) ? updatedAgreement : e).toList();
+    _emitIdleState();
+  }
+
+  void acceptAllAgreements() {
+    _agreements = _agreements.map((e) => e.copyWith(isAccepted: true)).toList();
+    _emitIdleState();
   }
 
   void _emitIdleState() {
     final requiredAgreements = _agreements.where((e) => e.isRequired).toList();
     final optionalAgreements = _agreements.where((e) => !e.isRequired).toList();
 
-    emit(ServiceRulesPageState.idle(requiredAgreements, optionalAgreements));
+    emit(ServiceRulesPageState.idle(requiredAgreements, optionalAgreements, _allAccepted));
   }
 }

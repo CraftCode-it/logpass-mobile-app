@@ -261,9 +261,7 @@ class _ServiceRulesElement extends StatelessWidget {
         ServiceRulesPageRoute(
           agreements: agreements,
           service: service,
-          onPagePop: (updatedAgreements) {
-            onAgreementsChange(updatedAgreements);
-          },
+          onPagePop: (updatedAgreements) => onAgreementsChange(updatedAgreements),
         ),
       ),
     );

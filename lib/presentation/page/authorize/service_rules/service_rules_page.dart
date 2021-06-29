@@ -16,6 +16,7 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
@@ -32,6 +33,14 @@ class ServiceRulesPage extends HookWidget {
     required this.onPagePop,
   });
 
+  void _callOnPagePop(ServiceRulesPageState state) {
+    final agreements = state.maybeMap(
+      idle: (state) => [...state.requiredAgreements, ...state.optionalAgreements],
+      orElse: () {},
+    );
+    if (agreements != null) onPagePop.call(agreements);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<ServiceRulesPageCubit>();
@@ -42,34 +51,39 @@ class ServiceRulesPage extends HookWidget {
       cubit.init(agreements);
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallTitle(
-        title: LocaleKeys.authorize_serviceRulesTitle.tr(),
-        leading: NavigationButton.back(
-          customAction: () {
-            final agreements = state.maybeMap(
-              idle: (state) => [...state.requiredAgreements, ...state.optionAgreements],
-              orElse: () {},
-            );
-            if (agreements != null) onPagePop.call(agreements);
-            AutoRouter.of(context).pop();
-          },
+    return WillPopScope(
+      onWillPop: () {
+        _callOnPagePop(state);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: CustomAppBar.smallTitle(
+          title: LocaleKeys.authorize_serviceRulesTitle.tr(),
+          leading: NavigationButton.back(
+            customAction: () {
+              _callOnPagePop(state);
+              AutoRouter.of(context).pop();
+            },
+          ),
         ),
-      ),
-      body: state.maybeWhen(
-        idle: (
-          requiredAgreements,
-          optionalAgreements,
-        ) =>
-            _Content(
-          requiredAgreements,
-          optionalAgreements,
-          service,
-          onAcceptanceChanged: cubit.updateAgreements,
+        body: state.maybeWhen(
+          idle: (
+            requiredAgreements,
+            optionalAgreements,
+            allAccepted,
+          ) =>
+              _Content(
+            requiredAgreements,
+            optionalAgreements,
+            service,
+            onAcceptanceChanged: cubit.updateAgreements,
+            allAgreementsAccepted: allAccepted,
+            acceptAllAgreements: cubit.acceptAllAgreements,
+          ),
+          loading: () => const Loader(),
+          orElse: () => const SizedBox(),
         ),
-        loading: () => const Loader(),
-        orElse: () => const SizedBox(),
       ),
     );
   }
@@ -80,12 +94,16 @@ class _Content extends StatelessWidget {
   final List<ServiceAgreement> optionalAgreements;
   final Service service;
   final Function(ServiceAgreement, bool) onAcceptanceChanged;
+  final bool allAgreementsAccepted;
+  final VoidCallback acceptAllAgreements;
 
   const _Content(
     this.requiredAgreements,
     this.optionalAgreements,
     this.service, {
     required this.onAcceptanceChanged,
+    required this.allAgreementsAccepted,
+    required this.acceptAllAgreements,
   });
 
   @override
@@ -100,32 +118,53 @@ class _Content extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(AppDimens.l),
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return _AgreementCheckboxRow(
-                          requiredAgreements[index],
-                          onAcceptanceChanged,
-                        );
-                      },
-                      childCount: requiredAgreements.length,
+              padding: const EdgeInsets.only(
+                top: AppDimens.l,
+                left: AppDimens.l,
+                right: AppDimens.l,
+                bottom: AppDimens.xl,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Container(
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return _AgreementCheckboxRow(
+                                  requiredAgreements[index],
+                                  onAcceptanceChanged,
+                                );
+                              },
+                              childCount: requiredAgreements.length,
+                            ),
+                          ),
+                          const SliverToBoxAdapter(child: SizedBox(height: AppDimens.xc)),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return _AgreementCheckboxRow(
+                                  optionalAgreements[index],
+                                  onAcceptanceChanged,
+                                );
+                              },
+                              childCount: optionalAgreements.length,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: AppDimens.xc)),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return _AgreementCheckboxRow(
-                          optionalAgreements[index],
-                          onAcceptanceChanged,
-                        );
-                      },
-                      childCount: optionalAgreements.length,
+                  if (!allAgreementsAccepted) ...[
+                    const SizedBox(height: AppDimens.l),
+                    CustomRectangularButton.filled(
+                      text: LocaleKeys.authorize_acceptAllRules.tr(),
+                      onPressed: acceptAllAgreements,
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
