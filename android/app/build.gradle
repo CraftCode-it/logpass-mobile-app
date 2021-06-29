@@ -77,13 +77,20 @@ android {
     productFlavors {
         dev {
             dimension "env"
+
             applicationIdSuffix ".dev"
+
             resValue "string", "app_name", "LogPass Dev"
+            resValue "string", "app_link_host", "app.logpass.me"
+            resValue "string", "deep_link_scheme", "logpass"
         }
 
         prod {
             dimension "env"
+
             resValue "string", "app_name", "LogPass"
+            resValue "string", "app_link_host", "app.logpass.me"
+            resValue "string", "deep_link_scheme", "logpass"
         }
     }
 }

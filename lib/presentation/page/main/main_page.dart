@@ -40,6 +40,9 @@ class MainPage extends HookWidget {
           },
         );
       },
+      openAction: (action) {
+        AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId));
+      },
       orElse: () {},
     );
   }

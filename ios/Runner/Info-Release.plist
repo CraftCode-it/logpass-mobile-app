@@ -53,5 +53,18 @@
     <string>Why is my app authenticating using face id?</string>
     <key>io.flutter.embedded_views_preview</key>
     <true/>
+    <key>CFBundleURLTypes</key>
+    <array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key></key>
+        <string>me.logpass.mobile</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+        <string>${DEEP_LINKS_SCHEME}</string>
+        </array>
+    </dict>
+    </array>
 </dict>
 </plist>

@@ -1,13 +1,16 @@
+import 'package:bloc_test/bloc_test.dart' hide when, verify;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_action_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:mockito/annotations.dart';
-import 'package:bloc_test/bloc_test.dart' hide when, verify;
 import 'package:mockito/mockito.dart';
 
 import 'main_cubit_test.mocks.dart';
@@ -18,6 +21,9 @@ import 'main_cubit_test.mocks.dart';
     CloseWebSocketUseCase,
     SubscribeToIncomingActionsUseCase,
     InitNotificationsServicesUseCase,
+    SwitchPreLoginActionHandlerUseCase,
+    SubscribeToIncomingActionsFromLinkUseCase,
+    GetQueuedIncomingActionUseCase,
   ],
 )
 void main() {
@@ -25,6 +31,9 @@ void main() {
   late CloseWebSocketUseCase closeWebSocketUseCase;
   late SubscribeToIncomingActionsUseCase subscribeToIncomingActionsUseCase;
   late InitNotificationsServicesUseCase initNotificationsServicesUseCase;
+  late SwitchPreLoginActionHandlerUseCase switchPreLoginActionHandlerUseCase;
+  late SubscribeToIncomingActionsFromLinkUseCase subscribeToIncomingActionsFromLinkUseCase;
+  late GetQueuedIncomingActionUseCase getQueuedIncomingActionUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
@@ -32,12 +41,18 @@ void main() {
     closeWebSocketUseCase = MockCloseWebSocketUseCase();
     subscribeToIncomingActionsUseCase = MockSubscribeToIncomingActionsUseCase();
     initNotificationsServicesUseCase = MockInitNotificationsServicesUseCase();
+    switchPreLoginActionHandlerUseCase = MockSwitchPreLoginActionHandlerUseCase();
+    subscribeToIncomingActionsFromLinkUseCase = MockSubscribeToIncomingActionsFromLinkUseCase();
+    getQueuedIncomingActionUseCase = MockGetQueuedIncomingActionUseCase();
 
     cubit = MainPageCubit(
       setupWebSocketChannelUseCase,
       subscribeToIncomingActionsUseCase,
       closeWebSocketUseCase,
       initNotificationsServicesUseCase,
+      switchPreLoginActionHandlerUseCase,
+      subscribeToIncomingActionsFromLinkUseCase,
+      getQueuedIncomingActionUseCase,
     );
   });
 
@@ -50,6 +65,8 @@ void main() {
       build: () {
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
         when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => Stream.value(incomingAction));
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
 
         return cubit;
       },
@@ -72,6 +89,52 @@ void main() {
       expect: () => [
         const MainPageState.error(failureMessage),
       ],
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'emits [OpenAction] when there is queued incoming action',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => incomingAction);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        MainPageState.openAction(incomingAction),
+      ],
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'emits [OpenAction] when incoming action from link emits event',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => Stream.value(incomingAction));
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        MainPageState.openAction(incomingAction),
+      ],
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'emits nothing',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [],
     );
   });
 }

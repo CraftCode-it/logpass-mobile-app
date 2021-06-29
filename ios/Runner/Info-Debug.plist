@@ -51,6 +51,19 @@
     </array>
     <key>NSFaceIDUsageDescription</key>
     <string>Why is my app authenticating using face id?</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>me.logpass.mobile</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+        <string>${DEEP_LINKS_SCHEME}</string>
+        </array>
+    </dict>
+    </array>
     <key>NSBonjourServices</key>
     <array>
         <string>_dartobservatory._tcp</string>
