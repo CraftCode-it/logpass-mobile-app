@@ -20,11 +20,21 @@ import 'package:logpass_me/presentation/widget/service_header.dart';
 class InvoiceDataSelectionPage extends HookWidget {
   final Service service;
   final InvoiceData? invoiceData;
+  final Function(InvoiceData) onPagePop;
 
   const InvoiceDataSelectionPage({
     required this.service,
+    required this.onPagePop,
     this.invoiceData,
   });
+
+  void _callOnPagePop(InvoiceDataSelectionPageState state) {
+    final invoice = state.maybeWhen(
+      idle: (invoiceDatas, selectedInvoiceData) => selectedInvoiceData,
+      orElse: () {},
+    );
+    if (invoice != null) onPagePop.call(invoice);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,32 +58,36 @@ class InvoiceDataSelectionPage extends HookWidget {
       cubit.init(invoiceData);
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallTitle(
-        title: LocaleKeys.authorize_selectInvoiceData.tr(),
-        leading: NavigationButton.back(
-          customAction: () => AutoRouter.of(context).pop(
-            state.maybeWhen(
-              idle: (invoiceDatas, selectedInvoiceData) => selectedInvoiceData,
-              orElse: () {},
-            ),
+    return WillPopScope(
+      onWillPop: () {
+        _callOnPagePop(state);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: CustomAppBar.smallTitle(
+          title: LocaleKeys.authorize_selectInvoiceData.tr(),
+          leading: NavigationButton.back(
+            customAction: () {
+              _callOnPagePop(state);
+              AutoRouter.of(context).pop();
+            },
           ),
         ),
-      ),
-      body: state.maybeWhen(
-        idle: (
-          invoiceDatas,
-          selectedInvoiceData,
-        ) =>
-            _Content(
-          service,
-          invoiceDatas,
-          selectedInvoiceData,
-          cubit,
+        body: state.maybeWhen(
+          idle: (
+            invoiceDatas,
+            selectedInvoiceData,
+          ) =>
+              _Content(
+            service,
+            invoiceDatas,
+            selectedInvoiceData,
+            cubit,
+          ),
+          loading: () => const Loader(),
+          orElse: () => const SizedBox(),
         ),
-        loading: () => const Loader(),
-        orElse: () => const SizedBox(),
       ),
     );
   }

@@ -299,26 +299,26 @@ class _ScopeFormElement extends StatelessWidget {
 
   VoidCallback? _getOnTapAction(BuildContext context, Service service) {
     return element.maybeMap(
-      address: (state) => () async {
-        final result = await AutoRouter.of(context)
-            .push<Address?>(AddressSelectionPageRoute(service: service, address: state.address));
-        if (result != null) {
-          onScopeElementChange(state.copyWith(address: result));
-        }
+      address: (state) => () {
+        AutoRouter.of(context).push(AddressSelectionPageRoute(
+          service: service,
+          address: state.address,
+          onPagePop: (address) => onScopeElementChange(state.copyWith(address: address)),
+        ));
       },
-      email: (state) => () async {
-        final result =
-            await AutoRouter.of(context).push<Email?>(EmailSelectionPageRoute(service: service, email: state.email));
-        if (result != null) {
-          onScopeElementChange(state.copyWith(email: result));
-        }
+      email: (state) => () {
+        AutoRouter.of(context).push(EmailSelectionPageRoute(
+          service: service,
+          email: state.email,
+          onPagePop: (email) => onScopeElementChange(state.copyWith(email: email)),
+        ));
       },
-      invoice: (state) => () async {
-        final result = await AutoRouter.of(context)
-            .push<InvoiceData?>(InvoiceDataSelectionPageRoute(service: service, invoiceData: state.invoiceData));
-        if (result != null) {
-          onScopeElementChange(state.copyWith(invoiceData: result));
-        }
+      invoice: (state) => () {
+        AutoRouter.of(context).push(InvoiceDataSelectionPageRoute(
+          service: service,
+          invoiceData: state.invoiceData,
+          onPagePop: (invoice) => onScopeElementChange(state.copyWith(invoiceData: invoice)),
+        ));
       },
       orElse: () {},
     );

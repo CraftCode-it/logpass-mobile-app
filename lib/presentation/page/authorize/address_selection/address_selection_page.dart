@@ -20,11 +20,21 @@ import 'package:logpass_me/presentation/widget/service_header.dart';
 class AddressSelectionPage extends HookWidget {
   final Service service;
   final Address? address;
+  final Function(Address) onPagePop;
 
   const AddressSelectionPage({
     required this.service,
+    required this.onPagePop,
     this.address,
   });
+
+  void _callOnPagePop(AddressSelectionPageState state) {
+    final address = state.maybeWhen(
+      idle: (addresses, selectedAddress) => selectedAddress,
+      orElse: () {},
+    );
+    if (address != null) onPagePop.call(address);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,32 +58,36 @@ class AddressSelectionPage extends HookWidget {
       cubit.init(address);
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallTitle(
-        title: LocaleKeys.authorize_selectAddressTitle.tr(),
-        leading: NavigationButton.back(
-          customAction: () => AutoRouter.of(context).pop(
-            state.maybeWhen(
-              idle: (addresses, selectedAddress) => selectedAddress,
-              orElse: () {},
-            ),
+    return WillPopScope(
+      onWillPop: () {
+        _callOnPagePop(state);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: CustomAppBar.smallTitle(
+          title: LocaleKeys.authorize_selectAddressTitle.tr(),
+          leading: NavigationButton.back(
+            customAction: () {
+              _callOnPagePop(state);
+              AutoRouter.of(context).pop();
+            },
           ),
         ),
-      ),
-      body: state.maybeWhen(
-        idle: (
-          addresses,
-          selectedAddress,
-        ) =>
-            _Content(
-          service,
-          addresses,
-          selectedAddress,
-          cubit,
+        body: state.maybeWhen(
+          idle: (
+            addresses,
+            selectedAddress,
+          ) =>
+              _Content(
+            service,
+            addresses,
+            selectedAddress,
+            cubit,
+          ),
+          loading: () => const Loader(),
+          orElse: () => const SizedBox(),
         ),
-        loading: () => const Loader(),
-        orElse: () => const SizedBox(),
       ),
     );
   }
