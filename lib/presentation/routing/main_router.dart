@@ -15,6 +15,8 @@ import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/language/language_page.dart';
 import 'package:logpass_me/presentation/page/login_success/login_success_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page.dart';
+import 'package:logpass_me/presentation/page/need_help/need_help_page.dart';
+import 'package:logpass_me/presentation/page/need_help/question_page.dart';
 import 'package:logpass_me/presentation/page/onboarding/onboarding_page.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page.dart';
@@ -57,6 +59,8 @@ import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_cond
     AutoRoute(page: TermsAndConditionsPage),
     AutoRoute(page: ServiceRulesPage),
     AutoRoute(page: AgreementContentPreviewPage),
+    AutoRoute(page: NeedHelpPage),
+    AutoRoute(page: QuestionPage),
   ],
 )
 class $MainRouter {}

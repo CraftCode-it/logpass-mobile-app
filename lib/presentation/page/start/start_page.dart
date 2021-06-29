@@ -135,7 +135,7 @@ class _NeedHelpButton extends HookWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => AutoRouter.of(context).push(const NeedHelpPageRoute()),
         child: Text(
           LocaleKeys.start_helpAction,
           style: typography.info1,
