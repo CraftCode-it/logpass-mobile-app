@@ -65,6 +65,8 @@ void main() {
       build: () {
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
         when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => Stream.value(incomingAction));
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
 
         return cubit;
       },
@@ -87,6 +89,52 @@ void main() {
       expect: () => [
         const MainPageState.error(failureMessage),
       ],
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'emits [OpenAction] when there is queued incoming action',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => incomingAction);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        MainPageState.openAction(incomingAction),
+      ],
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'emits [OpenAction] when incoming action from link emits event',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => Stream.value(incomingAction));
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        MainPageState.openAction(incomingAction),
+      ],
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'emits nothing',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(subscribeToIncomingActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [],
     );
   });
 }
