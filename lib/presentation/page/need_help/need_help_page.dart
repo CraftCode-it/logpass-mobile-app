@@ -2,8 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/need_help/need_help.dart';
 import 'package:logpass_me/domain/need_help/question.dart';
+import 'package:logpass_me/domain/package_info/use_case/get_application_version_use_case.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -84,7 +86,7 @@ class _ApplicationVersionInfo extends HookWidget {
           ),
         ),
         Text(
-          '0.0.1',
+          'Logpass v.${getIt<GetApplicationVersionUseCase>().call()}',
           style: typography.info1.copyWith(
             color: colors.labelText,
           ),
