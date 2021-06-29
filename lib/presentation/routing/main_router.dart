@@ -59,7 +59,7 @@ import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_cond
     AutoRoute(page: ConfirmWithPinPage),
     AutoRoute(page: LanguagePage),
     AutoRoute(page: TermsAndConditionsPage),
-    AutoRoute<List<ServiceAgreement>>(page: ServiceRulesPage),
+    AutoRoute(page: ServiceRulesPage),
     AutoRoute(page: AgreementContentPreviewPage),
   ],
 )

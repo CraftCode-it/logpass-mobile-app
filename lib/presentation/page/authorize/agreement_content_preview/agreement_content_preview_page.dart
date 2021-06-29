@@ -17,7 +17,7 @@ import 'package:easy_localization/easy_localization.dart';
 class AgreementContentPreviewPage extends HookWidget {
   final ServiceAgreement serviceAgreement;
 
-  const AgreementContentPreviewPage({required this.serviceAgreement});
+  const AgreementContentPreviewPage({required this.serviceAgreement, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,6 @@ class AgreementContentPreviewPage extends HookWidget {
           colors: colors,
           typography: typography,
         );
-        await AutoRouter.of(context).pop();
       },
       orElse: () {},
     );

@@ -24,10 +24,12 @@ const _arrowIconSize = 24.0;
 class ServiceRulesPage extends HookWidget {
   final Service service;
   final List<ServiceAgreement> agreements;
+  final Function(List<ServiceAgreement>) onPagePop;
 
   const ServiceRulesPage({
     required this.agreements,
     required this.service,
+    required this.onPagePop,
   });
 
   @override
@@ -45,17 +47,24 @@ class ServiceRulesPage extends HookWidget {
       appBar: CustomAppBar.smallTitle(
         title: LocaleKeys.authorize_serviceRulesTitle.tr(),
         leading: NavigationButton.back(
-          customAction: () => AutoRouter.of(context).pop(cubit.agreements),
+          customAction: () {
+            final agreements = state.maybeMap(
+              idle: (state) => [...state.requiredAgreements, ...state.optionAgreements],
+              orElse: () {},
+            );
+            if (agreements != null) onPagePop.call(agreements);
+            AutoRouter.of(context).pop();
+          },
         ),
       ),
       body: state.maybeWhen(
         idle: (
           requiredAgreements,
-          optionlAgreements,
+          optionalAgreements,
         ) =>
             _Content(
           requiredAgreements,
-          optionlAgreements,
+          optionalAgreements,
           service,
           onAcceptanceChanged: cubit.updateAgreements,
         ),
@@ -92,31 +101,32 @@ class _Content extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(AppDimens.l),
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => _AgreementCheckboxRow(
-                        requiredAgreements[index],
-                        onAcceptanceChanged,
-                      ),
-                      itemCount: requiredAgreements.length,
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return _AgreementCheckboxRow(
+                          requiredAgreements[index],
+                          onAcceptanceChanged,
+                        );
+                      },
+                      childCount: requiredAgreements.length,
                     ),
-                    const SizedBox(height: AppDimens.xc),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => _AgreementCheckboxRow(
-                        optionalAgreements[index],
-                        onAcceptanceChanged,
-                      ),
-                      itemCount: optionalAgreements.length,
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: AppDimens.xc)),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return _AgreementCheckboxRow(
+                          optionalAgreements[index],
+                          onAcceptanceChanged,
+                        );
+                      },
+                      childCount: optionalAgreements.length,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

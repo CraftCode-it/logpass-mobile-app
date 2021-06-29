@@ -257,13 +257,15 @@ class _ServiceRulesElement extends StatelessWidget {
     return _FormElement(
       title: LocaleKeys.authorize_serviceRules.tr(),
       imagePath: AppIcon.serviceRules,
-      onTapAction: () async {
-        final result = await AutoRouter.of(context)
-            .push<List<ServiceAgreement>>(ServiceRulesPageRoute(agreements: agreements, service: service));
-        if (result != null) {
-          onAgreementsChange(result);
-        }
-      },
+      onTapAction: () => AutoRouter.of(context).push(
+        ServiceRulesPageRoute(
+          agreements: agreements,
+          service: service,
+          onPagePop: (updatedAgreements) {
+            onAgreementsChange(updatedAgreements);
+          },
+        ),
+      ),
     );
   }
 }

@@ -10,7 +10,6 @@ part 'service_rules_page_cubit.freezed.dart';
 @injectable
 class ServiceRulesPageCubit extends Cubit<ServiceRulesPageState> {
   late List<ServiceAgreement> _agreements;
-  List<ServiceAgreement> get agreements => _agreements;
 
   ServiceRulesPageCubit() : super(const ServiceRulesPageState.loading());
 
