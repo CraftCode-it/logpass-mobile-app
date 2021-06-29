@@ -169,6 +169,7 @@ class _PageContent extends StatelessWidget {
                       scopeElements,
                       agreementList,
                       cubit.updateScopes,
+                      cubit.updateAgreements,
                     ),
                   ),
                   const SizedBox(height: AppDimens.xl),
@@ -197,12 +198,14 @@ class _Form extends StatelessWidget {
   final List<ScopeElement> scopeElements;
   final List<ServiceAgreement> agreements;
   final Function(ScopeElement) onScopeElementChange;
+  final Function(List<ServiceAgreement>) onAgreementsChange;
 
   const _Form(
     this.service,
     this.scopeElements,
     this.agreements,
     this.onScopeElementChange,
+    this.onAgreementsChange,
   );
 
   @override
@@ -210,7 +213,7 @@ class _Form extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _ServiceRulesElement(agreements),
+          _ServiceRulesElement(agreements, service, onAgreementsChange),
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -244,17 +247,23 @@ class _TrustLevelElement extends StatelessWidget {
 
 class _ServiceRulesElement extends StatelessWidget {
   final List<ServiceAgreement> agreements;
+  final Service service;
+  final Function(List<ServiceAgreement>) onAgreementsChange;
 
-  const _ServiceRulesElement(this.agreements);
+  const _ServiceRulesElement(this.agreements, this.service, this.onAgreementsChange);
 
   @override
   Widget build(BuildContext context) {
     return _FormElement(
       title: LocaleKeys.authorize_serviceRules.tr(),
       imagePath: AppIcon.serviceRules,
-      onTapAction: () {
-        // TODO: handle navigation to service rules
-      },
+      onTapAction: () => AutoRouter.of(context).push(
+        ServiceRulesPageRoute(
+          agreements: agreements,
+          service: service,
+          onPagePop: (updatedAgreements) => onAgreementsChange(updatedAgreements),
+        ),
+      ),
     );
   }
 }
@@ -290,26 +299,26 @@ class _ScopeFormElement extends StatelessWidget {
 
   VoidCallback? _getOnTapAction(BuildContext context, Service service) {
     return element.maybeMap(
-      address: (state) => () async {
-        final result = await AutoRouter.of(context)
-            .push<Address?>(AddressSelectionPageRoute(service: service, address: state.address));
-        if (result != null) {
-          onScopeElementChange(state.copyWith(address: result));
-        }
+      address: (state) => () {
+        AutoRouter.of(context).push(AddressSelectionPageRoute(
+          service: service,
+          address: state.address,
+          onPagePop: (address) => onScopeElementChange(state.copyWith(address: address)),
+        ));
       },
-      email: (state) => () async {
-        final result =
-            await AutoRouter.of(context).push<Email?>(EmailSelectionPageRoute(service: service, email: state.email));
-        if (result != null) {
-          onScopeElementChange(state.copyWith(email: result));
-        }
+      email: (state) => () {
+        AutoRouter.of(context).push(EmailSelectionPageRoute(
+          service: service,
+          email: state.email,
+          onPagePop: (email) => onScopeElementChange(state.copyWith(email: email)),
+        ));
       },
-      invoice: (state) => () async {
-        final result = await AutoRouter.of(context)
-            .push<InvoiceData?>(InvoiceDataSelectionPageRoute(service: service, invoiceData: state.invoiceData));
-        if (result != null) {
-          onScopeElementChange(state.copyWith(invoiceData: result));
-        }
+      invoice: (state) => () {
+        AutoRouter.of(context).push(InvoiceDataSelectionPageRoute(
+          service: service,
+          invoiceData: state.invoiceData,
+          onPagePop: (invoice) => onScopeElementChange(state.copyWith(invoiceData: invoice)),
+        ));
       },
       orElse: () {},
     );

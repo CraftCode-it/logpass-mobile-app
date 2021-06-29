@@ -2,13 +2,12 @@ import 'package:auto_route/annotations.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
-import 'package:logpass_me/domain/user_data/data/address.dart';
-import 'package:logpass_me/domain/user_data/data/email.dart';
-import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/agreement_content_preview/agreement_content_preview_page.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
 import 'package:logpass_me/presentation/page/authorize/email_selection/email_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/service_rules/service_rules_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
@@ -49,13 +48,15 @@ import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_cond
     AutoRoute(page: HistoricalSessionListPage),
     AutoRoute(page: AuthorizePage),
     AutoRoute(page: AgreementDetailsPage),
-    AutoRoute<Email?>(page: EmailSelectionPage),
-    AutoRoute<Address?>(page: AddressSelectionPage),
-    AutoRoute<InvoiceData?>(page: InvoiceDataSelectionPage),
+    AutoRoute(page: EmailSelectionPage),
+    AutoRoute(page: AddressSelectionPage),
+    AutoRoute(page: InvoiceDataSelectionPage),
     AutoRoute(page: SecuritySettingsPage),
     AutoRoute(page: ConfirmWithPinPage),
     AutoRoute(page: LanguagePage),
     AutoRoute(page: TermsAndConditionsPage),
+    AutoRoute(page: ServiceRulesPage),
+    AutoRoute(page: AgreementContentPreviewPage),
   ],
 )
 class $MainRouter {}

@@ -20,11 +20,21 @@ import 'package:logpass_me/presentation/widget/service_header.dart';
 class EmailSelectionPage extends HookWidget {
   final Service service;
   final Email? email;
+  final Function(Email) onPagePop;
 
   const EmailSelectionPage({
     required this.service,
+    required this.onPagePop,
     this.email,
   });
+
+  void _callOnPagePop(EmailSelectionPageState state) {
+    final selectedEmail = state.maybeWhen(
+      idle: (emails, selectedEmail) => selectedEmail,
+      orElse: () {},
+    );
+    if (selectedEmail != null) onPagePop.call(selectedEmail);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,32 +58,36 @@ class EmailSelectionPage extends HookWidget {
       cubit.init(email);
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallTitle(
-        title: LocaleKeys.authorize_selectEmailTitle.tr(),
-        leading: NavigationButton.back(
-          customAction: () => AutoRouter.of(context).pop(
-            state.maybeWhen(
-              idle: (emails, selectedEmail) => selectedEmail,
-              orElse: () {},
-            ),
+    return WillPopScope(
+      onWillPop: () {
+        _callOnPagePop(state);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: CustomAppBar.smallTitle(
+          title: LocaleKeys.authorize_selectEmailTitle.tr(),
+          leading: NavigationButton.back(
+            customAction: () {
+              _callOnPagePop(state);
+              AutoRouter.of(context).pop();
+            },
           ),
         ),
-      ),
-      body: state.maybeWhen(
-        idle: (
-          emails,
-          selectedEmail,
-        ) =>
-            _Content(
-          service,
-          emails,
-          selectedEmail,
-          cubit,
+        body: state.maybeWhen(
+          idle: (
+            emails,
+            selectedEmail,
+          ) =>
+              _Content(
+            service,
+            emails,
+            selectedEmail,
+            cubit,
+          ),
+          loading: () => const Loader(),
+          orElse: () => const SizedBox(),
         ),
-        loading: () => const Loader(),
-        orElse: () => const SizedBox(),
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logpass_me/data/common/data_mapper.dart';
 import 'package:logpass_me/data/networking/model/response_pagination_metadata_dto.dart';
-import 'package:logpass_me/data/service/api/data/service_dto.dart';
 import 'package:logpass_me/data/service/api/data/service_with_tokens_dto.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
 

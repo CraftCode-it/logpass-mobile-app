@@ -79,7 +79,9 @@
     "biometricCheckDialogTitle": "Biometrics needed",
     "biometricCheckDialogContent": "This operation requires additional verification via Touch / Face ID\n\nPlease add your biometric to proceed",
     "biometricCheckDialogTopAction": "Allow biometrics",
-    "biometricCheckDialogBottomAction": "Reject operation"
+    "biometricCheckDialogBottomAction": "Reject operation",
+    "serviceRulesTitle": "Service rules",
+    "acceptAllRules": "Agree to all"
   },
   "otpCode": {
     "title": "Verify your number",
