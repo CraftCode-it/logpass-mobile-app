@@ -96,6 +96,8 @@ PODS:
   - nanopb/encode (2.30908.0)
   - native_pdf_renderer (1.2.0):
     - Flutter
+  - package_info (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - PromisesObjC (1.2.12)
@@ -121,6 +123,7 @@ DEPENDENCIES:
   - libphonenumber (from `.symlinks/plugins/libphonenumber/ios`)
   - local_auth (from `.symlinks/plugins/local_auth/ios`)
   - native_pdf_renderer (from `.symlinks/plugins/native_pdf_renderer/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sms_autofill (from `.symlinks/plugins/sms_autofill/ios`)
@@ -167,6 +170,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/local_auth/ios"
   native_pdf_renderer:
     :path: ".symlinks/plugins/native_pdf_renderer/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   shared_preferences:
@@ -206,6 +211,7 @@ SPEC CHECKSUMS:
   local_auth: 25938960984c3a7f6e3253e3f8d962fdd16852bd
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   native_pdf_renderer: 0e545bf94fb341e0fe7508bf72d4c1c42c30aa02
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d

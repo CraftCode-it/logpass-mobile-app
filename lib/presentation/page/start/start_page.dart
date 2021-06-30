@@ -18,6 +18,7 @@ import 'package:logpass_me/presentation/widget/country_code_picker/country_code_
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
+import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class StartPage extends HookWidget {
@@ -46,7 +47,7 @@ class StartPage extends HookWidget {
       backgroundColor: color.background,
       appBar: CustomAppBar.bigTitle(
         title: LocaleKeys.start_title.tr(),
-        trailing: const _NeedHelpButton(),
+        trailing: const NeedHelpButton(),
       ),
       body: SafeArea(
         child: KeyboardVisibilityBuilder(
@@ -120,27 +121,6 @@ class StartPage extends HookWidget {
         );
       },
       orElse: () {},
-    );
-  }
-}
-
-class _NeedHelpButton extends HookWidget {
-  const _NeedHelpButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = useAppTypography();
-    final colors = useAppThemeColors();
-
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {},
-        child: Text(
-          LocaleKeys.start_helpAction,
-          style: typography.info1,
-        ).tr().withUnderline(colors.text),
-      ),
     );
   }
 }
