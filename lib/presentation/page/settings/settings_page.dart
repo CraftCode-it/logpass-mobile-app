@@ -75,7 +75,10 @@ class SettingsPage extends HookWidget {
                 () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
               ),
               Separator.light(),
-              NavigationRow.titled(LocaleKeys.settings_help.tr(), () {}),
+              NavigationRow.titled(
+                LocaleKeys.settings_help.tr(),
+                () => AutoRouter.of(context).push(const NeedHelpPageRoute()),
+              ),
               Separator.light(),
               const SizedBox(height: AppDimens.xc),
               CustomRectangularButton.outlined(
