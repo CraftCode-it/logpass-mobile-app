@@ -25,8 +25,8 @@ void main() {
       expect(
         action,
         isA<IncomingAction>()
-          ..having((a) => a.actionType, 'actionType', ActionType.authorize())
-          ..having((a) => a.actionId, 'actionId', id),
+            .having((a) => a.actionType, 'actionType', ActionType.authorize())
+            .having((a) => a.actionId, 'actionId', id),
       );
     });
 
@@ -40,8 +40,8 @@ void main() {
       expect(
         action,
         isA<IncomingAction>()
-          ..having((a) => a.actionType, 'actionType', ActionType.confirm())
-          ..having((a) => a.actionId, 'actionId', id),
+            .having((a) => a.actionType, 'actionType', ActionType.confirm())
+            .having((a) => a.actionId, 'actionId', id),
       );
     });
 
@@ -55,8 +55,21 @@ void main() {
       expect(
         action,
         isA<IncomingAction>()
-          ..having((a) => a.actionType, 'actionType', ActionType.updateAccount())
-          ..having((a) => a.actionId, 'actionId', id),
+            .having((a) => a.actionType, 'actionType', ActionType.updateAccount())
+            .having((a) => a.actionId, 'actionId', id),
+      );
+    });
+
+    test('returns mapped action when uri is closed by slash', () {
+      const id = 'abcd1';
+      const link = '$deepLinkScheme://updateAccount/$id/';
+      final dto = IncomingActionDTO(link);
+
+      final action = mapper(dto);
+
+      expect(
+        action,
+        isA<IncomingAction>().having((a) => a.actionId, 'actionId', id),
       );
     });
 
@@ -87,8 +100,8 @@ void main() {
       expect(
         action,
         isA<IncomingAction>()
-          ..having((a) => a.actionType, 'actionType', ActionType.authorize())
-          ..having((a) => a.actionId, 'actionId', id),
+            .having((a) => a.actionType, 'actionType', ActionType.authorize())
+            .having((a) => a.actionId, 'actionId', id),
       );
     });
 
@@ -102,8 +115,8 @@ void main() {
       expect(
         action,
         isA<IncomingAction>()
-          ..having((a) => a.actionType, 'actionType', ActionType.confirm())
-          ..having((a) => a.actionId, 'actionId', id),
+            .having((a) => a.actionType, 'actionType', ActionType.confirm())
+            .having((a) => a.actionId, 'actionId', id),
       );
     });
 
@@ -117,8 +130,21 @@ void main() {
       expect(
         action,
         isA<IncomingAction>()
-          ..having((a) => a.actionType, 'actionType', ActionType.updateAccount())
-          ..having((a) => a.actionId, 'actionId', id),
+            .having((a) => a.actionType, 'actionType', ActionType.updateAccount())
+            .having((a) => a.actionId, 'actionId', id),
+      );
+    });
+
+    test('returns mapped action when uri is closed by slash', () {
+      const id = 'abcd3';
+      const link = '$appLinkScheme://host/updateAccount/$id/';
+      final dto = IncomingActionDTO(link);
+
+      final action = mapper(dto);
+
+      expect(
+        action,
+        isA<IncomingAction>().having((a) => a.actionId, 'actionId', id),
       );
     });
 

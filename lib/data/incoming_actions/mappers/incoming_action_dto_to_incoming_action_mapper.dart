@@ -38,18 +38,19 @@ class IncomingActionDTOToIncomingActionMapper implements DataMapper<IncomingActi
 
   IncomingAction _parseDeepLinkAction(Uri uri) {
     final actionType = _mapActionType(uri.host);
-    final actionId = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : throw Exception('Lack of action id');
+    final actionId = uri.pathSegments.isNotEmpty ? uri.pathSegments.first : throw Exception('Lack of action id');
 
     return IncomingAction(actionType, actionId);
   }
 
   IncomingAction _parseAppLinkAction(Uri uri) {
     if (uri.pathSegments.length >= 2) {
-      final actionPathSegmentIndex = uri.pathSegments.length - 2;
-      final actionIdPathSegmentIndex = uri.pathSegments.length - 1;
+      final nonEmptyPathSegments = uri.pathSegments.where((e) => e.isNotEmpty).toList();
+      final actionPathSegmentIndex = nonEmptyPathSegments.length - 2;
+      final actionIdPathSegmentIndex = nonEmptyPathSegments.length - 1;
 
-      final actionType = _mapActionType(uri.pathSegments[actionPathSegmentIndex]);
-      final actionId = uri.pathSegments[actionIdPathSegmentIndex];
+      final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
+      final actionId = nonEmptyPathSegments[actionIdPathSegmentIndex];
 
       return IncomingAction(actionType, actionId);
     }
