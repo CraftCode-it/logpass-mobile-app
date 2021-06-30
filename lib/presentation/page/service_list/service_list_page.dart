@@ -14,6 +14,7 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 class ServiceListPage extends HookWidget {
@@ -24,14 +25,14 @@ class ServiceListPage extends HookWidget {
     final cubit = useCubit<ServiceListPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final scrollController = useScrollController();
+    final messengerController = useMessengerController();
 
     final screenHeight = MediaQuery.of(context).size.height;
 
     useCubitListener<ServiceListPageCubit, ServiceListPageState>(
       cubit,
-      (cubit, state, context) => _listener(cubit, state, context, colors, typography),
+      (cubit, state, context) => _listener(cubit, state, context, messengerController),
     );
 
     useEffect(() {
@@ -65,15 +66,11 @@ class ServiceListPage extends HookWidget {
     ServiceListPageCubit cubit,
     ServiceListPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
+    MessengerController controller,
   ) {
     state.maybeMap(
-      connectionError: (state) => showConnectionErrorSnackBar(
-        error: state.error,
-        context: context,
-        colors: colors,
-        typography: typography,
+      connectionError: (state) => controller.showError(
+        getConnectionErrorString(state.error),
       ),
       orElse: () {},
     );
@@ -119,14 +116,18 @@ class _ContentEmpty extends HookWidget {
 
     return RefreshIndicator(
       onRefresh: () => cubit.loadFirstPage(),
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Center(
-          child: Text(
-            LocaleKeys.serviceList_noServices,
-            textAlign: TextAlign.center,
-            style: typography.body1.copyWith(color: colors.secondaryText),
-          ).tr(),
+      child: Container(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Center(
+            child: Text(
+              LocaleKeys.serviceList_noServices,
+              textAlign: TextAlign.center,
+              style: typography.body1.copyWith(color: colors.secondaryText),
+            ).tr(),
+          ),
         ),
       ),
     );

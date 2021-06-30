@@ -54,6 +54,8 @@ class _Checkbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = MediaQuery.of(context).platformBrightness;
+
     return InkWell(
       onTap: () => onChanged(!value),
       child: Padding(
@@ -61,11 +63,41 @@ class _Checkbox extends StatelessWidget {
         child: SizedBox(
           width: 24,
           height: 24,
-          child: SvgPicture.asset(
-            value ? AppIcon.checkboxFilled : AppIcon.checkboxEmpty,
-          ),
+          child: brightness == Brightness.light ? _IconLightMode(value: value) : _IconDarkMode(value: value),
         ),
       ),
+    );
+  }
+}
+
+class _IconLightMode extends StatelessWidget {
+  final bool value;
+
+  const _IconLightMode({
+    required this.value,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      value ? AppIcon.checkboxFilled : AppIcon.checkboxEmpty,
+    );
+  }
+}
+
+class _IconDarkMode extends StatelessWidget {
+  final bool value;
+
+  const _IconDarkMode({
+    required this.value,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      value ? AppIcon.checkboxFilledDark : AppIcon.checkboxEmptyDark,
     );
   }
 }

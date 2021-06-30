@@ -32,7 +32,7 @@ class CountryCodePicker extends HookWidget {
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
-    useCubitListener(cubit, (CountryCodePickerCubit cubit, CountryCodePickerState state, context) {
+    useCubitListener(cubit, (CountryCodePickerCubit cubit, CountryCodePickerState state, context, {controller}) {
       state.maybeWhen(
         selectedEvent: onCountryCodeSelected,
         orElse: () {},

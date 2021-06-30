@@ -14,38 +14,10 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
-import 'package:logpass_me/presentation/widget/info_snackbar.dart';
 import 'package:logpass_me/presentation/widget/logout/logout_widget.dart';
 
 class MainPage extends HookWidget {
   const MainPage({Key? key}) : super(key: key);
-
-  void _cubitListener(
-    MainPageCubit cubit,
-    MainPageState state,
-    BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
-  ) {
-    state.maybeWhen(
-      error: (message) {},
-      showAction: (action) {
-        showInformationSnackBar(
-          context: context,
-          colors: colors,
-          typography: typography,
-          message: tr(LocaleKeys.main_new_action),
-          onTapAction: () {
-            AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId));
-          },
-        );
-      },
-      openAction: (action) {
-        AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId));
-      },
-      orElse: () {},
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +28,7 @@ class MainPage extends HookWidget {
 
     useCubitListener<MainPageCubit, MainPageState>(
       cubit,
-      (cubit, state, context) => _cubitListener(cubit, state, context, colors, typography),
+      (cubit, state, context) => _cubitListener(cubit, state, context),
     );
 
     final locale = EasyLocalization.of(context)?.locale;
@@ -101,7 +73,7 @@ class MainPage extends HookWidget {
               color: colors.bottomBarInactiveText,
             ),
             activeIcon: SvgPicture.asset(
-              AppIcon.home,
+              AppIcon.homeActive,
               color: colors.bottomBarActiveText,
             ),
             label: tr(LocaleKeys.bottomBarNavigation_home),
@@ -112,7 +84,7 @@ class MainPage extends HookWidget {
               color: colors.bottomBarInactiveText,
             ),
             activeIcon: SvgPicture.asset(
-              AppIcon.services,
+              AppIcon.servicesActive,
               color: colors.bottomBarActiveText,
             ),
             label: tr(LocaleKeys.bottomBarNavigation_services),
@@ -123,7 +95,7 @@ class MainPage extends HookWidget {
               color: colors.bottomBarInactiveText,
             ),
             activeIcon: SvgPicture.asset(
-              AppIcon.yourData,
+              AppIcon.yourDataActive,
               color: colors.bottomBarActiveText,
             ),
             label: tr(LocaleKeys.bottomBarNavigation_data),
@@ -134,7 +106,7 @@ class MainPage extends HookWidget {
               color: colors.bottomBarInactiveText,
             ),
             activeIcon: SvgPicture.asset(
-              AppIcon.settings,
+              AppIcon.settingsActive,
               color: colors.bottomBarActiveText,
             ),
             label: tr(LocaleKeys.bottomBarNavigation_settings),
@@ -143,6 +115,20 @@ class MainPage extends HookWidget {
         currentIndex: index.value,
         onTap: (newIndex) => index.value = newIndex,
       ),
+    );
+  }
+
+  void _cubitListener(
+    MainPageCubit cubit,
+    MainPageState state,
+    BuildContext context,
+  ) {
+    state.maybeWhen(
+      error: (message) {},
+      openAction: (action) {
+        AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId));
+      },
+      orElse: () {},
     );
   }
 }

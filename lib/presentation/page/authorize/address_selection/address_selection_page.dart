@@ -1,19 +1,19 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/radio_button_tile.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 
@@ -41,7 +41,7 @@ class AddressSelectionPage extends HookWidget {
     final cubit = useCubit<AddressSelectionPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
+    final messengerController = useMessengerController();
 
     useCubitListener<AddressSelectionPageCubit, AddressSelectionPageState>(
       cubit,
@@ -49,8 +49,7 @@ class AddressSelectionPage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
+        messengerController,
       ),
     );
 
@@ -74,19 +73,24 @@ class AddressSelectionPage extends HookWidget {
             },
           ),
         ),
-        body: state.maybeWhen(
-          idle: (
-            addresses,
-            selectedAddress,
-          ) =>
-              _Content(
-            service,
-            addresses,
-            selectedAddress,
-            cubit,
+        body: SafeArea(
+          child: Messenger(
+            controller: messengerController,
+            child: state.maybeWhen(
+              idle: (
+                addresses,
+                selectedAddress,
+              ) =>
+                  _Content(
+                service,
+                addresses,
+                selectedAddress,
+                cubit,
+              ),
+              loading: () => const Loader(),
+              orElse: () => const SizedBox(),
+            ),
           ),
-          loading: () => const Loader(),
-          orElse: () => const SizedBox(),
         ),
       ),
     );
@@ -96,17 +100,11 @@ class AddressSelectionPage extends HookWidget {
     AddressSelectionPageCubit cubit,
     AddressSelectionPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
+    MessengerController controller,
   ) {
     state.maybeMap(
       connectionError: (state) async {
-        showConnectionErrorSnackBar(
-          error: state.error,
-          context: context,
-          colors: colors,
-          typography: typography,
-        );
+        controller.showError(getConnectionErrorString(state.error));
       },
       orElse: () {},
     );
@@ -135,30 +133,28 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          ServiceHeader(
-            name: service.name,
-            logoPath: service.logo,
-            serviceUrl: service.url,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(AppDimens.l),
-              child: ListView.builder(
-                itemBuilder: (context, index) => RadioButtonTile(
-                  title: addresses[index].name,
-                  content: _buildTileContent(addresses[index]),
-                  isSelected: addresses[index] == selectedAddress,
-                  onTapAction: () => cubit.selectAddress(addresses[index]),
-                ),
-                itemCount: addresses.length,
+    return Column(
+      children: [
+        ServiceHeader(
+          name: service.name,
+          logoPath: service.logo,
+          serviceUrl: service.url,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimens.l),
+            child: ListView.builder(
+              itemBuilder: (context, index) => RadioButtonTile(
+                title: addresses[index].name,
+                content: _buildTileContent(addresses[index]),
+                isSelected: addresses[index] == selectedAddress,
+                onTapAction: () => cubit.selectAddress(addresses[index]),
               ),
+              itemCount: addresses.length,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
