@@ -17,7 +17,12 @@
   "error": {
     "noConnection": "It seems like you have no internet connection",
     "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
-    "somethingWentWrong": "Something went wrong. Please try again."
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "page": {
+      "header": "Oops,",
+      "content": "Something went wrong. We could not perform required action.",
+      "action": "Try again"
+    }
   },
   "bottomBarNavigation": {
     "home": "Home",
@@ -46,8 +51,8 @@
     "phoneNumberFormatError": "Wrong phone number format"
   },
   "main": {
-    "new_action": "You have new pending action",
-    "open_action_label": "Open"
+    "newAction": "You have new pending action",
+    "openActionLabel": "Open"
   },
   "home": {
     "codeErrorPlaceholder": "XXXXXX",
@@ -247,5 +252,17 @@
     "codeInsert": "and enter below presented code",
     "codeLabel": "Code",
     "codeHint": "000-000"
+  },
+  "needHelp": {
+    "title": "Help",
+    "needHelpTitle": "What is logpass?",
+    "needHelpDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionOneTitle": "How to start",
+    "questionOneDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionTwoTitle": "Where is my data stored",
+    "questionTwoDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionThreeTitle": "What is Logpass?",
+    "questionThreeDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "appVersion": "Currently you are using: "
   }
 }

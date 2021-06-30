@@ -14,6 +14,7 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container.dart';
 
 const _arrowIconSize = 24.0;
@@ -27,21 +28,32 @@ class HomePage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<HomeCubit>();
     final state = useCubitBuilder(cubit);
+    final messengerController = useMessengerController();
 
     useEffect(() {
       cubit.init();
       return;
     }, [cubit]);
 
-    return _HomePageContent(cubit, state);
+    return _HomePageContent(
+      cubit: cubit,
+      state: state,
+      messengerController: messengerController,
+    );
   }
 }
 
 class _HomePageContent extends HookWidget {
   final HomeCubit cubit;
   final HomeState state;
+  final MessengerController messengerController;
 
-  const _HomePageContent(this.cubit, this.state);
+  const _HomePageContent({
+    required this.cubit,
+    required this.state,
+    required this.messengerController,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +66,20 @@ class _HomePageContent extends HookWidget {
       ).copyWith(
         predefinedBackground: colors.darkBackground,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          OneTimeCodeContainer(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              child: _PendingActions(state),
+      body: Messenger(
+        controller: messengerController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            OneTimeCodeContainer(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                child: _PendingActions(state),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

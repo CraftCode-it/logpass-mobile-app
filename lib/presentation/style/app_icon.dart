@@ -6,6 +6,10 @@ class AppIcon {
   static const services = 'assets/icon/services.svg';
   static const yourData = 'assets/icon/your_data.svg';
   static const settings = 'assets/icon/settings.svg';
+  static const homeActive = 'assets/icon/home_active.svg';
+  static const servicesActive = 'assets/icon/services_active.svg';
+  static const yourDataActive = 'assets/icon/your_data_active.svg';
+  static const settingsActive = 'assets/icon/settings_active.svg';
 
   static const back = 'assets/icon/back.svg';
   static const close = 'assets/icon/close.svg';
@@ -16,6 +20,10 @@ class AppIcon {
   static const checkboxError = 'assets/icon/checkbox_error.svg';
   static const checkboxOutlined = 'assets/icon/checkbox_outlined.svg';
   static const checkboxFilled = 'assets/icon/checkbox_filled.svg';
+  static const checkboxEmptyDark = 'assets/icon/checkbox_empty_dark.svg';
+  static const checkboxErrorDark = 'assets/icon/checkbox_error_dark.svg';
+  static const checkboxOutlinedDark = 'assets/icon/checkbox_outlined_dark.svg';
+  static const checkboxFilledDark = 'assets/icon/checkbox_filled_dark.svg';
 
   static const checkSuccess = 'assets/icon/check_success.svg';
   static const checkError = 'assets/icon/check_error.svg';
@@ -29,6 +37,8 @@ class AppIcon {
   static const security = 'assets/icon/security.svg';
   static const biometricSmall = 'assets/icon/biometric_small.svg';
   static const pinCode = 'assets/icon/security.svg';
+  static const refresh = 'assets/icon/refresh.svg';
+  static const copy = 'assets/icon/copy.svg';
 
   static const personalData = 'assets/icon/personal_data.svg';
   static const address = 'assets/icon/address.svg';

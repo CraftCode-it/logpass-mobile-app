@@ -50,6 +50,7 @@ Future<bool> showTwoOptionsDialog(
               ),
               const SizedBox(height: AppDimens.l),
               CustomRectangularButton.outlined(
+                fillColor: colors.secondaryBackground,
                 text: topAction,
                 onPressed: () => AutoRouter.of(context).pop(true),
               ),

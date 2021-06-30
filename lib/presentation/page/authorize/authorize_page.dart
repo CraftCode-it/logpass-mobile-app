@@ -2,12 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -17,10 +18,10 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 const _arrowIconSize = 24.0;
 const _elemenetIconSize = 20.0;
@@ -36,6 +37,7 @@ class AuthorizePage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
     final typography = useAppTypography();
+    final messengerController = useMessengerController();
 
     useCubitListener<AuthorizePageCubit, AuthorizePageState>(
       cubit,
@@ -45,6 +47,7 @@ class AuthorizePage extends HookWidget {
         context,
         colors,
         typography,
+        messengerController,
       ),
     );
 
@@ -57,22 +60,27 @@ class AuthorizePage extends HookWidget {
       appBar: CustomAppBar.smallTitleOnly(
         title: LocaleKeys.authorize_title.tr(),
       ),
-      body: state.maybeWhen(
-        idle: (
-          canConfirm,
-          service,
-          scopes,
-          agreements,
-        ) =>
-            _PageContent(
-          service: service,
-          canConfirm: canConfirm,
-          scopeElements: scopes,
-          agreementList: agreements,
-          cubit: cubit,
+      body: SafeArea(
+        child: Messenger(
+          controller: messengerController,
+          child: state.maybeWhen(
+            idle: (
+              canConfirm,
+              service,
+              scopes,
+              agreements,
+            ) =>
+                _PageContent(
+              service: service,
+              canConfirm: canConfirm,
+              scopeElements: scopes,
+              agreementList: agreements,
+              cubit: cubit,
+            ),
+            loading: () => const Loader(),
+            orElse: () => const SizedBox(),
+          ),
         ),
-        loading: () => const Loader(),
-        orElse: () => const SizedBox(),
       ),
     );
   }
@@ -83,6 +91,7 @@ class AuthorizePage extends HookWidget {
     BuildContext context,
     AppThemeColors colors,
     AppTypography typography,
+    MessengerController controller,
   ) {
     state.maybeMap(
       confirmed: (state) async {
@@ -108,11 +117,8 @@ class AuthorizePage extends HookWidget {
         }
       },
       connectionError: (state) async {
-        showConnectionErrorSnackBar(
-          error: state.error,
-          context: context,
-          colors: colors,
-          typography: typography,
+        controller.showError(
+          getConnectionErrorString(state.error),
         );
         await AutoRouter.of(context).pop();
       },
@@ -146,46 +152,44 @@ class _PageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          ServiceHeader(
-            name: service.name,
-            logoPath: service.logo,
-            serviceUrl: service.url,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: _Form(
-                      service,
-                      scopeElements,
-                      agreementList,
-                      cubit.updateScopes,
-                      cubit.updateAgreements,
-                    ),
+    return Column(
+      children: [
+        ServiceHeader(
+          name: service.name,
+          logoPath: service.logo,
+          serviceUrl: service.url,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _Form(
+                    service,
+                    scopeElements,
+                    agreementList,
+                    cubit.updateScopes,
+                    cubit.updateAgreements,
                   ),
-                  const SizedBox(height: AppDimens.xl),
-                  CustomRectangularButton.filled(
-                    text: LocaleKeys.authorize_confirm_button.tr(),
-                    onPressed: canConfirm ? cubit.approveAuthorizeAttempt : null,
-                  ),
-                  const SizedBox(height: AppDimens.l),
-                  CustomRectangularButton.outlined(
-                    text: LocaleKeys.authorize_reject_button.tr(),
-                    onPressed: cubit.denyAuthorizeAttempt,
-                  ),
-                  const SizedBox(height: AppDimens.xl),
-                ],
-              ),
+                ),
+                const SizedBox(height: AppDimens.xl),
+                CustomRectangularButton.filled(
+                  text: LocaleKeys.authorize_confirm_button.tr(),
+                  onPressed: canConfirm ? cubit.approveAuthorizeAttempt : null,
+                ),
+                const SizedBox(height: AppDimens.l),
+                CustomRectangularButton.outlined(
+                  text: LocaleKeys.authorize_reject_button.tr(),
+                  onPressed: cubit.denyAuthorizeAttempt,
+                ),
+                const SizedBox(height: AppDimens.xl),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

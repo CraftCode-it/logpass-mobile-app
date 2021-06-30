@@ -47,7 +47,7 @@ void main() {
       act: (cubit) async {
         await withClock(Clock.fixed(now), cubit.init);
       },
-      wait: const Duration(seconds: 1),
+      wait: const Duration(seconds: 2),
       expect: () => [
         const OneTimeCodeContainerState.loadInProgress(),
         OneTimeCodeContainerState.idle(oneTimeCode, 1.0),

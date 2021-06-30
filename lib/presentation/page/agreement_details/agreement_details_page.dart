@@ -9,17 +9,17 @@ import 'package:logpass_me/presentation/page/service_details/session_list/sessio
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
-import 'package:logpass_me/presentation/widget/info_snackbar.dart';
 import 'package:logpass_me/presentation/widget/labeled_text.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/pdf/pdf_list_view.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:native_pdf_renderer/native_pdf_renderer.dart';
-import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 
 class AgreementDetailsPage extends HookWidget {
   final ServiceAgreement serviceAgreement;
@@ -30,12 +30,11 @@ class AgreementDetailsPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<AgreementDetailsPageCubit>();
     final state = useCubitBuilder(cubit);
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
+    final messengerController = useMessengerController();
 
     useCubitListener<AgreementDetailsPageCubit, AgreementDetailsPageState>(
       cubit,
-      (cubit, state, context) => _listener(cubit, state, context, colors, typography),
+      (cubit, state, context) => _listener(cubit, state, context, messengerController),
     );
 
     useEffect(() {
@@ -54,17 +53,20 @@ class AgreementDetailsPage extends HookWidget {
           document: null,
           agreement: state.agreement,
           cubit: cubit,
+          messengerController: messengerController,
         ),
         idle: (state) => _Content(
           document: state.pdfDocument,
           agreement: state.agreement,
           cubit: cubit,
+          messengerController: messengerController,
         ),
         processing: (state) => _Content(
           document: state.pdfDocument,
           agreement: state.agreement,
           processing: true,
           cubit: cubit,
+          messengerController: messengerController,
         ),
         orElse: () => const SizedBox(),
       ),
@@ -75,27 +77,17 @@ class AgreementDetailsPage extends HookWidget {
     AgreementDetailsPageCubit cubit,
     AgreementDetailsPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
+    MessengerController controller,
   ) {
     state.maybeMap(
-      connectionError: (state) => showConnectionErrorSnackBar(
-        error: state.error,
-        colors: colors,
-        context: context,
-        typography: typography,
+      connectionError: (state) => controller.showError(
+        getConnectionErrorString(state.error),
       ),
-      confirmed: (_) => showInformationSnackBar(
-        context: context,
-        colors: colors,
-        typography: typography,
-        message: LocaleKeys.agreementDetails_agreementConfirmed.tr(),
+      confirmed: (_) => controller.showInfo(
+        LocaleKeys.agreementDetails_agreementConfirmed.tr(),
       ),
-      revoked: (_) => showInformationSnackBar(
-        context: context,
-        colors: colors,
-        typography: typography,
-        message: LocaleKeys.agreementDetails_agreementRevoked.tr(),
+      revoked: (_) => controller.showInfo(
+        LocaleKeys.agreementDetails_agreementRevoked.tr(),
       ),
       orElse: () {},
     );
@@ -105,6 +97,7 @@ class AgreementDetailsPage extends HookWidget {
 class _Content extends HookWidget {
   final PdfDocument? document;
   final ServiceAgreement agreement;
+  final MessengerController messengerController;
   final bool processing;
   final AgreementDetailsPageCubit cubit;
 
@@ -112,6 +105,7 @@ class _Content extends HookWidget {
     required this.document,
     required this.agreement,
     required this.cubit,
+    required this.messengerController,
     this.processing = false,
     Key? key,
   }) : super(key: key);
@@ -125,7 +119,11 @@ class _Content extends HookWidget {
     return Column(
       children: [
         Expanded(
-          child: document == null ? const Loader() : PdfListView(document: document),
+          child: Messenger(
+            floating: true,
+            controller: messengerController,
+            child: document == null ? const Loader() : PdfListView(document: document),
+          ),
         ),
         Container(
           padding: const EdgeInsets.all(AppDimens.m),
@@ -159,6 +157,7 @@ class _Content extends HookWidget {
                     CustomRectangularButton.outlined(
                       text: tr(LocaleKeys.agreementDetails_revokeAction),
                       onPressed: () => _revokeAgreement(context, typography, colors),
+                      fillColor: colors.secondaryBackground,
                     )
                   else
                     CustomRectangularButton.filled(

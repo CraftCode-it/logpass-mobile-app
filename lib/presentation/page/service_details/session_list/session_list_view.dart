@@ -14,13 +14,35 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
-import 'package:logpass_me/presentation/widget/info_snackbar.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
+
+void cubitEventListener(
+    SessionListViewCubit cubit,
+    SessionListViewState state,
+    BuildContext context,
+    MessengerController controller,
+    ) {
+  state.maybeMap(
+    endedSession: (_) => controller.showInfo(
+      tr(LocaleKeys.sessionListView_sessionEnded),
+    ),
+    connectionError: (state) => controller.showError(
+      getConnectionErrorString(state.error),
+    ),
+    orElse: () {},
+  );
+}
 
 class SessionListViewKeepingState extends StatefulWidget {
   final Service service;
+  final MessengerController messengerController;
 
-  const SessionListViewKeepingState({required this.service, Key? key}) : super(key: key);
+  const SessionListViewKeepingState({
+    required this.service,
+    required this.messengerController,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _SessionListViewKeepingStateState createState() => _SessionListViewKeepingStateState();
@@ -30,7 +52,10 @@ class _SessionListViewKeepingStateState extends State<SessionListViewKeepingStat
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SessionListView(service: widget.service);
+    return SessionListView(
+      service: widget.service,
+      messengerController: widget.messengerController,
+    );
   }
 
   @override
@@ -39,9 +64,11 @@ class _SessionListViewKeepingStateState extends State<SessionListViewKeepingStat
 
 class SessionListView extends HookWidget {
   final Service service;
+  final MessengerController messengerController;
 
   const SessionListView({
     required this.service,
+    required this.messengerController,
     Key? key,
   }) : super(key: key);
 
@@ -49,17 +76,15 @@ class SessionListView extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<SessionListViewCubit>();
     final state = useCubitBuilder(cubit);
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final scrollController = useScrollController();
+
     useCubitListener<SessionListViewCubit, SessionListViewState>(
       cubit,
-      (cubit, state, context) => _listener(
+      (cubit, state, context) => cubitEventListener(
         cubit,
         state,
         context,
-        colors,
-        typography,
+        messengerController,
       ),
     );
 
@@ -80,30 +105,6 @@ class SessionListView extends HookWidget {
     }, [cubit]);
 
     return SessionListBuilder(cubit: cubit, state: state);
-  }
-
-  void _listener(
-    SessionListViewCubit cubit,
-    SessionListViewState state,
-    BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
-  ) {
-    state.maybeMap(
-      endedSession: (_) => showInformationSnackBar(
-        context: context,
-        colors: colors,
-        typography: typography,
-        message: tr(LocaleKeys.sessionListView_sessionEnded),
-      ),
-      connectionError: (state) => showConnectionErrorSnackBar(
-        error: state.error,
-        context: context,
-        colors: colors,
-        typography: typography,
-      ),
-      orElse: () {},
-    );
   }
 }
 
@@ -193,41 +194,44 @@ class _Empty extends HookWidget {
 
     return RefreshIndicator(
       onRefresh: () => cubit.loadFirstPage(),
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(top: AppDimens.m),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (activeSessions)
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: typography.body1.copyWith(color: colors.secondaryText),
-                  children: [
-                    TextSpan(
-                      text: tr(LocaleKeys.sessionListView_noActiveSessionsStart),
-                    ),
-                    WidgetSpan(
-                      child: SvgPicture.asset(
-                        AppIcon.history,
-                        color: colors.secondaryText,
+      child: Container(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(top: AppDimens.m),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (activeSessions)
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: typography.body1.copyWith(color: colors.secondaryText),
+                    children: [
+                      TextSpan(
+                        text: tr(LocaleKeys.sessionListView_noActiveSessionsStart),
                       ),
-                    ),
-                    TextSpan(
-                      text: tr(LocaleKeys.sessionListView_noActiveSessionsEnd),
-                    ),
-                  ],
-                ),
-              )
-            else
-              Text(
-                LocaleKeys.sessionListView_noHistoricalSessions,
-                style: typography.body1.copyWith(color: colors.secondaryText),
-                textAlign: TextAlign.center,
-              ).tr(),
-          ],
+                      WidgetSpan(
+                        child: SvgPicture.asset(
+                          AppIcon.history,
+                          color: colors.secondaryText,
+                        ),
+                      ),
+                      TextSpan(
+                        text: tr(LocaleKeys.sessionListView_noActiveSessionsEnd),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Text(
+                  LocaleKeys.sessionListView_noHistoricalSessions,
+                  style: typography.body1.copyWith(color: colors.secondaryText),
+                  textAlign: TextAlign.center,
+                ).tr(),
+            ],
+          ),
         ),
       ),
     );

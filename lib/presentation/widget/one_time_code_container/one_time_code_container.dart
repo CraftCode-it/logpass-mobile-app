@@ -1,17 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/presentation/utils/text_utils.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
-
-const _copyIconSize = 20.0;
 
 class OneTimeCodeContainer extends HookWidget {
   @override
@@ -46,6 +46,7 @@ class OneTimeCodeContainer extends HookWidget {
           onRefreshAction: null,
           onCopyAction: null,
           progressSize: size,
+          isLoading: true,
         ),
         error: () => _CodeContainer(
           oneTimeCode: null,
@@ -53,6 +54,7 @@ class OneTimeCodeContainer extends HookWidget {
           onRefreshAction: cubit.refreshOneTimeCode,
           onCopyAction: cubit.copyOneTimeCodeToClipboard,
           progressSize: size,
+          isError: true,
         ),
         orElse: () => SizedBox(
           width: size,
@@ -68,8 +70,9 @@ class _CodeContainer extends HookWidget {
   final double? remainingProgress;
   final VoidCallback? onRefreshAction;
   final VoidCallback? onCopyAction;
-  final bool hasErrors;
   final double progressSize;
+  final bool isError;
+  final bool isLoading;
 
   const _CodeContainer({
     required this.onRefreshAction,
@@ -77,9 +80,10 @@ class _CodeContainer extends HookWidget {
     required this.progressSize,
     this.oneTimeCode,
     this.remainingProgress,
+    this.isError = false,
+    this.isLoading = false,
     Key? key,
-  })  : hasErrors = oneTimeCode == null,
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +118,9 @@ class _CodeContainer extends HookWidget {
           child: RotatedBox(
             quarterTurns: 2,
             child: oneTimeCode == null
-                ? const CircularProgressIndicator(
+                ? CircularProgressIndicator(
                     strokeWidth: AppDimens.oneTimeCodeProgressWidth,
-                    color: AppColors.success100,
+                    color: isError ? AppColors.error100 : AppColors.success100,
                   )
                 : CircularProgressIndicator(
                     value: remainingProgress,
@@ -133,14 +137,11 @@ class _CodeContainer extends HookWidget {
             children: [
               Expanded(
                 flex: 4,
-                child: TextButton(
-                  onPressed: onRefreshAction,
-                  child: Text(
-                    LocaleKeys.home_refreshCodeLabel,
-                    style: appTypography.info1.copyWith(
-                      color: hasErrors ? inactiveColor : colors.textSpecial,
-                    ),
-                  ).tr().withUnderline(hasErrors ? inactiveColor : colors.textSpecial),
+                child: _IconTextButton(
+                  LocaleKeys.home_refreshCodeLabel.tr(),
+                  AppIcon.refresh,
+                  onTapAction: onRefreshAction,
+                  isActive: !isLoading,
                 ),
               ),
               Expanded(
@@ -149,18 +150,22 @@ class _CodeContainer extends HookWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (!hasErrors)
-                      Padding(
+                    Visibility(
+                      visible: oneTimeCode != null,
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: AppDimens.s),
                         child: Text(
                           LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
                           style: appTypography.info2.copyWith(color: colors.textSpecial),
                         ),
                       ),
+                    ),
                     const SizedBox(height: AppDimens.m),
                     Text(
                       oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
-                      style: appTypography.h1.copyWith(color: hasErrors ? inactiveColor : colors.textSpecial),
+                      style: appTypography.h1.copyWith(
+                        color: oneTimeCode == null ? inactiveColor : colors.textSpecial,
+                      ),
                     ),
                   ],
                 ),
@@ -169,13 +174,9 @@ class _CodeContainer extends HookWidget {
                 flex: 5,
                 child: _IconTextButton(
                   LocaleKeys.home_copyCodeLabel.tr(),
-                  Icon(
-                    Icons.copy,
-                    color: hasErrors ? inactiveColor : colors.logoSpecial,
-                    size: _copyIconSize,
-                  ),
+                  AppIcon.copy,
                   onTapAction: onCopyAction,
-                  isActive: !hasErrors,
+                  isActive: oneTimeCode != null,
                 ),
               ),
             ],
@@ -188,7 +189,7 @@ class _CodeContainer extends HookWidget {
 
 class _IconTextButton extends HookWidget {
   final String label;
-  final Widget icon;
+  final String icon;
   final VoidCallback? onTapAction;
   final bool isActive;
 
@@ -212,7 +213,10 @@ class _IconTextButton extends HookWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            icon,
+            SvgPicture.asset(
+              icon,
+              color: color,
+            ),
             const SizedBox(width: AppDimens.xs),
             Text(
               label,

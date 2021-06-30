@@ -13,6 +13,7 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/dark_mode_switch/dark_mode_switch_row.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/navigation_row.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
@@ -24,6 +25,7 @@ class SettingsPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<SettingsPageCubit>();
     final colors = useAppThemeColors();
+    final messengerController = useMessengerController();
 
     useCubitListener<SettingsPageCubit, SettingsPageState>(cubit, (cubit, state, context) {
       state.maybeMap(
@@ -49,40 +51,46 @@ class SettingsPage extends HookWidget {
       backgroundColor: colors.background,
       appBar: CustomAppBar.bigTitle(title: LocaleKeys.settings_title.tr()),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              NavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
-              Separator.light(),
-              NavigationRow.withIcon(
-                AppIcon.security,
-                LocaleKeys.settings_security.tr(),
-                () => AutoRouter.of(context).push(const SecuritySettingsPageRoute()),
-              ),
-              Separator.light(),
-              const SizedBox(height: AppDimens.xc),
-              const DarkModeSwitchRow(),
-              Separator.light(),
-              NavigationRow.titled(
-                LocaleKeys.settings_language.tr(),
-                () => AutoRouter.of(context).push(const LanguagePageRoute()),
-              ),
-              Separator.light(),
-              NavigationRow.titled(
-                LocaleKeys.settings_terms.tr(),
-                () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
-              ),
-              Separator.light(),
-              NavigationRow.titled(LocaleKeys.settings_help.tr(), () {}),
-              Separator.light(),
-              const SizedBox(height: AppDimens.xc),
-              CustomRectangularButton.outlined(
-                text: LocaleKeys.settings_logout.tr(),
-                onPressed: () => cubit.logOut(),
-              ),
-            ],
+        child: Messenger(
+          controller: messengerController,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                NavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
+                Separator.light(),
+                NavigationRow.withIcon(
+                  AppIcon.security,
+                  LocaleKeys.settings_security.tr(),
+                  () => AutoRouter.of(context).push(const SecuritySettingsPageRoute()),
+                ),
+                Separator.light(),
+                const SizedBox(height: AppDimens.xc),
+                const DarkModeSwitchRow(),
+                Separator.light(),
+                NavigationRow.titled(
+                  LocaleKeys.settings_language.tr(),
+                  () => AutoRouter.of(context).push(const LanguagePageRoute()),
+                ),
+                Separator.light(),
+                NavigationRow.titled(
+                  LocaleKeys.settings_terms.tr(),
+                  () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
+                ),
+                Separator.light(),
+                NavigationRow.titled(
+                  LocaleKeys.settings_help.tr(),
+                  () => AutoRouter.of(context).push(const NeedHelpPageRoute()),
+                ),
+                Separator.light(),
+                const SizedBox(height: AppDimens.xc),
+                CustomRectangularButton.outlined(
+                  text: LocaleKeys.settings_logout.tr(),
+                  onPressed: () => cubit.logOut(),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -8,6 +8,7 @@ class CustomRectangularButton extends HookWidget {
   final String text;
   final Function()? onPressed;
   final Color? fillColor;
+  final Color? borderColor;
   final Color? textColor;
   final bool filled;
   final double? height;
@@ -18,6 +19,7 @@ class CustomRectangularButton extends HookWidget {
     required this.onPressed,
     required this.filled,
     this.fillColor,
+    this.borderColor,
     this.textColor,
     this.height,
     this.textStyle,
@@ -28,6 +30,7 @@ class CustomRectangularButton extends HookWidget {
     required String text,
     required Function()? onPressed,
     Color? fillColor,
+    Color? borderColor,
     Color? textColor,
     double? height,
     TextStyle? textStyle,
@@ -37,6 +40,7 @@ class CustomRectangularButton extends HookWidget {
       onPressed: onPressed,
       filled: true,
       fillColor: fillColor,
+      borderColor: borderColor,
       textColor: textColor,
       height: height,
       textStyle: textStyle,
@@ -47,6 +51,7 @@ class CustomRectangularButton extends HookWidget {
     required String text,
     required Function()? onPressed,
     Color? fillColor,
+    Color? borderColor,
     Color? textColor,
     double? height,
     TextStyle? textStyle,
@@ -56,6 +61,7 @@ class CustomRectangularButton extends HookWidget {
       onPressed: onPressed,
       filled: false,
       fillColor: fillColor,
+      borderColor: borderColor,
       textColor: textColor,
       height: height,
       textStyle: textStyle,
@@ -73,7 +79,7 @@ class CustomRectangularButton extends HookWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.zero,
         side: BorderSide(
-          color: onPressed == null ? colors.buttonOutlinedInactive : (fillColor ?? colors.buttonOutlined),
+          color: onPressed == null ? colors.buttonOutlinedInactive : (borderColor ?? colors.buttonOutlined),
           width: 1.5,
         ),
       ),
