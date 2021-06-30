@@ -35,4 +35,6 @@ class AppIcon {
   static const email = 'assets/icon/email.svg';
   static const serviceRules = 'assets/icon/service_rules.svg';
   static const invoiceData = 'assets/icon/invoice_data.svg';
+  static const star = 'assets/icon/star.svg';
+  static const more = 'assets/icon/more.svg';
 }

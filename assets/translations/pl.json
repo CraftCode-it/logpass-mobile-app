@@ -222,7 +222,15 @@
     "personalData": "Personal data",
     "emails": "Emails",
     "addresses": "Addresses",
-    "invoiceData": "Invoice data"
+    "invoiceData": "Invoice data",
+    "personalDataAddButton": "Add new",
+    "personalDataEmptyList": "You have no personal data added to your account.",
+    "removeDialogTitle": "Remove data",
+    "removeDialogDescription": "Are you sure you want to remove this data?",
+    "removeOption": "Remove",
+    "setDefaultOption": "Set as default",
+    "goBackOption": "Go back",
+    "dataRemoved": "Data removed"
   },
   "language": {
     "title": "Wybierz twój język",
