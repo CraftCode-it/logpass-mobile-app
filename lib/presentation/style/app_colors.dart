@@ -35,6 +35,7 @@ AppThemeColors useAppThemeColors() {
 }
 
 class AppColors {
+  static const darkModeBackground = Color(0xFF101029);
   static const snackBarText = secondary;
   static const snackBarSuccessBackground = success100;
   static const snackBarErrorBackground = error100;
@@ -117,7 +118,7 @@ class AppColors {
 
   // Dark mode
 
-  static const backgroundDark = primary100;
+  static const backgroundDark = darkModeBackground;
   static const primaryTextDark = primary10;
   static const textInvertedDark = primary10;
   static const secondaryTextDark = primary30;
@@ -138,7 +139,7 @@ class AppColors {
   static const buttonFilledTextDark = primary100;
   static const buttonFilledInactiveTextDark = primary80;
 
-  static const buttonOutlinedFillDark = primary100;
+  static const buttonOutlinedFillDark = darkModeBackground;
   static const buttonOutlinedDark = primary10;
   static const buttonOutlinedInactiveDark = primary90;
   static const buttonOutlinedTextDark = primary10;

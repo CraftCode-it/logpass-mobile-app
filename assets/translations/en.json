@@ -17,7 +17,12 @@
   "error": {
     "noConnection": "It seems like you have no internet connection",
     "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
-    "somethingWentWrong": "Something went wrong. Please try again."
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "page": {
+      "header": "Oops,",
+      "content": "Something went wrong. We could not perform required action.",
+      "action": "Try again"
+    }
   },
   "bottomBarNavigation": {
     "home": "Home",
@@ -46,8 +51,8 @@
     "phoneNumberFormatError": "Wrong phone number format"
   },
   "main": {
-    "new_action": "You have new pending action",
-    "open_action_label": "Open"
+    "newAction": "You have new pending action",
+    "openActionLabel": "Open"
   },
   "home": {
     "codeErrorPlaceholder": "XXXXXX",

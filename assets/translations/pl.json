@@ -17,7 +17,12 @@
   "error": {
     "noConnection": "It seems like you have no internet connection",
     "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
-    "somethingWentWrong": "Something went wrong. Please try again."
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "page": {
+      "header": "Ups,",
+      "content": "Coś poszło nie tak. Nie udało nam się wykonać zleconej akcji.",
+      "action": "Spróbuj ponownie"
+    }
   },
   "bottomBarNavigation": {
     "home": "Home",
@@ -80,8 +85,8 @@
     "acceptAllRules": "Agree to all"
   },
   "main": {
-    "new_action": "Masz nową akcję",
-    "open_action_label": "Otwórz"
+    "newAction": "Masz nową akcję",
+    "openActionLabel": "Otwórz"
   },
   "otpCode": {
     "title": "Verify your number",

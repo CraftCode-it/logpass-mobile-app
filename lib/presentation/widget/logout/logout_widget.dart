@@ -23,7 +23,11 @@ class LogoutWidget extends HookWidget {
     return child;
   }
 
-  void _logoutCubitListener(LogoutCubit cubit, LogoutState state, BuildContext context) {
+  void _logoutCubitListener(
+    LogoutCubit cubit,
+    LogoutState state,
+    BuildContext context,
+  ) {
     state.maybeMap(
       logout: (sate) => _navigateOnLogout(context),
       orElse: () {},

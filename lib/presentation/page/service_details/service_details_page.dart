@@ -18,6 +18,7 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServiceDetailsPage extends HookWidget {
@@ -34,6 +35,7 @@ class ServiceDetailsPage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final tabController = useTabController(initialLength: 2);
     final colors = useAppThemeColors();
+    final messengerController = useMessengerController();
 
     useEffect(() {
       cubit.initialize(service);
@@ -61,6 +63,7 @@ class ServiceDetailsPage extends HookWidget {
             cubit: cubit,
             state: state,
             tabController: tabController,
+            messengerController: messengerController,
           ),
           processing: (state) => _ProcessingContent(state: state),
           orElse: () => const SizedBox(),
@@ -74,11 +77,13 @@ class _Content extends HookWidget {
   final ServiceDetailsPageCubit cubit;
   final ServiceDetailsPageStateIdle state;
   final TabController tabController;
+  final MessengerController messengerController;
 
   const _Content({
     required this.cubit,
     required this.state,
     required this.tabController,
+    required this.messengerController,
     Key? key,
   }) : super(key: key);
 
@@ -139,7 +144,10 @@ class _Content extends HookWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                child: SessionListViewKeepingState(service: state.service),
+                child: SessionListViewKeepingState(
+                  service: state.service,
+                  messengerController: messengerController,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
@@ -215,6 +223,7 @@ class _ServiceHeader extends HookWidget {
               service.logo,
               width: 40,
               height: 40,
+              errorBuilder: (context, _, __) => const SizedBox.shrink(),
             ),
             const SizedBox(width: AppDimens.m),
             Expanded(

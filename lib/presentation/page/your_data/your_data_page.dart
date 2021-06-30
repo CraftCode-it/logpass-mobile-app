@@ -6,6 +6,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/navigation_row.dart';
 import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
@@ -16,6 +17,7 @@ class YourDataPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
+    final messengerController = useMessengerController();
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -23,20 +25,23 @@ class YourDataPage extends HookWidget {
         title: LocaleKeys.yourData_title.tr(),
         trailing: const NeedHelpButton(),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            NavigationRow.withIcon(AppIcon.personalData, LocaleKeys.yourData_personalData.tr(), () {}),
-            Separator.light(),
-            NavigationRow.withIcon(AppIcon.email, LocaleKeys.yourData_emails.tr(), () {}),
-            Separator.light(),
-            NavigationRow.withIcon(AppIcon.address, LocaleKeys.yourData_addresses.tr(), () {}),
-            Separator.light(),
-            NavigationRow.withIcon(AppIcon.invoiceData, LocaleKeys.yourData_invoiceData.tr(), () {}),
-            Separator.light(),
-          ],
+      body: Messenger(
+        controller: messengerController,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              NavigationRow.withIcon(AppIcon.personalData, LocaleKeys.yourData_personalData.tr(), () {}),
+              Separator.light(),
+              NavigationRow.withIcon(AppIcon.email, LocaleKeys.yourData_emails.tr(), () {}),
+              Separator.light(),
+              NavigationRow.withIcon(AppIcon.address, LocaleKeys.yourData_addresses.tr(), () {}),
+              Separator.light(),
+              NavigationRow.withIcon(AppIcon.invoiceData, LocaleKeys.yourData_invoiceData.tr(), () {}),
+              Separator.light(),
+            ],
+          ),
         ),
       ),
     );

@@ -18,6 +18,7 @@ import 'package:logpass_me/presentation/widget/country_code_picker/country_code_
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
@@ -30,17 +31,11 @@ class StartPage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final phoneNumberController = useTextEditingController();
     final color = useAppThemeColors();
-    final typography = useAppTypography();
+    final messengerController = useMessengerController();
 
     useCubitListener<StartPageCubit, StartPageState>(
       cubit,
-      (cubit, state, context) => _cubitListener(
-        cubit,
-        state,
-        context,
-        color,
-        typography,
-      ),
+      (cubit, state, context) => _cubitListener(cubit, state, context, messengerController),
     );
 
     return Scaffold(
@@ -50,38 +45,41 @@ class StartPage extends HookWidget {
         trailing: const NeedHelpButton(),
       ),
       body: SafeArea(
-        child: KeyboardVisibilityBuilder(
-          builder: (context, isKeyboardVisible) => GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: AppDimens.l),
-                  _PhoneNumberInput(
-                    controller: phoneNumberController,
-                    cubit: cubit,
-                    state: state,
-                  ),
-                  const SizedBox(height: AppDimens.xxl),
-                  _TermsAndConditionsCheck(cubit: cubit),
-                  const SizedBox(height: AppDimens.l),
-                  state.maybeMap(
-                    processing: (state) => const Center(
-                      child: CircularProgressIndicator(),
+        child: Messenger(
+          controller: messengerController,
+          child: KeyboardVisibilityBuilder(
+            builder: (context, isKeyboardVisible) => GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: AppDimens.l),
+                    _PhoneNumberInput(
+                      controller: phoneNumberController,
+                      cubit: cubit,
+                      state: state,
                     ),
-                    orElse: () => CustomRectangularButton.filled(
-                      text: tr(LocaleKeys.common_next),
-                      onPressed: _getNextButtonAction(state, cubit),
+                    const SizedBox(height: AppDimens.xxl),
+                    _TermsAndConditionsCheck(cubit: cubit),
+                    const SizedBox(height: AppDimens.l),
+                    state.maybeMap(
+                      processing: (state) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      orElse: () => CustomRectangularButton.filled(
+                        text: tr(LocaleKeys.common_next),
+                        onPressed: _getNextButtonAction(state, cubit),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppDimens.l),
-                  if (!isKeyboardVisible) ...[
-                    const Spacer(),
-                    const _RegisterNewDevice(),
+                    const SizedBox(height: AppDimens.l),
+                    if (!isKeyboardVisible) ...[
+                      const Spacer(),
+                      const _RegisterNewDevice(),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),
@@ -101,8 +99,7 @@ class StartPage extends HookWidget {
     StartPageCubit cubit,
     StartPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
+    MessengerController controller,
   ) {
     state.maybeMap(
       successOTP: (state) {
@@ -113,12 +110,7 @@ class StartPage extends HookWidget {
       },
       error: (state) {},
       connectionError: (state) {
-        showConnectionErrorSnackBar(
-          error: state.error,
-          context: context,
-          colors: colors,
-          typography: typography,
-        );
+        controller.showError(getConnectionErrorString(state.error));
       },
       orElse: () {},
     );

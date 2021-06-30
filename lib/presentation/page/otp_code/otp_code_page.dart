@@ -14,8 +14,8 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
-import 'package:logpass_me/presentation/widget/info_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
 
@@ -34,6 +34,7 @@ class OTPCodePage extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
     final otpCodeController = useTextEditingController();
+    final messengerController = useMessengerController();
 
     useCubitListener<OTPCodePageCubit, OTPCodePageState>(
       cubit,
@@ -42,8 +43,7 @@ class OTPCodePage extends HookWidget {
         state,
         context,
         otpCodeController,
-        colors,
-        typography,
+        messengerController,
       ),
     );
 
@@ -57,31 +57,34 @@ class OTPCodePage extends HookWidget {
         title: LocaleKeys.otpCode_title.tr(),
         leading: NavigationButton.back(),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: AppDimens.xl),
-            Text(
-              LocaleKeys.otpCode_info,
-              textAlign: TextAlign.center,
-              style: typography.body1,
-            ).tr(),
-            const SizedBox(height: AppDimens.xl),
-            _CodeField(cubit: cubit, state: state),
-            const SizedBox(height: AppDimens.xxl),
-            _VerifyButton(state: state, cubit: cubit),
-            const SizedBox(height: AppDimens.xl),
-            Text(
-              LocaleKeys.otpCode_resendInfo,
-              textAlign: TextAlign.center,
-              style: typography.body1,
-            ).tr(),
-            const SizedBox(height: AppDimens.s),
-            _ResendButton(cubit: cubit, state: state),
-          ],
+      body: Messenger(
+        controller: messengerController,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: AppDimens.xl),
+              Text(
+                LocaleKeys.otpCode_info,
+                textAlign: TextAlign.center,
+                style: typography.body1,
+              ).tr(),
+              const SizedBox(height: AppDimens.xl),
+              _CodeField(cubit: cubit, state: state),
+              const SizedBox(height: AppDimens.xxl),
+              _VerifyButton(state: state, cubit: cubit),
+              const SizedBox(height: AppDimens.xl),
+              Text(
+                LocaleKeys.otpCode_resendInfo,
+                textAlign: TextAlign.center,
+                style: typography.body1,
+              ).tr(),
+              const SizedBox(height: AppDimens.s),
+              _ResendButton(cubit: cubit, state: state),
+            ],
+          ),
         ),
       ),
     );
@@ -92,15 +95,11 @@ class OTPCodePage extends HookWidget {
     OTPCodePageState state,
     BuildContext context,
     TextEditingController otpController,
-    AppThemeColors colors,
-    AppTypography typography,
+    MessengerController controller,
   ) {
     state.maybeMap(
-      connectionError: (state) => showConnectionErrorSnackBar(
-        error: state.error,
-        context: context,
-        colors: colors,
-        typography: typography,
+      connectionError: (state) => controller.showError(
+        getConnectionErrorString(state.error),
       ),
       success: (state) {
         AutoRouter.of(context).pushAndPopUntil(
@@ -109,11 +108,8 @@ class OTPCodePage extends HookWidget {
         );
       },
       otpAutofill: (state) => otpController.text = state.code,
-      resendSuccess: (_) => showInformationSnackBar(
-        context: context,
-        colors: colors,
-        typography: typography,
-        message: tr(LocaleKeys.otpCode_codeResendSuccess),
+      resendSuccess: (_) => controller.showInfo(
+        tr(LocaleKeys.otpCode_codeResendSuccess),
       ),
       orElse: () {},
     );
