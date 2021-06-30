@@ -2,10 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/need_help/need_help.dart';
+import 'package:logpass_me/domain/need_help/need_help_factory.dart';
 import 'package:logpass_me/domain/need_help/question.dart';
-import 'package:logpass_me/domain/package_info/use_case/get_application_version_use_case.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -15,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/widget/version_info/version_info.dart';
 
 const _arrowIconSize = 24.0;
 
@@ -25,24 +25,9 @@ class NeedHelpPage extends HookWidget {
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
 
-    final needHelp = useMemoized(() => NeedHelp(
-          LocaleKeys.needHelp_needHelpTitle.tr(),
-          LocaleKeys.needHelp_needHelpDescription.tr(),
-          [
-            Question(
-              LocaleKeys.needHelp_questionOneTitle.tr(),
-              LocaleKeys.needHelp_questionOneDescription.tr(),
-            ),
-            Question(
-              LocaleKeys.needHelp_questionTwoTitle.tr(),
-              LocaleKeys.needHelp_questionTwoDescription.tr(),
-            ),
-            Question(
-              LocaleKeys.needHelp_questionThreeTitle.tr(),
-              LocaleKeys.needHelp_questionThreeDescription.tr(),
-            )
-          ],
-        ));
+    final needHelp = useMemoized(() {
+      return NeedHelpFactory.getObject();
+    });
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -85,12 +70,7 @@ class _ApplicationVersionInfo extends HookWidget {
             color: colors.labelText,
           ),
         ),
-        Text(
-          'Logpass v.${getIt<GetApplicationVersionUseCase>().call()}',
-          style: typography.info1.copyWith(
-            color: colors.labelText,
-          ),
-        ),
+        VersionInfo(),
       ],
     );
   }
