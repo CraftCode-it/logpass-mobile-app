@@ -54,10 +54,13 @@ class ServiceListPage extends HookWidget {
       appBar: CustomAppBar.bigTitle(
         title: LocaleKeys.serviceList_title.tr(),
       ),
-      body: _Content(
-        cubit: cubit,
-        state: state,
-        scrollController: scrollController,
+      body: Messenger(
+        controller: messengerController,
+        child: _Content(
+          cubit: cubit,
+          state: state,
+          scrollController: scrollController,
+        ),
       ),
     );
   }
