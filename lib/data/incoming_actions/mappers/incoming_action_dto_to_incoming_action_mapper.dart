@@ -45,11 +45,12 @@ class IncomingActionDTOToIncomingActionMapper implements DataMapper<IncomingActi
 
   IncomingAction _parseAppLinkAction(Uri uri) {
     if (uri.pathSegments.length >= 2) {
-      final actionPathSegmentIndex = uri.pathSegments.length - 2;
-      final actionIdPathSegmentIndex = uri.pathSegments.length - 1;
+      final nonEmptyPathSegments = uri.pathSegments.where((e) => e.isNotEmpty).toList();
+      final actionPathSegmentIndex = nonEmptyPathSegments.length - 2;
+      final actionIdPathSegmentIndex = nonEmptyPathSegments.length - 1;
 
-      final actionType = _mapActionType(uri.pathSegments[actionPathSegmentIndex]);
-      final actionId = uri.pathSegments[actionIdPathSegmentIndex];
+      final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
+      final actionId = nonEmptyPathSegments[actionIdPathSegmentIndex];
 
       return IncomingAction(actionType, actionId);
     }
