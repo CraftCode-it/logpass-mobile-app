@@ -26,7 +26,7 @@ class NeedHelpPage extends HookWidget {
     final colors = useAppThemeColors();
 
     final needHelp = useMemoized(() {
-      return NeedHelpFactory.createObject();
+      return NeedHelpFactory.create();
     });
 
     return Scaffold(

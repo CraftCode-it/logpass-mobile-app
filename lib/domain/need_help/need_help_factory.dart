@@ -4,7 +4,7 @@ import 'package:logpass_me/domain/need_help/question.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 
 class NeedHelpFactory {
-  static NeedHelp createObject() => NeedHelp(
+  static NeedHelp create() => NeedHelp(
         LocaleKeys.needHelp_needHelpTitle.tr(),
         LocaleKeys.needHelp_needHelpDescription.tr(),
         [
