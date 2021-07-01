@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/domain/user_data/data/personal_data.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
 
 @injectable
-class AddPersonalDataUseCase {
+class DeleteEmailUseCase {
   // TODO: replace after implementation of UserDataRepository
-  Future<void> call(PersonalData personalData) => Future.delayed(
+  Future<void> call(Email email) => Future.delayed(
         const Duration(seconds: 2),
         () => null,
       );

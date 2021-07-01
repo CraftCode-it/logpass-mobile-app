@@ -40,7 +40,11 @@ class YourDataPage extends HookWidget {
                 () => AutoRouter.of(context).push(const DataPersonalPageRoute()),
               ),
               Separator.light(),
-              NavigationRow.withIcon(AppIcon.email, LocaleKeys.yourData_emails.tr(), () {}),
+              NavigationRow.withIcon(
+                AppIcon.email,
+                LocaleKeys.yourData_emails.tr(),
+                () => AutoRouter.of(context).push(const DataEmailsPageRoute()),
+              ),
               Separator.light(),
               NavigationRow.withIcon(AppIcon.address, LocaleKeys.yourData_addresses.tr(), () {}),
               Separator.light(),

@@ -1,5 +1,9 @@
-class Email {
+import 'package:logpass_me/domain/user_data/default_data.dart';
+
+class Email implements DefaultData {
   final String value;
+
+  @override
   final bool isDefault;
 
   Email(

@@ -1,4 +1,6 @@
-class InvoiceData {
+import 'package:logpass_me/domain/user_data/default_data.dart';
+
+class InvoiceData implements DefaultData {
   // TODO: add translation for tax ID
   final String? taxId;
   final String name;
@@ -8,6 +10,8 @@ class InvoiceData {
   final String? apartmentNumber;
   final String postCode;
   final String city;
+
+  @override
   final bool isDefault;
 
   InvoiceData({

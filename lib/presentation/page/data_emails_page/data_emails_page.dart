@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logpass_me/domain/user_data/data/personal_data.dart';
-import 'package:logpass_me/presentation/page/data_personal_page/data_personal_page_cubit.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/presentation/page/data_emails_page/data_emails_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -20,17 +20,17 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
-class DataPersonalPage extends HookWidget {
+class DataEmailsPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final cubit = useCubit<DataPersonalPageCubit>();
+    final cubit = useCubit<DataEmailsPageCubit>();
     final state = useCubitBuilder(cubit);
 
     final colors = useAppThemeColors();
     final typography = useAppTypography();
     final messengerController = useMessengerController();
 
-    useCubitListener<DataPersonalPageCubit, DataPersonalPageState>(
+    useCubitListener<DataEmailsPageCubit, DataEmailsPageState>(
       cubit,
       (cubit, state, context) => _cubitListener(
         cubit,
@@ -49,19 +49,19 @@ class DataPersonalPage extends HookWidget {
     return Scaffold(
       backgroundColor: colors.background,
       appBar: CustomAppBar.smallTitle(
-        title: LocaleKeys.yourData_personalData.tr(),
+        title: LocaleKeys.yourData_emails.tr(),
         leading: NavigationButton.back(),
       ),
       body: SafeArea(
         child: Messenger(
           controller: messengerController,
           child: state.maybeWhen(
-            idle: (personalDataList) => _Content(
-              personalDataList: personalDataList,
+            idle: (emailList) => _Content(
+              emailList: emailList,
               cubit: cubit,
             ),
             empty: () => _Content(
-              personalDataList: null,
+              emailList: null,
               cubit: cubit,
             ),
             loading: () => const Loader(),
@@ -73,15 +73,15 @@ class DataPersonalPage extends HookWidget {
   }
 
   void _cubitListener(
-    DataPersonalPageCubit cubit,
-    DataPersonalPageState state,
+    DataEmailsPageCubit cubit,
+    DataEmailsPageState state,
     BuildContext context,
     AppThemeColors colors,
     AppTypography typography,
     MessengerController controller,
   ) {
     state.maybeMap(
-      dataRemoved: (state) async {
+      emailRemoved: (state) async {
         controller.showError(
           LocaleKeys.yourData_dataRemoved.tr(),
         );
@@ -97,7 +97,7 @@ class DataPersonalPage extends HookWidget {
           colors,
         );
         if (confirmed) {
-          await cubit.deletePersonalData(state.data);
+          await cubit.deleteEmail(state.email);
         }
       },
       connectionError: (state) async {
@@ -111,11 +111,11 @@ class DataPersonalPage extends HookWidget {
 }
 
 class _Content extends StatelessWidget {
-  final List<PersonalData>? personalDataList;
-  final DataPersonalPageCubit cubit;
+  final List<Email>? emailList;
+  final DataEmailsPageCubit cubit;
 
   const _Content({
-    required this.personalDataList,
+    required this.emailList,
     required this.cubit,
   });
 
@@ -128,9 +128,9 @@ class _Content extends StatelessWidget {
         children: [
           const SizedBox(height: AppDimens.m),
           Expanded(
-            child: (personalDataList != null)
-                ? _PersonalDataList(
-                    personalDataList: personalDataList!,
+            child: (emailList != null)
+                ? _EmailList(
+                    emailList: emailList!,
                     cubit: cubit,
                   )
                 : _EmptyListMessage(),
@@ -138,9 +138,7 @@ class _Content extends StatelessWidget {
           const SizedBox(height: AppDimens.l),
           CustomRectangularButton.filled(
             text: LocaleKeys.yourData_addNewOption.tr(),
-            onPressed: () => AutoRouter.of(context).push(DataPersonalFormPageRoute(
-              refreshListOnPagePop: cubit.getPersonalDataList,
-            )),
+            onPressed: () {},
           ),
           const SizedBox(height: AppDimens.xl),
         ],
@@ -158,7 +156,7 @@ class _EmptyListMessage extends HookWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
       child: Text(
-        LocaleKeys.yourData_personalDataEmptyList.tr(),
+        LocaleKeys.yourData_emailEmptyList.tr(),
         style: typography.body1.copyWith(color: colors.secondaryText),
         textAlign: TextAlign.center,
       ),
@@ -166,12 +164,12 @@ class _EmptyListMessage extends HookWidget {
   }
 }
 
-class _PersonalDataList extends HookWidget {
-  final List<PersonalData> personalDataList;
-  final DataPersonalPageCubit cubit;
+class _EmailList extends HookWidget {
+  final List<Email> emailList;
+  final DataEmailsPageCubit cubit;
 
-  const _PersonalDataList({
-    required this.personalDataList,
+  const _EmailList({
+    required this.emailList,
     required this.cubit,
   });
 
@@ -183,19 +181,19 @@ class _PersonalDataList extends HookWidget {
     return ListView.builder(
       itemBuilder: (context, index) {
         return UserDataTile(
-          title: personalDataList[index].toString(),
-          isDefault: personalDataList[index].isDefault,
-          onMoreTapped: () => showMore<PersonalData>(
+          title: emailList[index].toString(),
+          isDefault: emailList[index].isDefault,
+          onMoreTapped: () => showMore<Email>(
             context,
-            personalDataList[index],
+            emailList[index],
             typography,
             colors,
-            cubit.ensureDataRemoval,
-            cubit.setDefaultPersonalData,
+            cubit.ensureRemoval,
+            cubit.setEmailAsDefault,
           ),
         );
       },
-      itemCount: personalDataList.length,
+      itemCount: emailList.length,
     );
   }
 }

@@ -224,8 +224,9 @@
     "emails": "Emails",
     "addresses": "Addresses",
     "invoiceData": "Invoice data",
-    "personalDataAddButton": "Add new",
+    "addNewOption": "Add new",
     "personalDataEmptyList": "You have no personal data added to your account.",
+    "emailEmptyList": "You have no emails added to your account.",
     "removeDialogTitle": "Remove data",
     "removeDialogDescription": "Are you sure you want to remove this data?",
     "removeOption": "Remove",
@@ -237,9 +238,13 @@
     "exitDialogTitle": "Exit adding",
     "exitDialogDescription": "Are you sure you want to leave without saving?",
     "addPersonalDataTitle": "Add personal data",
+    "addEmailTitle": "Add new email",
     "personalDataForm": {
       "nameHint": "*Name",
       "surnameHint": "*Surname"
+    },
+    "emailForm": {
+      "emailHint": "*Email"
     }
   },
   "language": {

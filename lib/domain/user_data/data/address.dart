@@ -1,4 +1,6 @@
-class Address {
+import 'package:logpass_me/domain/user_data/default_data.dart';
+
+class Address implements DefaultData {
   final String name;
   final String street;
   final String buildingNumber;
@@ -6,6 +8,8 @@ class Address {
   final String postCode;
   final String city;
   final String country;
+
+  @override
   final bool isDefault;
 
   Address({
