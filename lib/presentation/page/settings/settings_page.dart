@@ -58,7 +58,11 @@ class SettingsPage extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                NavigationRow.withIcon(AppIcon.device, LocaleKeys.settings_devices.tr(), () {}),
+                NavigationRow.withIcon(
+                  AppIcon.device,
+                  LocaleKeys.settings_devices.tr(),
+                  () => AutoRouter.of(context).push(const DeviceListPageRoute()),
+                ),
                 Separator.light(),
                 NavigationRow.withIcon(
                   AppIcon.security,
