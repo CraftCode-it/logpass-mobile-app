@@ -138,7 +138,9 @@ class _Content extends StatelessWidget {
           const SizedBox(height: AppDimens.l),
           CustomRectangularButton.filled(
             text: LocaleKeys.yourData_addNewOption.tr(),
-            onPressed: () {},
+            onPressed: () => AutoRouter.of(context).push(DataEmailsFormPageRoute(
+              refreshListOnPagePop: cubit.getEmailList,
+            )),
           ),
           const SizedBox(height: AppDimens.xl),
         ],
