@@ -33,7 +33,7 @@ Future<bool> showTwoOptionsDialog(
                 child: Container(
                   height: _dividerHeight,
                   width: _dividerWidth,
-                  color: colors.dividerLight,
+                  color: colors.dividerDark,
                 ),
               ),
               const SizedBox(height: AppDimens.l),

@@ -235,7 +235,16 @@
     "removeOption": "Remove",
     "setDefaultOption": "Set as default",
     "goBackOption": "Go back",
-    "dataRemoved": "Data removed"
+    "dataRemoved": "Data removed",
+    "saveOption": "Save",
+    "leaveOption": "Leave",
+    "exitDialogTitle": "Exit adding",
+    "exitDialogDescription": "Are you sure you want to leave without saving?",
+    "addPersonalDataTitle": "Add personal data",
+    "personalDataForm": {
+      "nameHint": "*Name",
+      "surnameHint": "*Surname"
+    }
   },
   "language": {
     "title": "Wybierz twój język",

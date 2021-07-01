@@ -27,10 +27,12 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
   ) : super(DataPersonalPageState.loading());
 
   Future<void> init() async {
-    await _getPersonalDataList();
+    await getPersonalDataList();
   }
 
-  Future<void> _getPersonalDataList() async {
+  Future<void> getPersonalDataList() async {
+    emit(DataPersonalPageState.loading());
+
     try {
       final result = await _getPersonalDataListUseCase();
       _personalDataList = result;
@@ -55,7 +57,7 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
     try {
       await _deletePersonalDataUseCase(data);
 
-      await _getPersonalDataList();
+      await getPersonalDataList();
       emit(DataPersonalPageState.dataRemoved());
     } on GeneralConnectionError catch (e) {
       emit(DataPersonalPageState.connectionError(e));
@@ -69,7 +71,7 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
 
     try {
       await _setDefaultPersonalDataUseCase(data);
-      await _getPersonalDataList();
+      await getPersonalDataList();
     } on GeneralConnectionError catch (e) {
       emit(DataPersonalPageState.connectionError(e));
     } catch (e, s) {

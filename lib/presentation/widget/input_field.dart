@@ -6,7 +6,7 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 
 class InputField extends HookWidget {
   final String label;
-  final String hint;
+  final String? hint;
   final String? error;
   final bool enabled;
   final TextEditingController? controller;
@@ -17,9 +17,9 @@ class InputField extends HookWidget {
 
   const InputField({
     required this.label,
-    required this.hint,
     required this.onChanged,
     this.enabled = true,
+    this.hint,
     this.error,
     this.controller,
     this.inputType,
