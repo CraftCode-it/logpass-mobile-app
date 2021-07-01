@@ -227,6 +227,7 @@
     "addNewOption": "Add new",
     "personalDataEmptyList": "You have no personal data added to your account.",
     "emailEmptyList": "You have no emails added to your account.",
+    "addressesEmptyList": "You have no addresses added to your accounts.",
     "removeDialogTitle": "Remove data",
     "removeDialogDescription": "Are you sure you want to remove this data?",
     "removeOption": "Remove",
