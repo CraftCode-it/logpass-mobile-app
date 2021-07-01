@@ -44,16 +44,23 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
     }
   }
 
+  void ensureDataRemoval(PersonalData data) {
+    emit(DataPersonalPageState.removalConfirmationNeeded(data));
+    _emitIdleOrEmptyState();
+  }
+
   Future<void> deletePersonalData(PersonalData data) async {
     emit(DataPersonalPageState.loading());
 
     try {
       await _deletePersonalDataUseCase(data);
+
       await _getPersonalDataList();
+      emit(DataPersonalPageState.dataRemoved());
     } on GeneralConnectionError catch (e) {
       emit(DataPersonalPageState.connectionError(e));
     } catch (e, s) {
-      Fimber.e('Failed to load Personal Data list', ex: e, stacktrace: s);
+      Fimber.e('Failed to delete Personal Data', ex: e, stacktrace: s);
     }
   }
 
@@ -62,14 +69,11 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
 
     try {
       await _setDefaultPersonalDataUseCase(data);
-
-      emit(DataPersonalPageState.dataRemoved());
-
       await _getPersonalDataList();
     } on GeneralConnectionError catch (e) {
       emit(DataPersonalPageState.connectionError(e));
     } catch (e, s) {
-      Fimber.e('Failed to load Personal Data list', ex: e, stacktrace: s);
+      Fimber.e('Failed to set Personal Data as default', ex: e, stacktrace: s);
     }
   }
 

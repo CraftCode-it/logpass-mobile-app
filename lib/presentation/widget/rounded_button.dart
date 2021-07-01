@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+
+const _leadingIconSize = 20.0;
 
 class CustomRectangularButton extends HookWidget {
   final String text;
@@ -13,6 +16,7 @@ class CustomRectangularButton extends HookWidget {
   final bool filled;
   final double? height;
   final TextStyle? textStyle;
+  final String? leadingIconPath;
 
   const CustomRectangularButton._({
     required this.text,
@@ -23,6 +27,7 @@ class CustomRectangularButton extends HookWidget {
     this.textColor,
     this.height,
     this.textStyle,
+    this.leadingIconPath,
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +39,7 @@ class CustomRectangularButton extends HookWidget {
     Color? textColor,
     double? height,
     TextStyle? textStyle,
+    String? leadingIconPath,
   }) {
     return CustomRectangularButton._(
       text: text,
@@ -44,6 +50,7 @@ class CustomRectangularButton extends HookWidget {
       textColor: textColor,
       height: height,
       textStyle: textStyle,
+      leadingIconPath: leadingIconPath,
     );
   }
 
@@ -55,6 +62,7 @@ class CustomRectangularButton extends HookWidget {
     Color? textColor,
     double? height,
     TextStyle? textStyle,
+    String? leadingIconPath,
   }) {
     return CustomRectangularButton._(
       text: text,
@@ -65,6 +73,7 @@ class CustomRectangularButton extends HookWidget {
       textColor: textColor,
       height: height,
       textStyle: textStyle,
+      leadingIconPath: leadingIconPath,
     );
   }
 
@@ -89,12 +98,26 @@ class CustomRectangularButton extends HookWidget {
       onPressed: onPressed,
       color: _getFillColor(colors),
       disabledColor: _getDisabledFillColor(colors),
-      child: Text(
-        text,
-        style: style.copyWith(
-          color: _getTextColor(colors),
-          height: 1.0,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (leadingIconPath != null) ...[
+            SvgPicture.asset(
+              leadingIconPath!,
+              color: _getTextColor(colors),
+              width: _leadingIconSize,
+              height: _leadingIconSize,
+            ),
+            const SizedBox(width: AppDimens.m),
+          ],
+          Text(
+            text,
+            style: style.copyWith(
+              color: _getTextColor(colors),
+            ),
+          ),
+        ],
       ),
     );
   }

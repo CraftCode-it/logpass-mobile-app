@@ -69,3 +69,46 @@ Future<bool> showTwoOptionsDialog(
 
   return result == true;
 }
+
+Future<void> showCustomContentDialog(
+  BuildContext context,
+  List<Widget> widgets,
+  AppThemeColors colors,
+) async {
+  await showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+        color: colors.secondaryBackground,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: AppDimens.m),
+              Center(
+                child: Container(
+                  height: _dividerHeight,
+                  width: _dividerWidth,
+                  color: colors.dividerDark,
+                ),
+              ),
+              const SizedBox(height: AppDimens.l),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return widgets[index];
+                },
+                separatorBuilder: (context, index) => const SizedBox(height: AppDimens.l),
+                itemCount: widgets.length,
+              ),
+              const SizedBox(height: AppDimens.l),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

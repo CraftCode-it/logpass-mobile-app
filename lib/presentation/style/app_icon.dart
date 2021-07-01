@@ -47,4 +47,5 @@ class AppIcon {
   static const invoiceData = 'assets/icon/invoice_data.svg';
   static const star = 'assets/icon/star.svg';
   static const more = 'assets/icon/more.svg';
+  static const bin = 'assets/icon/bin.svg';
 }

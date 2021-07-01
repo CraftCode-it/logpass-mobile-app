@@ -13,7 +13,8 @@ class DataPersonalPageState with _$DataPersonalPageState {
 
   factory DataPersonalPageState.connectionError(GeneralConnectionError error) = _DataPersonalPageStateConnectionError;
 
-  factory DataPersonalPageState.dataRemovalConfirmation() = _DataPersonalPageStateDataRemovalConfirmation;
+  factory DataPersonalPageState.removalConfirmationNeeded(PersonalData data) =
+      _DataPersonalPageStateRemovalConfirmationNeeded;
 
   factory DataPersonalPageState.dataRemoved() = _DataPersonalPageStateDataRemoved;
 }
