@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,7 @@ import 'package:logpass_me/domain/device/device.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page_cubit.dart';
 import 'package:logpass_me/presentation/page/device_list/device_menu.dart';
 import 'package:logpass_me/presentation/page/device_list/device_row.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -35,7 +37,7 @@ class DeviceListPage extends HookWidget {
         title: 'Your devices',
         trailing: IconButton(
           icon: SvgPicture.asset(AppIcon.info),
-          onPressed: () {},
+          onPressed: () => AutoRouter.of(context).push(const TrustLevelPageRoute()),
         ),
       ),
       body: SafeArea(
