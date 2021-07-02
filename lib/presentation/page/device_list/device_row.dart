@@ -7,13 +7,16 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/separator.dart';
 import 'package:logpass_me/presentation/widget/trust_level_indicator.dart';
 
 class DeviceRow extends HookWidget {
   final Device device;
+  final Function() onMorePressed;
 
   const DeviceRow({
     required this.device,
+    required this.onMorePressed,
     Key? key,
   }) : super(key: key);
 
@@ -22,31 +25,36 @@ class DeviceRow extends HookWidget {
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppDimens.l),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _PlatformIcon(deviceType: device.deviceType),
-          const SizedBox(width: AppDimens.m),
-          TrustLevelIndicator(trustLevel: device.trustLevel),
-          const SizedBox(width: AppDimens.m),
-          Expanded(
-            child: Text(
-              device.name,
-              style: typography.body3,
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppDimens.l),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _PlatformIcon(deviceType: device.deviceType),
+              const SizedBox(width: AppDimens.m),
+              TrustLevelIndicator(trustLevel: device.trustLevel),
+              const SizedBox(width: AppDimens.m),
+              Expanded(
+                child: Text(
+                  device.name,
+                  style: typography.body3,
+                ),
+              ),
+              const SizedBox(width: AppDimens.l),
+              IconButton(
+                icon: SvgPicture.asset(
+                  AppIcon.more,
+                  color: colors.buttonFill,
+                ),
+                onPressed: onMorePressed,
+              ),
+            ],
           ),
-          const SizedBox(width: AppDimens.l),
-          IconButton(
-            icon: SvgPicture.asset(
-              AppIcon.more,
-              color: colors.buttonFill,
-            ),
-            onPressed: () {},
-          ),
-        ],
-      ),
+        ),
+        Separator.light(),
+      ],
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/device/device.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page_cubit.dart';
+import 'package:logpass_me/presentation/page/device_list/device_menu.dart';
 import 'package:logpass_me/presentation/page/device_list/device_row.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -13,6 +14,7 @@ import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class DeviceListPage extends HookWidget {
@@ -42,7 +44,10 @@ class DeviceListPage extends HookWidget {
             Expanded(
               child: state.maybeMap(
                 loading: (_) => const Loader(),
-                idle: (state) => _Content(deviceList: state.deviceList),
+                idle: (state) => _Content(
+                  deviceList: state.deviceList,
+                  onMorePressed: () => _showDeviceMenu(context),
+                ),
                 orElse: () => const SizedBox.shrink(),
               ),
             ),
@@ -61,13 +66,43 @@ class DeviceListPage extends HookWidget {
       ),
     );
   }
+
+  Future<void> _showDeviceMenu(BuildContext context) async {
+    final result = await showModalBottomSheet<DeviceMenuItem?>(
+      context: context,
+      builder: (context) => const DeviceMenu(),
+    );
+
+    if (result != null) {
+      switch (result) {
+        case DeviceMenuItem.changeName:
+          // TODO: Handle this case.
+          break;
+        case DeviceMenuItem.remove:
+          await _showRemoveDialog(context);
+          break;
+      }
+    }
+  }
+
+  Future<void> _showRemoveDialog(BuildContext context) async {
+    final shouldRemove = showTwoOptionsDialog(
+      context,
+      'Remove device',
+      'Are you sure you want to remove this device? Lorem ippsum dolor, lorem ipsum - dolor.',
+      'Remove',
+      'Back',
+    );
+  }
 }
 
 class _Content extends HookWidget {
   final List<Device> deviceList;
+  final Function() onMorePressed;
 
   const _Content({
     required this.deviceList,
+    required this.onMorePressed,
     Key? key,
   }) : super(key: key);
 
@@ -76,7 +111,10 @@ class _Content extends HookWidget {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
       itemCount: deviceList.length,
-      itemBuilder: (context, index) => DeviceRow(device: deviceList[index]),
+      itemBuilder: (context, index) => DeviceRow(
+        device: deviceList[index],
+        onMorePressed: onMorePressed,
+      ),
     );
   }
 }

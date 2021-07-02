@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
 
 class Loader extends StatelessWidget {
   final double? size;
@@ -18,6 +19,7 @@ class Loader extends StatelessWidget {
       return Center(
         child: CircularProgressIndicator(
           strokeWidth: width,
+          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.success100),
         ),
       );
     } else {
@@ -27,6 +29,7 @@ class Loader extends StatelessWidget {
           width: size,
           child: CircularProgressIndicator(
             strokeWidth: width,
+            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.success100),
           ),
         ),
       );
