@@ -30,10 +30,15 @@ class ChangeDeviceNamePage extends HookWidget {
     final cubit = useCubit<ChangeDeviceNamePageCubit>();
     final state = useCubitBuilder(cubit);
     final nameController = useTextEditingController();
+    final nameFocus = useFocusNode();
 
     useCubitListener<ChangeDeviceNamePageCubit, ChangeDeviceNamePageState>(cubit, (cubit, state, context) {
       state.maybeMap(
-        initializeName: (state) => nameController.text = state.name,
+        initializeName: (state) {
+          nameController.text = state.name;
+          nameController.selection = TextSelection.fromPosition(TextPosition(offset: currentName.length));
+          nameFocus.requestFocus();
+        },
         orElse: () {},
       );
     });
@@ -59,6 +64,7 @@ class ChangeDeviceNamePage extends HookWidget {
                 label: 'Name',
                 hint: '',
                 onChanged: cubit.updateName,
+                focusNode: nameFocus,
               ),
               const Spacer(),
               _SaveButton(

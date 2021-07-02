@@ -11,7 +11,7 @@ class DeviceListPageState with _$DeviceListPageState {
   factory DeviceListPageState.loading() = _DeviceListPageStateLoading;
 
   @Implements(BuildState)
-  factory DeviceListPageState.idle(List<Device> deviceList) = _DeviceListPageStateIdle;
+  factory DeviceListPageState.idle(List<Device> deviceList, bool modified) = _DeviceListPageStateIdle;
 
   @Implements(BuildState)
   factory DeviceListPageState.loadingError() = _DeviceListPageStateError;

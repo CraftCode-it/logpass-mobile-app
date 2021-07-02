@@ -48,13 +48,21 @@ class DeviceListPage extends HookWidget {
                 loading: (_) => const Loader(),
                 idle: (state) => _Content(
                   deviceList: state.deviceList,
-                  onMorePressed: (device) => _showDeviceMenu(context, device),
+                  onMorePressed: (device) => _showDeviceMenu(
+                    context,
+                    device,
+                    cubit,
+                  ),
                 ),
                 orElse: () => const SizedBox.shrink(),
               ),
             ),
-            const _BottomContent(
-              showSaveButton: true,
+            _BottomContent(
+              onSavePressed: () => cubit.saveChanges(),
+              showSaveButton: state.maybeMap(
+                idle: (state) => state.modified,
+                orElse: () => false,
+              ),
             ),
           ],
         ),
@@ -69,7 +77,7 @@ class DeviceListPage extends HookWidget {
     );
   }
 
-  Future<void> _showDeviceMenu(BuildContext context, Device device) async {
+  Future<void> _showDeviceMenu(BuildContext context, Device device, DeviceListPageCubit cubit) async {
     final result = await showModalBottomSheet<DeviceMenuItem?>(
       context: context,
       builder: (context) => const DeviceMenu(),
@@ -81,25 +89,31 @@ class DeviceListPage extends HookWidget {
           await AutoRouter.of(context).push(
             ChangeDeviceNamePageRoute(
               currentName: device.name,
-              onNameChanged: (newName) {},
+              onNameChanged: (newName) {
+                cubit.changeName(device, newName);
+              },
             ),
           );
           break;
         case DeviceMenuItem.remove:
-          await _showRemoveDialog(context);
+          await _showRemoveDialog(context, device, cubit);
           break;
       }
     }
   }
 
-  Future<void> _showRemoveDialog(BuildContext context) async {
-    final shouldRemove = showTwoOptionsDialog(
+  Future<void> _showRemoveDialog(BuildContext context, Device device, DeviceListPageCubit cubit) async {
+    final shouldRemove = await showTwoOptionsDialog(
       context,
       'Remove device',
       'Are you sure you want to remove this device? Lorem ippsum dolor, lorem ipsum - dolor.',
       'Remove',
       'Back',
     );
+
+    if (shouldRemove) {
+      cubit.remove(device);
+    }
   }
 }
 
@@ -127,9 +141,11 @@ class _Content extends HookWidget {
 }
 
 class _BottomContent extends HookWidget {
+  final Function() onSavePressed;
   final bool showSaveButton;
 
   const _BottomContent({
+    required this.onSavePressed,
     required this.showSaveButton,
     Key? key,
   }) : super(key: key);
@@ -182,7 +198,7 @@ class _BottomContent extends HookWidget {
                 const SizedBox(height: AppDimens.m),
                 CustomRectangularButton.filled(
                   text: 'Save changes',
-                  onPressed: () {},
+                  onPressed: onSavePressed,
                 ),
               ],
             ),

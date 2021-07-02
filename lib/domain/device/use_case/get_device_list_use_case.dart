@@ -7,8 +7,18 @@ class GetDeviceListUseCase {
   Future<List<Device>> call() async => Future.delayed(
         const Duration(seconds: 2),
         () => [
-          Device(name: 'Pixel 4a', trustLevel: 1, deviceType: DeviceType.mobile),
-          Device(name: 'Chrome 10.2.3', trustLevel: 1, deviceType: DeviceType.pc),
+          Device(
+            id: '0000-1234',
+            name: 'Pixel 4a',
+            trustLevel: 1,
+            deviceType: DeviceType.mobile,
+          ),
+          Device(
+            id: '0000-4312',
+            name: 'Chrome 10.2.3',
+            trustLevel: 1,
+            deviceType: DeviceType.pc,
+          ),
         ],
       );
 }
