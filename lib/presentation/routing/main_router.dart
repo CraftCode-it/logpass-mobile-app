@@ -9,6 +9,7 @@ import 'package:logpass_me/presentation/page/authorize/email_selection/email_sel
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/service_rules/service_rules_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
+import 'package:logpass_me/presentation/page/device_list/change_device_name/change_device_name_page.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
@@ -65,6 +66,7 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: QuestionPage),
     AutoRoute(page: DeviceListPage),
     AutoRoute(page: TrustLevelPage),
+    AutoRoute(page: ChangeDeviceNamePage),
   ],
 )
 class $MainRouter {}

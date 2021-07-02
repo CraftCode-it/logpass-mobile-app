@@ -48,7 +48,7 @@ class DeviceListPage extends HookWidget {
                 loading: (_) => const Loader(),
                 idle: (state) => _Content(
                   deviceList: state.deviceList,
-                  onMorePressed: () => _showDeviceMenu(context),
+                  onMorePressed: (device) => _showDeviceMenu(context, device),
                 ),
                 orElse: () => const SizedBox.shrink(),
               ),
@@ -69,7 +69,7 @@ class DeviceListPage extends HookWidget {
     );
   }
 
-  Future<void> _showDeviceMenu(BuildContext context) async {
+  Future<void> _showDeviceMenu(BuildContext context, Device device) async {
     final result = await showModalBottomSheet<DeviceMenuItem?>(
       context: context,
       builder: (context) => const DeviceMenu(),
@@ -78,7 +78,12 @@ class DeviceListPage extends HookWidget {
     if (result != null) {
       switch (result) {
         case DeviceMenuItem.changeName:
-          // TODO: Handle this case.
+          await AutoRouter.of(context).push(
+            ChangeDeviceNamePageRoute(
+              currentName: device.name,
+              onNameChanged: (newName) {},
+            ),
+          );
           break;
         case DeviceMenuItem.remove:
           await _showRemoveDialog(context);
@@ -100,7 +105,7 @@ class DeviceListPage extends HookWidget {
 
 class _Content extends HookWidget {
   final List<Device> deviceList;
-  final Function() onMorePressed;
+  final Function(Device device) onMorePressed;
 
   const _Content({
     required this.deviceList,
@@ -115,7 +120,7 @@ class _Content extends HookWidget {
       itemCount: deviceList.length,
       itemBuilder: (context, index) => DeviceRow(
         device: deviceList[index],
-        onMorePressed: onMorePressed,
+        onMorePressed: () => onMorePressed(deviceList[index]),
       ),
     );
   }
