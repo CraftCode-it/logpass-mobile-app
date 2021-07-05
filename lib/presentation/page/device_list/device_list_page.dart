@@ -19,6 +19,7 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class DeviceListPage extends HookWidget {
@@ -29,6 +30,7 @@ class DeviceListPage extends HookWidget {
     final cubit = useCubit<DeviceListPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
+    final messengerController = useMessengerController();
 
     useEffect(() {
       cubit.initialize();
@@ -47,30 +49,33 @@ class DeviceListPage extends HookWidget {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: state.maybeMap(
-                loading: (_) => const Loader(),
-                idle: (state) => _Content(
-                  deviceList: state.deviceList,
-                  onMorePressed: (device) => _showDeviceMenu(
-                    context,
-                    device,
-                    cubit,
+        child: Messenger(
+          controller: messengerController,
+          child: Column(
+            children: [
+              Expanded(
+                child: state.maybeMap(
+                  loading: (_) => const Loader(),
+                  idle: (state) => _Content(
+                    deviceList: state.deviceList,
+                    onMorePressed: (device) => _showDeviceMenu(
+                      context,
+                      device,
+                      cubit,
+                    ),
                   ),
+                  orElse: () => const SizedBox.shrink(),
                 ),
-                orElse: () => const SizedBox.shrink(),
               ),
-            ),
-            _BottomContent(
-              onSavePressed: () => cubit.saveChanges(),
-              showSaveButton: state.maybeMap(
-                idle: (state) => state.modified,
-                orElse: () => false,
+              _BottomContent(
+                onSavePressed: () => cubit.saveChanges(),
+                showSaveButton: state.maybeMap(
+                  idle: (state) => state.modified,
+                  orElse: () => false,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       onTryAgain: () {
@@ -177,7 +182,7 @@ class _BottomContent extends HookWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: CustomRectangularButton.filled(
             text: LocaleKeys.deviceList_addNewAction.tr(),
-            onPressed: () {},
+            onPressed: () => AutoRouter.of(context).push(const AddNewDeviceCodePageRoute()),
           ),
         ),
         const SizedBox(height: AppDimens.l),

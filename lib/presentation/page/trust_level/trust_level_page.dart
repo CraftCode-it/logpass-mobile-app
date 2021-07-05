@@ -9,6 +9,8 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 
+const _indicatorSize = 40.0;
+
 class TrustLevelPage extends HookWidget {
   const TrustLevelPage({Key? key}) : super(key: key);
 
@@ -68,8 +70,8 @@ class _Level extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 40,
-          height: 40,
+          width: _indicatorSize,
+          height: _indicatorSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(

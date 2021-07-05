@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
+import 'package:logpass_me/presentation/page/add_new_device_code/add_new_device_code_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
 import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/agreement_content_preview/agreement_content_preview_page.dart';
@@ -67,6 +68,7 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: DeviceListPage),
     AutoRoute(page: TrustLevelPage),
     AutoRoute(page: ChangeDeviceNamePage),
+    AutoRoute(page: AddNewDeviceCodePage),
   ],
 )
 class $MainRouter {}
