@@ -17,9 +17,8 @@ class TrustLevelIndicator extends HookWidget {
     final colors = useAppThemeColors();
 
     return Container(
-      width: 24,
-      height: 24,
-      padding: const EdgeInsets.all(1),
+      width: 26,
+      height: 26,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
@@ -30,7 +29,7 @@ class TrustLevelIndicator extends HookWidget {
       child: Center(
         child: Text(
           trustLevel.toString(),
-          style: typography.body1.copyWith(height: 1),
+          style: typography.body1.copyWith(fontSize: 12),
         ),
       ),
     );

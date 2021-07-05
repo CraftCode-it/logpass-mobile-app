@@ -113,9 +113,9 @@ class AppColors {
   static const switchToggleLight = secondary;
   static const switchInactiveTrackLight = primary20;
 
-  static const dividerDarkLight = primary20;
+  static const dividerDarkLight = primary05;
   static const dividerMediumLight = primary10;
-  static const dividerLightLight = primary05;
+  static const dividerLightLight = primary20;
 
   // Dark mode
 
@@ -149,9 +149,9 @@ class AppColors {
   static const switchToggleDark = primary10;
   static const switchInactiveTrackDark = primary80;
 
-  static const dividerDarkDark = primary80;
+  static const dividerDarkDark = primary95;
   static const dividerMediumDark = primary90;
-  static const dividerLightDark = primary95;
+  static const dividerLightDark = primary80;
 }
 
 abstract class AppThemeColors {

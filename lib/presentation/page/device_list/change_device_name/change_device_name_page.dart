@@ -49,7 +49,7 @@ class ChangeDeviceNamePage extends HookWidget {
 
     return CustomScaffold(
       appBar: CustomAppBar.smallTitle(
-        leading: NavigationButton.back(),
+        leading: NavigationButton.close(),
         title: LocaleKeys.changeDeviceName_title.tr(),
       ),
       body: SafeArea(
