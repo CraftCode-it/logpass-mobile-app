@@ -61,8 +61,6 @@ class DataEmailsFormPage extends HookWidget {
                     LocaleKeys.yourData_exitDialogDescription.tr(),
                     LocaleKeys.yourData_leaveOption.tr(),
                     LocaleKeys.yourData_goBackOption.tr(),
-                    typography,
-                    colors,
                   );
                   if (confirmed) {
                     await AutoRouter.of(context).pop();

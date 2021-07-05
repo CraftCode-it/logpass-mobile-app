@@ -43,6 +43,7 @@ class AppColors {
 
   static const primary100 = Color(0xFF191933);
   static const primary97 = Color(0xFF1F1F38);
+  static const primary96 = Color(0xFF28283F);
   static const primary95 = Color(0xFF25253D);
   static const primary90 = Color(0xFF303047);
   static const primary80 = Color(0xFF47475C);
@@ -112,9 +113,9 @@ class AppColors {
   static const switchToggleLight = secondary;
   static const switchInactiveTrackLight = primary20;
 
-  static const dividerDarkLight = primary20;
+  static const dividerDarkLight = primary05;
   static const dividerMediumLight = primary10;
-  static const dividerLightLight = primary05;
+  static const dividerLightLight = primary20;
 
   // Dark mode
 
@@ -148,9 +149,9 @@ class AppColors {
   static const switchToggleDark = primary10;
   static const switchInactiveTrackDark = primary80;
 
-  static const dividerDarkDark = primary80;
+  static const dividerDarkDark = primary95;
   static const dividerMediumDark = primary90;
-  static const dividerLightDark = primary95;
+  static const dividerLightDark = primary80;
 }
 
 abstract class AppThemeColors {
@@ -222,9 +223,13 @@ abstract class AppThemeColors {
 
   Color get darkBackground;
 
+  Color get dialogBackground;
+
   Color get switchToggle;
 
   Color get switchInactiveTrack;
+
+  Color get modalHandle;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -331,10 +336,16 @@ class LightThemeColors implements AppThemeColors {
   Color get darkBackground => AppColors.primary100;
 
   @override
+  Color get dialogBackground => AppColors.secondary;
+
+  @override
   Color get switchToggle => AppColors.switchToggleLight;
 
   @override
   Color get switchInactiveTrack => AppColors.switchInactiveTrackLight;
+
+  @override
+  Color get modalHandle => AppColors.primary20;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -420,7 +431,7 @@ class DarkThemeColors implements AppThemeColors {
   Color get secondaryBackground => AppColors.primary97;
 
   @override
-  Color get bottomBarBackground => AppColors.primary97;
+  Color get bottomBarBackground => AppColors.primary96;
 
   @override
   Color get bottomBarActiveText => AppColors.primary10;
@@ -441,8 +452,14 @@ class DarkThemeColors implements AppThemeColors {
   Color get darkBackground => AppColors.primary97;
 
   @override
+  Color get dialogBackground => AppColors.primary96;
+
+  @override
   Color get switchToggle => AppColors.switchToggleDark;
 
   @override
   Color get switchInactiveTrack => AppColors.switchInactiveTrackDark;
+
+  @override
+  Color get modalHandle => AppColors.primary80;
 }

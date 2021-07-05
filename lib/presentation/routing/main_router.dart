@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
+import 'package:logpass_me/presentation/page/add_new_device_code/add_new_device_code_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
 import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/agreement_content_preview/agreement_content_preview_page.dart';
@@ -15,6 +16,8 @@ import 'package:logpass_me/presentation/page/data_emails_page/data_emails_form/d
 import 'package:logpass_me/presentation/page/data_emails_page/data_emails_page.dart';
 import 'package:logpass_me/presentation/page/data_personal_page/data_personal_form/data_personal_form_page.dart';
 import 'package:logpass_me/presentation/page/data_personal_page/data_personal_page.dart';
+import 'package:logpass_me/presentation/page/device_list/change_device_name/change_device_name_page.dart';
+import 'package:logpass_me/presentation/page/device_list/device_list_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
@@ -35,6 +38,7 @@ import 'package:logpass_me/presentation/page/service_details/service_details_pag
 import 'package:logpass_me/presentation/page/service_details/session_list/historical_session_list_page.dart';
 import 'package:logpass_me/presentation/page/start/start_page.dart';
 import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_conditions_page.dart';
+import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
 
 @AdaptiveAutoRouter(
   routes: [
@@ -73,6 +77,10 @@ import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_cond
     AutoRoute(page: DataEmailsFormPage),
     AutoRoute(page: DataAddressesPage),
     AutoRoute(page: DataAddressesFormPage),
+    AutoRoute(page: DeviceListPage),
+    AutoRoute(page: TrustLevelPage),
+    AutoRoute(page: ChangeDeviceNamePage),
+    AutoRoute(page: AddNewDeviceCodePage),
   ],
 )
 class $MainRouter {}

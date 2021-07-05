@@ -36,7 +36,6 @@ class AuthorizePage extends HookWidget {
     final cubit = useCubit<AuthorizePageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final messengerController = useMessengerController();
 
     useCubitListener<AuthorizePageCubit, AuthorizePageState>(
@@ -45,8 +44,6 @@ class AuthorizePage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
         messengerController,
       ),
     );
@@ -89,8 +86,6 @@ class AuthorizePage extends HookWidget {
     AuthorizePageCubit cubit,
     AuthorizePageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
     MessengerController controller,
   ) {
     state.maybeMap(
@@ -109,8 +104,6 @@ class AuthorizePage extends HookWidget {
           LocaleKeys.authorize_biometricCheckDialogContent.tr(),
           LocaleKeys.authorize_biometricCheckDialogTopAction.tr(),
           LocaleKeys.authorize_biometricCheckDialogBottomAction.tr(),
-          typography,
-          colors,
         );
         if (allowed) {
           await cubit.approveAuthorizeAttemptWithBiometric();

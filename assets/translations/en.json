@@ -12,7 +12,9 @@
     "continue": "Continue",
     "deactivate": "Deactivate",
     "back": "Back",
-    "save": "Save"
+    "save": "Save",
+    "remove": "Remove",
+    "copied": "Copied"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
@@ -289,5 +291,39 @@
     "questionThreeTitle": "What is Logpass?",
     "questionThreeDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "appVersion": "Currently you are using: "
+  },
+  "trustLevel": {
+    "title": "Trust levels",
+    "header": "What is device trust level?",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "level": "Level {}",
+    "levelDescription": {
+      "1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "3": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    }
+  },
+  "deviceList": {
+    "title": "Your devices",
+    "addNewAction": "Add new",
+    "saveChangesInfo": "Remember to save changes",
+    "saveChanges": "Save changes",
+    "changeNameAction": "Change name",
+    "removeDeviceTitle": "Remove device",
+    "removeDeviceInfo": "Are you sure you want to remove this device?"
+  },
+  "changeDeviceName": {
+    "title": "Change device name",
+    "name": "Name"
+  },
+  "addNewDeviceCode": {
+    "title": "Add new device",
+    "content": "If you want to add another device to your account do the following;",
+    "steps": {
+      "1": "Open Logpass application on new device",
+      "2": "After open, click Add new device ",
+      "3": "Enter the code presented:"
+    },
+    "copy": "click on the code to copy"
   }
 }

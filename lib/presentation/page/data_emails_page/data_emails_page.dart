@@ -93,8 +93,6 @@ class DataEmailsPage extends HookWidget {
           LocaleKeys.yourData_removeDialogDescription.tr(),
           LocaleKeys.yourData_removeOption.tr(),
           LocaleKeys.yourData_goBackOption.tr(),
-          typography,
-          colors,
         );
         if (confirmed) {
           await cubit.deleteEmail(state.email);
