@@ -17,8 +17,8 @@ class DataPersonalFormPageCubit extends Cubit<DataPersonalFormPageState> {
   String _name = '';
   String _surname = '';
 
-  bool get canSave => _name.isNotEmpty && _surname.isNotEmpty;
-  bool get areSomeFieldsFilled => _name.isNotEmpty || _surname.isNotEmpty;
+  bool get _canSave => _name.isNotEmpty && _surname.isNotEmpty;
+  bool get _areSomeFieldsFilled => _name.isNotEmpty || _surname.isNotEmpty;
 
   DataPersonalFormPageCubit(
     this._addPersonalDataUseCase,
@@ -55,6 +55,6 @@ class DataPersonalFormPageCubit extends Cubit<DataPersonalFormPageState> {
   }
 
   void _emitIdleState() {
-    emit(DataPersonalFormPageState.idle(canSave, areSomeFieldsFilled));
+    emit(DataPersonalFormPageState.idle(_canSave, _areSomeFieldsFilled));
   }
 }

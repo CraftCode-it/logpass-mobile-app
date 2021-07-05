@@ -135,11 +135,13 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_personalDataForm_nameHint.tr(),
             onChanged: cubit.nameChanged,
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_personalDataForm_surnameHint.tr(),
             onChanged: cubit.surnameChanged,
+            textInputAction: TextInputAction.done,
           ),
           const Spacer(),
           CustomRectangularButton.filled(

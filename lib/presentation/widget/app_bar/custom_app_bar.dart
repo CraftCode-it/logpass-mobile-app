@@ -18,6 +18,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
   final double? leadingWidth;
   final Color? predefinedBackground;
   final bool isError;
+  final bool hasElevation;
 
   CustomAppBar({
     this.title = '',
@@ -28,12 +29,24 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     this.leadingWidth,
     this.predefinedBackground,
     this.isError = false,
-  }) : preferredSize = Size.fromHeight(isBigTitle ? kToolbarHeight + AppDimens.m : kToolbarHeight);
+    this.hasElevation = false,
+  }) : preferredSize = Size.fromHeight(_calculateAppBarHeight(isBigTitle, hasElevation));
+
+  static double _calculateAppBarHeight(bool isBigTitle, bool hasElevation) {
+    if (isBigTitle) {
+      return hasElevation
+          ? kToolbarHeight + AppDimens.m + AppDimens.appBarElevationHeight
+          : kToolbarHeight + AppDimens.m;
+    } else {
+      return hasElevation ? kToolbarHeight + AppDimens.appBarElevationHeight : kToolbarHeight;
+    }
+  }
 
   factory CustomAppBar.smallLogo({
     required Color logoColor,
     Widget? trailing,
     bool isError = false,
+    bool hasElevation = false,
   }) =>
       CustomAppBar(
         leadingElement: Padding(
@@ -47,6 +60,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         leadingWidth: AppDimens.appBarLogoWidth,
         rightElements: trailing != null ? [trailing] : [],
         isError: isError,
+        hasElevation: hasElevation,
       );
 
   factory CustomAppBar.smallTitle({
@@ -54,18 +68,21 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     Widget? leading,
     Widget? trailing,
     bool isError = false,
+    bool hasElevation = false,
   }) =>
       CustomAppBar(
         title: title ?? '',
         rightElements: trailing != null ? [trailing] : [],
         leadingElement: leading,
         isError: isError,
+        hasElevation: hasElevation,
       );
 
   factory CustomAppBar.bigTitle({
     required String title,
     Widget? trailing,
     bool isError = false,
+    bool hasElevation = false,
   }) =>
       CustomAppBar(
         title: title,
@@ -73,15 +90,18 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         isBigTitle: true,
         centerTitle: false,
         isError: isError,
+        hasElevation: hasElevation,
       );
 
   factory CustomAppBar.smallTitleOnly({
     required String title,
     bool isError = false,
+    bool hasElevation = false,
   }) =>
       CustomAppBar(
         title: title,
         isError: isError,
+        hasElevation: hasElevation,
       );
 
   @override
@@ -91,21 +111,30 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
 
     final foregroundColor = isError ? colors.textSpecial : colors.text;
 
-    return AppBar(
-      centerTitle: centerTitle,
-      backgroundColor: isError ? AppColors.error100 : (predefinedBackground ?? colors.background),
-      title: Padding(
-        padding: EdgeInsets.only(left: isBigTitle ? AppDimens.s : AppDimens.zero),
-        child: Text(
-          title,
-          style: (isBigTitle ? typography.h4 : typography.h8).copyWith(color: foregroundColor),
+    return Column(
+      children: [
+        AppBar(
+          centerTitle: centerTitle,
+          backgroundColor: isError ? AppColors.error100 : (predefinedBackground ?? colors.background),
+          title: Padding(
+            padding: EdgeInsets.only(left: isBigTitle ? AppDimens.s : AppDimens.zero),
+            child: Text(
+              title,
+              style: (isBigTitle ? typography.h4 : typography.h8).copyWith(color: foregroundColor),
+            ),
+          ),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          leading: leadingElement,
+          leadingWidth: leadingWidth,
+          actions: rightElements,
         ),
-      ),
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      leading: leadingElement,
-      leadingWidth: leadingWidth,
-      actions: rightElements,
+        if (hasElevation)
+          Container(
+            color: colors.inputBorder,
+            height: AppDimens.appBarElevationHeight,
+          ),
+      ],
     );
   }
 
