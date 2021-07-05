@@ -3,6 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
+const _indicatorSize = 26.0;
+const _borderWidth = 1.0;
+const _customFontSize = 12.0;
+
 class TrustLevelIndicator extends HookWidget {
   final int trustLevel;
 
@@ -17,19 +21,19 @@ class TrustLevelIndicator extends HookWidget {
     final colors = useAppThemeColors();
 
     return Container(
-      width: 26,
-      height: 26,
+      width: _indicatorSize,
+      height: _indicatorSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          width: 1.0,
+          width: _borderWidth,
           color: colors.buttonFill,
         ),
       ),
       child: Center(
         child: Text(
           trustLevel.toString(),
-          style: typography.body1.copyWith(fontSize: 12),
+          style: typography.body1.copyWith(fontSize: _customFontSize),
         ),
       ),
     );
