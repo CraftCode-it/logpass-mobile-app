@@ -35,7 +35,6 @@ class DataAddressesFormPage extends HookWidget {
     final state = useCubitBuilder(cubit);
 
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final messengerController = useMessengerController();
     final scrollController = useScrollController();
     final elevationState = useState(false);
@@ -46,8 +45,6 @@ class DataAddressesFormPage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
         messengerController,
       ),
     );
@@ -115,8 +112,6 @@ class DataAddressesFormPage extends HookWidget {
     DataAddressesFormPageCubit cubit,
     DataAddressesFormPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
     MessengerController controller,
   ) {
     state.maybeMap(
@@ -149,63 +144,61 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-      child: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: AppDimens.m),
-            InputField(
-              label: LocaleKeys.yourData_addressForm_nameHint.tr(),
-              onChanged: cubit.nameChanged,
-              textInputAction: TextInputAction.next,
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: AppDimens.m),
+          InputField(
+            label: LocaleKeys.yourData_addressForm_nameHint.tr(),
+            onChanged: cubit.nameChanged,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: AppDimens.l),
+          InputField(
+            label: LocaleKeys.yourData_addressForm_streetHint.tr(),
+            onChanged: cubit.streetChanged,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: AppDimens.l),
+          InputField(
+            label: LocaleKeys.yourData_addressForm_buildingHint.tr(),
+            onChanged: cubit.buildingNumberChanged,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: AppDimens.l),
+          InputField(
+            label: LocaleKeys.yourData_addressForm_apartmentHint.tr(),
+            onChanged: cubit.apartmentNumberChanged,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: AppDimens.l),
+          InputField(
+            label: LocaleKeys.yourData_addressForm_postCodeHint.tr(),
+            onChanged: cubit.postCodeChanged,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: AppDimens.l),
+          InputField(
+            label: LocaleKeys.yourData_addressForm_cityHint.tr(),
+            onChanged: cubit.cityChanged,
+            textInputAction: TextInputAction.done,
+          ),
+          const SizedBox(height: AppDimens.l),
+          CountryCodeWidePicker(
+            onCountryCodeSelected: (code) => cubit.countyChanged(code.countryName),
+          ),
+          const SizedBox(height: AppDimens.xxl),
+          if (!keyboardVisible) ...[
+            CustomRectangularButton.filled(
+              text: LocaleKeys.yourData_saveOption.tr(),
+              onPressed: canSave ? cubit.saveAddress : null,
             ),
-            const SizedBox(height: AppDimens.l),
-            InputField(
-              label: LocaleKeys.yourData_addressForm_streetHint.tr(),
-              onChanged: cubit.streetChanged,
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: AppDimens.l),
-            InputField(
-              label: LocaleKeys.yourData_addressForm_buildingHint.tr(),
-              onChanged: cubit.buildingNumberChanged,
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: AppDimens.l),
-            InputField(
-              label: LocaleKeys.yourData_addressForm_apartmentHint.tr(),
-              onChanged: cubit.apartmentNumberChanged,
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: AppDimens.l),
-            InputField(
-              label: LocaleKeys.yourData_addressForm_postCodeHint.tr(),
-              onChanged: cubit.postCodeChanged,
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: AppDimens.l),
-            InputField(
-              label: LocaleKeys.yourData_addressForm_cityHint.tr(),
-              onChanged: cubit.cityChanged,
-              textInputAction: TextInputAction.done,
-            ),
-            const SizedBox(height: AppDimens.l),
-            CountryCodeWidePicker(
-              onCountryCodeSelected: (code) => cubit.countyChanged(code.countryName),
-            ),
-            const SizedBox(height: AppDimens.xxl),
-            if (!keyboardVisible) ...[
-              CustomRectangularButton.filled(
-                text: LocaleKeys.yourData_saveOption.tr(),
-                onPressed: canSave ? cubit.saveAddress : null,
-              ),
-              const SizedBox(height: AppDimens.xl),
-            ],
+            const SizedBox(height: AppDimens.xl),
           ],
-        ),
+        ],
       ),
     );
   }

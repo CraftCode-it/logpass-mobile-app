@@ -18,7 +18,7 @@ class DataAddressesPageCubit extends Cubit<DataAddressesPageState> {
   final SetDefaultAddressUseCase _setDefaultAddressUseCase;
   final DeleteAddressUseCase _deleteAddressUseCase;
 
-  List<Address>? _addressList;
+  List<Address> _addressList = [];
 
   DataAddressesPageCubit(
     this._getUserAddressesUseCase,
@@ -80,11 +80,6 @@ class DataAddressesPageCubit extends Cubit<DataAddressesPageState> {
   }
 
   void _emitIdleOrEmptyState() {
-    final addressList = _addressList;
-    if (addressList != null) {
-      addressList.isNotEmpty ? emit(DataAddressesPageState.idle(addressList)) : emit(DataAddressesPageState.empty());
-    } else {
-      emit(DataAddressesPageState.empty());
-    }
+    _addressList.isNotEmpty ? emit(DataAddressesPageState.idle(_addressList)) : emit(DataAddressesPageState.empty());
   }
 }

@@ -34,11 +34,6 @@ class DataPersonalFormPageCubit extends Cubit<DataPersonalFormPageState> {
     _emitIdleState();
   }
 
-  PersonalData _createPersonalData() => PersonalData(
-        name: _name,
-        surname: _surname,
-      );
-
   Future<void> savePersonalData() async {
     emit(const DataPersonalFormPageState.loading());
 
@@ -53,6 +48,11 @@ class DataPersonalFormPageCubit extends Cubit<DataPersonalFormPageState> {
       Fimber.e('Failed to save Personal Data', ex: e, stacktrace: s);
     }
   }
+
+  PersonalData _createPersonalData() => PersonalData(
+        name: _name,
+        surname: _surname,
+      );
 
   void _emitIdleState() {
     emit(DataPersonalFormPageState.idle(_canSave, _areSomeFieldsFilled));

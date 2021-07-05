@@ -27,7 +27,6 @@ class DataAddressesPage extends HookWidget {
     final state = useCubitBuilder(cubit);
 
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final messengerController = useMessengerController();
 
     useCubitListener<DataAddressesPageCubit, DataAddressesPageState>(
@@ -36,8 +35,6 @@ class DataAddressesPage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
         messengerController,
       ),
     );
@@ -76,8 +73,6 @@ class DataAddressesPage extends HookWidget {
     DataAddressesPageCubit cubit,
     DataAddressesPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
     MessengerController controller,
   ) {
     state.maybeMap(

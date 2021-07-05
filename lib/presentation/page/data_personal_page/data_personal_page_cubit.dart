@@ -18,7 +18,7 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
   final SetDefaultPersonalDataUseCase _setDefaultPersonalDataUseCase;
   final DeletePersonalDataUseCase _deletePersonalDataUseCase;
 
-  List<PersonalData>? _personalDataList;
+  List<PersonalData> _personalDataList = [];
 
   DataPersonalPageCubit(
     this._getPersonalDataListUseCase,
@@ -80,13 +80,8 @@ class DataPersonalPageCubit extends Cubit<DataPersonalPageState> {
   }
 
   void _emitIdleOrEmptyState() {
-    final personalDataList = _personalDataList;
-    if (personalDataList != null) {
-      personalDataList.isNotEmpty
-          ? emit(DataPersonalPageState.idle(personalDataList))
-          : emit(DataPersonalPageState.empty());
-    } else {
-      emit(DataPersonalPageState.empty());
-    }
+    _personalDataList.isNotEmpty
+        ? emit(DataPersonalPageState.idle(_personalDataList))
+        : emit(DataPersonalPageState.empty());
   }
 }

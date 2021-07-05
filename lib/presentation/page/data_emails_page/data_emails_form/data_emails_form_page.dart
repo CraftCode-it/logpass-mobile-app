@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/page/data_emails_page/data_emails_form/data_emails_form_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
@@ -31,7 +30,6 @@ class DataEmailsFormPage extends HookWidget {
     final state = useCubitBuilder(cubit);
 
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final messengerController = useMessengerController();
 
     useCubitListener<DataEmailsFormPageCubit, DataEmailsFormPageState>(
@@ -40,8 +38,6 @@ class DataEmailsFormPage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
         messengerController,
       ),
     );
@@ -94,8 +90,6 @@ class DataEmailsFormPage extends HookWidget {
     DataEmailsFormPageCubit cubit,
     DataEmailsFormPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
     MessengerController controller,
   ) {
     state.maybeMap(

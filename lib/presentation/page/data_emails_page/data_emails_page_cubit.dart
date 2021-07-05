@@ -18,7 +18,7 @@ class DataEmailsPageCubit extends Cubit<DataEmailsPageState> {
   final SetDefaultEmailUseCase _setDefaultEmailUseCase;
   final DeleteEmailUseCase _deleteEmailUseCase;
 
-  List<Email>? _emailList;
+  List<Email> _emailList = [];
 
   DataEmailsPageCubit(
     this._getUserEmailsUseCase,
@@ -80,11 +80,6 @@ class DataEmailsPageCubit extends Cubit<DataEmailsPageState> {
   }
 
   void _emitIdleOrEmptyState() {
-    final emailList = _emailList;
-    if (emailList != null) {
-      emailList.isNotEmpty ? emit(DataEmailsPageState.idle(emailList)) : emit(DataEmailsPageState.empty());
-    } else {
-      emit(DataEmailsPageState.empty());
-    }
+    _emailList.isNotEmpty ? emit(DataEmailsPageState.idle(_emailList)) : emit(DataEmailsPageState.empty());
   }
 }

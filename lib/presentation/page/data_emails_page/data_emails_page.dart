@@ -27,7 +27,6 @@ class DataEmailsPage extends HookWidget {
     final state = useCubitBuilder(cubit);
 
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final messengerController = useMessengerController();
 
     useCubitListener<DataEmailsPageCubit, DataEmailsPageState>(
@@ -36,8 +35,6 @@ class DataEmailsPage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
         messengerController,
       ),
     );
@@ -76,8 +73,6 @@ class DataEmailsPage extends HookWidget {
     DataEmailsPageCubit cubit,
     DataEmailsPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
     MessengerController controller,
   ) {
     state.maybeMap(

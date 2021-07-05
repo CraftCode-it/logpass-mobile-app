@@ -21,8 +21,6 @@ class DataEmailsFormPageCubit extends Cubit<DataEmailsFormPageState> {
 
   DataEmailsFormPageCubit(this._addEmailUseCase) : super(const DataEmailsFormPageState.idle(false, false));
 
-  Email _createEmail() => Email(_email);
-
   Future<void> saveEmail() async {
     emit(const DataEmailsFormPageState.loading());
 
@@ -42,6 +40,8 @@ class DataEmailsFormPageCubit extends Cubit<DataEmailsFormPageState> {
     _email = value.trim();
     _emitIdleState();
   }
+
+  Email _createEmail() => Email(_email);
 
   void _emitIdleState() {
     emit(DataEmailsFormPageState.idle(canSave, _email.isNotEmpty));
