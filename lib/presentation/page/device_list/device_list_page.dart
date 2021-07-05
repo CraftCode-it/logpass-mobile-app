@@ -177,7 +177,7 @@ class _BottomContent extends HookWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: CustomRectangularButton.filled(
             text: LocaleKeys.deviceList_addNewAction.tr(),
-            onPressed: () {},
+            onPressed: () => AutoRouter.of(context).push(const AddNewDeviceCodePageRoute()),
           ),
         ),
         const SizedBox(height: AppDimens.l),

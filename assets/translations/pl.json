@@ -285,5 +285,15 @@
   "changeDeviceName": {
     "title": "Change device name",
     "name": "Name"
+  },
+  "addNewDeviceCode": {
+    "title": "Add new device",
+    "content": "If you want to add another device to your account do the following;",
+    "steps": {
+      "1": "Open Logpass application on new device",
+      "2": "After open, click Add new device ",
+      "3": "Enter the code presented:"
+    },
+    "copy": "click on the code to copy"
   }
 }
