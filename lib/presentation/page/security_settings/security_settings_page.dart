@@ -28,7 +28,6 @@ class SecuritySettingsPage extends HookWidget {
     final cubit = useCubit<SecuritySettingsPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
 
     useCubitListener<SecuritySettingsPageCubit, SecuritySettingsPageState>(
       cubit,
@@ -36,8 +35,6 @@ class SecuritySettingsPage extends HookWidget {
         cubit,
         state,
         context,
-        colors,
-        typography,
       ),
     );
 
@@ -67,12 +64,10 @@ class SecuritySettingsPage extends HookWidget {
     SecuritySettingsPageCubit cubit,
     SecuritySettingsPageState state,
     BuildContext context,
-    AppThemeColors colors,
-    AppTypography typography,
   ) {
     state.maybeMap(
       setCode: (state) => _setCode(cubit, context, state.type),
-      confirmWithCode: (state) => _confirmWithCode(cubit, context, state.type, colors, typography),
+      confirmWithCode: (state) => _confirmWithCode(cubit, context, state.type),
       orElse: () {},
     );
   }
@@ -89,8 +84,6 @@ class SecuritySettingsPage extends HookWidget {
     SecuritySettingsPageCubit cubit,
     BuildContext context,
     AppSecurityType type,
-    AppThemeColors colors,
-    AppTypography typography,
   ) async {
     if (type == AppSecurityType.none) {
       final deactivate = await showTwoOptionsDialog(
@@ -99,8 +92,6 @@ class SecuritySettingsPage extends HookWidget {
         LocaleKeys.securitySettings_turnOffSecurity_content.tr(),
         LocaleKeys.securitySettings_turnOffSecurity_action.tr(),
         LocaleKeys.common_back.tr(),
-        typography,
-        colors,
       );
       if (!deactivate) {
         cubit.cancelAction();

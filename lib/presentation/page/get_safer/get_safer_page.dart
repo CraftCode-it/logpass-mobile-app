@@ -124,7 +124,7 @@ class _Body extends HookWidget {
             ),
           const SizedBox(height: AppDimens.c),
           TextButton(
-            onPressed: () => _skip(context, colors, typography),
+            onPressed: () => _skip(context),
             child: Text(
               tr(LocaleKeys.getSafer_skipAction),
               style: typography.body3,
@@ -135,15 +135,13 @@ class _Body extends HookWidget {
     );
   }
 
-  Future<void> _skip(BuildContext context, AppThemeColors colors, AppTypography typography) async {
+  Future<void> _skip(BuildContext context) async {
     final shouldSkip = await showTwoOptionsDialog(
       context,
       LocaleKeys.getSafer_skipDialog_title.tr(),
       LocaleKeys.getSafer_skipDialog_content.tr(),
       LocaleKeys.getSafer_skipDialog_action.tr(),
       LocaleKeys.getSafer_skipDialog_backAction.tr(),
-      typography,
-      colors,
     );
     if (shouldSkip) {
       AutoRouter.of(context).popUntilRoot();

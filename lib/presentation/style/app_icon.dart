@@ -15,6 +15,8 @@ class AppIcon {
   static const close = 'assets/icon/close.svg';
   static const history = 'assets/icon/history.svg';
   static const lock = 'assets/icon/lock.svg';
+  static const info = 'assets/icon/info.svg';
+  static const more = 'assets/icon/more.svg';
 
   static const checkboxEmpty = 'assets/icon/checkbox_empty.svg';
   static const checkboxError = 'assets/icon/checkbox_error.svg';
@@ -45,4 +47,8 @@ class AppIcon {
   static const email = 'assets/icon/email.svg';
   static const serviceRules = 'assets/icon/service_rules.svg';
   static const invoiceData = 'assets/icon/invoice_data.svg';
+
+  static const platformMobile = 'assets/icon/mobile.svg';
+  static const platformTablet = 'assets/icon/tablet.svg';
+  static const platformPc = 'assets/icon/pc.svg';
 }

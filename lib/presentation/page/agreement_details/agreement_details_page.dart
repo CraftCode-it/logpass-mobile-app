@@ -8,7 +8,6 @@ import 'package:logpass_me/presentation/page/agreement_details/agreement_details
 import 'package:logpass_me/presentation/page/service_details/session_list/session_date_formatter.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
@@ -113,7 +112,6 @@ class _Content extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final document = this.document;
 
     return Column(
@@ -156,7 +154,7 @@ class _Content extends HookWidget {
                   else if (agreement.isAccepted)
                     CustomRectangularButton.outlined(
                       text: tr(LocaleKeys.agreementDetails_revokeAction),
-                      onPressed: () => _revokeAgreement(context, typography, colors),
+                      onPressed: () => _revokeAgreement(context),
                       fillColor: colors.secondaryBackground,
                     )
                   else
@@ -173,7 +171,7 @@ class _Content extends HookWidget {
     );
   }
 
-  Future<void> _revokeAgreement(BuildContext context, AppTypography typography, AppThemeColors colors) async {
+  Future<void> _revokeAgreement(BuildContext context) async {
     if (agreement.isRequired) {
       final revokeAccepted = await showTwoOptionsDialog(
         context,
@@ -181,8 +179,6 @@ class _Content extends HookWidget {
         LocaleKeys.agreementDetails_revokeAgreementDialogContent,
         LocaleKeys.agreementDetails_revokeAgreementDialogTopAction,
         LocaleKeys.agreementDetails_revokeAgreementDialogBottomAction,
-        typography,
-        colors,
       );
       if (revokeAccepted) {
         await cubit.revokeAgreement();

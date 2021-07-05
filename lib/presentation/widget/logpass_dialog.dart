@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog_base.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-
-const _dividerWidth = 35.0;
-const _dividerHeight = 2.0;
 
 Future<bool> showTwoOptionsDialog(
   BuildContext context,
@@ -14,58 +13,70 @@ Future<bool> showTwoOptionsDialog(
   String content,
   String topAction,
   String bottomAction,
-  AppTypography typography,
-  AppThemeColors colors,
 ) async {
   final result = await showModalBottomSheet(
     context: context,
     builder: (context) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-        color: colors.secondaryBackground,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: AppDimens.m),
-              Center(
-                child: Container(
-                  height: _dividerHeight,
-                  width: _dividerWidth,
-                  color: colors.dividerLight,
-                ),
-              ),
-              const SizedBox(height: AppDimens.l),
-              Text(
-                title,
-                style: typography.h8,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppDimens.m),
-              Text(
-                content,
-                style: typography.body2.copyWith(color: colors.secondaryText),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppDimens.l),
-              CustomRectangularButton.outlined(
-                fillColor: colors.secondaryBackground,
-                text: topAction,
-                onPressed: () => AutoRouter.of(context).pop(true),
-              ),
-              const SizedBox(height: AppDimens.l),
-              CustomRectangularButton.filled(
-                text: bottomAction,
-                onPressed: () => AutoRouter.of(context).pop(false),
-              ),
-              const SizedBox(height: AppDimens.l),
-            ],
-          ),
+      return LogpassDialogBase(
+        child: TwoOptionsDialog(
+          title: title,
+          content: content,
+          topAction: topAction,
+          bottomAction: bottomAction,
         ),
       );
     },
   );
 
   return result == true;
+}
+
+class TwoOptionsDialog extends HookWidget {
+  final String title;
+  final String content;
+  final String topAction;
+  final String bottomAction;
+
+  const TwoOptionsDialog({
+    required this.title,
+    required this.content,
+    required this.topAction,
+    required this.bottomAction,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          title,
+          style: typography.h8,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: AppDimens.m),
+        Text(
+          content,
+          style: typography.body2.copyWith(color: colors.secondaryText),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: AppDimens.l),
+        CustomRectangularButton.outlined(
+          fillColor: colors.dialogBackground,
+          text: topAction,
+          onPressed: () => AutoRouter.of(context).pop(true),
+        ),
+        const SizedBox(height: AppDimens.l),
+        CustomRectangularButton.filled(
+          text: bottomAction,
+          onPressed: () => AutoRouter.of(context).pop(false),
+        ),
+      ],
+    );
+  }
 }
