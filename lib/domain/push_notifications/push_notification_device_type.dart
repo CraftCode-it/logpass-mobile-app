@@ -1,0 +1,1 @@
+enum PushTokenDeviceType { android, ios }

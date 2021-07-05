@@ -5,7 +5,6 @@ import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/interceptor_with_dio.dart';
 import 'package:logpass_me/domain/auth/auth_exception.dart';
-import 'package:logpass_me/domain/auth/forced_logout_service.dart';
 import 'package:logpass_me/domain/auth/logout_service.dart';
 import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/refresh_access_token_use_case.dart';
