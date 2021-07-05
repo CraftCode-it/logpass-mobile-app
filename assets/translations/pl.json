@@ -12,7 +12,8 @@
     "continue": "Continue",
     "deactivate": "Deactivate",
     "back": "Back",
-    "save": "Save"
+    "save": "Save",
+    "remove": "Remove"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
@@ -271,5 +272,18 @@
       "2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       "3": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     }
+  },
+  "deviceList": {
+    "title": "Your devices",
+    "addNewAction": "Add new",
+    "saveChangesInfo": "Remember to save changes",
+    "saveChanges": "Save changes",
+    "changeNameAction": "Change name",
+    "removeDeviceTitle": "Remove device",
+    "removeDeviceInfo": "Are you sure you want to remove this device?"
+  },
+  "changeDeviceName": {
+    "title": "Change device name",
+    "name": "Name"
   }
 }

@@ -50,7 +50,7 @@ class ChangeDeviceNamePage extends HookWidget {
     return CustomScaffold(
       appBar: CustomAppBar.smallTitle(
         leading: NavigationButton.back(),
-        title: 'Change device name',
+        title: LocaleKeys.changeDeviceName_title.tr(),
       ),
       body: SafeArea(
         child: Padding(
@@ -61,7 +61,7 @@ class ChangeDeviceNamePage extends HookWidget {
               const SizedBox(height: AppDimens.m),
               InputField(
                 controller: nameController,
-                label: 'Name',
+                label: LocaleKeys.changeDeviceName_name.tr(),
                 hint: '',
                 onChanged: cubit.updateName,
                 focusNode: nameFocus,

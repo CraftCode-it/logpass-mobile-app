@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/device/device.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page_cubit.dart';
 import 'package:logpass_me/presentation/page/device_list/device_menu.dart';
 import 'package:logpass_me/presentation/page/device_list/device_row.dart';
@@ -26,6 +28,7 @@ class DeviceListPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<DeviceListPageCubit>();
     final state = useCubitBuilder(cubit);
+    final colors = useAppThemeColors();
 
     useEffect(() {
       cubit.initialize();
@@ -34,9 +37,12 @@ class DeviceListPage extends HookWidget {
     return CustomScaffold(
       appBar: CustomAppBar.smallTitle(
         leading: NavigationButton.back(),
-        title: 'Your devices',
+        title: LocaleKeys.deviceList_title.tr(),
         trailing: IconButton(
-          icon: SvgPicture.asset(AppIcon.info),
+          icon: SvgPicture.asset(
+            AppIcon.info,
+            color: colors.buttonFill,
+          ),
           onPressed: () => AutoRouter.of(context).push(const TrustLevelPageRoute()),
         ),
       ),
@@ -105,10 +111,10 @@ class DeviceListPage extends HookWidget {
   Future<void> _showRemoveDialog(BuildContext context, Device device, DeviceListPageCubit cubit) async {
     final shouldRemove = await showTwoOptionsDialog(
       context,
-      'Remove device',
-      'Are you sure you want to remove this device? Lorem ippsum dolor, lorem ipsum - dolor.',
-      'Remove',
-      'Back',
+      LocaleKeys.deviceList_removeDeviceTitle.tr(),
+      LocaleKeys.deviceList_removeDeviceInfo.tr(),
+      LocaleKeys.common_remove.tr(),
+      LocaleKeys.common_back.tr(),
     );
 
     if (shouldRemove) {
@@ -170,7 +176,7 @@ class _BottomContent extends HookWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: CustomRectangularButton.filled(
-            text: 'Add new',
+            text: LocaleKeys.deviceList_addNewAction.tr(),
             onPressed: () {},
           ),
         ),
@@ -191,13 +197,13 @@ class _BottomContent extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Remember to save changes',
+                  LocaleKeys.deviceList_saveChangesInfo.tr(),
                   style: typography.body2.copyWith(color: AppColors.error100),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppDimens.m),
                 CustomRectangularButton.filled(
-                  text: 'Save changes',
+                  text: LocaleKeys.deviceList_saveChanges.tr(),
                   onPressed: onSavePressed,
                 ),
               ],
