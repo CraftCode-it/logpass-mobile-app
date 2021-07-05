@@ -240,12 +240,22 @@
     "exitDialogDescription": "Are you sure you want to leave without saving?",
     "addPersonalDataTitle": "Add personal data",
     "addEmailTitle": "Add new email",
+    "addAddressTitle": "Add new address",
     "personalDataForm": {
       "nameHint": "*Name",
       "surnameHint": "*Surname"
     },
     "emailForm": {
       "emailHint": "*Email"
+    },
+    "addressForm": {
+      "nameHint": "*Name",
+      "streetHint": "*Street",
+      "buildingHint": "*Building number",
+      "apartmentHint": "*Apartment number",
+      "postCodeHint": "*Postcode",
+      "cityHint": "*City",
+      "countryHint": "*Country"
     }
   },
   "language": {

@@ -4,23 +4,26 @@ import 'package:auto_route/auto_route.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:logpass_me/presentation/utils/country_flag.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_cubit.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-const _width = 110.0;
+const _arrowIconSize = 24.0;
 
-class CountryCodePicker extends HookWidget {
+class CountryCodeWidePicker extends HookWidget {
   final Function(CountryCode countryCode) onCountryCodeSelected;
 
-  const CountryCodePicker({
+  const CountryCodeWidePicker({
     required this.onCountryCodeSelected,
     Key? key,
   }) : super(key: key);
@@ -52,37 +55,37 @@ class CountryCodePicker extends HookWidget {
           Stack(
             children: [
               SizedBox(
-                width: _width,
+                width: double.infinity,
                 child: TextField(
                   enabled: false,
                   decoration: InputDecoration(
                     disabledBorder: inputFieldBorder(colors.inputInactiveBorder),
                     hintStyle: typography.h9.copyWith(color: colors.inputHint),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Prefix',
+                    labelText: LocaleKeys.yourData_addressForm_countryHint.tr(),
                   ),
                 ),
               ),
               Positioned.fill(
-                left: AppDimens.s,
-                right: AppDimens.s,
+                left: AppDimens.m,
+                right: AppDimens.m,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: state.maybeMap(
-                          loading: (state) => const Center(child: CircularProgressIndicator()),
-                          selected: (state) => _Selected(countryCode: state.countryCode),
-                          orElse: () {},
-                        ),
+                    state.maybeMap(
+                      loading: (state) => const SizedBox.shrink(),
+                      selected: (state) => Text(
+                        state.countryCode.countryName,
+                        style: typography.h9.copyWith(color: colors.text),
                       ),
+                      orElse: () => const SizedBox.shrink(),
                     ),
-                    Icon(
-                      Icons.keyboard_arrow_down_sharp,
-                      color: colors.buttonOutlined,
+                    SvgPicture.asset(
+                      AppIcon.chevronDown,
+                      color: colors.text,
+                      width: _arrowIconSize,
+                      height: _arrowIconSize,
                     ),
                   ],
                 ),
@@ -102,7 +105,7 @@ class CountryCodePicker extends HookWidget {
             CountryCodePickerPageRoute(
               countryCodeList: state.countryCodeList,
               selectedCountryCode: state.countryCode,
-              includeCountryCodes: true,
+              includeCountryCodes: false,
             ),
           );
 
@@ -122,33 +125,5 @@ String _getSystemLocale() {
   } catch (e, s) {
     Fimber.e('Getting system locale failed', ex: e, stacktrace: s);
     return 'PL';
-  }
-}
-
-class _Selected extends HookWidget {
-  final CountryCode countryCode;
-
-  const _Selected({required this.countryCode, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = useAppTypography();
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.network(
-          countryFlagUrl(countryCode.country, true),
-          width: 24,
-          height: 24,
-        ),
-        const SizedBox(width: AppDimens.xxs),
-        Text(
-          '+${countryCode.code}',
-          style: typography.body1,
-        ),
-      ],
-    );
   }
 }

@@ -107,6 +107,7 @@ class DataAddressesFormPageCubit extends Cubit<DataAddressesFormPageState> {
         postCode: _postCode,
         city: _city,
         country: _country,
+        apartmentNumber: _apartmentNumber,
       );
 
   void _emitIdleState() => emit(DataAddressesFormPageState.idle(_canSave, _areSomeFieldsFilled));

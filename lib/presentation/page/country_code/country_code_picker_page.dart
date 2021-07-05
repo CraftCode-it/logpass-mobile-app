@@ -18,10 +18,12 @@ import 'package:logpass_me/presentation/widget/separator.dart';
 class CountryCodePickerPage extends HookWidget {
   final List<CountryCode> countryCodeList;
   final CountryCode selectedCountryCode;
+  final bool includeCountryCodes;
 
   const CountryCodePickerPage({
     required this.countryCodeList,
     required this.selectedCountryCode,
+    required this.includeCountryCodes,
     Key? key,
   }) : super(key: key);
 
@@ -56,6 +58,7 @@ class CountryCodePickerPage extends HookWidget {
                                 _CountryCodeRow(
                                   countryCode: countryCode,
                                   selected: countryCode == selectedCountryCode,
+                                  codeVisible: includeCountryCodes,
                                   onPressed: () => AutoRouter.of(context).pop(countryCode),
                                 ),
                                 Separator.light(),
@@ -91,11 +94,13 @@ class _CountryCodeRow extends HookWidget {
   final CountryCode countryCode;
   final bool selected;
   final Function() onPressed;
+  final bool codeVisible;
 
   const _CountryCodeRow({
     required this.countryCode,
     required this.selected,
     required this.onPressed,
+    required this.codeVisible,
     Key? key,
   }) : super(key: key);
 
@@ -115,16 +120,18 @@ class _CountryCodeRow extends HookWidget {
               width: 36,
             ),
             const SizedBox(width: AppDimens.m),
-            Expanded(
-              flex: 1,
-              child: Text(
-                '+${countryCode.code}',
-                style: typography.info2.copyWith(color: colors.labelText),
+            if (codeVisible) ...[
+              Expanded(
+                flex: 1,
+                child: Text(
+                  '+${countryCode.code}',
+                  style: typography.info2.copyWith(color: colors.labelText),
+                ),
               ),
-            ),
-            const SizedBox(width: AppDimens.xxl),
+              const SizedBox(width: AppDimens.m),
+            ],
             Expanded(
-              flex: 3,
+              flex: 5,
               child: Text(
                 countryCode.countryName,
                 style: typography.body1,
