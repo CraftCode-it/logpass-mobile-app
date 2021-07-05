@@ -13,7 +13,8 @@
     "deactivate": "Deactivate",
     "back": "Back",
     "save": "Save",
-    "remove": "Remove"
+    "remove": "Remove",
+    "copied": "Copied"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
