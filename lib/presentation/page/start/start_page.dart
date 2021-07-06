@@ -11,7 +11,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:logpass_me/presentation/utils/text_utils.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';

@@ -7,6 +7,7 @@ import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
+import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_actions_repository.dart';
 
@@ -60,8 +61,14 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
     if (_messagesStreamSubscription != null) return;
 
     _messagesStreamSubscription = _pushNotificationsManager.listenForForegroundMessages().listen((message) {
-      final incomingAction = _mapIncomingActionDto(message.data);
-      _dispatchAction(incomingAction);
+      final action = message.maybeMap(
+        authorize: (data) => IncomingAction(ActionType.authorize(), data.body.id),
+        orElse: () => null,
+      );
+
+      if (action == null) return;
+
+      _dispatchAction(action);
     });
   }
 

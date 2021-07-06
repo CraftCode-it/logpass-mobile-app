@@ -7,7 +7,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
@@ -26,7 +25,6 @@ Future<void> runMain(String env) async {
   await EasyLocalization.ensureInitialized();
 
   await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await setupCrashlytics();
 
   await runZonedGuarded<Future<void>>(() async {
@@ -56,11 +54,6 @@ Future<void> runMain(String env) async {
 }
 
 void setupFimber() => Fimber.plantTree(getIt());
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // TODO: to be handled with deep-linking service
-  print('Handling a background message: ${message.messageId}');
-}
 
 Future<void> setupCrashlytics() async {
   if (kDebugMode) {

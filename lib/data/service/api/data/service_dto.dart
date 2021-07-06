@@ -6,7 +6,6 @@ import 'package:logpass_me/data/model/enum/response_type_dto_mapper.dart';
 import 'package:logpass_me/data/model/enum/scope_dto_mapper.dart';
 import 'package:logpass_me/data/service/api/data/service_agreement_dto.dart';
 import 'package:logpass_me/data/service/api/data/service_supported_scopes_dto.dart';
-import 'package:logpass_me/data/service/api/data/service_tokens_dto.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 
 part 'service_dto.g.dart';
