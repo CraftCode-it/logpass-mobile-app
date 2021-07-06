@@ -56,3 +56,12 @@ class Address implements DefaultData {
         isDefault.hashCode;
   }
 }
+
+extension FormatContent on Address {
+  String buildContent() {
+    if (apartmentNumber != null) {
+      return '$street $buildingNumber/$apartmentNumber\n$postCode $city';
+    }
+    return '$street $buildingNumber\n$postCode $city';
+  }
+}

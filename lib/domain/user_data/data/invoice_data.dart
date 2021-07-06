@@ -66,3 +66,14 @@ class InvoiceData implements DefaultData {
         isDefault.hashCode;
   }
 }
+
+extension FormatContent on InvoiceData {
+  String buildContent() {
+    final taxInfo = (taxId != null) ? '\n${LocaleKeys.yourData_invoiceDataForm_taxId.tr(args: [taxId!])}' : '';
+
+    if (apartmentNumber != null) {
+      return '$street $buildingNumber/$apartmentNumber\n$postCode $city $taxInfo';
+    }
+    return '$street $buildingNumber\n$postCode $city $taxInfo';
+  }
+}

@@ -168,17 +168,6 @@ class _InvoiceDataList extends HookWidget {
     required this.cubit,
   });
 
-  String _formatInvoiceDataDetails(InvoiceData invoiceData) {
-    final taxInfo = (invoiceData.taxId != null)
-        ? '\n${LocaleKeys.yourData_invoiceDataForm_taxId.tr(args: [invoiceData.taxId!])}'
-        : '';
-
-    if (invoiceData.apartmentNumber != null) {
-      return '${invoiceData.street} ${invoiceData.buildingNumber}/${invoiceData.apartmentNumber}\n${invoiceData.postCode} ${invoiceData.city} $taxInfo';
-    }
-    return '${invoiceData.street} ${invoiceData.buildingNumber}\n${invoiceData.postCode} ${invoiceData.city} $taxInfo';
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
@@ -189,7 +178,7 @@ class _InvoiceDataList extends HookWidget {
         return UserDataTile(
           title: '${invoiceDataList[index].name} ${invoiceDataList[index].surname}',
           isDefault: invoiceDataList[index].isDefault,
-          content: _formatInvoiceDataDetails(invoiceDataList[index]),
+          content: invoiceDataList[index].buildContent(),
           onMoreTapped: () => showMore<InvoiceData>(
             context,
             invoiceDataList[index],

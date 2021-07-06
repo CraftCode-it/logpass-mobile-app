@@ -61,7 +61,6 @@ Future<void> showMore<T extends DefaultData>(
               ),
               CustomRectangularButton.outlined(
                 text: LocaleKeys.yourData_removeOption.tr(),
-                textColor: colors.textSpecial,
                 fillColor: colors.dialogBackground,
                 onPressed: () {
                   AutoRouter.of(context).pop();

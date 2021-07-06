@@ -168,13 +168,6 @@ class _AddressList extends HookWidget {
     required this.cubit,
   });
 
-  String _formatAddressDetails(Address address) {
-    if (address.apartmentNumber != null) {
-      return '${address.street} ${address.buildingNumber}/${address.apartmentNumber}\n${address.postCode} ${address.city}';
-    }
-    return '${address.street} ${address.buildingNumber}\n${address.postCode} ${address.city}';
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
@@ -185,7 +178,7 @@ class _AddressList extends HookWidget {
         return UserDataTile(
           title: addressList[index].name,
           isDefault: addressList[index].isDefault,
-          content: _formatAddressDetails(addressList[index]),
+          content: addressList[index].buildContent(),
           onMoreTapped: () => showMore<Address>(
             context,
             addressList[index],

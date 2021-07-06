@@ -15,6 +15,7 @@ class GetDefaultInvoiceDataUseCase {
           postCode: '04-242',
           city: 'Warsaw',
           isDefault: true,
+          taxId: '58102591925',
         ),
       );
 }
