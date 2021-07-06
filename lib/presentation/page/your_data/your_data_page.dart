@@ -52,7 +52,11 @@ class YourDataPage extends HookWidget {
                 () => AutoRouter.of(context).push(const DataAddressesPageRoute()),
               ),
               Separator.light(),
-              NavigationRow.withIcon(AppIcon.invoiceData, LocaleKeys.yourData_invoiceData.tr(), () {}),
+              NavigationRow.withIcon(
+                AppIcon.invoiceData,
+                LocaleKeys.yourData_invoiceData.tr(),
+                () => AutoRouter.of(context).push(const DataInvoiceListPageRoute()),
+              ),
               Separator.light(),
             ],
           ),

@@ -8,14 +8,14 @@ class GetInvoiceDataListUseCase {
         const Duration(seconds: 2),
         () => [
           InvoiceData(
-            name: 'John',
-            surname: 'Doe',
-            street: 'Some kind of street',
-            buildingNumber: '127',
-            apartmentNumber: '21',
-            postCode: '51-612',
-            city: 'Cracow',
-          ),
+              name: 'John',
+              surname: 'Doe',
+              street: 'Some kind of street',
+              buildingNumber: '127',
+              apartmentNumber: '21',
+              postCode: '51-612',
+              city: 'Cracow',
+              taxId: '93019405124'),
           InvoiceData(
             name: 'John',
             surname: 'Doe',
@@ -33,6 +33,7 @@ class GetInvoiceDataListUseCase {
             postCode: '04-242',
             city: 'Warsaw',
             isDefault: true,
+            taxId: '58102591925',
           ),
         ],
       );

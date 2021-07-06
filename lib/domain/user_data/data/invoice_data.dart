@@ -1,7 +1,8 @@
 import 'package:logpass_me/domain/user_data/default_data.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class InvoiceData implements DefaultData {
-  // TODO: add translation for tax ID
   final String? taxId;
   final String name;
   final String surname;
@@ -28,10 +29,12 @@ class InvoiceData implements DefaultData {
 
   @override
   String toString() {
+    final taxInfo = (taxId != null) ? '\n${LocaleKeys.yourData_invoiceDataForm_taxId.tr(args: [taxId!])}' : '';
+
     if (apartmentNumber != null) {
-      return '$name $surname\n$street $buildingNumber/$apartmentNumber\n$postCode $city';
+      return '$name $surname\n$street $buildingNumber/$apartmentNumber\n$postCode $city $taxInfo';
     }
-    return '$name $surname\n$street $buildingNumber\n$postCode $city';
+    return '$name $surname\n$street $buildingNumber\n$postCode $city $taxInfo';
   }
 
   @override

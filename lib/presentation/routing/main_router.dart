@@ -14,6 +14,8 @@ import 'package:logpass_me/presentation/page/data_address_page/data_addresses_fo
 import 'package:logpass_me/presentation/page/data_address_page/data_addresses_page.dart';
 import 'package:logpass_me/presentation/page/data_emails_page/data_emails_form/data_emails_form_page.dart';
 import 'package:logpass_me/presentation/page/data_emails_page/data_emails_page.dart';
+import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_form_page/data_invoice_list_form_page.dart';
+import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_page.dart';
 import 'package:logpass_me/presentation/page/data_personal_page/data_personal_form/data_personal_form_page.dart';
 import 'package:logpass_me/presentation/page/data_personal_page/data_personal_page.dart';
 import 'package:logpass_me/presentation/page/device_list/change_device_name/change_device_name_page.dart';
@@ -81,6 +83,8 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: TrustLevelPage),
     AutoRoute(page: ChangeDeviceNamePage),
     AutoRoute(page: AddNewDeviceCodePage),
+    AutoRoute(page: DataInvoiceListPage),
+    AutoRoute(page: DataInvoiceListFormPage),
   ],
 )
 class $MainRouter {}
