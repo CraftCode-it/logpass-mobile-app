@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 @module
 abstract class UtilModule {
@@ -17,4 +18,7 @@ abstract class UtilModule {
 
   @preResolve
   Future<PackageInfo> getPackageInfo() => PackageInfo.fromPlatform();
+
+  @lazySingleton
+  DeviceInfoPlugin getDeviceInfoPlugin() => DeviceInfoPlugin();
 }

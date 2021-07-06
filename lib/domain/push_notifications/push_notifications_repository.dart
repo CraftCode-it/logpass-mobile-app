@@ -13,6 +13,8 @@ abstract class PushNotificationsRepository {
 
   Future<PushNotificationDevice> registerDevice(String deviceName, PushTokenDeviceType deviceType);
 
+  Future<String?> getToken();
+
   Future<void> deactivateDevice(String token);
 
   Future<void> updateDevice(PushNotificationDevice updatedDevice);

@@ -53,6 +53,9 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
       _pushNotificationsManager.listenForForegroundMessages().map(_pushNotificationMessageDTOMapper);
 
   @override
+  Future<String?> getToken() => _pushNotificationsManager.getRegistrationRefreshToken();
+
+  @override
   Future<PushNotificationDevice> registerDevice(String deviceName, PushTokenDeviceType deviceType) async {
     final token = await _pushNotificationsManager.getRegistrationRefreshToken();
     if (token == null) throw Exception();
