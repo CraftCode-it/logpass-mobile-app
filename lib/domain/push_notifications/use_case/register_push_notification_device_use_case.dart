@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/device_info/device_info_repository.dart';
 import 'package:logpass_me/domain/push_notifications/push_notification_device_store.dart';
@@ -11,11 +9,13 @@ class RegisterPushNotificationDeviceUseCase {
   final PushNotificationsRepository _pushNotificationsRepository;
   final PushNotificationDeviceStore _pushNotificationDeviceStore;
   final DeviceInfoRepository _deviceInfoRepository;
+  final PushTokenDeviceTypeFactory _pushTokenDeviceTypeFactory;
 
   RegisterPushNotificationDeviceUseCase(
     this._pushNotificationsRepository,
     this._pushNotificationDeviceStore,
     this._deviceInfoRepository,
+    this._pushTokenDeviceTypeFactory,
   );
 
   Future<void> call() async {
@@ -36,18 +36,8 @@ class RegisterPushNotificationDeviceUseCase {
   Future<void> _registerDevice() async {
     final registeredDevice = await _pushNotificationsRepository.registerDevice(
       await _deviceInfoRepository.getDeviceName(),
-      _getDeviceType(),
+      _pushTokenDeviceTypeFactory.get(),
     );
     await _pushNotificationDeviceStore.save(registeredDevice);
-  }
-
-  PushTokenDeviceType _getDeviceType() {
-    if (Platform.isAndroid) {
-      return PushTokenDeviceType.android;
-    } else if (Platform.isIOS) {
-      return PushTokenDeviceType.ios;
-    } else {
-      throw UnsupportedError('This kind of platform is not supported');
-    }
   }
 }

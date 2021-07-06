@@ -12,4 +12,17 @@ class PushNotificationDevice {
     required this.type,
     required this.isActive,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PushNotificationDevice &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          type == other.type &&
+          isActive == other.isActive;
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ type.hashCode ^ isActive.hashCode;
 }
