@@ -3,6 +3,19 @@ import 'package:json_annotation/json_annotation.dart';
 part 'push_notification_device_dto.g.dart';
 
 @JsonSerializable()
+class PushNotificationDeviceWrapperDTO {
+  final PushNotificationDeviceDTO data;
+
+  PushNotificationDeviceWrapperDTO({
+    required this.data,
+  });
+
+  Map<String, dynamic> toJson() => _$PushNotificationDeviceWrapperDTOToJson(this);
+
+  factory PushNotificationDeviceWrapperDTO.fromJson(Map<String, dynamic> json) => _$PushNotificationDeviceWrapperDTOFromJson(json);
+}
+
+@JsonSerializable()
 class PushNotificationDeviceDTO {
   final String id;
   final String name;

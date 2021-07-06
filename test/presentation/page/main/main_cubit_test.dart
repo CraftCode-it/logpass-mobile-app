@@ -6,6 +6,7 @@ import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
+import 'package:logpass_me/domain/push_notifications/use_case/register_push_notification_device_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
@@ -22,6 +23,7 @@ import 'main_cubit_test.mocks.dart';
     SwitchPreLoginActionHandlerUseCase,
     SubscribeToIncomingActionsFromLinkUseCase,
     GetQueuedIncomingActionUseCase,
+    RegisterPushNotificationDeviceUseCase,
   ],
 )
 void main() {
@@ -31,6 +33,7 @@ void main() {
   late SwitchPreLoginActionHandlerUseCase switchPreLoginActionHandlerUseCase;
   late SubscribeToIncomingActionsFromLinkUseCase subscribeToIncomingActionsFromLinkUseCase;
   late GetQueuedIncomingActionUseCase getQueuedIncomingActionUseCase;
+  late RegisterPushNotificationDeviceUseCase registerPushNotificationDeviceUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
@@ -40,6 +43,7 @@ void main() {
     switchPreLoginActionHandlerUseCase = MockSwitchPreLoginActionHandlerUseCase();
     subscribeToIncomingActionsFromLinkUseCase = MockSubscribeToIncomingActionsFromLinkUseCase();
     getQueuedIncomingActionUseCase = MockGetQueuedIncomingActionUseCase();
+    registerPushNotificationDeviceUseCase = MockRegisterPushNotificationDeviceUseCase();
 
     cubit = MainPageCubit(
       setupWebSocketChannelUseCase,
@@ -48,6 +52,7 @@ void main() {
       switchPreLoginActionHandlerUseCase,
       subscribeToIncomingActionsFromLinkUseCase,
       getQueuedIncomingActionUseCase,
+      registerPushNotificationDeviceUseCase,
     );
   });
 

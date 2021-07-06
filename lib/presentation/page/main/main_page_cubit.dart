@@ -9,6 +9,7 @@ import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
+import 'package:logpass_me/domain/push_notifications/use_case/register_push_notification_device_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -24,6 +25,7 @@ class MainPageCubit extends Cubit<MainPageState> {
   final SwitchPreLoginActionHandlerUseCase _switchPreLoginActionHandlerUseCase;
   final SubscribeToIncomingActionsFromLinkUseCase _subscribeToIncomingActionsFromLinkUseCase;
   final GetQueuedIncomingActionUseCase _getQueuedIncomingActionUseCase;
+  final RegisterPushNotificationDeviceUseCase _registerPushNotificationDeviceUseCase;
 
   StreamSubscription<IncomingAction>? _incomingActionsFromLinkSubscription;
   StreamSubscription<IncomingAction>? _incomingActionsSubscription;
@@ -35,12 +37,15 @@ class MainPageCubit extends Cubit<MainPageState> {
     this._switchPreLoginActionHandlerUseCase,
     this._subscribeToIncomingActionsFromLinkUseCase,
     this._getQueuedIncomingActionUseCase,
+    this._registerPushNotificationDeviceUseCase,
   ) : super(const MainPageState.idle());
 
   Future<void> init() async {
     await _openWebSocketChannelConnection();
     await _initNotificationsServices();
     await _initializeActionHandlers();
+
+    await _registerPushNotificationDeviceUseCase();
   }
 
   Future<void> _initializeActionHandlers() async {

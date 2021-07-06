@@ -15,10 +15,10 @@ abstract class PushNotificationsApiDataSource {
   factory PushNotificationsApiDataSource(LogPassDio dio) = _PushNotificationsApiDataSource;
 
   @POST('/push-notifications/devices/')
-  Future<PushNotificationDeviceDTO> registerDevice(@Body() RegisterPushNotificationDeviceDTO body);
+  Future<PushNotificationDeviceWrapperDTO> registerDevice(@Body() RegisterPushNotificationDeviceDTO body);
 
   @PUT('/push-notifications/devices/{token}/')
-  Future<PushNotificationDeviceDTO> updateDevice(@Path() String token, @Body() UpdatePushNotificationDeviceDTO body);
+  Future<PushNotificationDeviceWrapperDTO> updateDevice(@Path() String token, @Body() UpdatePushNotificationDeviceDTO body);
 
   @DELETE('/push-notifications/devices/{token}/')
   Future<void> unregisterDevice(@Path() String token);

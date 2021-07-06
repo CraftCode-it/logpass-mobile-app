@@ -5,10 +5,13 @@ import 'package:logpass_me/data/networking/error/dio_error_resolver.dart';
 import 'package:logpass_me/data/push_notifications/api/dto/register_push_notification_device_dto.dart';
 import 'package:logpass_me/data/push_notifications/api/dto/update_push_notification_device_dto.dart';
 import 'package:logpass_me/data/push_notifications/api/push_notifications_api_data_source.dart';
+import 'package:logpass_me/data/push_notifications/mapper/push_notification_device_dto_mapper.dart';
 import 'package:logpass_me/data/push_notifications/mapper/push_notification_device_type_dto_mapper.dart';
+import 'package:logpass_me/data/push_notifications/mapper/push_notification_message_dto_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/domain/push_notifications/push_notification_device.dart';
 import 'package:logpass_me/domain/push_notifications/push_notification_device_type.dart';
+import 'package:logpass_me/domain/push_notifications/push_notification_message.dart';
 import 'package:logpass_me/domain/push_notifications/push_notifications_repository.dart';
 
 @LazySingleton(as: PushNotificationsRepository)
@@ -16,11 +19,15 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
   final PushNotificationsApiDataSource _pushNotificationsApiDataSource;
   final PushNotificationsManager _pushNotificationsManager;
   final PushNotificationDeviceTypeDTOMapper _pushTokenDeviceTypeDTOMapper;
+  final PushNotificationDeviceFromDTOMapper _pushNotificationDeviceFromDTOMapper;
+  final PushNotificationMessageDTOMapper _pushNotificationMessageDTOMapper;
 
   PushNotificationsRepositoryImpl(
     this._pushNotificationsApiDataSource,
     this._pushNotificationsManager,
     this._pushTokenDeviceTypeDTOMapper,
+    this._pushNotificationDeviceFromDTOMapper,
+    this._pushNotificationMessageDTOMapper,
   );
 
   @override
@@ -33,16 +40,20 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
     return _pushNotificationsManager.listenForRefreshToken();
   }
 
-  Future _handleOpeningMessage() async {
+  @override
+  Future<PushNotificationMessage?> initialMessage() async {
     final message = await _pushNotificationsManager.handleOpeningMessage();
+    if (message == null) return null;
 
-    if (message != null) {
-      // TODO: to be handled with deep-linking service
-    }
+    return _pushNotificationMessageDTOMapper(message);
   }
 
   @override
-  Future<String> registerDevice(String deviceName, PushTokenDeviceType deviceType) async {
+  Stream<PushNotificationMessage> registerMessageListener() =>
+      _pushNotificationsManager.listenForForegroundMessages().map(_pushNotificationMessageDTOMapper);
+
+  @override
+  Future<PushNotificationDevice> registerDevice(String deviceName, PushTokenDeviceType deviceType) async {
     final token = await _pushNotificationsManager.getRegistrationRefreshToken();
     if (token == null) throw Exception();
 
@@ -54,11 +65,11 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
       isActive: true,
     );
 
-    await callWithDioErrorResolver(
+    final device = await callWithDioErrorResolver(
       () => _pushNotificationsApiDataSource.registerDevice(registerDevice),
     );
 
-    return token;
+    return _pushNotificationDeviceFromDTOMapper(device.data);
   }
 
   @override
@@ -81,7 +92,4 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
       () => _pushNotificationsApiDataSource.updateDevice(updatedDevice.id, updateDevice),
     );
   }
-
-  @override
-  Future<void> clear() async {}
 }
