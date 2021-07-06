@@ -159,7 +159,7 @@ class _EmptyListMessage extends HookWidget {
   }
 }
 
-class _EmailList extends HookWidget {
+class _EmailList extends StatelessWidget {
   final List<Email> emailList;
   final DataEmailsPageCubit cubit;
 
@@ -170,9 +170,6 @@ class _EmailList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
-
     return ListView.builder(
       itemBuilder: (context, index) {
         return UserDataTile(
@@ -181,8 +178,6 @@ class _EmailList extends HookWidget {
           onMoreTapped: () => showMore<Email>(
             context,
             emailList[index],
-            typography,
-            colors,
             cubit.ensureRemoval,
             cubit.setEmailAsDefault,
           ),

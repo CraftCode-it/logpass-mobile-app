@@ -159,7 +159,7 @@ class _EmptyListMessage extends HookWidget {
   }
 }
 
-class _AddressList extends HookWidget {
+class _AddressList extends StatelessWidget {
   final List<Address> addressList;
   final DataAddressesPageCubit cubit;
 
@@ -170,9 +170,6 @@ class _AddressList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
-
     return ListView.builder(
       itemBuilder: (context, index) {
         return UserDataTile(
@@ -182,8 +179,6 @@ class _AddressList extends HookWidget {
           onMoreTapped: () => showMore<Address>(
             context,
             addressList[index],
-            typography,
-            colors,
             cubit.ensureRemoval,
             cubit.setAddressAsDefault,
           ),

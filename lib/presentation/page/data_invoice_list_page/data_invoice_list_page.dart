@@ -159,7 +159,7 @@ class _EmptyListMessage extends HookWidget {
   }
 }
 
-class _InvoiceDataList extends HookWidget {
+class _InvoiceDataList extends StatelessWidget {
   final List<InvoiceData> invoiceDataList;
   final DataInvoiceListPageCubit cubit;
 
@@ -170,9 +170,6 @@ class _InvoiceDataList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
-
     return ListView.builder(
       itemBuilder: (context, index) {
         return UserDataTile(
@@ -182,8 +179,6 @@ class _InvoiceDataList extends HookWidget {
           onMoreTapped: () => showMore<InvoiceData>(
             context,
             invoiceDataList[index],
-            typography,
-            colors,
             cubit.ensureRemoval,
             cubit.setInvoiceDataAsDefault,
           ),

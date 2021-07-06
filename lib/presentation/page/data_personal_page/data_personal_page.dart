@@ -159,7 +159,7 @@ class _EmptyListMessage extends HookWidget {
   }
 }
 
-class _PersonalDataList extends HookWidget {
+class _PersonalDataList extends StatelessWidget {
   final List<PersonalData> personalDataList;
   final DataPersonalPageCubit cubit;
 
@@ -170,9 +170,6 @@ class _PersonalDataList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
-
     return ListView.builder(
       itemBuilder: (context, index) {
         return UserDataTile(
@@ -181,8 +178,6 @@ class _PersonalDataList extends HookWidget {
           onMoreTapped: () => showMore<PersonalData>(
             context,
             personalDataList[index],
-            typography,
-            colors,
             cubit.ensureDataRemoval,
             cubit.setDefaultPersonalData,
           ),
