@@ -124,13 +124,6 @@ class _Content extends StatelessWidget {
     this.cubit,
   );
 
-  String _buildTileContent(Address address) {
-    if (address.apartmentNumber != null) {
-      return '${address.street} ${address.buildingNumber}/${address.apartmentNumber}\n${address.postCode} ${address.city}';
-    }
-    return '${address.street} ${address.buildingNumber}\n${address.postCode} ${address.city}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -146,7 +139,7 @@ class _Content extends StatelessWidget {
             child: ListView.builder(
               itemBuilder: (context, index) => RadioButtonTile(
                 title: addresses[index].name,
-                content: _buildTileContent(addresses[index]),
+                content: addresses[index].buildContent(),
                 isSelected: addresses[index] == selectedAddress,
                 onTapAction: () => cubit.selectAddress(addresses[index]),
               ),

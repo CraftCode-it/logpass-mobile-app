@@ -4,8 +4,9 @@ import 'package:logpass_me/domain/user_data/data/address.dart';
 @injectable
 class GetDefaultUserAddressUseCase {
   // TODO: replace after implementation of UserDataRepository
-  Future<Address?> call() async => Future.value(
-        Address(
+  Future<Address?> call() async => Future.delayed(
+        const Duration(seconds: 2),
+        () => Address(
           name: 'John Doe',
           street: 'Some kind of street',
           buildingNumber: '28',

@@ -4,8 +4,9 @@ import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 @injectable
 class GetInvoiceDataListUseCase {
 // TODO: replace after implementation of UserDataRepository
-  Future<List<InvoiceData>> call() async => Future.value(
-        [
+  Future<List<InvoiceData>> call() => Future.delayed(
+        const Duration(seconds: 2),
+        () => [
           InvoiceData(
             name: 'John',
             surname: 'Doe',
@@ -14,6 +15,7 @@ class GetInvoiceDataListUseCase {
             apartmentNumber: '21',
             postCode: '51-612',
             city: 'Cracow',
+            taxId: '93019405124',
           ),
           InvoiceData(
             name: 'John',
@@ -32,6 +34,7 @@ class GetInvoiceDataListUseCase {
             postCode: '04-242',
             city: 'Warsaw',
             isDefault: true,
+            taxId: '58102591925',
           ),
         ],
       );

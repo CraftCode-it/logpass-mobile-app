@@ -8,7 +8,6 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
@@ -42,7 +41,6 @@ class InvoiceDataSelectionPage extends HookWidget {
     final cubit = useCubit<InvoiceDataSelectionPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final typography = useAppTypography();
     final messengerController = useMessengerController();
 
     useCubitListener<InvoiceDataSelectionPageCubit, InvoiceDataSelectionPageState>(
@@ -126,13 +124,6 @@ class _Content extends StatelessWidget {
     this.cubit,
   );
 
-  String _buildTileContent(InvoiceData data) {
-    if (data.apartmentNumber != null) {
-      return '${data.street} ${data.buildingNumber}/${data.apartmentNumber}\n${data.postCode} ${data.city}';
-    }
-    return '${data.street} ${data.buildingNumber}\n${data.postCode} ${data.city}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -148,7 +139,7 @@ class _Content extends StatelessWidget {
             child: ListView.builder(
               itemBuilder: (context, index) => RadioButtonTile(
                 title: '${invoiceDatas[index].name} ${invoiceDatas[index].surname}',
-                content: _buildTileContent(invoiceDatas[index]),
+                content: invoiceDatas[index].buildContent(),
                 isSelected: invoiceDatas[index] == selectedInvoiceData,
                 onTapAction: () => cubit.selectInvoiceData(invoiceDatas[index]),
               ),

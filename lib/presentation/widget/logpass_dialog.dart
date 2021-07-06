@@ -80,3 +80,22 @@ class TwoOptionsDialog extends HookWidget {
     );
   }
 }
+
+class CustomContentDialog extends StatelessWidget {
+  final List<Widget> widgets;
+
+  const CustomContentDialog({required this.widgets, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return widgets[index];
+      },
+      separatorBuilder: (context, index) => const SizedBox(height: AppDimens.l),
+      itemCount: widgets.length,
+    );
+  }
+}

@@ -102,6 +102,7 @@ class CountryCodePicker extends HookWidget {
             CountryCodePickerPageRoute(
               countryCodeList: state.countryCodeList,
               selectedCountryCode: state.countryCode,
+              includeCountryCodes: true,
             ),
           );
 

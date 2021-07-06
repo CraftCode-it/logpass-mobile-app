@@ -1,5 +1,8 @@
-class InvoiceData {
-  // TODO: add translation for tax ID
+import 'package:logpass_me/domain/user_data/default_data.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+class InvoiceData implements DefaultData {
   final String? taxId;
   final String name;
   final String surname;
@@ -8,6 +11,8 @@ class InvoiceData {
   final String? apartmentNumber;
   final String postCode;
   final String city;
+
+  @override
   final bool isDefault;
 
   InvoiceData({
@@ -24,10 +29,12 @@ class InvoiceData {
 
   @override
   String toString() {
+    final taxInfo = (taxId != null) ? '\n${LocaleKeys.yourData_invoiceDataForm_taxId.tr(args: [taxId!])}' : '';
+
     if (apartmentNumber != null) {
-      return '$name $surname\n$street $buildingNumber/$apartmentNumber\n$postCode $city';
+      return '$name $surname\n$street $buildingNumber/$apartmentNumber\n$postCode $city $taxInfo';
     }
-    return '$name $surname\n$street $buildingNumber\n$postCode $city';
+    return '$name $surname\n$street $buildingNumber\n$postCode $city $taxInfo';
   }
 
   @override
@@ -57,5 +64,16 @@ class InvoiceData {
         postCode.hashCode ^
         city.hashCode ^
         isDefault.hashCode;
+  }
+}
+
+extension FormatContent on InvoiceData {
+  String buildContent() {
+    final taxInfo = (taxId != null) ? '\n${LocaleKeys.yourData_invoiceDataForm_taxId.tr(args: [taxId!])}' : '';
+
+    if (apartmentNumber != null) {
+      return '$street $buildingNumber/$apartmentNumber\n$postCode $city $taxInfo';
+    }
+    return '$street $buildingNumber\n$postCode $city $taxInfo';
   }
 }

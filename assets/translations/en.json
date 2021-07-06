@@ -225,7 +225,53 @@
     "personalData": "Personal data",
     "emails": "Emails",
     "addresses": "Addresses",
-    "invoiceData": "Invoice data"
+    "invoiceData": "Invoice data",
+    "addNewOption": "Add new",
+    "personalDataEmptyList": "You have no personal data added to your account.",
+    "emailEmptyList": "You have no emails added to your account.",
+    "addressesEmptyList": "You have no addresses added to your account.",
+    "invoiceDataEmptyList": "You have no invoice data added to your account.",
+    "removeDialogTitle": "Remove data",
+    "removeDialogDescription": "Are you sure you want to remove this data?",
+    "removeOption": "Remove",
+    "setDefaultOption": "Set as default",
+    "goBackOption": "Go back",
+    "dataRemoved": "Data removed",
+    "saveOption": "Save",
+    "leaveOption": "Leave",
+    "exitDialogTitle": "Exit adding",
+    "exitDialogDescription": "Are you sure you want to leave without saving?",
+    "addPersonalDataTitle": "Add personal data",
+    "addEmailTitle": "Add new email",
+    "addAddressTitle": "Add new address",
+    "addInvoiceDataTitle": "Add new invoice data",
+    "personalDataForm": {
+      "nameHint": "*Name",
+      "surnameHint": "*Surname"
+    },
+    "emailForm": {
+      "emailHint": "*Email"
+    },
+    "addressForm": {
+      "nameHint": "*Name",
+      "streetHint": "*Street",
+      "buildingHint": "*Building number",
+      "apartmentHint": "Apartment number",
+      "postCodeHint": "*Postcode",
+      "cityHint": "*City",
+      "countryHint": "*Country"
+    },
+    "invoiceDataForm": {
+      "taxId": "TAX id: {}",
+      "taxIdHint": "TAX id",
+      "nameHint": "*Name",
+      "surnameHint": "*Surname",
+      "streetHint": "*Street",
+      "buildingHint": "*Building number",
+      "apartmentHint": "Apartment number",
+      "postCodeHint": "*Postcode",
+      "cityHint": "*City"
+    }
   },
   "language": {
     "title": "Select your language",

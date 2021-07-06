@@ -66,4 +66,6 @@ class AppDimens {
   static const tabBarIndicatorSize = 34.0;
   static const tabBarIndicatorWeight = 2.0;
   static const tabBarUnderlineWeight = 1.5;
+
+  static const appBarElevationHeight = 1.0;
 }
