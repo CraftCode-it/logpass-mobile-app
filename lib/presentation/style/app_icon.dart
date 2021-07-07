@@ -2,6 +2,14 @@ class AppIcon {
   static const logo = 'assets/icon/logo.svg';
   static const biometric = 'assets/icon/biometric.svg';
 
+  static const onboarding1Light = 'assets/icon/onboarding_1_light.svg';
+  static const onboarding2Light = 'assets/icon/onboarding_2_light.svg';
+  static const onboarding3Light = 'assets/icon/onboarding_3_light.svg';
+
+  static const onboarding1Dark = 'assets/icon/onboarding_1_dark.svg';
+  static const onboarding2Dark = 'assets/icon/onboarding_2_dark.svg';
+  static const onboarding3Dark = 'assets/icon/onboarding_3_dark.svg';
+
   static const home = 'assets/icon/home.svg';
   static const services = 'assets/icon/services.svg';
   static const yourData = 'assets/icon/your_data.svg';

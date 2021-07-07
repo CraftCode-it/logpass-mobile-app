@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/language/language_code.dart';
@@ -17,6 +18,7 @@ import 'package:logpass_me/domain/theme/use_case/get_theme_brightness_use_case.d
 import 'package:logpass_me/presentation/log_pass_me_app.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/utils/brightness_utils.dart';
 
 Future<void> runMain(String env) async {

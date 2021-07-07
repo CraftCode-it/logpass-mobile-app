@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/onboarding/onboarding_step.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_image.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -19,29 +21,31 @@ class OnboardingPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = MediaQuery.platformBrightnessOf(context);
+    final colors = useAppThemeColors();
     final controller = usePageController();
     final onboardingSteps = useMemoized(
       () => [
         OnboardingStep(
-          image: Image.asset(
-            AppImage.placeholder,
-            alignment: Alignment.centerRight,
+          image: SvgPicture.asset(
+            brightness == Brightness.light ? AppIcon.onboarding1Light : AppIcon.onboarding1Dark,
+            alignment: Alignment.topCenter,
           ),
           title: tr(LocaleKeys.onboarding_stepOneTitle),
           content: tr(LocaleKeys.onboarding_stepOneContent),
         ),
         OnboardingStep(
-          image: Image.asset(
-            AppImage.placeholder,
-            alignment: Alignment.centerRight,
+          image: SvgPicture.asset(
+            brightness == Brightness.light ? AppIcon.onboarding2Light : AppIcon.onboarding2Dark,
+            alignment: Alignment.topCenter,
           ),
           title: tr(LocaleKeys.onboarding_stepTwoTitle),
           content: tr(LocaleKeys.onboarding_stepTwoContent),
         ),
         OnboardingStep(
-          image: Image.asset(
-            AppImage.placeholder,
-            alignment: Alignment.centerRight,
+          image: SvgPicture.asset(
+            brightness == Brightness.light ? AppIcon.onboarding3Light : AppIcon.onboarding3Dark,
+            alignment: Alignment.topCenter,
           ),
           title: tr(LocaleKeys.onboarding_stepThreeTitle),
           content: tr(LocaleKeys.onboarding_stepThreeContent),
@@ -51,6 +55,7 @@ class OnboardingPage extends HookWidget {
     final index = useState(0);
 
     return Scaffold(
+      backgroundColor: colors.darkBackground,
       body: SafeArea(
         child: Center(
           child: Column(

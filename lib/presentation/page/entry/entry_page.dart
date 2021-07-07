@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page_cubit.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
@@ -27,7 +29,7 @@ class EntryPage extends HookWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       body: state.maybeMap(
-        idle: (_) => const _Idle(),
+        idle: (_) => const Loader(),
         orElse: () => const SizedBox(),
       ),
     );
@@ -35,19 +37,27 @@ class EntryPage extends HookWidget {
 
   void _listener(EntryPageCubit cubit, EntryPageState state, BuildContext context) {
     state.maybeMap(
-      onboarding: (_) => AutoRouter.of(context).replace(const OnboardingPageRoute()),
+      onboarding: (_) async {
+        await _precacheOnboardingImages(context);
+        await AutoRouter.of(context).replace(const OnboardingPageRoute());
+      },
       home: (_) => AutoRouter.of(context).replace(const MainPageRoute()),
       securedLogin: (_) => AutoRouter.of(context).replace(const SecuredLoginPageRoute()),
       orElse: () {},
     );
   }
-}
 
-class _Idle extends StatelessWidget {
-  const _Idle({Key? key}) : super(key: key);
+  Future<void> _precacheOnboardingImages(BuildContext context) async {
+    final brightness = MediaQuery.platformBrightnessOf(context);
 
-  @override
-  Widget build(BuildContext context) => const Center(
-        child: Loader(),
-      );
+    if (brightness == Brightness.light) {
+      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding1Light), context);
+      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding2Light), context);
+      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding3Light), context);
+    } else {
+      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding1Dark), context);
+      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding2Dark), context);
+      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding3Dark), context);
+    }
+  }
 }
