@@ -67,7 +67,7 @@ class UserDataTile extends HookWidget {
                     ],
                     const SizedBox(width: AppDimens.m),
                     IconButton(
-                      padding: const EdgeInsets.all(AppDimens.zero),
+                      padding: const EdgeInsets.all(AppDimens.xs),
                       constraints: const BoxConstraints(),
                       onPressed: onMoreTapped,
                       icon: SvgPicture.asset(
