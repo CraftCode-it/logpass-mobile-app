@@ -20,8 +20,7 @@ class AddNewDeviceCodePageCubit extends Cubit<AddNewDeviceCodePageState> {
 
     try {
       final code = await _getNewDeviceCodeUseCase();
-      final splitCode = code.replaceRange((code.length / 2).round(), (code.length / 2).round(), ' ');
-      emit(AddNewDeviceCodePageState.idle(splitCode));
+      emit(AddNewDeviceCodePageState.idle(code));
     } on GeneralConnectionError {
       emit(AddNewDeviceCodePageState.error());
     } catch (e, s) {

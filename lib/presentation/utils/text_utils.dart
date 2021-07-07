@@ -21,3 +21,9 @@ extension Underlinable on Widget {
     );
   }
 }
+
+extension OneTimeCodeFormatter on String {
+  String withMidSpace() {
+    return replaceRange((length / 2).round(), (length / 2).round(), ' ');
+  }
+}

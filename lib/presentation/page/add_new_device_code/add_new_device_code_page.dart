@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/add_new_device_code/add_new_device_code_page_cubit.dart';
+import 'package:logpass_me/presentation/utils/text_utils.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -156,7 +157,7 @@ class _Code extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: AppDimens.s),
-            Text(code, style: typography.h1),
+            Text(code.withMidSpace(), style: typography.h1),
             const SizedBox(height: AppDimens.m),
             Text(
               LocaleKeys.addNewDeviceCode_copy.tr(),

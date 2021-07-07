@@ -18,6 +18,7 @@ import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class OTPCodePage extends HookWidget {
   final SignUpVerification verification;
@@ -116,7 +117,7 @@ class OTPCodePage extends HookWidget {
   }
 }
 
-class _CodeField extends StatelessWidget {
+class _CodeField extends HookWidget {
   final OTPCodePageCubit cubit;
   final OTPCodePageState state;
 
@@ -128,21 +129,24 @@ class _CodeField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mask = useMemoized(() => MaskTextInputFormatter(mask: '###-###'));
+
     return state.maybeMap(
-      idle: (state) => _buildCodeField(true, error: state.codeError),
-      verifying: (state) => _buildCodeField(false),
-      resending: (state) => _buildCodeField(false),
-      orElse: () => _buildCodeField(false),
+      idle: (state) => _buildCodeField(true, mask, error: state.codeError),
+      verifying: (state) => _buildCodeField(false, mask),
+      resending: (state) => _buildCodeField(false, mask),
+      orElse: () => _buildCodeField(false, mask),
     );
   }
 
-  Widget _buildCodeField(bool enabled, {String? error}) => InputField(
+  Widget _buildCodeField(bool enabled, MaskTextInputFormatter mask, {String? error}) => InputField(
         label: tr(LocaleKeys.otpCode_codeLabel),
-        hint: '000000',
+        hint: LocaleKeys.addNewDevice_codeHint.tr(),
         onChanged: cubit.updateCode,
         enabled: enabled,
         inputType: TextInputType.phone,
         error: error,
+        formatters: [mask],
       );
 }
 
