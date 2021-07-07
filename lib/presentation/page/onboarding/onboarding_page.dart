@@ -9,7 +9,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
-import 'package:logpass_me/presentation/style/app_image.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -21,7 +20,7 @@ class OnboardingPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = MediaQuery.platformBrightnessOf(context);
+    final brightness = Theme.of(context).brightness;
     final colors = useAppThemeColors();
     final controller = usePageController();
     final onboardingSteps = useMemoized(
