@@ -15,11 +15,13 @@ class Messenger extends HookWidget {
   final MessengerController controller;
   final Widget child;
   final bool floating;
+  final bool withActionHandler;
 
   const Messenger({
     required this.controller,
     required this.child,
     this.floating = false,
+    this.withActionHandler = true,
     Key? key,
   }) : super(key: key);
 
@@ -30,7 +32,7 @@ class Messenger extends HookWidget {
 
     useEffect(
       () {
-        cubit.initialize();
+        cubit.initialize(withActionHandler);
       },
       [cubit],
     );

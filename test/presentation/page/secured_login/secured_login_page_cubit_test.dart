@@ -4,6 +4,7 @@ import 'package:logpass_me/domain/app_security/app_security_type.dart';
 import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometrics_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/get_app_security_type_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/validate_pin_code_use_case.dart';
+import 'package:logpass_me/domain/auth/use_case/logout_use_case.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_cubit.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_state.dart';
 import 'package:mockito/annotations.dart';
@@ -16,22 +17,26 @@ import 'secured_login_page_cubit_test.mocks.dart';
     GetAppSecurityTypeUseCase,
     ValidatePinCodeUseCase,
     AuthorizeWithBiometricsUseCase,
+    LogoutUseCase,
   ],
 )
 void main() {
   late GetAppSecurityTypeUseCase getAppSecurityTypeUseCase;
   late ValidatePinCodeUseCase validatePinCodeUseCase;
   late AuthorizeWithBiometricsUseCase authorizeWithBiometricsUseCase;
+  late LogoutUseCase logoutUseCase;
   late SecuredLoginPageCubit cubit;
 
   setUp(() {
     getAppSecurityTypeUseCase = MockGetAppSecurityTypeUseCase();
     validatePinCodeUseCase = MockValidatePinCodeUseCase();
     authorizeWithBiometricsUseCase = MockAuthorizeWithBiometricsUseCase();
+    logoutUseCase = MockLogoutUseCase();
     cubit = SecuredLoginPageCubit(
       getAppSecurityTypeUseCase,
       validatePinCodeUseCase,
       authorizeWithBiometricsUseCase,
+      logoutUseCase,
     );
   });
 

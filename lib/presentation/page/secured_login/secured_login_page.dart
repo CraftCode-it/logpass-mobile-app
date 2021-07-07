@@ -7,6 +7,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/app_security/app_security_type.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_cubit.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_state.dart';
@@ -18,6 +20,9 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/full_screen_loader.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -31,10 +36,11 @@ class SecuredLoginPage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
     final pinFieldController = useTextEditingController();
+    final messengerController = useMessengerController();
 
     useCubitListener<SecuredLoginPageCubit, SecuredLoginPageState>(
       cubit,
-      (cubit, state, context) => _listener(cubit, state, context, pinFieldController),
+      (cubit, state, context) => _listener(cubit, state, context, pinFieldController, messengerController),
     );
     useEffect(() {
       cubit.initialize();
@@ -47,13 +53,17 @@ class SecuredLoginPage extends HookWidget {
         trailing: const NeedHelpButton(),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-          child: KeyboardVisibilityBuilder(
-            builder: (context, keyboardVisible) => _Content(
-              state: state,
-              cubit: cubit,
-              keyboardVisible: keyboardVisible,
+        child: Messenger(
+          withActionHandler: false,
+          controller: messengerController,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: KeyboardVisibilityBuilder(
+              builder: (context, keyboardVisible) => _Content(
+                state: state,
+                cubit: cubit,
+                keyboardVisible: keyboardVisible,
+              ),
             ),
           ),
         ),
@@ -66,10 +76,29 @@ class SecuredLoginPage extends HookWidget {
     SecuredLoginPageState state,
     BuildContext context,
     TextEditingController pinController,
+    MessengerController messengerController,
   ) {
     state.maybeMap(
       wrongPin: (_) => pinController.clear(),
       validated: (_) => AutoRouter.of(context).replaceAll([const MainPageRoute()]),
+      loggingOut: (_) {
+        showFullScreenLoader(context);
+      },
+      loggedOut: (_) {
+        AutoRouter.of(context).replaceAll(
+          [
+            const StartPageRoute(),
+          ],
+        );
+      },
+      connectionError: (state) {
+        AutoRouter.of(context).popUntil((route) => route.settings.name == SecuredLoginPageRoute.name);
+        messengerController.showError(getConnectionErrorString(state.error));
+      },
+      error: (_) {
+        AutoRouter.of(context).popUntil((route) => route.settings.name == SecuredLoginPageRoute.name);
+        messengerController.showError(getConnectionErrorString(GeneralConnectionError.somethingWentWrong()));
+      },
       orElse: () {},
     );
   }
@@ -128,7 +157,7 @@ class _Content extends HookWidget {
           const SizedBox(height: AppDimens.m),
           CustomRectangularButton.filled(
             text: tr(LocaleKeys.common_logout),
-            onPressed: () {},
+            onPressed: () => cubit.logout(),
           ),
           const SizedBox(height: AppDimens.l),
         ],
