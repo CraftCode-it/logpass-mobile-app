@@ -21,11 +21,13 @@ class MessengerCubit extends Cubit<MessengerState> {
     return super.close();
   }
 
-  void initialize() {
-    _subscribeToIncomingActionsUseCase().listen((event) {
-      emit(MessengerState.action(event));
-      _setupTimer();
-    });
+  void initialize(bool handleActions) {
+    if (handleActions) {
+      _subscribeToIncomingActionsUseCase().listen((event) {
+        emit(MessengerState.action(event));
+        _setupTimer();
+      });
+    }
   }
 
   void showInfo(String message, String? action, Function()? onAction) {

@@ -5,6 +5,8 @@ import 'package:logpass_me/domain/app_security/app_security_type.dart';
 import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometrics_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/get_app_security_type_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/validate_pin_code_use_case.dart';
+import 'package:logpass_me/domain/auth/use_case/logout_use_case.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/presentation/page/pin_setup/app_pin_config.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_state.dart';
 
@@ -13,6 +15,7 @@ class SecuredLoginPageCubit extends Cubit<SecuredLoginPageState> {
   final GetAppSecurityTypeUseCase _getAppSecurityTypeUseCase;
   final ValidatePinCodeUseCase _validatePinCodeUseCase;
   final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
+  final LogoutUseCase _logoutUseCase;
 
   late AppSecurityType _securityType;
 
@@ -20,6 +23,7 @@ class SecuredLoginPageCubit extends Cubit<SecuredLoginPageState> {
     this._getAppSecurityTypeUseCase,
     this._validatePinCodeUseCase,
     this._authorizeWithBiometricsUseCase,
+    this._logoutUseCase,
   ) : super(SecuredLoginPageState.processing());
 
   Future<void> initialize() async {
@@ -55,6 +59,22 @@ class SecuredLoginPageCubit extends Cubit<SecuredLoginPageState> {
         emit(SecuredLoginPageState.idle(_securityType, true));
       }
     } else {
+      emit(SecuredLoginPageState.idle(_securityType, false));
+    }
+  }
+
+  Future<void> logout() async {
+    emit(SecuredLoginPageState.loggingOut());
+
+    try {
+      await _logoutUseCase();
+      emit(SecuredLoginPageState.loggedOut());
+    } on GeneralConnectionError catch (e) {
+      emit(SecuredLoginPageState.connectionError(e));
+      emit(SecuredLoginPageState.idle(_securityType, false));
+    } catch (e, s) {
+      Fimber.e('Logging out failed', ex: e, stacktrace: s);
+      emit(SecuredLoginPageState.error());
       emit(SecuredLoginPageState.idle(_securityType, false));
     }
   }
