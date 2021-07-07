@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox_cubit.dart';
@@ -24,15 +25,16 @@ class CustomCheckbox extends HookWidget {
 
     useEffect(
       () {
-        cubit.set(initialValue);
+        cubit.init(initialValue);
       },
       [initialValue],
     );
 
     return state.map(
-      loading: (state) => const Loader(),
+      loading: (state) => const SizedBox.shrink(),
       value: (state) => _Checkbox(
         value: state.value,
+        brightness: _getBrightness(context, state.brightness),
         onChanged: (value) {
           cubit.set(value);
           onValueChanged(value);
@@ -40,22 +42,35 @@ class CustomCheckbox extends HookWidget {
       ),
     );
   }
+
+  Brightness _getBrightness(BuildContext context, ThemeBrightness themeBrightness) {
+    final systemBrightness = MediaQuery.of(context).platformBrightness;
+
+    switch (themeBrightness) {
+      case ThemeBrightness.light:
+        return Brightness.light;
+      case ThemeBrightness.dark:
+        return Brightness.dark;
+      case ThemeBrightness.system:
+        return systemBrightness;
+    }
+  }
 }
 
 class _Checkbox extends StatelessWidget {
   final bool value;
   final Function(bool value) onChanged;
+  final Brightness brightness;
 
   const _Checkbox({
     required this.value,
     required this.onChanged,
+    required this.brightness,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final brightness = MediaQuery.of(context).platformBrightness;
-
     return InkWell(
       onTap: () => onChanged(!value),
       child: Padding(

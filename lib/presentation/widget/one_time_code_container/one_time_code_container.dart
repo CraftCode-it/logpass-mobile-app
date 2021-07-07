@@ -162,7 +162,7 @@ class _CodeContainer extends HookWidget {
                     ),
                     const SizedBox(height: AppDimens.m),
                     Text(
-                      oneTimeCode?.code ?? LocaleKeys.home_codeErrorPlaceholder.tr(),
+                      oneTimeCode?.code.withMidSpace() ?? LocaleKeys.home_codeErrorPlaceholder.tr().withMidSpace(),
                       style: appTypography.h1.copyWith(
                         color: oneTimeCode == null ? inactiveColor : colors.textSpecial,
                       ),

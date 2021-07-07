@@ -54,7 +54,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   }
 
   void updateCode(String? code) {
-    _code = code ?? '';
+    _code = code?.replaceAll(RegExp('-'), '') ?? '';
     _emitIdleState();
   }
 
