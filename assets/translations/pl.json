@@ -36,12 +36,12 @@
     "title": "Select your country"
   },
   "onboarding": {
-    "stepOneTitle": "Witaj!",
-    "stepOneContent": "Czym jest Logpass Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodsed do eiusmod",
-    "stepTwoTitle": "Bezpieczeństwo",
-    "stepTwoContent": "Sposoby autentyfikacji Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-    "stepThreeTitle": "Dane pod ręką",
-    "stepThreeContent": "Jakie dane mogą być przechowywane/ używane Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+    "stepOneTitle": "Loguj się bezpiecznie do wszystkich usług online",
+    "stepOneContent": "Dzięki Logpass bezpiecznie zalogujesz się do sklepów internetowych, serwisów online czy swoich kont u różnych dostawców.",
+    "stepTwoTitle": "Odzyskaj kontrolę nad swoimi danymi",
+    "stepTwoContent": "Logpass pozwoli Ci kontrolować, ile informacji na swój temat udostępniasz dostawcom usług w internecie.",
+    "stepThreeTitle": "Nie pozwól się śledzić",
+    "stepThreeContent": "Jednym kliknięciem możesz zablokować przekazywanie informacji o swojej aktywności w sieci. Masz też prawo domagania się usunięcia swoich danych w dowolnym momencie."
   },
   "start": {
     "title": "Rejestracja",

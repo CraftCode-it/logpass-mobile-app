@@ -36,12 +36,12 @@
     "title": "Select your country"
   },
   "onboarding": {
-    "stepOneTitle": "Welcome!",
-    "stepOneContent": "Czym jest Logpass Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmodsed do eiusmod",
-    "stepTwoTitle": "Safety first",
-    "stepTwoContent": "Sposoby autentyfikacji Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    "stepOneTitle": "Security first",
+    "stepOneContent": "Thanks to Logpass you can safely log in to online shops, services and your accounts on different platforms",
+    "stepTwoTitle": "Protect your data",
+    "stepTwoContent": "A simple and safe way to control how much information you want to share with services that require sharing of information",
     "stepThreeTitle": "Data at hand",
-    "stepThreeContent": "Jakie dane mogą być przechowywane/ używane Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do"
+    "stepThreeContent": "You can revoke access to your data with one click or erase all information in any give moment."
   },
   "start": {
     "title": "Register",
