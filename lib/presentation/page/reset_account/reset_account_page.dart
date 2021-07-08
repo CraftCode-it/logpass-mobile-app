@@ -42,9 +42,10 @@ class ResetAccountPage extends HookWidget {
     BuildContext context,
     MessengerController controller,
   ) {
-    if (state != ResetAccountPageState.processing()) {
-      AutoRouter.of(context).popUntil((route) => route.settings.name == ResetAccountPageRoute.name);
-    }
+    state.maybeMap(
+      processing: (_) {},
+      orElse: () => AutoRouter.of(context).popUntil((route) => route.settings.name == ResetAccountPageRoute.name),
+    );
 
     state.maybeMap(
       accountResetSuccessful: (_) {
