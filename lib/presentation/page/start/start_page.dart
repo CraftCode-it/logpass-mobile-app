@@ -13,6 +13,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
@@ -64,9 +65,7 @@ class StartPage extends HookWidget {
                     _TermsAndConditionsCheck(cubit: cubit),
                     const SizedBox(height: AppDimens.l),
                     state.maybeMap(
-                      processing: (state) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      processing: (state) => const Loader(),
                       orElse: () => CustomRectangularButton.filled(
                         text: tr(LocaleKeys.common_next),
                         onPressed: _getNextButtonAction(state, cubit),

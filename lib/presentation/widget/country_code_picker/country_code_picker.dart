@@ -10,6 +10,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/country_flag.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_cubit.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -74,7 +75,7 @@ class CountryCodePicker extends HookWidget {
                       child: Align(
                         alignment: Alignment.center,
                         child: state.maybeMap(
-                          loading: (state) => const Center(child: CircularProgressIndicator()),
+                          loading: (state) => const Loader(),
                           selected: (state) => _Selected(countryCode: state.countryCode),
                           orElse: () {},
                         ),
