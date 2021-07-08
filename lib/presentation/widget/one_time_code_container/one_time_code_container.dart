@@ -29,7 +29,7 @@ class OneTimeCodeContainer extends HookWidget {
 
     return Container(
       width: double.infinity,
-      color: colors.darkBackground,
+      color: colors.codeContainerBackground,
       padding: const EdgeInsets.symmetric(vertical: AppDimens.xxl),
       child: state.maybeWhen(
         idle: (oneTimeCode, remainingProgress) => _CodeContainer(

@@ -48,7 +48,7 @@ class EntryPage extends HookWidget {
   }
 
   Future<void> _precacheOnboardingImages(BuildContext context) async {
-    final brightness = MediaQuery.platformBrightnessOf(context);
+    final brightness = Theme.of(context).brightness;
 
     if (brightness == Brightness.light) {
       await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding1Light), context);

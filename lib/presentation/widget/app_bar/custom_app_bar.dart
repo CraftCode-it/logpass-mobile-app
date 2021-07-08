@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -19,6 +20,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
   final Color? predefinedBackground;
   final bool isError;
   final bool hasElevation;
+  final SystemUiOverlayStyle? systemUiOverlayStyle;
 
   CustomAppBar({
     this.title = '',
@@ -30,6 +32,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     this.predefinedBackground,
     this.isError = false,
     this.hasElevation = false,
+    this.systemUiOverlayStyle,
   }) : preferredSize = Size.fromHeight(_calculateAppBarHeight(isBigTitle, hasElevation));
 
   static double _calculateAppBarHeight(bool isBigTitle, bool hasElevation) {
@@ -47,6 +50,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     Widget? trailing,
     bool isError = false,
     bool hasElevation = false,
+    SystemUiOverlayStyle? systemUiOverlayStyle,
   }) =>
       CustomAppBar(
         leadingElement: Padding(
@@ -61,6 +65,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         rightElements: trailing != null ? [trailing] : [],
         isError: isError,
         hasElevation: hasElevation,
+        systemUiOverlayStyle: systemUiOverlayStyle,
       );
 
   factory CustomAppBar.smallTitle({
@@ -69,6 +74,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     Widget? trailing,
     bool isError = false,
     bool hasElevation = false,
+    SystemUiOverlayStyle? systemUiOverlayStyle,
   }) =>
       CustomAppBar(
         title: title ?? '',
@@ -76,6 +82,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         leadingElement: leading,
         isError: isError,
         hasElevation: hasElevation,
+        systemUiOverlayStyle: systemUiOverlayStyle,
       );
 
   factory CustomAppBar.bigTitle({
@@ -83,6 +90,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     Widget? trailing,
     bool isError = false,
     bool hasElevation = false,
+    SystemUiOverlayStyle? systemUiOverlayStyle,
   }) =>
       CustomAppBar(
         title: title,
@@ -91,17 +99,20 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         centerTitle: false,
         isError: isError,
         hasElevation: hasElevation,
+        systemUiOverlayStyle: systemUiOverlayStyle,
       );
 
   factory CustomAppBar.smallTitleOnly({
     required String title,
     bool isError = false,
     bool hasElevation = false,
+    SystemUiOverlayStyle? systemUiOverlayStyle,
   }) =>
       CustomAppBar(
         title: title,
         isError: isError,
         hasElevation: hasElevation,
+        systemUiOverlayStyle: systemUiOverlayStyle,
       );
 
   @override
@@ -115,6 +126,8 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
       children: [
         AppBar(
           centerTitle: centerTitle,
+          systemOverlayStyle: systemUiOverlayStyle,
+          backwardsCompatibility: false,
           backgroundColor: isError ? AppColors.error100 : (predefinedBackground ?? colors.background),
           title: Padding(
             padding: EdgeInsets.only(left: isBigTitle ? AppDimens.s : AppDimens.zero),
@@ -147,6 +160,8 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     double? leadingWidth,
     Color? predefinedBackground,
     bool? isError,
+    bool? hasElevation,
+    SystemUiOverlayStyle? systemUiOverlayStyle,
   }) {
     return CustomAppBar(
       title: title ?? this.title,
@@ -157,6 +172,8 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
       leadingWidth: leadingWidth ?? this.leadingWidth,
       predefinedBackground: predefinedBackground ?? this.predefinedBackground,
       isError: isError ?? this.isError,
+      hasElevation: hasElevation ?? this.hasElevation,
+      systemUiOverlayStyle: systemUiOverlayStyle ?? this.systemUiOverlayStyle,
     );
   }
 }
