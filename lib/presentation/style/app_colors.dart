@@ -230,6 +230,8 @@ abstract class AppThemeColors {
   Color get switchInactiveTrack;
 
   Color get modalHandle;
+
+  Color get codeContainerBackground;
 }
 
 class LightThemeColors implements AppThemeColors {
@@ -346,6 +348,9 @@ class LightThemeColors implements AppThemeColors {
 
   @override
   Color get modalHandle => AppColors.primary20;
+
+  @override
+  Color get codeContainerBackground => AppColors.primary100;
 }
 
 class DarkThemeColors implements AppThemeColors {
@@ -449,7 +454,7 @@ class DarkThemeColors implements AppThemeColors {
   Color get tabBarUnderline => AppColors.primary95;
 
   @override
-  Color get darkBackground => AppColors.primary97;
+  Color get darkBackground => AppColors.backgroundDark;
 
   @override
   Color get dialogBackground => AppColors.primary96;
@@ -462,4 +467,7 @@ class DarkThemeColors implements AppThemeColors {
 
   @override
   Color get modalHandle => AppColors.primary80;
+
+  @override
+  Color get codeContainerBackground => AppColors.primary100;
 }

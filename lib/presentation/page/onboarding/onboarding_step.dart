@@ -25,10 +25,13 @@ class OnboardingStep extends HookWidget {
       children: [
         Expanded(child: image),
         const SizedBox(height: AppDimens.l),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: typography.h5.copyWith(color: AppColors.primaryTextDark),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: typography.h5.copyWith(color: AppColors.primaryTextDark),
+          ),
         ),
         const SizedBox(height: AppDimens.l),
         Padding(

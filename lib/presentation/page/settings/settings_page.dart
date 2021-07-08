@@ -49,7 +49,9 @@ class SettingsPage extends HookWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: CustomAppBar.bigTitle(title: LocaleKeys.settings_title.tr()),
+      appBar: CustomAppBar.bigTitle(
+        title: LocaleKeys.settings_title.tr(),
+      ),
       body: SafeArea(
         child: Messenger(
           controller: messengerController,
