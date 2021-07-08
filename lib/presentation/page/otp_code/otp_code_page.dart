@@ -12,6 +12,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
@@ -167,9 +168,7 @@ class _VerifyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return state.maybeMap(
-      verifying: (_) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      verifying: (_) => const Loader(),
       orElse: () => _buildButton(),
     );
   }
@@ -204,9 +203,7 @@ class _ResendButton extends StatelessWidget {
         builder: (timePassed) => _buildButton(timePassed),
         timestamp: state.resendAvailabilityTimestamp,
       ),
-      resending: (_) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      resending: (_) => const Loader(),
       orElse: () => _buildButton(false),
     );
   }

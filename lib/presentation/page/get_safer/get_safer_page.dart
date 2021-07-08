@@ -39,9 +39,7 @@ class GetSaferPage extends HookWidget {
       ),
       body: SafeArea(
         child: state.maybeMap(
-          loading: (_) => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          loading: (_) => const Loader(),
           idle: (state) => _Body(
             withBiometrics: state.withBiometrics,
             setPinCodeCallback: () => _setPinCode(context, cubit.setPinSecurity),

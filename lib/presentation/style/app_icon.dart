@@ -61,4 +61,9 @@ class AppIcon {
   static const platformMobile = 'assets/icon/mobile.svg';
   static const platformTablet = 'assets/icon/tablet.svg';
   static const platformPc = 'assets/icon/pc.svg';
+
+  static const failureLight = 'assets/icon/failure_light.svg';
+  static const failureDark = 'assets/icon/failure_dark.svg';
+  static const successLight = 'assets/icon/success_light.svg';
+  static const successDark = 'assets/icon/success_dark.svg';
 }

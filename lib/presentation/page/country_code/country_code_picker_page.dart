@@ -15,6 +15,8 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
+const _flagSize = 36.0;
+
 class CountryCodePickerPage extends HookWidget {
   final List<CountryCode> countryCodeList;
   final CountryCode selectedCountryCode;
@@ -117,7 +119,9 @@ class _CountryCodeRow extends HookWidget {
           children: [
             Image.network(
               countryFlagUrl(countryCode.country, true),
-              width: 36,
+              width: _flagSize,
+              height: _flagSize,
+              errorBuilder: (context, _, __) => const SizedBox.shrink(),
             ),
             const SizedBox(width: AppDimens.m),
             if (codeVisible) ...[

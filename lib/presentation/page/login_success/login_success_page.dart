@@ -8,7 +8,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
-import 'package:logpass_me/presentation/style/app_image.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
 class LoginSuccessPage extends HookWidget {
@@ -16,6 +15,7 @@ class LoginSuccessPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
@@ -33,43 +33,37 @@ class LoginSuccessPage extends HookWidget {
     return Scaffold(
       backgroundColor: AppColors.success100,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: AppDimens.xl),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              child: Text(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: AppDimens.xl),
+              Text(
                 LocaleKeys.loginSuccess_header,
                 style: typography.h2.copyWith(color: colors.textSpecial),
               ).tr(),
-            ),
-            const SizedBox(height: AppDimens.l),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              child: Text(
+              const SizedBox(height: AppDimens.l),
+              Text(
                 LocaleKeys.loginSuccess_info,
                 style: typography.h7.copyWith(color: colors.textSpecial),
               ).tr(),
-            ),
-            Expanded(
-              child: Image.asset(
-                AppImage.placeholder,
-                alignment: Alignment.bottomRight,
+              Expanded(
+                child: SvgPicture.asset(
+                  brightness  == Brightness.light ? AppIcon.successLight : AppIcon.successDark,
+                  alignment: Alignment.center,
+                ),
               ),
-            ),
-            const SizedBox(height: AppDimens.xc),
-            Padding(
-              padding: const EdgeInsets.only(left: AppDimens.xxl),
-              child: SvgPicture.asset(
+              const SizedBox(height: AppDimens.xc),
+              SvgPicture.asset(
                 AppIcon.logo,
                 height: AppDimens.logoHeight,
                 color: colors.logoSpecial,
               ),
-            ),
-            const SizedBox(height: AppDimens.l),
-          ],
+              const SizedBox(height: AppDimens.l),
+            ],
+          ),
         ),
       ),
     );
