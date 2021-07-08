@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,7 +10,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
-import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
+import 'package:logpass_me/presentation/widget/bubbles_loader/bubbles_loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
@@ -17,6 +18,7 @@ import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 class AddNewDevicePage extends HookWidget {
   const AddNewDevicePage({Key? key}) : super(key: key);
@@ -35,39 +37,24 @@ class AddNewDevicePage extends HookWidget {
       (cubit, state, context) => _listener(cubit, state, context, messengerController),
     );
 
-    return CustomScaffold(
-      appBar: CustomAppBar.smallTitle(
-        leading: NavigationButton.back(),
-        title: LocaleKeys.addNewDevice_title.tr(),
+    return state.maybeWhen(
+      idle: (_) => _ContentWrapper(
+        messengerController: messengerController,
+        isLoading: false,
+        cubit: cubit,
+        state: state,
+        codeController: codeController,
+        codeInputKey: codeInputKey,
       ),
-      body: SafeArea(
-        child: Messenger(
-          controller: messengerController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-            child: KeyboardVisibilityBuilder(
-              builder: (BuildContext context, bool isKeyboardVisible) {
-                if (isKeyboardVisible) {
-                  return _PartialContent(
-                    state: state,
-                    controller: codeController,
-                    cubit: cubit,
-                    codeInputKey: codeInputKey,
-                  );
-                } else {
-                  return _FullContent(
-                    state: state,
-                    controller: codeController,
-                    cubit: cubit,
-                    codeInputKey: codeInputKey,
-                  );
-                }
-              },
-            ),
-          ),
-        ),
+      processing: () => _ContentWrapper(
+        messengerController: messengerController,
+        isLoading: true,
+        cubit: cubit,
+        state: state,
+        codeController: codeController,
+        codeInputKey: codeInputKey,
       ),
-      onTryAgain: () {},
+      orElse: () => const SizedBox.shrink(),
     );
   }
 
@@ -78,10 +65,78 @@ class AddNewDevicePage extends HookWidget {
     MessengerController controller,
   ) {
     state.maybeMap(
+      deviceAdded: (value) {
+        AutoRouter.of(context).pushAndPopUntil(
+          const LoginSuccessPageRoute(),
+          predicate: (route) => false,
+        );
+      },
       connectionError: (state) => controller.showError(
         getConnectionErrorString(state.error),
       ),
       orElse: () {},
+    );
+  }
+}
+
+class _ContentWrapper extends StatelessWidget {
+  final MessengerController messengerController;
+  final AddNewDevicePageState state;
+  final AddNewDevicePageCubit cubit;
+  final Key codeInputKey;
+  final TextEditingController codeController;
+  final bool isLoading;
+
+  const _ContentWrapper({
+    required this.messengerController,
+    required this.state,
+    required this.cubit,
+    required this.codeInputKey,
+    required this.codeController,
+    required this.isLoading,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      child: isLoading
+          ? BubblesLoader()
+          : CustomScaffold(
+              appBar: CustomAppBar.smallTitle(
+                leading: NavigationButton.back(),
+                title: LocaleKeys.addNewDevice_title.tr(),
+              ),
+              body: SafeArea(
+                child: Messenger(
+                  controller: messengerController,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                    child: KeyboardVisibilityBuilder(
+                      builder: (BuildContext context, bool isKeyboardVisible) {
+                        if (isKeyboardVisible) {
+                          return _PartialContent(
+                            state: state,
+                            controller: codeController,
+                            cubit: cubit,
+                            codeInputKey: codeInputKey,
+                          );
+                        } else {
+                          return _FullContent(
+                            state: state,
+                            controller: codeController,
+                            cubit: cubit,
+                            codeInputKey: codeInputKey,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              onTryAgain: () {},
+            ),
     );
   }
 }
@@ -270,13 +325,6 @@ class _ContinueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isProcessing = state.maybeMap(
-      processing: (_) => true,
-      orElse: () => false,
-    );
-
-    if (isProcessing) return const Loader();
-
     final active = state.maybeMap(
       idle: (state) => state.isCodeValid,
       orElse: () => false,

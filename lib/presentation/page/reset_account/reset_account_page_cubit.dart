@@ -20,7 +20,8 @@ class ResetAccountPageCubit extends Cubit<ResetAccountPageState> {
 
     try {
       await _resetAccountUseCase();
-      emit(ResetAccountPageState.accountResetSuccessful());
+      // TODO: uncomment after backend impl of account reset
+      // emit(ResetAccountPageState.accountResetSuccessful());
     } on GeneralConnectionError catch (e) {
       emit(ResetAccountPageState.idle());
       await Future.delayed(const Duration(milliseconds: 200));

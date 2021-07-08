@@ -13,4 +13,8 @@ class AddNewDevicePageState with _$AddNewDevicePageState {
   factory AddNewDevicePageState.processing() = _AddNewDevicePageStateProcessing;
 
   factory AddNewDevicePageState.connectionError(GeneralConnectionError error) = _AddNewDevicePageStateConnectionError;
+
+  factory AddNewDevicePageState.error() = _AddNewDevicePageStateError;
+
+  factory AddNewDevicePageState.deviceAdded() = _AddNewDeviceCodePageDeviceAdded;
 }
