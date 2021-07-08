@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
-import 'package:logpass_me/presentation/style/app_image.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
@@ -18,6 +19,7 @@ class FullscreenError extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     final colors = useAppThemeColors();
     final typography = useAppTypography();
 
@@ -42,8 +44,8 @@ class FullscreenError extends HookWidget {
             ).tr(),
           ),
           Expanded(
-            child: Image.asset(
-              AppImage.placeholder,
+            child: SvgPicture.asset(
+              brightness == Brightness.light ? AppIcon.failureLight : AppIcon.failureDark,
               alignment: Alignment.centerRight,
             ),
           ),

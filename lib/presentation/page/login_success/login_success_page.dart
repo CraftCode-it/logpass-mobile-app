@@ -8,7 +8,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
-import 'package:logpass_me/presentation/style/app_image.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
 class LoginSuccessPage extends HookWidget {
@@ -16,6 +15,7 @@ class LoginSuccessPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
@@ -54,9 +54,9 @@ class LoginSuccessPage extends HookWidget {
               ).tr(),
             ),
             Expanded(
-              child: Image.asset(
-                AppImage.placeholder,
-                alignment: Alignment.bottomRight,
+              child: SvgPicture.asset(
+                brightness  == Brightness.light ? AppIcon.successLight : AppIcon.successDark,
+                alignment: Alignment.center,
               ),
             ),
             const SizedBox(height: AppDimens.xc),

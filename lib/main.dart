@@ -30,6 +30,7 @@ Future<void> runMain(String env) async {
   await setupCrashlytics();
 
   await runZonedGuarded<Future<void>>(() async {
+    await _precacheSvgImages();
     await CountryCodes.init();
 
     await configureDependencies(env);
@@ -75,3 +76,10 @@ Future<void> setupCrashlytics() async {
 }
 
 Future<ThemeBrightness> getInitialBrightnessTheme() => getIt<GetThemeBrightnessUseCase>()();
+
+Future<void> _precacheSvgImages() async {
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.successLight), null);
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.successDark), null);
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.failureLight), null);
+  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.failureDark), null);
+}
