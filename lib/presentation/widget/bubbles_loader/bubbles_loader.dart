@@ -14,36 +14,39 @@ class BubblesLoader extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Container(
-          color: colors.darkBackground,
-          child: SvgPicture.asset(
-            AppImage.bubbles,
-            alignment: Alignment.centerRight,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            color: colors.darkBackground,
+            child: SvgPicture.asset(
+              AppImage.bubbles,
+              alignment: Alignment.centerRight,
+            ),
           ),
-        ),
-        Material(
-          color: Colors.transparent,
-          child: SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimens.l,
-                  vertical: AppDimens.xxl,
-                ),
-                child: Text(
-                  LocaleKeys.bubbleLoader_description.tr(),
-                  textAlign: TextAlign.center,
-                  style: typography.h9.copyWith(color: colors.textSpecial),
+          Material(
+            color: Colors.transparent,
+            child: SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimens.l,
+                    vertical: AppDimens.xxl,
+                  ),
+                  child: Text(
+                    LocaleKeys.bubbleLoader_description.tr(),
+                    textAlign: TextAlign.center,
+                    style: typography.h9.copyWith(color: colors.textSpecial),
+                  ),
                 ),
               ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

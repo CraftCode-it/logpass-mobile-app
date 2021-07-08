@@ -46,6 +46,7 @@ class StartPage extends HookWidget {
       body: SafeArea(
         child: Messenger(
           controller: messengerController,
+          withActionHandler: false,
           child: KeyboardVisibilityBuilder(
             builder: (context, isKeyboardVisible) => GestureDetector(
               onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

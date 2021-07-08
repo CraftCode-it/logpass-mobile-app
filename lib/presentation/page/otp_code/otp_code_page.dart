@@ -60,6 +60,7 @@ class OTPCodePage extends HookWidget {
       ),
       body: Messenger(
         controller: messengerController,
+        withActionHandler: false,
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: Column(
@@ -112,6 +113,9 @@ class OTPCodePage extends HookWidget {
       resendSuccess: (_) => controller.showInfo(
         tr(LocaleKeys.otpCode_codeResendSuccess),
       ),
+      accountAlreadyExists: (state) {
+        AutoRouter.of(context).replaceAll([const LoginResetPageRoute()]);
+      },
       orElse: () {},
     );
   }

@@ -9,4 +9,8 @@ class ResetAccountPageState with _$ResetAccountPageState {
   factory ResetAccountPageState.processing() = _ResetAccountPageStateProcessing;
 
   factory ResetAccountPageState.connectionError(GeneralConnectionError error) = _ResetAccountPageStateConnectionError;
+
+  factory ResetAccountPageState.error() = _ResetAccountPageStateError;
+
+  factory ResetAccountPageState.accountResetSuccessful() = _ResetAccountPageStateAccountResetSuccessful;
 }
