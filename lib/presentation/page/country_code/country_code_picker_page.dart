@@ -118,6 +118,7 @@ class _CountryCodeRow extends HookWidget {
             Image.network(
               countryFlagUrl(countryCode.country, true),
               width: 36,
+              errorBuilder: (context, _, __) => const SizedBox.shrink(),
             ),
             const SizedBox(width: AppDimens.m),
             if (codeVisible) ...[

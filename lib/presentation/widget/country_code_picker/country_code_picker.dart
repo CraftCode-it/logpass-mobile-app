@@ -142,6 +142,7 @@ class _Selected extends HookWidget {
           countryFlagUrl(countryCode.country, true),
           width: 24,
           height: 24,
+          errorBuilder: (context, _, __) => const SizedBox.shrink(),
         ),
         const SizedBox(width: AppDimens.xxs),
         Text(
