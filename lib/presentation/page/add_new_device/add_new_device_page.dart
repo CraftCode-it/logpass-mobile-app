@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,7 +10,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
-import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
+import 'package:logpass_me/presentation/widget/bubbles_loader/bubbles_loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
@@ -17,6 +18,7 @@ import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 
 class AddNewDevicePage extends HookWidget {
   const AddNewDevicePage({Key? key}) : super(key: key);
@@ -78,6 +80,23 @@ class AddNewDevicePage extends HookWidget {
     MessengerController controller,
   ) {
     state.maybeMap(
+      processing: (_) {},
+      orElse: () => AutoRouter.of(context).popUntil((route) => route.settings.name == AddNewDevicePageRoute.name),
+    );
+
+    state.maybeMap(
+      processing: (_) {
+        showGeneralDialog(
+          context: context,
+          pageBuilder: (context, animation, secondaryAnimation) => BubblesLoader(),
+        );
+      },
+      deviceAdded: (_) {
+        AutoRouter.of(context).pushAndPopUntil(
+          const LoginSuccessPageRoute(),
+          predicate: (route) => false,
+        );
+      },
       connectionError: (state) => controller.showError(
         getConnectionErrorString(state.error),
       ),
@@ -270,13 +289,6 @@ class _ContinueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isProcessing = state.maybeMap(
-      processing: (_) => true,
-      orElse: () => false,
-    );
-
-    if (isProcessing) return const Loader();
-
     final active = state.maybeMap(
       idle: (state) => state.isCodeValid,
       orElse: () => false,

@@ -24,6 +24,7 @@ import 'package:logpass_me/presentation/page/entry/entry_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/language/language_page.dart';
+import 'package:logpass_me/presentation/page/login_reset/login_reset_page.dart';
 import 'package:logpass_me/presentation/page/login_success/login_success_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page.dart';
 import 'package:logpass_me/presentation/page/need_help/need_help_page.dart';
@@ -34,6 +35,7 @@ import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_p
 import 'package:logpass_me/presentation/page/pin_setup/confirm_with_pin/confirm_with_pin_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/new_pin/new_pin_page.dart';
 import 'package:logpass_me/presentation/page/pin_setup/pin_success/pin_success_page.dart';
+import 'package:logpass_me/presentation/page/reset_account/reset_account_page.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page.dart';
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page.dart';
@@ -85,6 +87,8 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: AddNewDeviceCodePage),
     AutoRoute(page: DataInvoiceListPage),
     AutoRoute(page: DataInvoiceListFormPage),
+    AutoRoute(page: LoginResetPage),
+    AutoRoute(page: ResetAccountPage),
   ],
 )
 class $MainRouter {}

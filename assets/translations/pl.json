@@ -342,5 +342,27 @@
       "3": "Enter the code presented:"
     },
     "copy": "click on the code to copy"
+  },
+  "loginReset": {
+    "title": "Login reset",
+    "description": "It seems like your account has been configured on other device.",
+    "header": "What can you do now?",
+    "newDeviceDescription": "Link this device to your account to proceed on it",
+    "newDeviceButton": "Add new device",
+    "resetAccountDescription": "Is this your default device or you do not recall using another one?",
+    "resetAccountButton": "Reset account"
+  },
+  "resetAccount": {
+    "title": "Reset account",
+    "header": "You are about to reset your account",
+    "firstParagraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "secondParagraph": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "firstWarningNote": "Please note, the data assigned to this account will be lost.",
+    "secondWarningNote": "Are you sure you want to proceed?",
+    "thirdWarningNote": "This action cannot be undone",
+    "resetAccountButton": "Reset"
+  },
+  "bubbleLoader": {
+    "description": "Configuring your account.\nIt may take a minute."
   }
 }

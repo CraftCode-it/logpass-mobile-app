@@ -9,8 +9,11 @@ class AddNewDevicePageState with _$AddNewDevicePageState {
   @Implements(BuildState)
   factory AddNewDevicePageState.idle(bool isCodeValid) = _AddNewDevicePageStateIdle;
 
-  @Implements(BuildState)
   factory AddNewDevicePageState.processing() = _AddNewDevicePageStateProcessing;
 
   factory AddNewDevicePageState.connectionError(GeneralConnectionError error) = _AddNewDevicePageStateConnectionError;
+
+  factory AddNewDevicePageState.error() = _AddNewDevicePageStateError;
+
+  factory AddNewDevicePageState.deviceAdded() = _AddNewDeviceCodePageDeviceAdded;
 }
