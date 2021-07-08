@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -14,38 +15,41 @@ class BubblesLoader extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
 
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-            color: colors.darkBackground,
-            child: SvgPicture.asset(
-              AppImage.bubbles,
-              alignment: Alignment.centerRight,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Container(
+              color: colors.darkBackground,
+              child: SvgPicture.asset(
+                AppImage.bubbles,
+                alignment: Alignment.centerRight,
+              ),
             ),
-          ),
-          Material(
-            color: Colors.transparent,
-            child: SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimens.l,
-                    vertical: AppDimens.xxl,
-                  ),
-                  child: Text(
-                    LocaleKeys.bubbleLoader_description.tr(),
-                    textAlign: TextAlign.center,
-                    style: typography.h9.copyWith(color: colors.textSpecial),
+            Material(
+              color: Colors.transparent,
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.l,
+                      vertical: AppDimens.xxl,
+                    ),
+                    child: Text(
+                      LocaleKeys.bubbleLoader_description.tr(),
+                      textAlign: TextAlign.center,
+                      style: typography.h9.copyWith(color: colors.textSpecial),
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
