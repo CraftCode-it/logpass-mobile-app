@@ -51,6 +51,7 @@ class FullscreenError extends HookWidget {
               child: CustomRectangularButton.filled(
                 text: tr(LocaleKeys.error_page_action),
                 onPressed: onTryAgain,
+                borderColor: Colors.transparent,
                 fillColor: AppColors.secondary,
                 textColor: AppColors.primary100,
               ),

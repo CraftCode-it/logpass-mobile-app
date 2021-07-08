@@ -364,5 +364,13 @@
   },
   "bubbleLoader": {
     "description": "Configuring your account.\nIt may take a minute."
+  },
+  "pastEvents": {
+    "title": "Events log",
+    "actionLabel": {
+      "authorize": "Authorization",
+      "confirm": "Confirmation",
+      "update": "Security update"
+    }
   }
 }

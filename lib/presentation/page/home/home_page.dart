@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
@@ -254,9 +255,7 @@ class _PastEventsButton extends HookWidget {
             ),
           ),
         ),
-        onPressed: () {
-          // TODO: handle navigation to past events
-        },
+        onPressed: () => AutoRouter.of(context).push(const EventLogPageRoute()),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.m),
           child: Row(

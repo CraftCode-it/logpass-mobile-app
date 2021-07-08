@@ -21,6 +21,7 @@ import 'package:logpass_me/presentation/page/data_personal_page/data_personal_pa
 import 'package:logpass_me/presentation/page/device_list/change_device_name/change_device_name_page.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
+import 'package:logpass_me/presentation/page/event_log/event_log_page.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/language/language_page.dart';
@@ -89,6 +90,7 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: DataInvoiceListFormPage),
     AutoRoute(page: LoginResetPage),
     AutoRoute(page: ResetAccountPage),
+    AutoRoute(page: EventLogPage),
   ],
 )
 class $MainRouter {}
