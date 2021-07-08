@@ -23,8 +23,6 @@ class ResetAccountPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<ResetAccountPageCubit>();
-    final state = useCubitBuilder(cubit);
-
     final messengerController = useMessengerController();
 
     useCubitListener<ResetAccountPageCubit, ResetAccountPageState>(
@@ -32,18 +30,9 @@ class ResetAccountPage extends HookWidget {
       (cubit, state, context) => _cubitListener(cubit, state, context, messengerController),
     );
 
-    return state.maybeWhen(
-      idle: () => _Content(
-        controller: messengerController,
-        isLoading: false,
-        cubit: cubit,
-      ),
-      processing: () => _Content(
-        controller: messengerController,
-        isLoading: true,
-        cubit: cubit,
-      ),
-      orElse: () => const SizedBox.shrink(),
+    return _Content(
+      controller: messengerController,
+      cubit: cubit,
     );
   }
 
@@ -53,17 +42,27 @@ class ResetAccountPage extends HookWidget {
     BuildContext context,
     MessengerController controller,
   ) {
+    if (state != ResetAccountPageState.processing()) {
+      AutoRouter.of(context).popUntil((route) => route.settings.name == ResetAccountPageRoute.name);
+    }
+
     state.maybeMap(
-      accountResetSuccessful: (state) {
+      accountResetSuccessful: (_) {
         AutoRouter.of(context).pushAndPopUntil(
           const LoginSuccessPageRoute(),
           predicate: (route) => false,
         );
       },
+      processing: (_) {
+        showGeneralDialog(
+          context: context,
+          pageBuilder: (context, animation, secondaryAnimation) => BubblesLoader(),
+        );
+      },
       connectionError: (state) => controller.showError(
         getConnectionErrorString(state.error),
       ),
-      error: (state) => controller.showError(
+      error: (_) => controller.showError(
         getConnectionErrorString(GeneralConnectionError.somethingWentWrong()),
       ),
       orElse: () {},
@@ -73,70 +72,63 @@ class ResetAccountPage extends HookWidget {
 
 class _Content extends HookWidget {
   final MessengerController controller;
-  final bool isLoading;
   final ResetAccountPageCubit cubit;
 
   const _Content({
     required this.controller,
-    required this.isLoading,
     required this.cubit,
   });
 
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
-      child: isLoading
-          ? BubblesLoader()
-          : Scaffold(
-              backgroundColor: colors.background,
-              appBar: CustomAppBar.smallTitle(
-                leading: NavigationButton.back(),
-                title: LocaleKeys.resetAccount_title.tr(),
-              ),
-              body: SafeArea(
-                child: Messenger(
-                  controller: controller,
-                  withActionHandler: false,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverList(
-                          delegate: SliverChildListDelegate(
-                            [
-                              const SizedBox(height: AppDimens.m),
-                              const _InfoContent(),
-                              const SizedBox(height: AppDimens.m),
-                            ],
-                          ),
-                        ),
-                        SliverFillRemaining(
-                          fillOverscroll: false,
-                          hasScrollBody: false,
-                          child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  _WarningContent(),
-                                  const SizedBox(height: AppDimens.m),
-                                  CustomRectangularButton.filled(
-                                    text: LocaleKeys.resetAccount_resetAccountButton.tr(),
-                                    onPressed: cubit.resetAccount,
-                                  ),
-                                  const SizedBox(height: AppDimens.xl),
-                                ],
-                              )),
-                        ),
-                      ],
-                    ),
+    return Scaffold(
+      backgroundColor: colors.background,
+      appBar: CustomAppBar.smallTitle(
+        leading: NavigationButton.back(),
+        title: LocaleKeys.resetAccount_title.tr(),
+      ),
+      body: SafeArea(
+        child: Messenger(
+          controller: controller,
+          withActionHandler: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      const SizedBox(height: AppDimens.m),
+                      const _InfoContent(),
+                      const SizedBox(height: AppDimens.m),
+                    ],
                   ),
                 ),
-              ),
+                SliverFillRemaining(
+                  fillOverscroll: false,
+                  hasScrollBody: false,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _WarningContent(),
+                          const SizedBox(height: AppDimens.m),
+                          CustomRectangularButton.filled(
+                            text: LocaleKeys.resetAccount_resetAccountButton.tr(),
+                            onPressed: cubit.resetAccount,
+                          ),
+                          const SizedBox(height: AppDimens.xl),
+                        ],
+                      )),
+                ),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 }

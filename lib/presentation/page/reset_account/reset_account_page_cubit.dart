@@ -23,13 +23,9 @@ class ResetAccountPageCubit extends Cubit<ResetAccountPageState> {
       // TODO: uncomment after backend impl of account reset
       // emit(ResetAccountPageState.accountResetSuccessful());
     } on GeneralConnectionError catch (e) {
-      emit(ResetAccountPageState.idle());
-      await Future.delayed(const Duration(milliseconds: 200));
       emit(ResetAccountPageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Account reset has failed', ex: e, stacktrace: s);
-      emit(ResetAccountPageState.idle());
-      await Future.delayed(const Duration(milliseconds: 200));
       emit(ResetAccountPageState.error());
     }
   }

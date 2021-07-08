@@ -25,13 +25,9 @@ class AddNewDevicePageCubit extends Cubit<AddNewDevicePageState> {
       // TODO: uncomment after backend impl of adding new device
       // emit(AddNewDevicePageState.deviceAdded());
     } on GeneralConnectionError catch (e) {
-      _emitIdleState();
-      await Future.delayed(const Duration(milliseconds: 200));
       emit(AddNewDevicePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Device adding has failed', ex: e, stacktrace: s);
-      _emitIdleState();
-      await Future.delayed(const Duration(milliseconds: 200));
       emit(AddNewDevicePageState.error());
     }
   }

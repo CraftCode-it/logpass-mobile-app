@@ -37,24 +37,39 @@ class AddNewDevicePage extends HookWidget {
       (cubit, state, context) => _listener(cubit, state, context, messengerController),
     );
 
-    return state.maybeWhen(
-      idle: (_) => _ContentWrapper(
-        messengerController: messengerController,
-        isLoading: false,
-        cubit: cubit,
-        state: state,
-        codeController: codeController,
-        codeInputKey: codeInputKey,
+    return CustomScaffold(
+      appBar: CustomAppBar.smallTitle(
+        leading: NavigationButton.back(),
+        title: LocaleKeys.addNewDevice_title.tr(),
       ),
-      processing: () => _ContentWrapper(
-        messengerController: messengerController,
-        isLoading: true,
-        cubit: cubit,
-        state: state,
-        codeController: codeController,
-        codeInputKey: codeInputKey,
+      body: SafeArea(
+        child: Messenger(
+          controller: messengerController,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: KeyboardVisibilityBuilder(
+              builder: (BuildContext context, bool isKeyboardVisible) {
+                if (isKeyboardVisible) {
+                  return _PartialContent(
+                    state: state,
+                    controller: codeController,
+                    cubit: cubit,
+                    codeInputKey: codeInputKey,
+                  );
+                } else {
+                  return _FullContent(
+                    state: state,
+                    controller: codeController,
+                    cubit: cubit,
+                    codeInputKey: codeInputKey,
+                  );
+                }
+              },
+            ),
+          ),
+        ),
       ),
-      orElse: () => const SizedBox.shrink(),
+      onTryAgain: () {},
     );
   }
 
@@ -64,8 +79,18 @@ class AddNewDevicePage extends HookWidget {
     BuildContext context,
     MessengerController controller,
   ) {
+    if (state != AddNewDevicePageState.processing()) {
+      AutoRouter.of(context).popUntil((route) => route.settings.name == AddNewDevicePageRoute.name);
+    }
+
     state.maybeMap(
-      deviceAdded: (value) {
+      processing: (_) {
+        showGeneralDialog(
+          context: context,
+          pageBuilder: (context, animation, secondaryAnimation) => BubblesLoader(),
+        );
+      },
+      deviceAdded: (_) {
         AutoRouter.of(context).pushAndPopUntil(
           const LoginSuccessPageRoute(),
           predicate: (route) => false,
@@ -75,68 +100,6 @@ class AddNewDevicePage extends HookWidget {
         getConnectionErrorString(state.error),
       ),
       orElse: () {},
-    );
-  }
-}
-
-class _ContentWrapper extends StatelessWidget {
-  final MessengerController messengerController;
-  final AddNewDevicePageState state;
-  final AddNewDevicePageCubit cubit;
-  final Key codeInputKey;
-  final TextEditingController codeController;
-  final bool isLoading;
-
-  const _ContentWrapper({
-    required this.messengerController,
-    required this.state,
-    required this.cubit,
-    required this.codeInputKey,
-    required this.codeController,
-    required this.isLoading,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
-      child: isLoading
-          ? BubblesLoader()
-          : CustomScaffold(
-              appBar: CustomAppBar.smallTitle(
-                leading: NavigationButton.back(),
-                title: LocaleKeys.addNewDevice_title.tr(),
-              ),
-              body: SafeArea(
-                child: Messenger(
-                  controller: messengerController,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                    child: KeyboardVisibilityBuilder(
-                      builder: (BuildContext context, bool isKeyboardVisible) {
-                        if (isKeyboardVisible) {
-                          return _PartialContent(
-                            state: state,
-                            controller: codeController,
-                            cubit: cubit,
-                            codeInputKey: codeInputKey,
-                          );
-                        } else {
-                          return _FullContent(
-                            state: state,
-                            controller: codeController,
-                            cubit: cubit,
-                            codeInputKey: codeInputKey,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              onTryAgain: () {},
-            ),
     );
   }
 }
