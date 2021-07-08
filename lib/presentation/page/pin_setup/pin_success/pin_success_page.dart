@@ -24,36 +24,36 @@ class PinSuccessPage extends HookWidget {
     return Scaffold(
       backgroundColor: AppColors.success100,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: AppDimens.xl),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              child: Text(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: AppDimens.xl),
+              Text(
                 LocaleKeys.pinSuccess_header,
                 style: typography.h7.copyWith(color: colors.textSpecial),
               ).tr(),
-            ),
-            Expanded(
-              child: SvgPicture.asset(
-                brightness == Brightness.light ? AppIcon.successLight : AppIcon.successDark,
-                alignment: Alignment.center,
+              Expanded(
+                child: SvgPicture.asset(
+                  brightness == Brightness.light ? AppIcon.successLight : AppIcon.successDark,
+                  alignment: Alignment.center,
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-              width: double.infinity,
-              child: CustomRectangularButton.filled(
-                text: tr(LocaleKeys.common_continue),
-                onPressed: () => AutoRouter.of(context).navigate(route),
-                borderColor: Colors.transparent,
-                fillColor: AppColors.secondary,
-                textColor: AppColors.primary100,
+              const SizedBox(height: AppDimens.l),
+              Container(
+                width: double.infinity,
+                child: CustomRectangularButton.filled(
+                  text: tr(LocaleKeys.common_continue),
+                  onPressed: () => AutoRouter.of(context).navigate(route),
+                  borderColor: Colors.transparent,
+                  fillColor: AppColors.secondary,
+                  textColor: AppColors.primary100,
+                ),
               ),
-            ),
-            const SizedBox(height: AppDimens.l),
-          ],
+              const SizedBox(height: AppDimens.l),
+            ],
+          ),
         ),
       ),
     );
