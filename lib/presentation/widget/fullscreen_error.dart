@@ -24,43 +24,40 @@ class FullscreenError extends HookWidget {
     final typography = useAppTypography();
 
     return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: AppDimens.xl),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-            child: Text(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: AppDimens.xl),
+            Text(
               LocaleKeys.error_page_header,
               style: typography.h2.copyWith(color: colors.textSpecial),
             ).tr(),
-          ),
-          const SizedBox(height: AppDimens.l),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-            child: Text(
+            const SizedBox(height: AppDimens.l),
+            Text(
               LocaleKeys.error_page_content,
               style: typography.h7.copyWith(color: colors.textSpecial),
             ).tr(),
-          ),
-          Expanded(
-            child: SvgPicture.asset(
-              brightness == Brightness.light ? AppIcon.failureLight : AppIcon.failureDark,
-              alignment: Alignment.centerRight,
+            Expanded(
+              child: SvgPicture.asset(
+                brightness == Brightness.light ? AppIcon.failureLight : AppIcon.failureDark,
+                alignment: Alignment.center,
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-            width: double.infinity,
-            child: CustomRectangularButton.filled(
-              text: tr(LocaleKeys.error_page_action),
-              onPressed: onTryAgain,
-              fillColor: AppColors.secondary,
-              textColor: AppColors.primary100,
+            const SizedBox(height: AppDimens.l),
+            Container(
+              width: double.infinity,
+              child: CustomRectangularButton.filled(
+                text: tr(LocaleKeys.error_page_action),
+                onPressed: onTryAgain,
+                fillColor: AppColors.secondary,
+                textColor: AppColors.primary100,
+              ),
             ),
-          ),
-          const SizedBox(height: AppDimens.l),
-        ],
+            const SizedBox(height: AppDimens.l),
+          ],
+        ),
       ),
     );
   }
