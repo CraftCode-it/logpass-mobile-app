@@ -6,7 +6,10 @@ class AgreementContentPreviewPageState with _$AgreementContentPreviewPageState {
   const factory AgreementContentPreviewPageState.loading() = _AgreementContentPreviewPageStateLoading;
 
   @Implements(BuildState)
-  const factory AgreementContentPreviewPageState.idle(PdfDocument pdfDocument) = _AgreementContentPreviewPageStateIdle;
+  const factory AgreementContentPreviewPageState.idle(PdfController pdfDocument) = _AgreementContentPreviewPageStateIdle;
+
+  @Implements(BuildState)
+  const factory AgreementContentPreviewPageState.error() = _AgreementContentPreviewPageStateError;
 
   factory AgreementContentPreviewPageState.connectionError(GeneralConnectionError error) =
       _AgreementContentPreviewPageStateConnectionError;

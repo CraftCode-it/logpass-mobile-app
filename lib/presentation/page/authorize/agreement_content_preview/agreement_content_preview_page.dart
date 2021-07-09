@@ -4,14 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/agreement_content_preview/agreement_content_preview_page_cubit.dart';
-import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
-import 'package:logpass_me/presentation/widget/pdf/pdf_list_view.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 
 class AgreementContentPreviewPage extends HookWidget {
   final ServiceAgreement serviceAgreement;
@@ -22,7 +22,6 @@ class AgreementContentPreviewPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<AgreementContentPreviewPageCubit>();
     final state = useCubitBuilder(cubit);
-    final colors = useAppThemeColors();
     final messengerController = useMessengerController();
 
     useCubitListener<AgreementContentPreviewPageCubit, AgreementContentPreviewPageState>(
@@ -34,8 +33,7 @@ class AgreementContentPreviewPage extends HookWidget {
       cubit.init(serviceAgreement);
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
+    return CustomScaffold(
       appBar: CustomAppBar.smallTitle(
         title: LocaleKeys.agreementDetails_title.tr(),
         leading: NavigationButton.back(),
@@ -44,9 +42,17 @@ class AgreementContentPreviewPage extends HookWidget {
         controller: messengerController,
         child: state.maybeMap(
           loading: (_) => const Loader(),
-          idle: (state) => PdfListView(document: state.pdfDocument),
+          idle: (state) => PdfView(
+            controller: state.pdfDocument,
+            scrollDirection: Axis.vertical,
+          ),
           orElse: () => const SizedBox(),
         ),
+      ),
+      onTryAgain: () => cubit.init(serviceAgreement),
+      showErrorPage: state.maybeMap(
+        error: (_) => true,
+        orElse: () => false,
       ),
     );
   }

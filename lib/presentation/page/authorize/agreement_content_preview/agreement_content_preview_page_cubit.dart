@@ -7,16 +7,17 @@ import 'package:logpass_me/domain/pdf/use_case/get_agreement_pdf_file_use_case.d
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:native_pdf_renderer/native_pdf_renderer.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 
-part 'agreement_content_preview_page_state.dart';
 part 'agreement_content_preview_page_cubit.freezed.dart';
+part 'agreement_content_preview_page_state.dart';
 
 @injectable
 class AgreementContentPreviewPageCubit extends Cubit<AgreementContentPreviewPageState> {
   final GetAgreementPdfFileUseCase _getAgreementPdfFileUseCase;
 
   late ServiceAgreement _agreement;
-  PdfDocument? _document;
+  PdfController? _controller;
 
   AgreementContentPreviewPageCubit(
     this._getAgreementPdfFileUseCase,
@@ -24,7 +25,7 @@ class AgreementContentPreviewPageCubit extends Cubit<AgreementContentPreviewPage
 
   @override
   Future<void> close() async {
-    await _document?.close();
+    _controller?.dispose();
     return super.close();
   }
 
@@ -33,15 +34,15 @@ class AgreementContentPreviewPageCubit extends Cubit<AgreementContentPreviewPage
 
     try {
       final file = await _getAgreementPdfFileUseCase(_agreement);
-      final document = await PdfDocument.openFile(file.path);
-      _document = document;
+      final document = PdfController(document: PdfDocument.openFile(file.path));
+      _controller = document;
 
       emit(AgreementContentPreviewPageState.idle(document));
     } on GeneralConnectionError catch (e) {
       emit(AgreementContentPreviewPageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Loading PDF failed', ex: e, stacktrace: s);
-      emit(AgreementContentPreviewPageState.connectionError(GeneralConnectionError.somethingWentWrong()));
+      emit(const AgreementContentPreviewPageState.error());
     }
   }
 }

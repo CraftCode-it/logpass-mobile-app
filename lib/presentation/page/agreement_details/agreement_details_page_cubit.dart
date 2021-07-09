@@ -8,6 +8,7 @@ import 'package:logpass_me/domain/pdf/use_case/get_agreement_pdf_file_use_case.d
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page_state.dart';
 import 'package:native_pdf_renderer/native_pdf_renderer.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 
 @Injectable()
 class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
@@ -16,7 +17,7 @@ class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
   final RevokeAgreementUseCase _revokeAgreementUseCase;
 
   late ServiceAgreement _agreement;
-  PdfDocument? _document;
+  PdfController? _controller;
 
   AgreementDetailsPageCubit(
     this._getAgreementPdfFileUseCase,
@@ -26,7 +27,7 @@ class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
 
   @override
   Future<void> close() async {
-    await _document?.close();
+    _controller?.dispose();
     return super.close();
   }
 
@@ -37,7 +38,7 @@ class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
 
     try {
       final file = await _getAgreementPdfFileUseCase(_agreement);
-      _document = await PdfDocument.openFile(file.path);
+      _controller = PdfController(document: PdfDocument.openFile(file.path));
     } on GeneralConnectionError catch (e) {
       emit(AgreementDetailsPageState.connectionError(e));
     } catch (e, s) {
@@ -45,11 +46,11 @@ class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
       emit(AgreementDetailsPageState.connectionError(GeneralConnectionError.somethingWentWrong()));
     }
 
-    emit(AgreementDetailsPageState.idle(_document, _agreement));
+    emit(AgreementDetailsPageState.idle(_controller, _agreement));
   }
 
   Future<void> revokeAgreement() async {
-    emit(AgreementDetailsPageState.processing(_document, _agreement));
+    emit(AgreementDetailsPageState.processing(_controller, _agreement));
 
     try {
       await _revokeAgreementUseCase(_agreement);
@@ -61,12 +62,12 @@ class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
       Fimber.e('Revoking agreement failed', ex: e, stacktrace: s);
       emit(AgreementDetailsPageState.connectionError(GeneralConnectionError.somethingWentWrong()));
     } finally {
-      emit(AgreementDetailsPageState.idle(_document, _agreement));
+      emit(AgreementDetailsPageState.idle(_controller, _agreement));
     }
   }
 
   Future<void> confirmAgreement() async {
-    emit(AgreementDetailsPageState.processing(_document, _agreement));
+    emit(AgreementDetailsPageState.processing(_controller, _agreement));
 
     try {
       await _confirmAgreementUseCase(_agreement);
@@ -78,7 +79,7 @@ class AgreementDetailsPageCubit extends Cubit<AgreementDetailsPageState> {
       Fimber.e('Confirming agreement failed', ex: e, stacktrace: s);
       emit(AgreementDetailsPageState.connectionError(GeneralConnectionError.somethingWentWrong()));
     } finally {
-      emit(AgreementDetailsPageState.idle(_document, _agreement));
+      emit(AgreementDetailsPageState.idle(_controller, _agreement));
     }
   }
 }
