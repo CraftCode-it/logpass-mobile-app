@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
+import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 class ServiceListPage extends HookWidget {
@@ -53,6 +54,7 @@ class ServiceListPage extends HookWidget {
       backgroundColor: colors.background,
       appBar: CustomAppBar.bigTitle(
         title: LocaleKeys.serviceList_title.tr(),
+        trailing: const NeedHelpButton(),
       ),
       body: Messenger(
         controller: messengerController,
