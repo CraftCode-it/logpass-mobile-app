@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
@@ -53,50 +54,53 @@ class OnboardingPage extends HookWidget {
     );
     final index = useState(0);
 
-    return Scaffold(
-      backgroundColor: colors.darkBackground,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _SkipButton(
-                index: index.value,
-                onSkip: _navigateToLoginPage,
-              ),
-              const SizedBox(height: AppDimens.xxl),
-              Expanded(
-                child: PageView(
-                  controller: controller,
-                  onPageChanged: (page) => index.value = page,
-                  children: onboardingSteps,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: colors.darkBackground,
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _SkipButton(
+                  index: index.value,
+                  onSkip: _navigateToLoginPage,
                 ),
-              ),
-              const SizedBox(height: AppDimens.xxl),
-              _NavigationButton(
-                page: index.value,
-                nextPressed: () => controller.nextPage(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                ),
-                startPressed: () => _navigateToLoginPage(context),
-              ),
-              const SizedBox(height: AppDimens.l),
-              Center(
-                child: SmoothPageIndicator(
-                  controller: controller,
-                  count: onboardingSteps.length,
-                  effect: ColorTransitionEffect(
-                    activeDotColor: AppColors.secondary,
-                    dotColor: AppColors.secondary.withOpacity(0.5),
-                    activeStrokeWidth: 1,
-                    strokeWidth: 1,
-                    paintStyle: PaintingStyle.stroke,
+                const SizedBox(height: AppDimens.xxl),
+                Expanded(
+                  child: PageView(
+                    controller: controller,
+                    onPageChanged: (page) => index.value = page,
+                    children: onboardingSteps,
                   ),
                 ),
-              ),
-              const SizedBox(height: AppDimens.m),
-            ],
+                const SizedBox(height: AppDimens.xxl),
+                _NavigationButton(
+                  page: index.value,
+                  nextPressed: () => controller.nextPage(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  ),
+                  startPressed: () => _navigateToLoginPage(context),
+                ),
+                const SizedBox(height: AppDimens.l),
+                Center(
+                  child: SmoothPageIndicator(
+                    controller: controller,
+                    count: onboardingSteps.length,
+                    effect: ColorTransitionEffect(
+                      activeDotColor: AppColors.secondary,
+                      dotColor: AppColors.secondary.withOpacity(0.5),
+                      activeStrokeWidth: 1,
+                      strokeWidth: 1,
+                      paintStyle: PaintingStyle.stroke,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppDimens.m),
+              ],
+            ),
           ),
         ),
       ),
