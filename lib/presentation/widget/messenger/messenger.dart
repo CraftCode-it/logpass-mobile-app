@@ -81,8 +81,15 @@ class Messenger extends HookWidget {
           onDismiss: cubit.dismissCurrent,
           action: LocaleKeys.main_openActionLabel.tr(),
           onAction: () {
-            AutoRouter.of(context).push(
-              AuthorizePageRoute(authorizationAttemptId: state.action.actionId),
+            state.action.actionType.when(
+              authorize: () =>
+                  AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: state.action.actionId)),
+              confirm: () {
+                if (state.action.content != null) {
+                  AutoRouter.of(context).push(ConfirmPageRoute(confirmMessage: state.action.content!));
+                }
+              },
+              updateAccount: () {},
             );
           },
         ),

@@ -379,5 +379,9 @@
     "requiresHigherLevel": "This operation requires higher trust level",
     "currentLevel": "Currently reached level:",
     "confirmOnDevices": "Please confirm operation on other devices linked to your account:"
+  },
+  "confirm": {
+    "title": "Confirm",
+    "header": "Do you want to confirm following operation?"
   }
 }

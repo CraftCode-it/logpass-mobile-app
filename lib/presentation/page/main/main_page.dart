@@ -126,7 +126,15 @@ class MainPage extends HookWidget {
     state.maybeWhen(
       error: (message) {},
       openAction: (action) {
-        AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId));
+        action.actionType.when(
+          authorize: () => AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId)),
+          confirm: () {
+            if (action.content != null) {
+              AutoRouter.of(context).push(ConfirmPageRoute(confirmMessage: action.content!));
+            }
+          },
+          updateAccount: () {},
+        );
       },
       orElse: () {},
     );

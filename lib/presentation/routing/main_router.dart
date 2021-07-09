@@ -10,6 +10,7 @@ import 'package:logpass_me/presentation/page/authorize/email_selection/email_sel
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/service_rules/service_rules_page.dart';
 import 'package:logpass_me/presentation/page/authorize/trust_level_confirmation/trust_level_confirmation_page.dart';
+import 'package:logpass_me/presentation/page/confirm/confirm_page.dart';
 import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
 import 'package:logpass_me/presentation/page/data_address_page/data_addresses_form_page/data_addresses_form_page.dart';
 import 'package:logpass_me/presentation/page/data_address_page/data_addresses_page.dart';
@@ -93,6 +94,7 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: ResetAccountPage),
     AutoRoute(page: EventLogPage),
     AutoRoute(page: TrustLevelConfirmationPage),
+    AutoRoute(page: ConfirmPage),
   ],
 )
 class $MainRouter {}
