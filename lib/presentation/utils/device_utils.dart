@@ -1,3 +1,7 @@
+import 'package:logpass_me/domain/device/device.dart';
+import 'package:logpass_me/domain/model/device_type.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
+
 extension Icon on Device {
   String getIconPath() {
     switch (deviceType) {
