@@ -11,6 +11,8 @@ class AuthorizePageState with _$AuthorizePageState {
     Service service,
     List<ScopeElement> scopeElements,
     List<ServiceAgreement> agreements,
+    int requiredTrustLevel,
+    int currentTrustLevel,
   ) = _AuthorizePageStateIdle;
 
   const factory AuthorizePageState.confirmed(String? redirectUri) = _AuthorizePageStateConfirmed;

@@ -80,6 +80,7 @@
     "serviceRules": "Service rules",
     "trustLevelName": "Trust level",
     "trustLevelDescription": "No additional confirmation required",
+    "trustLevelRequired": "*Confirmation on another device required",
     "selectEmailTitle": "Select email",
     "selectAddressTitle": "Select address",
     "selectInvoiceData": "Select invoice data",
@@ -368,5 +369,11 @@
       "confirm": "Confirmation",
       "update": "Security update"
     }
+  },
+  "trustLevelConfirmation": {
+    "title": "Trust level confirmation",
+    "requiresHigherLevel": "This operation requires higher trust level",
+    "currentLevel": "Currently reached level:",
+    "confirmOnDevices": "Please confirm operation on other devices linked to your account:"
   }
 }

@@ -32,7 +32,10 @@ class DeviceRow extends HookWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _PlatformIcon(deviceType: device.deviceType),
+              SvgPicture.asset(
+                device.getIconPath(),
+                color: colors.buttonFill,
+              ),
               const SizedBox(width: AppDimens.m),
               TrustLevelIndicator(trustLevel: device.trustLevel),
               const SizedBox(width: AppDimens.m),
@@ -56,37 +59,5 @@ class DeviceRow extends HookWidget {
         Separator.light(),
       ],
     );
-  }
-}
-
-class _PlatformIcon extends HookWidget {
-  final DeviceType deviceType;
-
-  const _PlatformIcon({
-    required this.deviceType,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-
-    return SvgPicture.asset(
-      _getIconPath(),
-      color: colors.buttonFill,
-    );
-  }
-
-  String _getIconPath() {
-    switch (deviceType) {
-      case DeviceType.mobile:
-        return AppIcon.platformMobile;
-      case DeviceType.pc:
-        return AppIcon.platformPc;
-      case DeviceType.tablet:
-        return AppIcon.platformTablet;
-      case DeviceType.unknown:
-        return AppIcon.device;
-    }
   }
 }
