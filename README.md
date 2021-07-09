@@ -17,7 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Init commands
 - FVM use:
-`fvm use 2.2.0`
+`fvm use 2.2.2`
 - Easy localization:
 `fvm flutter pub run easy_localization:generate --source-dir ./assets/translations -f keys -o local_keys.g.dart`
 

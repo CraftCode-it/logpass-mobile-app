@@ -52,12 +52,15 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   List<Scope> _scopeRequested = [];
   Service? _service;
   bool _biometricCheckNeeded = false;
+  int _currentTrustLevel = 1;
+  int _requiredTrustLevel = 1;
 
   late String _authorizationAttemptId;
 
-  bool get _canConfirm => _areScopesEligible && _areRequiredAgreementsAccepted;
+  bool get _canConfirm => _areScopesEligible && _areRequiredAgreementsAccepted && _trustLevelIsReached;
   bool get _areScopesEligible => _scopeElements.every((e) => e.isEligible());
   bool get _areRequiredAgreementsAccepted => _agreements.where((e) => e.isRequired).every((e) => e.isAccepted);
+  bool get _trustLevelIsReached => _currentTrustLevel >= _requiredTrustLevel;
 
   AuthorizePageCubit(
     this._getOAuthApplicationDetailsUseCase,
@@ -91,6 +94,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       _scopeElements = await _getScopeElements(oAuthApplication);
       _shouldRedirect = !oAuthApplication.isRemote;
       _biometricCheckNeeded = oAuthApplication.scopesRequested.contains(Scope.verificationBiometric);
+      _requiredTrustLevel = oAuthApplication.trustLevel;
 
       _emitIdleState();
     } on GeneralConnectionError catch (e) {
@@ -126,6 +130,11 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     } else {
       return true;
     }
+  }
+
+  void updateTrustLevel(int trustLevel) {
+    _currentTrustLevel = trustLevel;
+    _emitIdleState();
   }
 
   void updateScopes(ScopeElement element) {
@@ -216,6 +225,13 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   }
 
   void _emitIdleState() {
-    emit(AuthorizePageState.idle(_canConfirm, _service!, _scopeElements, _agreements));
+    emit(AuthorizePageState.idle(
+      _canConfirm,
+      _service!,
+      _scopeElements,
+      _agreements,
+      _requiredTrustLevel,
+      _currentTrustLevel,
+    ));
   }
 }

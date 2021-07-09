@@ -14,6 +14,7 @@ class OAuthApplication {
   final bool isRemote;
   final List<Scope> scopesRequested;
   final Service service;
+  final int trustLevel;
 
   OAuthApplication({
     required this.id,
@@ -28,5 +29,6 @@ class OAuthApplication {
     required this.isRemote,
     required this.scopesRequested,
     required this.service,
+    required this.trustLevel,
   });
 }

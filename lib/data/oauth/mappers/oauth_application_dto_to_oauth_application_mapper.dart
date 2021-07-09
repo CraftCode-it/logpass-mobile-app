@@ -27,6 +27,7 @@ class OAuthApplicationDTOToOAuthApplicationMapper implements DataMapper<OAuthApp
       isRemote: data.data.isRemote,
       scopesRequested: data.data.scopesRequested.map(_scopeDTOMapper.to).toList(),
       service: _serviceDTOMapper.to(data.data.service),
+      trustLevel: data.data.trustLevel,
     );
   }
 }

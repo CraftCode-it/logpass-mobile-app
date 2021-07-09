@@ -31,6 +31,7 @@ class OAuthApplicationDataDTO {
   final String city;
   final String country;
   final bool isRemote;
+  final int trustLevel;
   final List<String> scopesRequested;
   @JsonKey(name: _linksKey)
   final OAuthApplicationDataLinksDTO links;
@@ -49,6 +50,7 @@ class OAuthApplicationDataDTO {
     this.country,
     this.isRemote,
     this.scopesRequested,
+    this.trustLevel,
     this.links,
     this.service,
   );

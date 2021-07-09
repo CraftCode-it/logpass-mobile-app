@@ -9,9 +9,15 @@ const _customFontSize = 12.0;
 
 class TrustLevelIndicator extends HookWidget {
   final int trustLevel;
+  final double? indicatorSize;
+  final double? fontSize;
+  final Color? borderColor;
 
   const TrustLevelIndicator({
     required this.trustLevel,
+    this.borderColor,
+    this.indicatorSize,
+    this.fontSize,
     Key? key,
   }) : super(key: key);
 
@@ -21,19 +27,22 @@ class TrustLevelIndicator extends HookWidget {
     final colors = useAppThemeColors();
 
     return Container(
-      width: _indicatorSize,
-      height: _indicatorSize,
+      width: indicatorSize ?? _indicatorSize,
+      height: indicatorSize ?? _indicatorSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
           width: _borderWidth,
-          color: colors.buttonFill,
+          color: borderColor ?? colors.buttonFill,
         ),
       ),
       child: Center(
         child: Text(
           trustLevel.toString(),
-          style: typography.body1.copyWith(fontSize: _customFontSize),
+          style: typography.body1.copyWith(
+            fontSize: fontSize ?? _customFontSize,
+            color: borderColor ?? colors.text,
+          ),
         ),
       ),
     );

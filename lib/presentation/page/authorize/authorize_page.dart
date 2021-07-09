@@ -60,21 +60,17 @@ class AuthorizePage extends HookWidget {
       body: SafeArea(
         child: Messenger(
           controller: messengerController,
-          child: state.maybeWhen(
-            idle: (
-              canConfirm,
-              service,
-              scopes,
-              agreements,
-            ) =>
-                _PageContent(
-              service: service,
-              canConfirm: canConfirm,
-              scopeElements: scopes,
-              agreementList: agreements,
+          child: state.maybeMap(
+            idle: (state) => _PageContent(
+              service: state.service,
+              canConfirm: state.canConfirm,
+              scopeElements: state.scopeElements,
+              agreementList: state.agreements,
               cubit: cubit,
+              requiredTrustLevel: state.requiredTrustLevel,
+              currentTrustLevel: state.currentTrustLevel,
             ),
-            loading: () => const Loader(),
+            loading: (_) => const Loader(),
             orElse: () => const SizedBox(),
           ),
         ),
@@ -134,6 +130,8 @@ class _PageContent extends StatelessWidget {
   final bool canConfirm;
   final List<ScopeElement> scopeElements;
   final List<ServiceAgreement> agreementList;
+  final int requiredTrustLevel;
+  final int currentTrustLevel;
 
   const _PageContent({
     required this.service,
@@ -141,6 +139,8 @@ class _PageContent extends StatelessWidget {
     required this.scopeElements,
     required this.agreementList,
     required this.cubit,
+    required this.requiredTrustLevel,
+    required this.currentTrustLevel,
   });
 
   @override
@@ -165,6 +165,9 @@ class _PageContent extends StatelessWidget {
                     agreementList,
                     cubit.updateScopes,
                     cubit.updateAgreements,
+                    requiredTrustLevel,
+                    currentTrustLevel,
+                    cubit.updateTrustLevel,
                   ),
                 ),
                 const SizedBox(height: AppDimens.xl),
@@ -193,6 +196,9 @@ class _Form extends StatelessWidget {
   final List<ServiceAgreement> agreements;
   final Function(ScopeElement) onScopeElementChange;
   final Function(List<ServiceAgreement>) onAgreementsChange;
+  final int requiredTrustLevel;
+  final int currentTrustLevel;
+  final Function(int) onTrustLevelChange;
 
   const _Form(
     this.service,
@@ -200,6 +206,9 @@ class _Form extends StatelessWidget {
     this.agreements,
     this.onScopeElementChange,
     this.onAgreementsChange,
+    this.requiredTrustLevel,
+    this.currentTrustLevel,
+    this.onTrustLevelChange,
   );
 
   @override
@@ -220,7 +229,12 @@ class _Form extends StatelessWidget {
             },
             itemCount: scopeElements.length,
           ),
-          _TrustLevelElement(),
+          _TrustLevelElement(
+            requiredTrustLevel: requiredTrustLevel,
+            currentTrustLevel: currentTrustLevel,
+            onTrustLevelChange: onTrustLevelChange,
+            service: service,
+          ),
         ],
       ),
     );
@@ -228,13 +242,40 @@ class _Form extends StatelessWidget {
 }
 
 class _TrustLevelElement extends StatelessWidget {
+  final int requiredTrustLevel;
+  final int currentTrustLevel;
+  final bool isActionRequired;
+  final Function(int) onTrustLevelChange;
+  final Service service;
+
+  const _TrustLevelElement({
+    required this.requiredTrustLevel,
+    required this.currentTrustLevel,
+    required this.onTrustLevelChange,
+    required this.service,
+  }) : isActionRequired = requiredTrustLevel > currentTrustLevel;
+
+  String _getContentDescription() {
+    return isActionRequired
+        ? LocaleKeys.authorize_trustLevelRequired.tr()
+        : LocaleKeys.authorize_trustLevelDescription.tr();
+  }
+
   @override
   Widget build(BuildContext context) {
     return _FormElement(
       title: LocaleKeys.authorize_trustLevelName.tr(),
-      content: LocaleKeys.authorize_trustLevelDescription.tr(),
+      content: _getContentDescription(),
       imagePath: AppIcon.lock,
-      contentHasError: false,
+      contentHasError: isActionRequired,
+      onTapAction: isActionRequired
+          ? () => AutoRouter.of(context).push(TrustLevelConfirmationPageRoute(
+                service: service,
+                initialTrustLevel: currentTrustLevel,
+                requiredTrustLevel: requiredTrustLevel,
+                onPagePop: (reachedLevel) => onTrustLevelChange(reachedLevel),
+              ))
+          : null,
     );
   }
 }
@@ -373,12 +414,13 @@ class _FormElement extends HookWidget {
                           style: typography.body3,
                         ),
                       ),
-                      SvgPicture.asset(
-                        AppIcon.chevronRight,
-                        color: colors.text,
-                        width: _arrowIconSize,
-                        height: _arrowIconSize,
-                      ),
+                      if (onTapAction != null)
+                        SvgPicture.asset(
+                          AppIcon.chevronRight,
+                          color: colors.text,
+                          width: _arrowIconSize,
+                          height: _arrowIconSize,
+                        ),
                     ],
                   ),
                   if (content != null && contentHasError != null) ...[
