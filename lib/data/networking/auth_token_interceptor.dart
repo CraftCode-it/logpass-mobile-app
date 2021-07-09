@@ -13,6 +13,10 @@ class AuthTokenInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    if (_isForbidden(options)) {
+      return super.onRequest(options, handler);
+    }
+
     try {
       final tokens = await _getUserTokensUseCase();
       options.headers[HttpHeaders.authorizationHeader] = tokens.accessToken.toString();
@@ -22,4 +26,18 @@ class AuthTokenInterceptor extends Interceptor {
 
     super.onRequest(options, handler);
   }
+
+  bool _isForbidden(RequestOptions options) {
+    for (final forbiddenPath in _forbiddenRequestList) {
+      if (options.uri.path.contains(forbiddenPath)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
+
+const _forbiddenRequestList = [
+  '/auth/users/login-attempts/',
+];
