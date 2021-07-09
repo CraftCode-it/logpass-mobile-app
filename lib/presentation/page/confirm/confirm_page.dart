@@ -11,10 +11,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class ConfirmPage extends HookWidget {
-  final String confirmMessage;
-
   const ConfirmPage({
-    required this.confirmMessage,
     Key? key,
   }) : super(key: key);
 
@@ -31,7 +28,7 @@ class ConfirmPage extends HookWidget {
       body: SafeArea(
         child: Messenger(
           controller: messengerController,
-          child: _PageContent(confirmMessage),
+          child: const _PageContent(''),
         ),
       ),
     );

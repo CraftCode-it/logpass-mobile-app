@@ -162,11 +162,7 @@ class _PendingItem extends HookWidget {
       onTap: () {
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId)),
-          confirm: () {
-            if (action.content != null) {
-              AutoRouter.of(context).push(ConfirmPageRoute(confirmMessage: action.content!));
-            }
-          },
+          confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
           updateAccount: () {},
         );
       },

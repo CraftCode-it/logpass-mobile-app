@@ -4,26 +4,16 @@ class IncomingAction {
   final ActionType actionType;
   final String actionId;
 
-  // TODO: adjust after backend implementation
-  final String? content;
-
-  IncomingAction(
-    this.actionType,
-    this.actionId, [
-    this.content,
-  ]);
+  IncomingAction(this.actionType, this.actionId);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is IncomingAction &&
-        other.runtimeType == runtimeType &&
-        other.actionType == actionType &&
-        other.actionId == actionId &&
-        other.content == content;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IncomingAction &&
+          runtimeType == other.runtimeType &&
+          actionId == other.actionId &&
+          actionType == other.actionType;
 
   @override
-  int get hashCode => actionType.hashCode ^ actionId.hashCode ^ content.hashCode;
+  int get hashCode => actionType.hashCode;
 }
