@@ -16,9 +16,8 @@ import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/labeled_text.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
-import 'package:logpass_me/presentation/widget/pdf/pdf_list_view.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:native_pdf_renderer/native_pdf_renderer.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 
 class AgreementDetailsPage extends HookWidget {
   final ServiceAgreement serviceAgreement;
@@ -49,19 +48,19 @@ class AgreementDetailsPage extends HookWidget {
       body: state.maybeMap(
         initializing: (_) => const Loader(),
         loadingPdf: (state) => _Content(
-          document: null,
+          controller: null,
           agreement: state.agreement,
           cubit: cubit,
           messengerController: messengerController,
         ),
         idle: (state) => _Content(
-          document: state.pdfDocument,
+          controller: state.pdfController,
           agreement: state.agreement,
           cubit: cubit,
           messengerController: messengerController,
         ),
         processing: (state) => _Content(
-          document: state.pdfDocument,
+          controller: state.pdfController,
           agreement: state.agreement,
           processing: true,
           cubit: cubit,
@@ -94,14 +93,14 @@ class AgreementDetailsPage extends HookWidget {
 }
 
 class _Content extends HookWidget {
-  final PdfDocument? document;
+  final PdfController? controller;
   final ServiceAgreement agreement;
   final MessengerController messengerController;
   final bool processing;
   final AgreementDetailsPageCubit cubit;
 
   const _Content({
-    required this.document,
+    required this.controller,
     required this.agreement,
     required this.cubit,
     required this.messengerController,
@@ -112,7 +111,7 @@ class _Content extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
-    final document = this.document;
+    final controller = this.controller;
 
     return Column(
       children: [
@@ -120,7 +119,13 @@ class _Content extends HookWidget {
           child: Messenger(
             floating: true,
             controller: messengerController,
-            child: document == null ? const Loader() : PdfListView(document: document),
+            child: controller == null
+                ? const Loader()
+                : PdfView(
+                    controller: controller,
+                    documentLoader: const Loader(),
+                    scrollDirection: Axis.vertical,
+                  ),
           ),
         ),
         Container(
