@@ -17,6 +17,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 import 'package:logpass_me/presentation/widget/trust_level_indicator.dart';
+import 'package:logpass_me/presentation/utils/device_utils.dart';
 
 const _trustIndicatorSize = 40.0;
 const _trustIndicatorFontSize = 16.0;
@@ -197,14 +198,14 @@ class _DevicesList extends HookWidget {
                   childCount: availableDevices.length,
                 ),
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _DeviceRow(device: unavailableDevices[index], isAvailable: false),
-                  childCount: unavailableDevices.length,
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: AppDimens.xl),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _DeviceRow(device: unavailableDevices[index], isAvailable: false),
+                    childCount: unavailableDevices.length,
+                  ),
                 ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppDimens.xl),
               ),
             ],
           ),
