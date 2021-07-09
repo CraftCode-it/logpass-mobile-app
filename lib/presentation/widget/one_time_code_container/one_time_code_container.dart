@@ -31,34 +31,37 @@ class OneTimeCodeContainer extends HookWidget {
       width: double.infinity,
       color: colors.codeContainerBackground,
       padding: const EdgeInsets.symmetric(vertical: AppDimens.xxl),
-      child: state.maybeWhen(
-        idle: (oneTimeCode, remainingProgress) => _CodeContainer(
-          key: ValueKey(oneTimeCode),
-          oneTimeCode: oneTimeCode,
-          remainingProgress: remainingProgress,
-          onRefreshAction: cubit.refreshOneTimeCode,
-          onCopyAction: cubit.copyOneTimeCodeToClipboard,
-          progressSize: size,
-        ),
-        loadInProgress: () => _CodeContainer(
-          oneTimeCode: null,
-          remainingProgress: null,
-          onRefreshAction: null,
-          onCopyAction: null,
-          progressSize: size,
-          isLoading: true,
-        ),
-        error: () => _CodeContainer(
-          oneTimeCode: null,
-          remainingProgress: null,
-          onRefreshAction: cubit.refreshOneTimeCode,
-          onCopyAction: cubit.copyOneTimeCodeToClipboard,
-          progressSize: size,
-          isError: true,
-        ),
-        orElse: () => SizedBox(
-          width: size,
-          height: size,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        child: state.maybeWhen(
+          idle: (oneTimeCode, remainingProgress) => _CodeContainer(
+            key: ValueKey(oneTimeCode),
+            oneTimeCode: oneTimeCode,
+            remainingProgress: remainingProgress,
+            onRefreshAction: cubit.refreshOneTimeCode,
+            onCopyAction: cubit.copyOneTimeCodeToClipboard,
+            progressSize: size,
+          ),
+          loadInProgress: () => _CodeContainer(
+            oneTimeCode: null,
+            remainingProgress: null,
+            onRefreshAction: null,
+            onCopyAction: null,
+            progressSize: size,
+            isLoading: true,
+          ),
+          error: () => _CodeContainer(
+            oneTimeCode: null,
+            remainingProgress: null,
+            onRefreshAction: cubit.refreshOneTimeCode,
+            onCopyAction: cubit.copyOneTimeCodeToClipboard,
+            progressSize: size,
+            isError: true,
+          ),
+          orElse: () => SizedBox(
+            width: size,
+            height: size,
+          ),
         ),
       ),
     );
