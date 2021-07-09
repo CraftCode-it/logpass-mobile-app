@@ -55,6 +55,11 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
     try {
       final services = await _getPageOfServicesUseCase(1);
 
+      if (services.totalCount == 0) {
+        emit(ServiceListPageState.empty());
+        return;
+      }
+
       _itemsCount += services.services.length;
 
       _activeServices = _getActiveServices(services);
