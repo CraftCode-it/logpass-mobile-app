@@ -11,8 +11,8 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/page_indicator.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingPage extends HookWidget {
   static const _lastPageIndex = 2;
@@ -86,15 +86,15 @@ class OnboardingPage extends HookWidget {
                 ),
                 const SizedBox(height: AppDimens.l),
                 Center(
-                  child: SmoothPageIndicator(
-                    controller: controller,
-                    count: onboardingSteps.length,
-                    effect: ColorTransitionEffect(
-                      activeDotColor: AppColors.secondary,
-                      dotColor: AppColors.secondary.withOpacity(0.5),
-                      activeStrokeWidth: 1,
-                      strokeWidth: 1,
-                      paintStyle: PaintingStyle.stroke,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List<Widget>.generate(
+                      onboardingSteps.length,
+                      (indicatorIndex) => PageIndicator(
+                        isActive: index.value == indicatorIndex,
+                        activeColor: AppColors.secondary,
+                        inactiveColor: AppColors.secondary.withOpacity(0.5),
+                      ),
                     ),
                   ),
                 ),
