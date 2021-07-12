@@ -121,6 +121,9 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
     final typography = useAppTypography();
 
     final foregroundColor = isError ? colors.textSpecial : colors.text;
+    rightElements.add(
+      const Padding(padding: EdgeInsets.only(right: AppDimens.m)),
+    );
 
     return Column(
       children: [
