@@ -16,7 +16,8 @@ import 'package:logpass_me/presentation/widget/country_code_picker/country_code_
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 
-const _width = 110.0;
+const _width = 120.0;
+const _flagThumbnailSize = 24.0;
 
 class CountryCodePicker extends HookWidget {
   final Function(CountryCode countryCode) onCountryCodeSelected;
@@ -141,11 +142,11 @@ class _Selected extends HookWidget {
       children: [
         Image.network(
           countryFlagUrl(countryCode.country, true),
-          width: 24,
-          height: 24,
+          width: _flagThumbnailSize,
+          height: _flagThumbnailSize,
           errorBuilder: (context, _, __) => const SizedBox.shrink(),
         ),
-        const SizedBox(width: AppDimens.xxs),
+        const SizedBox(width: AppDimens.xs),
         Text(
           '+${countryCode.code}',
           style: typography.body1,
