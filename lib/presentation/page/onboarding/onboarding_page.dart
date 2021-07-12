@@ -29,7 +29,7 @@ class OnboardingPage extends HookWidget {
         OnboardingStep(
           image: SvgPicture.asset(
             brightness == Brightness.light ? AppIcon.onboarding1Light : AppIcon.onboarding1Dark,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           title: tr(LocaleKeys.onboarding_stepOneTitle),
           content: tr(LocaleKeys.onboarding_stepOneContent),
@@ -37,7 +37,7 @@ class OnboardingPage extends HookWidget {
         OnboardingStep(
           image: SvgPicture.asset(
             brightness == Brightness.light ? AppIcon.onboarding2Light : AppIcon.onboarding2Dark,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           title: tr(LocaleKeys.onboarding_stepTwoTitle),
           content: tr(LocaleKeys.onboarding_stepTwoContent),
@@ -45,7 +45,7 @@ class OnboardingPage extends HookWidget {
         OnboardingStep(
           image: SvgPicture.asset(
             brightness == Brightness.light ? AppIcon.onboarding3Light : AppIcon.onboarding3Dark,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           title: tr(LocaleKeys.onboarding_stepThreeTitle),
           content: tr(LocaleKeys.onboarding_stepThreeContent),
@@ -67,7 +67,6 @@ class OnboardingPage extends HookWidget {
                   index: index.value,
                   onSkip: _navigateToLoginPage,
                 ),
-                const SizedBox(height: AppDimens.xxl),
                 Expanded(
                   child: PageView(
                     controller: controller,
