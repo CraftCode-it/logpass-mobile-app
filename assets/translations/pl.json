@@ -14,7 +14,8 @@
     "back": "Back",
     "save": "Save",
     "remove": "Remove",
-    "copied": "Copied"
+    "copied": "Copied",
+    "done": "Done"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",

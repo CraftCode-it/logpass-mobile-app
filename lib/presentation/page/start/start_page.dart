@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
@@ -16,6 +18,7 @@ import 'package:logpass_me/presentation/widget/checkbox/custom_checkbox.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/done_keyboard_button.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
@@ -29,8 +32,9 @@ class StartPage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<StartPageCubit>();
     final state = useCubitBuilder(cubit);
+
     final phoneNumberController = useTextEditingController();
-    final color = useAppThemeColors();
+    final colors = useAppThemeColors();
     final messengerController = useMessengerController();
 
     useCubitListener<StartPageCubit, StartPageState>(
@@ -39,7 +43,7 @@ class StartPage extends HookWidget {
     );
 
     return Scaffold(
-      backgroundColor: color.background,
+      backgroundColor: colors.background,
       appBar: CustomAppBar.bigTitle(
         title: LocaleKeys.start_title.tr(),
         trailing: const NeedHelpButton(),
@@ -73,8 +77,9 @@ class StartPage extends HookWidget {
                       ),
                     ),
                     const SizedBox(height: AppDimens.l),
+                    const Spacer(),
+                    if (isKeyboardVisible && Platform.isIOS) DoneKeyboardButton(),
                     if (!isKeyboardVisible) ...[
-                      const Spacer(),
                       const _RegisterNewDevice(),
                     ],
                   ],

@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/done_keyboard_button.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/full_screen_loader.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
@@ -137,17 +138,7 @@ class _Content extends HookWidget {
           keyboardVisible: keyboardVisible,
         ),
         const Spacer(flex: 2),
-        if (_shouldShowDoneKeyboardButton())
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Text(
-                'Done',
-                style: typography.info1,
-              ),
-            ),
-          ),
+        if (_shouldShowDoneKeyboardButton()) DoneKeyboardButton(),
         if (!keyboardVisible) ...[
           Text(
             LocaleKeys.securedLogin_logoutInfo,
