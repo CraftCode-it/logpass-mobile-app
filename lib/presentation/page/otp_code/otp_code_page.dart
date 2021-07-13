@@ -59,34 +59,36 @@ class OTPCodePage extends HookWidget {
         title: LocaleKeys.otpCode_title.tr(),
         leading: NavigationButton.back(),
       ),
-      body: Messenger(
-        controller: messengerController,
-        withActionHandler: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: AppDimens.xl),
-              Text(
-                LocaleKeys.otpCode_info,
-                textAlign: TextAlign.center,
-                style: typography.body1,
-              ).tr(),
-              const SizedBox(height: AppDimens.xl),
-              _CodeField(cubit: cubit, state: state),
-              const SizedBox(height: AppDimens.xxl),
-              _VerifyButton(state: state, cubit: cubit),
-              const SizedBox(height: AppDimens.xl),
-              Text(
-                LocaleKeys.otpCode_resendInfo,
-                textAlign: TextAlign.center,
-                style: typography.body1,
-              ).tr(),
-              const SizedBox(height: AppDimens.s),
-              _ResendButton(cubit: cubit, state: state),
-            ],
+      body: SafeArea(
+        child: Messenger(
+          controller: messengerController,
+          withActionHandler: false,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: AppDimens.xl),
+                Text(
+                  LocaleKeys.otpCode_info,
+                  textAlign: TextAlign.center,
+                  style: typography.body1,
+                ).tr(),
+                const SizedBox(height: AppDimens.xl),
+                _CodeField(cubit: cubit, state: state),
+                const SizedBox(height: AppDimens.xxl),
+                _VerifyButton(state: state, cubit: cubit),
+                const SizedBox(height: AppDimens.xl),
+                Text(
+                  LocaleKeys.otpCode_resendInfo,
+                  textAlign: TextAlign.center,
+                  style: typography.body1,
+                ).tr(),
+                const SizedBox(height: AppDimens.s),
+                _ResendButton(cubit: cubit, state: state),
+              ],
+            ),
           ),
         ),
       ),
