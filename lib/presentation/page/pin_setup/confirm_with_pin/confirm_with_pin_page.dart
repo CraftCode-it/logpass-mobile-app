@@ -58,10 +58,8 @@ class ConfirmWithPinPage extends HookWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppDimens.l),
-              Center(
-                child: PinField(
-                  onPinChanged: cubit.updateCode,
-                ),
+              PinField(
+                onPinChanged: cubit.updateCode,
               ),
               ...state.maybeMap(
                 idle: (state) => state.validCode

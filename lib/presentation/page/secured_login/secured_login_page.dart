@@ -199,6 +199,7 @@ class _AuthorizationOptionsContainer extends HookWidget {
         PinField(
           onPinChanged: cubit.updatePinCode,
           autoFocus: type == AppSecurityType.code,
+          showSideIcon: false,
         ),
         if (pinError != null) ...[
           const SizedBox(height: AppDimens.s),
