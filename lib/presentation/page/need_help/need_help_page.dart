@@ -167,16 +167,51 @@ class _AboutSection extends HookWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          needHelp.title,
-          style: typography.h8,
-        ),
+        _AboutSectionHeader(needHelp.title),
         const SizedBox(height: AppDimens.l),
         Text(
           needHelp.description,
           style: typography.body1,
         ),
       ],
+    );
+  }
+}
+
+const _customFontHeight = 1.5;
+const _customLogoHeight = 18.0;
+
+class _AboutSectionHeader extends HookWidget {
+  final String title;
+
+  const _AboutSectionHeader(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return RichText(
+      text: TextSpan(
+        style: typography.h8.copyWith(height: _customFontHeight),
+        children: [
+          TextSpan(text: title),
+          WidgetSpan(
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: AppDimens.xs,
+                right: AppDimens.xxs,
+              ),
+              child: SvgPicture.asset(
+                AppIcon.logo,
+                color: colors.text,
+                height: _customLogoHeight,
+              ),
+            ),
+          ),
+          const TextSpan(text: '?'),
+        ],
+      ),
     );
   }
 }
