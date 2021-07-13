@@ -113,6 +113,7 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         isError: isError,
         hasElevation: hasElevation,
         systemUiOverlayStyle: systemUiOverlayStyle,
+        rightElements: [],
       );
 
   @override
