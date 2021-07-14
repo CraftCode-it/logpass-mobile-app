@@ -148,7 +148,7 @@ class _PhoneNumberInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CountryCodePicker(onCountryCodeSelected: cubit.updateCountryCode),
-        const SizedBox(width: AppDimens.s),
+        const SizedBox(width: AppDimens.m),
         Expanded(
           child: InputField(
             controller: controller,
