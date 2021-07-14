@@ -19,6 +19,7 @@ import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
+import 'package:logpass_me/presentation/widget/service_header.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServiceDetailsPage extends HookWidget {
@@ -100,7 +101,11 @@ class _Content extends HookWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _ServiceHeader(service: state.service),
+            ServiceHeader(
+              name: state.service.name,
+              logoPath: state.service.logo,
+              serviceUrl: state.service.url,
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 top: AppDimens.xxl,
@@ -179,63 +184,15 @@ class _ProcessingContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _ServiceHeader(service: state.service),
+        ServiceHeader(
+          name: state.service.name,
+          logoPath: state.service.logo,
+          serviceUrl: state.service.url,
+        ),
         const Expanded(
           child: Loader(),
         ),
       ],
-    );
-  }
-}
-
-class _ServiceHeader extends HookWidget {
-  final Service service;
-
-  const _ServiceHeader({
-    required this.service,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
-    final typography = useAppTypography();
-
-    return GestureDetector(
-      onTap: () async {
-        await launch(service.url);
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(
-          top: AppDimens.xxxc,
-          bottom: AppDimens.xxl,
-          left: AppDimens.l,
-          right: AppDimens.l,
-        ),
-        color: colors.secondaryBackground,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network(
-              service.logo,
-              width: 40,
-              height: 40,
-              errorBuilder: (context, _, __) => const SizedBox.shrink(),
-            ),
-            const SizedBox(width: AppDimens.m),
-            Expanded(
-              child: Text(
-                service.name,
-                style: typography.h2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
