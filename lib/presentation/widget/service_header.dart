@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -48,10 +49,10 @@ class ServiceHeader extends HookWidget {
             ),
             const SizedBox(width: AppDimens.m),
             Expanded(
-              child: Text(
+              child: AutoSizeText(
                 name,
                 style: typography.h2,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ],

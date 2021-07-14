@@ -11,6 +11,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/separator.dart';
 
 class AgreementRow extends HookWidget {
   final ServiceAgreement agreement;
@@ -32,16 +33,22 @@ class AgreementRow extends HookWidget {
         await AutoRouter.of(context).push(AgreementDetailsPageRoute(serviceAgreement: agreement));
         onBackFromDetails?.call();
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SvgPicture.asset(agreement.isAccepted ? AppIcon.checkSuccess : AppIcon.checkError),
-              const SizedBox(width: AppDimens.m),
-              Expanded(
+          SvgPicture.asset(agreement.isAccepted ? AppIcon.checkSuccess : AppIcon.checkError),
+          const SizedBox(width: AppDimens.m),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(bottom: AppDimens.s),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: colors.dividerLight,
+                  ),
+                ),
+              ),
+              child: Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -52,9 +59,19 @@ class AgreementRow extends HookWidget {
                       style: typography.info2.copyWith(color: colors.secondaryText),
                     ),
                     const SizedBox(height: AppDimens.xs),
-                    Text(
-                      agreement.name,
-                      style: typography.body3,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            agreement.name,
+                            style: typography.body3,
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          AppIcon.chevronRight,
+                          color: colors.buttonFill,
+                        ),
+                      ],
                     ),
                     if (agreement.isAccepted) ...[
                       const SizedBox(height: AppDimens.xs),
@@ -70,11 +87,7 @@ class AgreementRow extends HookWidget {
                   ],
                 ),
               ),
-              SvgPicture.asset(
-                AppIcon.chevronRight,
-                color: colors.buttonFill,
-              ),
-            ],
+            ),
           ),
         ],
       ),

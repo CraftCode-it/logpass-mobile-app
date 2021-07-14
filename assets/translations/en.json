@@ -5,7 +5,7 @@
     "next": "Next",
     "start": "Start",
     "prefix": "Prefix",
-    "phoneNumber": "Phone number",
+    "phoneNumber": "Mobile number",
     "verify": "Verify",
     "logout": "Logout",
     "wrongCode": "Code is wrong",
@@ -14,7 +14,8 @@
     "back": "Back",
     "save": "Save",
     "remove": "Remove",
-    "copied": "Copied"
+    "copied": "Copied",
+    "done": "Done"
   },
   "error": {
     "noConnection": "It seems like you have no internet connection",
@@ -65,7 +66,8 @@
     "pendingActionsEmpty": "Nothing requires your action now",
     "pastActions": "See past events",
     "actionTypeAuthorization": "Authorization",
-    "pendingItemTimeLeft": "Closes in {}"
+    "pendingItemTimeLeft": "Closes in {}",
+    "codeCopied": "Code copied to clipboard"
   },
   "authorize": {
     "title": "Authorize operation",
@@ -143,7 +145,11 @@
     "activeHeader": "With active sessions",
     "otherHeader": "Other services",
     "session": {
+      "zero": "{} sessions",
       "one": "{} session",
+      "two": "{} sessions",
+      "few": "{} sessions",
+      "many": "{} sessions",
       "other": "{} sessions"
     },
     "noServices": "You have no connected services."
@@ -175,15 +181,15 @@
     "revokeAllAction": "Revoke all agreements"
   },
   "agreementRow": {
-    "required": "required",
-    "optional": "optional",
+    "required": "Required",
+    "optional": "Optional",
     "agreedOn": "Agreed on {}"
   },
   "agreementDetails": {
     "title": "Agreement details",
     "type": "type:",
-    "typeOptional": "optional",
-    "typeRequired": "required",
+    "typeOptional": "Optional",
+    "typeRequired": "Required",
     "agreedOn": "agreed on:",
     "revokeAction": "Revoke this agreement",
     "confirmAction": "Confirm this agreement",
@@ -296,7 +302,7 @@
   },
   "needHelp": {
     "title": "Help",
-    "needHelpTitle": "What is logpass?",
+    "needHelpTitle": "What is",
     "needHelpDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "questionOneTitle": "How to start",
     "questionOneDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",

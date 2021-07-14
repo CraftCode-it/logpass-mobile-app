@@ -26,6 +26,9 @@ class AppIcon {
   static const info = 'assets/icon/info.svg';
   static const more = 'assets/icon/more.svg';
 
+  static const passwordEyeShow = 'assets/icon/password_eye_show.svg';
+  static const passwordEyeHide = 'assets/icon/password_eye_hide.svg';
+
   static const checkboxEmpty = 'assets/icon/checkbox_empty.svg';
   static const checkboxError = 'assets/icon/checkbox_error.svg';
   static const checkboxOutlined = 'assets/icon/checkbox_outlined.svg';

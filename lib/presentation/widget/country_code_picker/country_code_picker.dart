@@ -14,9 +14,13 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_cubit.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
-import 'package:logpass_me/presentation/widget/input_field.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-const _width = 110.0;
+const _flagThumbnailSize = 24.0;
+const _boxFontSize = 12.0;
+const _boxFontHeight = 0.8;
+const _boxHeight = 64.0;
 
 class CountryCodePicker extends HookWidget {
   final Function(CountryCode countryCode) onCountryCodeSelected;
@@ -30,7 +34,6 @@ class CountryCodePicker extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<CountryCodePickerCubit>();
     final state = useCubitBuilder(cubit);
-    final typography = useAppTypography();
     final colors = useAppThemeColors();
 
     useCubitListener(cubit, (CountryCodePickerCubit cubit, CountryCodePickerState state, context, {controller}) {
@@ -44,53 +47,24 @@ class CountryCodePicker extends HookWidget {
       cubit.initialize(_getSystemLocale());
     }, [cubit]);
 
-    return InkWell(
+    return GestureDetector(
       onTap: _onPressed(state, context, cubit),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              SizedBox(
-                width: _width,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    disabledBorder: inputFieldBorder(colors.inputInactiveBorder),
-                    hintStyle: typography.h9.copyWith(color: colors.inputHint),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Prefix',
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                left: AppDimens.s,
-                right: AppDimens.s,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: state.maybeMap(
-                          loading: (state) => const Loader(),
-                          selected: (state) => _Selected(countryCode: state.countryCode),
-                          orElse: () {},
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_down_sharp,
-                      color: colors.buttonOutlined,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+      child: _DecorationBorder(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            state.maybeMap(
+              loading: (state) => const Loader(),
+              selected: (state) => _Selected(countryCode: state.countryCode),
+              orElse: () => const SizedBox.shrink(),
+            ),
+            const SizedBox(width: AppDimens.xs),
+            Icon(
+              Icons.keyboard_arrow_down_sharp,
+              color: colors.buttonOutlined,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,14 +115,58 @@ class _Selected extends HookWidget {
       children: [
         Image.network(
           countryFlagUrl(countryCode.country, true),
-          width: 24,
-          height: 24,
+          width: _flagThumbnailSize,
+          height: _flagThumbnailSize,
           errorBuilder: (context, _, __) => const SizedBox.shrink(),
         ),
-        const SizedBox(width: AppDimens.xxs),
+        const SizedBox(width: AppDimens.xs),
         Text(
           '+${countryCode.code}',
           style: typography.body1,
+        ),
+      ],
+    );
+  }
+}
+
+class _DecorationBorder extends HookWidget {
+  final Widget child;
+
+  const _DecorationBorder({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return Stack(
+      children: [
+        Container(
+          height: _boxHeight,
+          padding: const EdgeInsets.all(AppDimens.m),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: colors.inputBorder,
+              width: 1,
+            ),
+            color: Colors.transparent,
+          ),
+          child: child,
+        ),
+        Positioned(
+          left: AppDimens.s,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.xs),
+            color: colors.background,
+            child: Text(
+              LocaleKeys.common_prefix.tr(),
+              style: typography.h9.copyWith(
+                color: colors.inputHint,
+                fontSize: _boxFontSize,
+                height: _boxFontHeight,
+              ),
+            ),
+          ),
         ),
       ],
     );

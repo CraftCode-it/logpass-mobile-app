@@ -11,7 +11,7 @@ class EventLogPageCubit extends Cubit<EventLogPageState> {
 
   Future<void> initialize() async {
     await Future.delayed(const Duration(seconds: 1));
-    emit(EventLogPageState.error());
+    await load();
   }
 
   Future<void> load() async {

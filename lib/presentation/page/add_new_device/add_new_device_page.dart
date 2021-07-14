@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/bubbles_loader/bubbles_loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
+import 'package:logpass_me/presentation/widget/done_keyboard_button.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
@@ -137,6 +140,7 @@ class _PartialContent extends StatelessWidget {
           cubit: cubit,
         ),
         const SizedBox(height: AppDimens.m),
+        if (Platform.isIOS) DoneKeyboardButton(),
       ],
     );
   }

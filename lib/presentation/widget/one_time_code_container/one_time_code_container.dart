@@ -14,6 +14,10 @@ import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
 
 class OneTimeCodeContainer extends HookWidget {
+  final VoidCallback onCopyCallback;
+
+  const OneTimeCodeContainer({required this.onCopyCallback});
+
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<OneTimeCodeContainerCubit>();
@@ -40,6 +44,7 @@ class OneTimeCodeContainer extends HookWidget {
             remainingProgress: remainingProgress,
             onRefreshAction: cubit.refreshOneTimeCode,
             onCopyAction: cubit.copyOneTimeCodeToClipboard,
+            onCopyCallback: onCopyCallback,
             progressSize: size,
           ),
           loadInProgress: () => _CodeContainer(
@@ -73,6 +78,7 @@ class _CodeContainer extends HookWidget {
   final double? remainingProgress;
   final VoidCallback? onRefreshAction;
   final VoidCallback? onCopyAction;
+  final VoidCallback? onCopyCallback;
   final double progressSize;
   final bool isError;
   final bool isLoading;
@@ -82,6 +88,7 @@ class _CodeContainer extends HookWidget {
     required this.onCopyAction,
     required this.progressSize,
     this.oneTimeCode,
+    this.onCopyCallback,
     this.remainingProgress,
     this.isError = false,
     this.isLoading = false,
@@ -178,7 +185,10 @@ class _CodeContainer extends HookWidget {
                 child: _IconTextButton(
                   LocaleKeys.home_copyCodeLabel.tr(),
                   AppIcon.copy,
-                  onTapAction: onCopyAction,
+                  onTapAction: () {
+                    onCopyAction?.call();
+                    onCopyCallback?.call();
+                  },
                   isActive: oneTimeCode != null,
                 ),
               ),

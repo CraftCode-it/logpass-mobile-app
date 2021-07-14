@@ -22,7 +22,7 @@ class TermsAndConditionsPage extends HookWidget {
     useEffect(() => controller.dispose, [controller]);
 
     return Scaffold(
-      backgroundColor: colors.background,
+      backgroundColor: AppColors.secondary,
       appBar: CustomAppBar.smallTitle(
         leading: NavigationButton.back(),
         title: LocaleKeys.termsAndConditions_title.tr(),

@@ -44,7 +44,6 @@ dependencies:
   flutter_hooks: 0.17.0
   easy_localization: 3.0.0
   shared_preferences: 2.0.6
-  smooth_page_indicator: 0.3.0-nullsafety.0
   libphonenumber: 2.0.0
   flutter_keyboard_visibility: 5.0.2
   pinput: 1.2.0
@@ -67,6 +66,7 @@ dependencies:
   uni_links: 0.5.1
   package_info: 2.0.2
   device_info_plus: 2.0.1
+  auto_size_text: 3.0.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:

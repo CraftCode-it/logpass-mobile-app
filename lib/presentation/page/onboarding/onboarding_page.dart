@@ -11,8 +11,8 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/page_indicator.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingPage extends HookWidget {
   static const _lastPageIndex = 2;
@@ -29,7 +29,7 @@ class OnboardingPage extends HookWidget {
         OnboardingStep(
           image: SvgPicture.asset(
             brightness == Brightness.light ? AppIcon.onboarding1Light : AppIcon.onboarding1Dark,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           title: tr(LocaleKeys.onboarding_stepOneTitle),
           content: tr(LocaleKeys.onboarding_stepOneContent),
@@ -37,7 +37,7 @@ class OnboardingPage extends HookWidget {
         OnboardingStep(
           image: SvgPicture.asset(
             brightness == Brightness.light ? AppIcon.onboarding2Light : AppIcon.onboarding2Dark,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           title: tr(LocaleKeys.onboarding_stepTwoTitle),
           content: tr(LocaleKeys.onboarding_stepTwoContent),
@@ -45,7 +45,7 @@ class OnboardingPage extends HookWidget {
         OnboardingStep(
           image: SvgPicture.asset(
             brightness == Brightness.light ? AppIcon.onboarding3Light : AppIcon.onboarding3Dark,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           title: tr(LocaleKeys.onboarding_stepThreeTitle),
           content: tr(LocaleKeys.onboarding_stepThreeContent),
@@ -67,7 +67,6 @@ class OnboardingPage extends HookWidget {
                   index: index.value,
                   onSkip: _navigateToLoginPage,
                 ),
-                const SizedBox(height: AppDimens.xxl),
                 Expanded(
                   child: PageView(
                     controller: controller,
@@ -86,15 +85,15 @@ class OnboardingPage extends HookWidget {
                 ),
                 const SizedBox(height: AppDimens.l),
                 Center(
-                  child: SmoothPageIndicator(
-                    controller: controller,
-                    count: onboardingSteps.length,
-                    effect: ColorTransitionEffect(
-                      activeDotColor: AppColors.secondary,
-                      dotColor: AppColors.secondary.withOpacity(0.5),
-                      activeStrokeWidth: 1,
-                      strokeWidth: 1,
-                      paintStyle: PaintingStyle.stroke,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List<Widget>.generate(
+                      onboardingSteps.length,
+                      (indicatorIndex) => PageIndicator(
+                        isActive: index.value == indicatorIndex,
+                        activeColor: AppColors.secondary,
+                        inactiveColor: AppColors.secondary.withOpacity(0.5),
+                      ),
                     ),
                   ),
                 ),

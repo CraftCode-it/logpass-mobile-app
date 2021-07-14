@@ -32,6 +32,11 @@ class HomePage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final messengerController = useMessengerController();
 
+    useCubitListener<HomeCubit, HomeState>(
+      cubit,
+      (cubit, state, context) => _cubitListener(cubit, state, context, messengerController),
+    );
+
     useEffect(() {
       cubit.init();
       return;
@@ -41,6 +46,13 @@ class HomePage extends HookWidget {
       cubit: cubit,
       state: state,
       messengerController: messengerController,
+    );
+  }
+
+  void _cubitListener(HomeCubit cubit, HomeState state, BuildContext context, MessengerController controller) {
+    state.maybeWhen(
+      codeCopied: () => controller.showInfo(LocaleKeys.home_codeCopied.tr()),
+      orElse: () {},
     );
   }
 }
@@ -74,7 +86,7 @@ class _HomePageContent extends HookWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            OneTimeCodeContainer(),
+            OneTimeCodeContainer(onCopyCallback: cubit.emitCopyInformation),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),

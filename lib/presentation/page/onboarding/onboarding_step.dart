@@ -23,7 +23,12 @@ class OnboardingStep extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(child: image),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: image,
+          ),
+        ),
         const SizedBox(height: AppDimens.l),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
