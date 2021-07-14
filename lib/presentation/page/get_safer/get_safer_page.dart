@@ -61,7 +61,7 @@ class GetSaferPage extends HookWidget {
   void _listener(GetSaferCubit cubit, GetSaferPageState state, BuildContext context) {
     state.maybeMap(
       setCodeForBiometrics: (_) => _setPinCode(context, cubit.setBiometricsSecurity),
-      success: (_) => AutoRouter.of(context).push(PinSuccessPageRoute(route: const MainPageRoute())),
+      success: (_) => AutoRouter.of(context).popAndPush(PinSuccessPageRoute(route: const MainPageRoute())),
       orElse: () {},
     );
   }
