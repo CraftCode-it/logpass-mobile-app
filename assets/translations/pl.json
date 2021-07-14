@@ -62,7 +62,8 @@
     "pendingActionsEmpty": "Brak oczekujących akcji",
     "pastActions": "Zobacz pozostałe",
     "actionTypeAuthorization": "Autoryzacja",
-    "pendingItemTimeLeft": "Aktywne przez {}"
+    "pendingItemTimeLeft": "Aktywne przez {}",
+    "codeCopied": "Code copied to clipboard"
   },
   "authorize": {
     "title": "Autoryzuj operację",

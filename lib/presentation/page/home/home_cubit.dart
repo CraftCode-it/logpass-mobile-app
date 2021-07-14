@@ -27,6 +27,11 @@ class HomeCubit extends Cubit<HomeState> {
     _subscribeToIncomingActions();
   }
 
+  void emitCopyInformation() {
+    emit(const HomeState.codeCopied());
+    _emitIdleState();
+  }
+
   void _subscribeToIncomingActions() {
     try {
       _streamSubscription = _subscribeToIncomingActionsUseCase().listen((action) async {
