@@ -152,7 +152,8 @@
       "many": "{} sesji",
       "other": "{} sesji"
     },
-    "noServices": "You have no connected services."
+    "noServices": "You have no connected services.",
+    "noActiveSessions": "No active sessions"
   },
   "serviceDetails": {
     "title": "Service details",
