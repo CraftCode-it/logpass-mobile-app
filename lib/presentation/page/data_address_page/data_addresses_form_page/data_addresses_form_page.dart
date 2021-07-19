@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:logpass_me/presentation/page/data_address_page/data_addresses_form_page/data_addresses_form_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -91,13 +90,10 @@ class DataAddressesFormPage extends HookWidget {
         child: Messenger(
           controller: messengerController,
           child: state.maybeWhen(
-            idle: (canSave, areSomeFieldsFilled) => KeyboardVisibilityBuilder(
-              builder: (context, keyboardVisible) => _Content(
-                canSave: canSave,
-                cubit: cubit,
-                keyboardVisible: keyboardVisible,
-                scrollController: scrollController,
-              ),
+            idle: (canSave, areSomeFieldsFilled) => _Content(
+              canSave: canSave,
+              cubit: cubit,
+              scrollController: scrollController,
             ),
             loading: () => const Loader(),
             orElse: () => const SizedBox(),
@@ -131,13 +127,11 @@ class DataAddressesFormPage extends HookWidget {
 class _Content extends StatelessWidget {
   final bool canSave;
   final DataAddressesFormPageCubit cubit;
-  final bool keyboardVisible;
   final ScrollController scrollController;
 
   const _Content({
     required this.canSave,
     required this.cubit,
-    required this.keyboardVisible,
     required this.scrollController,
   });
 
@@ -192,14 +186,12 @@ class _Content extends StatelessWidget {
           CountryCodeWidePicker(
             onCountryCodeSelected: (code) => cubit.countyChanged(code.countryName),
           ),
-          const SizedBox(height: AppDimens.xxl),
-          if (!keyboardVisible) ...[
-            CustomRectangularButton.filled(
-              text: LocaleKeys.yourData_saveOption.tr(),
-              onPressed: canSave ? cubit.saveAddress : null,
-            ),
-            const SizedBox(height: AppDimens.xl),
-          ],
+          const SizedBox(height: AppDimens.xxxl),
+          CustomRectangularButton.filled(
+            text: LocaleKeys.yourData_saveOption.tr(),
+            onPressed: canSave ? cubit.saveAddress : null,
+          ),
+          const SizedBox(height: AppDimens.l),
         ],
       ),
     );
