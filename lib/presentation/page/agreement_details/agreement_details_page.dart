@@ -180,10 +180,10 @@ class _Content extends HookWidget {
     if (agreement.isRequired) {
       final revokeAccepted = await showTwoOptionsDialog(
         context,
-        LocaleKeys.agreementDetails_revokeAgreementDialogTitle,
-        LocaleKeys.agreementDetails_revokeAgreementDialogContent,
-        LocaleKeys.agreementDetails_revokeAgreementDialogTopAction,
-        LocaleKeys.agreementDetails_revokeAgreementDialogBottomAction,
+        LocaleKeys.agreementDetails_revokeAgreementDialogTitle.tr(),
+        LocaleKeys.agreementDetails_revokeAgreementDialogContent.tr(),
+        LocaleKeys.agreementDetails_revokeAgreementDialogTopAction.tr(),
+        LocaleKeys.agreementDetails_revokeAgreementDialogBottomAction.tr(),
       );
       if (revokeAccepted) {
         await cubit.revokeAgreement();

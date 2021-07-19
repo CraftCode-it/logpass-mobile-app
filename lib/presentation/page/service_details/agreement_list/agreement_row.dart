@@ -48,44 +48,40 @@ class AgreementRow extends HookWidget {
                   ),
                 ),
               ),
-              child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      agreement.isRequired
-                          ? tr(LocaleKeys.agreementRow_required)
-                          : tr(LocaleKeys.agreementRow_optional),
-                      style: typography.info2.copyWith(color: colors.secondaryText),
-                    ),
-                    const SizedBox(height: AppDimens.xs),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            agreement.name,
-                            style: typography.body3,
-                          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    agreement.isRequired ? tr(LocaleKeys.agreementRow_required) : tr(LocaleKeys.agreementRow_optional),
+                    style: typography.info2.copyWith(color: colors.secondaryText),
+                  ),
+                  const SizedBox(height: AppDimens.xs),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          agreement.name,
+                          style: typography.body3,
                         ),
-                        SvgPicture.asset(
-                          AppIcon.chevronRight,
-                          color: colors.buttonFill,
-                        ),
-                      ],
-                    ),
-                    if (agreement.isAccepted) ...[
-                      const SizedBox(height: AppDimens.xs),
-                      Text(
-                        LocaleKeys.agreementRow_agreedOn,
-                        style: typography.info2.copyWith(color: colors.secondaryText),
-                      ).tr(
-                        args: [
-                          SessionDateFormatter.formatDateTime(agreement.updatedAt),
-                        ],
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.chevronRight,
+                        color: colors.buttonFill,
                       ),
                     ],
+                  ),
+                  if (agreement.isAccepted) ...[
+                    const SizedBox(height: AppDimens.xs),
+                    Text(
+                      LocaleKeys.agreementRow_agreedOn,
+                      style: typography.info2.copyWith(color: colors.secondaryText),
+                    ).tr(
+                      args: [
+                        SessionDateFormatter.formatDateTime(agreement.updatedAt),
+                      ],
+                    ),
                   ],
-                ),
+                ],
               ),
             ),
           ),
