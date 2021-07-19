@@ -154,12 +154,14 @@ class _Content extends StatelessWidget {
             label: LocaleKeys.yourData_addressForm_nameHint.tr(),
             onChanged: cubit.nameChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.words,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_addressForm_streetHint.tr(),
             onChanged: cubit.streetChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.sentences,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -184,6 +186,7 @@ class _Content extends StatelessWidget {
             label: LocaleKeys.yourData_addressForm_cityHint.tr(),
             onChanged: cubit.cityChanged,
             textInputAction: TextInputAction.done,
+            textCapitalization: TextCapitalization.sentences,
           ),
           const SizedBox(height: AppDimens.l),
           CountryCodeWidePicker(

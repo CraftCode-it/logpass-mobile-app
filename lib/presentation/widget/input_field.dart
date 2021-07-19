@@ -16,11 +16,13 @@ class InputField extends HookWidget {
   final FocusNode? focusNode;
   final List<TextInputFormatter>? formatters;
   final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
 
   const InputField({
     required this.label,
     required this.onChanged,
     this.enabled = true,
+    this.textCapitalization = TextCapitalization.none,
     this.hint,
     this.error,
     this.controller,
@@ -45,6 +47,7 @@ class InputField extends HookWidget {
       focusNode: focusNode,
       textInputAction: textInputAction,
       inputFormatters: formatters,
+      textCapitalization: textCapitalization,
       decoration: InputDecoration(
         errorStyle: typography.input.copyWith(color: AppColors.error100),
         floatingLabelBehavior: FloatingLabelBehavior.auto,

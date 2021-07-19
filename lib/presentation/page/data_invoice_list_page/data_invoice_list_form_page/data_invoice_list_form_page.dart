@@ -159,18 +159,21 @@ class _Content extends StatelessWidget {
             label: LocaleKeys.yourData_invoiceDataForm_nameHint.tr(),
             onChanged: cubit.nameChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.words,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_surnameHint.tr(),
             onChanged: cubit.surnameChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.words,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_streetHint.tr(),
             onChanged: cubit.streetChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.sentences,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -194,7 +197,8 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_cityHint.tr(),
             onChanged: cubit.cityChanged,
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
+            textCapitalization: TextCapitalization.sentences,
           ),
           const SizedBox(height: AppDimens.xxl),
           if (!keyboardVisible) ...[
