@@ -173,6 +173,7 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_addressForm_postCodeHint.tr(),
             onChanged: cubit.postCodeChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),

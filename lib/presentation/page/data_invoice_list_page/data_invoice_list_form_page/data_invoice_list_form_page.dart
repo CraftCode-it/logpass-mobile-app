@@ -146,6 +146,7 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_taxIdHint.tr(),
             onChanged: cubit.taxIdChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
@@ -185,6 +186,7 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_postCodeHint.tr(),
             onChanged: cubit.postCodeChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
