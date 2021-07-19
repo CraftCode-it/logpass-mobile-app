@@ -160,19 +160,18 @@ class _ContentList extends StatelessWidget {
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            const SliverPadding(
-              padding: EdgeInsets.only(top: AppDimens.l),
+            const SliverPadding(padding: EdgeInsets.only(top: AppDimens.m)),
+            SliverToBoxAdapter(
+              child: _ServicesHeader(text: tr(LocaleKeys.serviceList_activeHeader)),
             ),
-            if (state.activeServices.isNotEmpty) ...[
-              SliverToBoxAdapter(
-                child: _ServicesHeader(text: tr(LocaleKeys.serviceList_activeHeader)),
-              ),
-              _ServiceList(services: state.activeServices, active: true),
-            ],
+            const SliverPadding(padding: EdgeInsets.only(top: AppDimens.l)),
+            _ServiceList(services: state.activeServices, active: true),
+            const SliverPadding(padding: EdgeInsets.only(top: AppDimens.xxl)),
             if (state.otherServices.isNotEmpty) ...[
               SliverToBoxAdapter(
                 child: _ServicesHeader(text: tr(LocaleKeys.serviceList_otherHeader)),
               ),
+              const SliverPadding(padding: EdgeInsets.only(top: AppDimens.l)),
               _ServiceList(services: state.otherServices, active: false),
             ],
             if (state.loadingMore)
@@ -189,7 +188,7 @@ class _ContentList extends StatelessWidget {
   }
 }
 
-class _ServiceList extends StatelessWidget {
+class _ServiceList extends HookWidget {
   final List<ServiceWithTokens> services;
   final bool active;
 
@@ -201,15 +200,25 @@ class _ServiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) => _ServiceRow(
-          service: services[index],
-          active: active,
-        ),
-        childCount: services.length,
-      ),
-    );
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return services.isNotEmpty
+        ? SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _ServiceRow(
+                service: services[index],
+                active: active,
+              ),
+              childCount: services.length,
+            ),
+          )
+        : SliverToBoxAdapter(
+            child: Text(
+              tr(LocaleKeys.serviceList_noActiveSessions),
+              style: typography.body1.copyWith(color: colors.secondaryText),
+            ).tr(),
+          );
   }
 }
 
