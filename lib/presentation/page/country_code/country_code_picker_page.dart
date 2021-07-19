@@ -16,6 +16,9 @@ import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 const _flagSize = 36.0;
+const _rowHeight = 64.0;
+const _headerHeight = 48.0;
+const _rowWithSeparatorHeight = _rowHeight + 1;
 
 class CountryCodePickerPage extends HookWidget {
   final List<CountryCode> countryCodeList;
@@ -33,10 +36,24 @@ class CountryCodePickerPage extends HookWidget {
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
+    final scrollController = useScrollController();
 
     final groupedCountryList = useMemoized(
       () => groupBy(countryCodeList, (CountryCode value) => value.countryName[0]),
     );
+
+    useEffect(() {
+      final selectedIndex = countryCodeList.indexOf(selectedCountryCode);
+      final headers = groupedCountryList.keys.toList();
+      final headerIndexIncremented = headers.indexOf(selectedCountryCode.countryName[0]) + 1;
+      final scrollOffset = selectedIndex * _rowWithSeparatorHeight + headerIndexIncremented * _headerHeight;
+
+      Future.delayed(const Duration(milliseconds: 50)).then((_) {
+        scrollController.jumpTo(
+          (scrollOffset > MediaQuery.of(context).size.height * 0.5) ? scrollOffset : 0,
+        );
+      });
+    }, [scrollController]);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -47,6 +64,7 @@ class CountryCodePickerPage extends HookWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
         child: CustomScrollView(
+          controller: scrollController,
           slivers: [
             ...groupedCountryList.entries
                 .map((e) => [
@@ -74,11 +92,14 @@ class CountryCodePickerPage extends HookWidget {
                 .expand(
                   (element) => [
                     SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: AppDimens.l),
-                        child: Text(
-                          element[0] as String,
-                          style: typography.body1,
+                      child: SizedBox(
+                        height: _headerHeight,
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            element[0] as String,
+                            style: typography.body1,
+                          ),
                         ),
                       ),
                     ),
@@ -113,8 +134,8 @@ class _CountryCodeRow extends HookWidget {
 
     return InkWell(
       onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
+      child: SizedBox(
+        height: _rowHeight,
         child: Row(
           children: [
             Image.network(
