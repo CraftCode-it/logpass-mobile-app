@@ -48,7 +48,7 @@ class CountryCodePickerPage extends HookWidget {
       final headerIndexIncremented = headers.indexOf(selectedCountryCode.countryName[0]) + 1;
       final scrollOffset = selectedIndex * _rowWithSeparatorHeight + headerIndexIncremented * _headerHeight;
 
-      Future.delayed(const Duration(milliseconds: 50)).then((_) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
         scrollController.jumpTo(
           (scrollOffset > MediaQuery.of(context).size.height * 0.5) ? scrollOffset : 0,
         );
