@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_form_page/data_invoice_list_form_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -90,13 +89,10 @@ class DataInvoiceListFormPage extends HookWidget {
         child: Messenger(
           controller: messengerController,
           child: state.maybeWhen(
-            idle: (canSave, areSomeFieldsFilled) => KeyboardVisibilityBuilder(
-              builder: (context, keyboardVisible) => _Content(
-                canSave: canSave,
-                cubit: cubit,
-                keyboardVisible: keyboardVisible,
-                scrollController: scrollController,
-              ),
+            idle: (canSave, areSomeFieldsFilled) => _Content(
+              canSave: canSave,
+              cubit: cubit,
+              scrollController: scrollController,
             ),
             loading: () => const Loader(),
             orElse: () => const SizedBox(),
@@ -130,13 +126,11 @@ class DataInvoiceListFormPage extends HookWidget {
 class _Content extends StatelessWidget {
   final bool canSave;
   final DataInvoiceListFormPageCubit cubit;
-  final bool keyboardVisible;
   final ScrollController scrollController;
 
   const _Content({
     required this.canSave,
     required this.cubit,
-    required this.keyboardVisible,
     required this.scrollController,
   });
 
@@ -152,6 +146,7 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_taxIdHint.tr(),
             onChanged: cubit.taxIdChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
@@ -159,18 +154,21 @@ class _Content extends StatelessWidget {
             label: LocaleKeys.yourData_invoiceDataForm_nameHint.tr(),
             onChanged: cubit.nameChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.words,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_surnameHint.tr(),
             onChanged: cubit.surnameChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.words,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_streetHint.tr(),
             onChanged: cubit.streetChanged,
             textInputAction: TextInputAction.next,
+            textCapitalization: TextCapitalization.sentences,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -188,22 +186,22 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_postCodeHint.tr(),
             onChanged: cubit.postCodeChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_cityHint.tr(),
             onChanged: cubit.cityChanged,
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
+            textCapitalization: TextCapitalization.sentences,
           ),
-          const SizedBox(height: AppDimens.xxl),
-          if (!keyboardVisible) ...[
-            CustomRectangularButton.filled(
-              text: LocaleKeys.yourData_saveOption.tr(),
-              onPressed: canSave ? cubit.saveInvoiceData : null,
-            ),
-            const SizedBox(height: AppDimens.xl),
-          ],
+          const SizedBox(height: AppDimens.xxxl),
+          CustomRectangularButton.filled(
+            text: LocaleKeys.yourData_saveOption.tr(),
+            onPressed: canSave ? cubit.saveInvoiceData : null,
+          ),
+          const SizedBox(height: AppDimens.l),
         ],
       ),
     );
