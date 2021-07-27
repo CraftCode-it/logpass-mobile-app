@@ -57,14 +57,11 @@ class SecuredLoginPage extends HookWidget {
         child: Messenger(
           withActionHandler: false,
           controller: messengerController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-            child: KeyboardVisibilityBuilder(
-              builder: (context, keyboardVisible) => _Content(
-                state: state,
-                cubit: cubit,
-                keyboardVisible: keyboardVisible,
-              ),
+          child: KeyboardVisibilityBuilder(
+            builder: (context, keyboardVisible) => _Content(
+              state: state,
+              cubit: cubit,
+              keyboardVisible: keyboardVisible,
             ),
           ),
         ),
@@ -121,37 +118,50 @@ class _Content extends HookWidget {
   Widget build(BuildContext context) {
     final typography = useAppTypography();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Stack(
       children: [
-        const Spacer(flex: 3),
-        const SizedBox(height: AppDimens.xl),
-        Text(
-          LocaleKeys.securedLogin_header,
-          textAlign: TextAlign.center,
-          style: typography.h4,
-        ).tr(),
-        const Spacer(flex: 3),
-        _AuthorizationOptionsContainer(
-          state: state,
-          cubit: cubit,
-          keyboardVisible: keyboardVisible,
-        ),
-        const Spacer(flex: 2),
-        if (_shouldShowDoneKeyboardButton()) DoneKeyboardButton(),
-        if (!keyboardVisible) ...[
-          Text(
-            LocaleKeys.securedLogin_logoutInfo,
-            textAlign: TextAlign.center,
-            style: typography.body1,
-          ).tr(),
-          const SizedBox(height: AppDimens.m),
-          CustomRectangularButton.filled(
-            text: tr(LocaleKeys.common_logout),
-            onPressed: () => cubit.logout(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Spacer(flex: 2),
+              const SizedBox(height: AppDimens.xl),
+              Text(
+                LocaleKeys.securedLogin_header,
+                textAlign: TextAlign.center,
+                style: typography.h4,
+              ).tr(),
+              const Spacer(flex: 2),
+              _AuthorizationOptionsContainer(
+                state: state,
+                cubit: cubit,
+                keyboardVisible: keyboardVisible,
+              ),
+              const Spacer(flex: 4),
+              if (!keyboardVisible) ...[
+                Text(
+                  LocaleKeys.securedLogin_logoutInfo,
+                  textAlign: TextAlign.center,
+                  style: typography.body1,
+                ).tr(),
+                const SizedBox(height: AppDimens.m),
+                CustomRectangularButton.filled(
+                  text: tr(LocaleKeys.common_logout),
+                  onPressed: () => cubit.logout(),
+                ),
+                const SizedBox(height: AppDimens.l),
+              ],
+            ],
           ),
-          const SizedBox(height: AppDimens.l),
-        ],
+        ),
+        if (_shouldShowDoneKeyboardButton())
+          Positioned(
+            bottom: AppDimens.zero,
+            right: AppDimens.zero,
+            left: AppDimens.zero,
+            child: DoneKeyboardButton(),
+          ),
       ],
     );
   }

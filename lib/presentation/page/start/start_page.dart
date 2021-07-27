@@ -53,38 +53,48 @@ class StartPage extends HookWidget {
           controller: messengerController,
           withActionHandler: false,
           child: KeyboardVisibilityBuilder(
-            builder: (context, isKeyboardVisible) => GestureDetector(
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: AppDimens.l),
-                    _PhoneNumberInput(
-                      controller: phoneNumberController,
-                      cubit: cubit,
-                      state: state,
+            builder: (context, isKeyboardVisible) => Stack(
+              children: [
+                GestureDetector(
+                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: AppDimens.l),
+                        _PhoneNumberInput(
+                          controller: phoneNumberController,
+                          cubit: cubit,
+                          state: state,
+                        ),
+                        const SizedBox(height: AppDimens.xxl),
+                        _TermsAndConditionsCheck(cubit: cubit),
+                        const SizedBox(height: AppDimens.l),
+                        state.maybeMap(
+                          processing: (state) => const Loader(),
+                          orElse: () => CustomRectangularButton.filled(
+                            text: tr(LocaleKeys.common_next),
+                            onPressed: _getNextButtonAction(state, cubit),
+                          ),
+                        ),
+                        const SizedBox(height: AppDimens.l),
+                        const Spacer(),
+                        if (!isKeyboardVisible) ...[
+                          const _RegisterNewDevice(),
+                        ],
+                      ],
                     ),
-                    const SizedBox(height: AppDimens.xxl),
-                    _TermsAndConditionsCheck(cubit: cubit),
-                    const SizedBox(height: AppDimens.l),
-                    state.maybeMap(
-                      processing: (state) => const Loader(),
-                      orElse: () => CustomRectangularButton.filled(
-                        text: tr(LocaleKeys.common_next),
-                        onPressed: _getNextButtonAction(state, cubit),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimens.l),
-                    const Spacer(),
-                    if (isKeyboardVisible && Platform.isIOS) DoneKeyboardButton(),
-                    if (!isKeyboardVisible) ...[
-                      const _RegisterNewDevice(),
-                    ],
-                  ],
+                  ),
                 ),
-              ),
+                if (isKeyboardVisible && Platform.isIOS)
+                  Positioned(
+                    bottom: AppDimens.zero,
+                    right: AppDimens.zero,
+                    left: AppDimens.zero,
+                    child: DoneKeyboardButton(),
+                  ),
+              ],
             ),
           ),
         ),

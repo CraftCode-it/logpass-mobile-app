@@ -101,7 +101,8 @@ class OTPCodePage extends HookWidget {
                   if (isKeyboardVisible && Platform.isIOS)
                     Positioned(
                       bottom: AppDimens.zero,
-                      right: AppDimens.l,
+                      right: AppDimens.zero,
+                      left: AppDimens.zero,
                       child: DoneKeyboardButton(),
                     ),
                 ],
