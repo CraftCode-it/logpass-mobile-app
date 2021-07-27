@@ -12,6 +12,12 @@ class LogpassApiError with _$LogpassApiError {
     List<LogpassApiErrorDetails> errors,
   ) = LogpassApiErrorVerificationFailed;
 
+  @FreezedUnionValue('throttled')
+  factory LogpassApiError.throttled(
+    String message,
+    List<LogpassApiErrorDetails> errors,
+  ) = LogpassApiErrorThrottled;
+
   @FreezedUnionValue('undefined')
   factory LogpassApiError.undefined(
     String code,

@@ -48,27 +48,24 @@ class AddNewDevicePage extends HookWidget {
       body: SafeArea(
         child: Messenger(
           controller: messengerController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-            child: KeyboardVisibilityBuilder(
-              builder: (BuildContext context, bool isKeyboardVisible) {
-                if (isKeyboardVisible) {
-                  return _PartialContent(
-                    state: state,
-                    controller: codeController,
-                    cubit: cubit,
-                    codeInputKey: codeInputKey,
-                  );
-                } else {
-                  return _FullContent(
-                    state: state,
-                    controller: codeController,
-                    cubit: cubit,
-                    codeInputKey: codeInputKey,
-                  );
-                }
-              },
-            ),
+          child: KeyboardVisibilityBuilder(
+            builder: (BuildContext context, bool isKeyboardVisible) {
+              if (isKeyboardVisible) {
+                return _PartialContent(
+                  state: state,
+                  controller: codeController,
+                  cubit: cubit,
+                  codeInputKey: codeInputKey,
+                );
+              } else {
+                return _FullContent(
+                  state: state,
+                  controller: codeController,
+                  cubit: cubit,
+                  codeInputKey: codeInputKey,
+                );
+              }
+            },
           ),
         ),
       ),
@@ -127,19 +124,29 @@ class _PartialContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: AppDimens.m),
-        _CodeContent(
-          key: codeInputKey,
-          state: state,
-          controller: controller,
-          cubit: cubit,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: AppDimens.m),
+                _CodeContent(
+                  key: codeInputKey,
+                  state: state,
+                  controller: controller,
+                  cubit: cubit,
+                ),
+                const Spacer(),
+                _ContinueButton(
+                  state: state,
+                  cubit: cubit,
+                ),
+                const SizedBox(height: AppDimens.m),
+              ],
+            ),
+          ),
         ),
-        const Spacer(),
-        _ContinueButton(
-          state: state,
-          cubit: cubit,
-        ),
-        const SizedBox(height: AppDimens.m),
         if (Platform.isIOS) DoneKeyboardButton(),
       ],
     );
@@ -162,39 +169,42 @@ class _FullContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              const SizedBox(height: AppDimens.m),
-              const _InfoContent(),
-              const SizedBox(height: AppDimens.xc),
-              _CodeContent(
-                key: codeInputKey,
-                state: state,
-                controller: controller,
-                cubit: cubit,
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+      child: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                const SizedBox(height: AppDimens.m),
+                const _InfoContent(),
+                const SizedBox(height: AppDimens.xc),
+                _CodeContent(
+                  key: codeInputKey,
+                  state: state,
+                  controller: controller,
+                  cubit: cubit,
+                ),
+              ],
+            ),
           ),
-        ),
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.only(bottom: AppDimens.m),
-              width: double.infinity,
-              child: _ContinueButton(
-                state: state,
-                cubit: cubit,
+          SliverFillRemaining(
+            fillOverscroll: false,
+            hasScrollBody: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.only(bottom: AppDimens.m),
+                width: double.infinity,
+                child: _ContinueButton(
+                  state: state,
+                  cubit: cubit,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
