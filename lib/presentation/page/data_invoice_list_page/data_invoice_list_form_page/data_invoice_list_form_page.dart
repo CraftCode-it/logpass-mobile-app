@@ -174,12 +174,14 @@ class _Content extends StatelessWidget {
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_buildingHint.tr(),
             onChanged: cubit.buildingNumberChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
             label: LocaleKeys.yourData_invoiceDataForm_apartmentHint.tr(),
             onChanged: cubit.apartmentNumberChanged,
+            inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: AppDimens.l),
