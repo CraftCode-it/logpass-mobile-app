@@ -31,5 +31,7 @@ class OTPCodePageState with _$OTPCodePageState {
 
   factory OTPCodePageState.accountAlreadyExists() = _OTPCodePageStateAccountAlreadyExists;
 
+  factory OTPCodePageState.tooManyAttempts(String message) = _OTPCodePageStateTooManyAttempts;
+
   factory OTPCodePageState.connectionError(GeneralConnectionError error) = _OTPCodePageStateError;
 }

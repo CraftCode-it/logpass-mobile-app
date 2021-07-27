@@ -10,6 +10,8 @@ part 'login_verification_error.freezed.dart';
 class LoginVerificationError with _$LoginVerificationError {
   factory LoginVerificationError.invalidCode(String message) = _LoginVerificationErrorInvalidCode;
 
+  factory LoginVerificationError.tooManyAttempts(String message) = _LoginVerificationErrorTooManyAttempts;
+
   factory LoginVerificationError.accountAlreadyCreated() = _LoginVerificationErrorAccountAlreadyCreated;
 }
 
@@ -21,6 +23,9 @@ class LoginVerificationErrorMapper implements DataMapper<LogpassApiError, LoginV
       verificationFailed: (error) {
         final codeError = error.errors.firstWhere((element) => element is LogpassApiErrorDetailsCode);
         return LoginVerificationError.invalidCode(codeError.message);
+      },
+      throttled: (error) {
+        return LoginVerificationError.tooManyAttempts(error.message);
       },
       orElse: () => throw data,
     );

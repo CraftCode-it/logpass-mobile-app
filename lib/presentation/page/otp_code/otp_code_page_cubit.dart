@@ -95,8 +95,12 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   void _handleLoginVerificationError(LoginVerificationError error) {
     error.map(
-      invalidCode: (invalidCode) => _emitIdleState(error: invalidCode.message),
-      accountAlreadyCreated: (accountAlreadyCreated) => emit(OTPCodePageState.accountAlreadyExists()),
+      invalidCode: (state) => _emitIdleState(error: state.message),
+      tooManyAttempts: (state) {
+        emit(OTPCodePageState.tooManyAttempts(state.message));
+        _emitIdleState();
+      },
+      accountAlreadyCreated: (state) => emit(OTPCodePageState.accountAlreadyExists()),
     );
   }
 

@@ -130,6 +130,7 @@ class OTPCodePage extends HookWidget {
           predicate: (route) => false,
         );
       },
+      tooManyAttempts: (state) => controller.showError(state.message),
       otpAutofill: (state) => otpController.text = state.code,
       resendSuccess: (_) => controller.showInfo(
         tr(LocaleKeys.otpCode_codeResendSuccess),
