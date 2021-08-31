@@ -5,7 +5,7 @@ import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 class GetInvoiceDataListUseCase {
 // TODO: replace after implementation of UserDataRepository
   Future<List<InvoiceData>> call() => Future.delayed(
-        const Duration(seconds: 2),
+        const Duration(milliseconds: 200),
         () => [
           InvoiceData(
             name: 'John',

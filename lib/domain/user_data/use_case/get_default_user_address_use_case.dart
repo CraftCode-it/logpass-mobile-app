@@ -5,7 +5,7 @@ import 'package:logpass_me/domain/user_data/data/address.dart';
 class GetDefaultUserAddressUseCase {
   // TODO: replace after implementation of UserDataRepository
   Future<Address?> call() async => Future.delayed(
-        const Duration(seconds: 2),
+        const Duration(milliseconds: 200),
         () => Address(
           name: 'John Doe',
           street: 'Some kind of street',
