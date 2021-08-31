@@ -7,9 +7,7 @@ class AssignToOAuthAttemptUseCase {
 
   AssignToOAuthAttemptUseCase(this._repository);
 
-  Future<void> call(String authorizationAttemptId) async {
-    // TODO: add new store from which phone number will be read
-    final phoneNumber = '+48123456789';
+  Future<void> call(String authorizationAttemptId, String phoneNumber) async {
     return _repository.assignToOAuthAttempt(authorizationAttemptId, phoneNumber);
   }
 }

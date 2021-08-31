@@ -9,6 +9,7 @@ import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
+import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -19,6 +20,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   final VerifyOTPSignUpUseCase _verifyOTPSignUpUseCase;
   final SignUpUsingOTPCodeUseCase _signUpUsingOTPCodeUseCase;
+  final SaveUserPhoneNumberUseCase _saveUserPhoneNumberUseCase;
   final SmsAutoFill _smsAutoFill;
 
   late SignUpVerification _signUpVerification;
@@ -30,6 +32,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   OTPCodePageCubit(
     this._verifyOTPSignUpUseCase,
     this._signUpUsingOTPCodeUseCase,
+    this._saveUserPhoneNumberUseCase,
     this._smsAutoFill,
   ) : super(OTPCodePageState.loading());
 
@@ -63,6 +66,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
     try {
       await _verifyOTPSignUpUseCase(_signUpVerification.verificationUrl, _code);
+      await _saveUserPhoneNumberUseCase(_signUpVerification.phoneNumber);
       emit(OTPCodePageState.success());
     } on LoginVerificationError catch (error) {
       _handleLoginVerificationError(error);

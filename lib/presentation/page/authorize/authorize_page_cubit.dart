@@ -21,6 +21,7 @@ import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_email_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_renderer.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
@@ -42,6 +43,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final IsBiometricAvailableUseCase _isBiometricAvailableUseCase;
   final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
 
+  final GetUserPhoneNumberUseCase _getUserPhoneNumberUseCase;
   final GetDefaultInvoiceDataUseCase _getDefaultInvoiceDataUseCase;
   final GetDefaultUserAddressUseCase _getDefaultUserAddressUseCase;
   final GetDefaultUserEmailUseCase _getDefaultUserEmailUseCase;
@@ -75,6 +77,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getDefaultInvoiceDataUseCase,
     this._getDefaultUserAddressUseCase,
     this._getDefaultUserEmailUseCase,
+    this._getUserPhoneNumberUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String authorizationAttemptId) async {
@@ -86,7 +89,10 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   Future<void> _startAuthorizationAttempt() async {
     try {
       final oAuthApplication = await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId);
-      await _assignToOAuthAttemptUseCase(_authorizationAttemptId);
+      final phoneNumber = await _getUserPhoneNumberUseCase();
+
+      // TODO: adjust handling phone number after 'Add new device' flow will be ready
+      await _assignToOAuthAttemptUseCase(_authorizationAttemptId, phoneNumber!);
 
       _service = oAuthApplication.service;
       _agreements = oAuthApplication.service.agreements;
