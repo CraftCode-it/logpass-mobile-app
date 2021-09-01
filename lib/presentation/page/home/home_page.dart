@@ -22,6 +22,7 @@ import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_
 const _arrowIconSize = 24.0;
 const _pendingItemIconSize = 20.0;
 const _buttonBorderWidth = 1.5;
+const _smallerSizePhoneThreshold = 672.0;
 
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,6 +32,10 @@ class HomePage extends HookWidget {
     final cubit = useCubit<HomeCubit>();
     final state = useCubitBuilder(cubit);
     final messengerController = useMessengerController();
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallSize = useMemoized(() {
+      return screenHeight <= _smallerSizePhoneThreshold;
+    }, []);
 
     useCubitListener<HomeCubit, HomeState>(
       cubit,
@@ -46,6 +51,7 @@ class HomePage extends HookWidget {
       cubit: cubit,
       state: state,
       messengerController: messengerController,
+      isSmallSize: isSmallSize,
     );
   }
 
@@ -61,11 +67,13 @@ class _HomePageContent extends HookWidget {
   final HomeCubit cubit;
   final HomeState state;
   final MessengerController messengerController;
+  final bool isSmallSize;
 
   const _HomePageContent({
     required this.cubit,
     required this.state,
     required this.messengerController,
+    required this.isSmallSize,
     Key? key,
   }) : super(key: key);
 
@@ -73,27 +81,32 @@ class _HomePageContent extends HookWidget {
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallLogo(
-        systemUiOverlayStyle: SystemUiOverlayStyle.light,
-        logoColor: colors.logoSpecial,
-      ).copyWith(
-        predefinedBackground: colors.codeContainerBackground,
-      ),
-      body: Messenger(
-        controller: messengerController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            OneTimeCodeContainer(onCopyCallback: cubit.emitCopyInformation),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                child: _PendingActions(state),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: isSmallSize
+            ? null
+            : CustomAppBar.smallLogo(
+                systemUiOverlayStyle: SystemUiOverlayStyle.light,
+                logoColor: colors.logoSpecial,
+              ).copyWith(
+                predefinedBackground: colors.codeContainerBackground,
               ),
-            ),
-          ],
+        body: Messenger(
+          controller: messengerController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              OneTimeCodeContainer(onCopyCallback: cubit.emitCopyInformation),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                  child: _PendingActions(state, isSmallSize),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -102,8 +115,9 @@ class _HomePageContent extends HookWidget {
 
 class _PendingActions extends HookWidget {
   final HomeState state;
+  final bool isSmallSize;
 
-  const _PendingActions(this.state);
+  const _PendingActions(this.state, this.isSmallSize);
 
   @override
   Widget build(BuildContext context) {
@@ -113,18 +127,18 @@ class _PendingActions extends HookWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: AppDimens.xxl),
+          SizedBox(height: isSmallSize ? AppDimens.m : AppDimens.xxl),
           Text(
             LocaleKeys.home_pendingActionsLabel.tr(),
             style: typography.h8,
           ),
-          const SizedBox(height: AppDimens.l),
+          SizedBox(height: isSmallSize ? AppDimens.zero : AppDimens.s),
           state.maybeWhen(
             idle: (pendingActions) => _PendingItemsList(pendingActions),
             orElse: () => const SizedBox.shrink(),
             loadInProgress: () => const Loader(),
           ),
-          const SizedBox(height: AppDimens.xxl),
+          const SizedBox(height: AppDimens.l),
           _PastEventsButton(),
           const SizedBox(height: AppDimens.xl),
         ],
@@ -152,11 +166,14 @@ class _PendingItemsList extends HookWidget {
             },
             itemCount: pendingActions.length,
           )
-        : Text(
-            LocaleKeys.home_pendingActionsEmpty,
-            textAlign: TextAlign.start,
-            style: typography.body1.copyWith(color: colors.secondaryText),
-          ).tr();
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
+            child: Text(
+              LocaleKeys.home_pendingActionsEmpty,
+              textAlign: TextAlign.start,
+              style: typography.body1.copyWith(color: colors.secondaryText),
+            ).tr(),
+          );
   }
 }
 
