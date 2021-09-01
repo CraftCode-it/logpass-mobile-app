@@ -5,7 +5,7 @@ import 'package:logpass_me/domain/user_data/data/email.dart';
 class AddEmailUseCase {
   // TODO: replace after implementation of UserDataRepository
   Future<void> call(Email email) => Future.delayed(
-        const Duration(seconds: 2),
+        const Duration(milliseconds: 200),
         () => null,
       );
 }

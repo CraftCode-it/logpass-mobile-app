@@ -5,7 +5,7 @@ import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 class GetPersonalDataListUseCase {
   // TODO: replace after implementation of UserDataRepository
   Future<List<PersonalData>> call() => Future.delayed(
-        const Duration(seconds: 2),
+        const Duration(milliseconds: 200),
         () => [
           PersonalData(
             name: 'John',

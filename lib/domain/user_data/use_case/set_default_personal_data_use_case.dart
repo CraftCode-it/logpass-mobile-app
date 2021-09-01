@@ -5,7 +5,7 @@ import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 class SetDefaultPersonalDataUseCase {
   // TODO: replace after implementation of UserDataRepository
   Future<void> call(PersonalData personalData) => Future.delayed(
-        const Duration(seconds: 2),
+        const Duration(milliseconds: 200),
         () => null,
       );
 }

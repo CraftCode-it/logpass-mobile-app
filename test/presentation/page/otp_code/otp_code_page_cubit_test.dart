@@ -6,6 +6,8 @@ import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_user_phone_number_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:mockito/annotations.dart';
@@ -29,17 +31,21 @@ class FakeSmsAutofill extends Fake implements SmsAutoFill {
   [
     VerifyOTPSignUpUseCase,
     SignUpUsingOTPCodeUseCase,
+    SaveUserPhoneNumberUseCase,
   ],
 )
 void main() {
   late MockVerifyOTPSignUpUseCase verifyOTPSignUpUseCase;
   late MockSignUpUsingOTPCodeUseCase signUpUsingOTPCodeUseCase;
+  late MockSaveUserPhoneNumberUseCase saveUserPhoneNumberUseCase;
   late OTPCodePageCubit cubit;
 
   setUp(() {
     verifyOTPSignUpUseCase = MockVerifyOTPSignUpUseCase();
     signUpUsingOTPCodeUseCase = MockSignUpUsingOTPCodeUseCase();
-    cubit = OTPCodePageCubit(verifyOTPSignUpUseCase, signUpUsingOTPCodeUseCase, FakeSmsAutofill());
+    saveUserPhoneNumberUseCase = MockSaveUserPhoneNumberUseCase();
+    cubit = OTPCodePageCubit(
+        verifyOTPSignUpUseCase, signUpUsingOTPCodeUseCase, saveUserPhoneNumberUseCase, FakeSmsAutofill());
   });
 
   final nowDateTime = DateTime(2021);
