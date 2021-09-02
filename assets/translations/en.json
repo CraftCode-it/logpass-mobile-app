@@ -24,7 +24,8 @@
     "page": {
       "header": "Oops,",
       "content": "Something went wrong. We could not perform required action.",
-      "action": "Try again"
+      "tryAgainAction": "Try again",
+      "goBackAction": "Go back"
     }
   },
   "bottomBarNavigation": {

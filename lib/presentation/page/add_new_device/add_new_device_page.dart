@@ -69,7 +69,7 @@ class AddNewDevicePage extends HookWidget {
           ),
         ),
       ),
-      onTryAgain: () {},
+      onErrorActionTapped: () {},
     );
   }
 

@@ -46,7 +46,7 @@ class TrustLevelPage extends HookWidget {
           ],
         ),
       ),
-      onTryAgain: () {},
+      onErrorActionTapped: () {},
     );
   }
 }

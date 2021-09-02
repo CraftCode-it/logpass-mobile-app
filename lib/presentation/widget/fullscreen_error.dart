@@ -10,10 +10,12 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class FullscreenError extends HookWidget {
-  final Function() onTryAgain;
+  final Function() onActionTapped;
+  final String? actionButtonLabel;
 
   const FullscreenError({
-    required this.onTryAgain,
+    required this.onActionTapped,
+    this.actionButtonLabel,
     Key? key,
   }) : super(key: key);
 
@@ -49,8 +51,8 @@ class FullscreenError extends HookWidget {
             Container(
               width: double.infinity,
               child: CustomRectangularButton.filled(
-                text: tr(LocaleKeys.error_page_action),
-                onPressed: onTryAgain,
+                text: actionButtonLabel ?? tr(LocaleKeys.error_page_tryAgainAction),
+                onPressed: onActionTapped,
                 borderColor: Colors.transparent,
                 fillColor: AppColors.secondary,
                 textColor: AppColors.primary100,

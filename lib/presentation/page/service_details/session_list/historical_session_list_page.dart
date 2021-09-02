@@ -45,7 +45,7 @@ class HistoricalSessionListPage extends HookWidget {
           state: state,
         ),
       ),
-      onTryAgain: () => cubit.initialize(false, service),
+      onErrorActionTapped: () => cubit.initialize(false, service),
     );
   }
 }
