@@ -78,7 +78,7 @@ class DeviceListPage extends HookWidget {
           ),
         ),
       ),
-      onTryAgain: () {
+      onErrorActionTapped: () {
         cubit.initialize();
       },
       showErrorPage: state.maybeMap(

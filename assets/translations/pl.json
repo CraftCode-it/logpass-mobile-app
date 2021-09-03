@@ -24,7 +24,8 @@
     "page": {
       "header": "Ups,",
       "content": "Coś poszło nie tak. Nie udało nam się wykonać zleconej akcji.",
-      "action": "Spróbuj ponownie"
+      "tryAgainAction": "Spróbuj ponownie",
+      "goBackAction": "Okej, wróć"
     }
   },
   "bottomBarNavigation": {

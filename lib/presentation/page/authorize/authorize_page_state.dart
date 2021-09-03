@@ -19,6 +19,9 @@ class AuthorizePageState with _$AuthorizePageState {
 
   const factory AuthorizePageState.denied(String? redirectUri) = _AuthorizePageStateDenied;
 
+  @Implements(BuildState)
+  const factory AuthorizePageState.error(bool actionExpired, {Function? retryCallback}) = _AuthorizePageStateError;
+
   const factory AuthorizePageState.connectionError(GeneralConnectionError error) = _AuthorizePageStateConnectionError;
 
   const factory AuthorizePageState.biometricVerificationNeeded() = _AuthorizePageStateBiometricVerificationNeeded;

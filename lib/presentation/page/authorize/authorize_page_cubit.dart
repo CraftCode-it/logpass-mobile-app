@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/actions_changed_notifier/use_case/notify_actions_changed_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometrics_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/is_biometric_available_use_case.dart';
 import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
@@ -39,6 +40,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
+  final NotifyActionsChangedUseCase _notifyActionsChangedUseCase;
   final ScopeRenderer _scopeRenderer;
   final IsBiometricAvailableUseCase _isBiometricAvailableUseCase;
   final AuthorizeWithBiometricsUseCase _authorizeWithBiometricsUseCase;
@@ -71,6 +73,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._approveOAuthAttemptUseCase,
     this._loadOneTimeCodeUseCase,
     this._notifyDataChangedUseCase,
+    this._notifyActionsChangedUseCase,
     this._scopeRenderer,
     this._isBiometricAvailableUseCase,
     this._authorizeWithBiometricsUseCase,
@@ -107,6 +110,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
+      _notifyActionsChangedUseCase(_authorizationAttemptId);
+      emit(const AuthorizePageState.error(true));
     }
   }
 
@@ -203,13 +208,16 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
       await _notifyDataChangedUseCase(DataChangedType.service);
+      _notifyActionsChangedUseCase(_authorizationAttemptId);
+      await _loadOneTimeCodeUseCase();
+
       emit(AuthorizePageState.confirmed(redirectUri));
     } on GeneralConnectionError catch (e) {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
-      Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
-    } finally {
-      await _loadOneTimeCodeUseCase();
+      Fimber.e('Failed to approve authorization attempt', ex: e, stacktrace: s);
+
+      emit(AuthorizePageState.error(false, retryCallback: () => approveAuthorizeAttempt(biometricConfirmed: true)));
     }
   }
 
@@ -220,13 +228,16 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       final confirmation = await _denyOAuthAttemptUseCase(_authorizationAttemptId);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
+      _notifyActionsChangedUseCase(_authorizationAttemptId);
+      await _loadOneTimeCodeUseCase();
+
       emit(AuthorizePageState.denied(redirectUri));
     } on GeneralConnectionError catch (e) {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
-      Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
-    } finally {
-      await _loadOneTimeCodeUseCase();
+      Fimber.e('Failed to deny authorization attempt', ex: e, stacktrace: s);
+
+      emit(AuthorizePageState.error(false, retryCallback: denyAuthorizeAttempt));
     }
   }
 

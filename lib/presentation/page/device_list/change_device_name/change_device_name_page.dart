@@ -76,7 +76,7 @@ class ChangeDeviceNamePage extends HookWidget {
           ),
         ),
       ),
-      onTryAgain: () {},
+      onErrorActionTapped: () {},
     );
   }
 }

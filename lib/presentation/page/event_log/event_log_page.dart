@@ -44,7 +44,7 @@ class EventLogPage extends HookWidget {
           orElse: () => const SizedBox.shrink(),
         ),
       ),
-      onTryAgain: () => cubit.load(),
+      onErrorActionTapped: () => cubit.load(),
       showErrorPage: state.maybeMap(
         error: (_) => true,
         orElse: () => false,

@@ -49,7 +49,7 @@ class AgreementContentPreviewPage extends HookWidget {
           orElse: () => const SizedBox(),
         ),
       ),
-      onTryAgain: () => cubit.init(serviceAgreement),
+      onErrorActionTapped: () => cubit.init(serviceAgreement),
       showErrorPage: state.maybeMap(
         error: (_) => true,
         orElse: () => false,

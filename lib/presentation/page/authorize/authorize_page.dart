@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
@@ -14,8 +15,10 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
@@ -35,7 +38,6 @@ class AuthorizePage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<AuthorizePageCubit>();
     final state = useCubitBuilder(cubit);
-    final colors = useAppThemeColors();
     final messengerController = useMessengerController();
 
     useCubitListener<AuthorizePageCubit, AuthorizePageState>(
@@ -52,10 +54,10 @@ class AuthorizePage extends HookWidget {
       cubit.init(authorizationAttemptId);
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallTitleOnly(
+    return CustomScaffold(
+      appBar: CustomAppBar.smallTitle(
         title: LocaleKeys.authorize_title.tr(),
+        leading: NavigationButton.back(),
       ),
       body: SafeArea(
         child: Messenger(
@@ -74,6 +76,26 @@ class AuthorizePage extends HookWidget {
             orElse: () => const SizedBox(),
           ),
         ),
+      ),
+      onErrorActionTapped: state.maybeMap(
+        error: (errorState) {
+          if (errorState.actionExpired) {
+            return () => AutoRouter.of(context).pop();
+          } else {
+            if (errorState.retryCallback != null) return () => errorState.retryCallback!();
+          }
+        },
+        orElse: () {},
+      ),
+      errorActionButtonLabel: state.maybeMap(
+        error: (errorState) {
+          if (errorState.actionExpired) return LocaleKeys.error_page_goBackAction.tr();
+        },
+        orElse: () {},
+      ),
+      showErrorPage: state.maybeWhen(
+        error: (_, __) => true,
+        orElse: () => false,
       ),
     );
   }
@@ -105,11 +127,10 @@ class AuthorizePage extends HookWidget {
           await cubit.approveAuthorizeAttemptWithBiometric();
         }
       },
-      connectionError: (state) async {
+      connectionError: (state) {
         controller.showError(
           getConnectionErrorString(state.error),
         );
-        await AutoRouter.of(context).pop();
       },
       orElse: () {},
     );

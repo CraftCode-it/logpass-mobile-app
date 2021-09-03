@@ -7,14 +7,16 @@ import 'package:logpass_me/presentation/widget/fullscreen_error.dart';
 class CustomScaffold extends HookWidget {
   final Widget body;
   final CustomAppBar appBar;
-  final Function()? onTryAgain;
+  final Function()? onErrorActionTapped;
+  final String? errorActionButtonLabel;
   final Color? customBackgroundColor;
   final bool showErrorPage;
 
   CustomScaffold({
     required this.body,
     required CustomAppBar appBar,
-    this.onTryAgain,
+    this.onErrorActionTapped,
+    this.errorActionButtonLabel,
     this.customBackgroundColor,
     this.showErrorPage = false,
     Key? key,
@@ -28,7 +30,12 @@ class CustomScaffold extends HookWidget {
     return Scaffold(
       backgroundColor: showErrorPage ? AppColors.error100 : (customBackgroundColor ?? colors.background),
       appBar: appBar,
-      body: showErrorPage ? FullscreenError(onTryAgain: onTryAgain ?? () {}) : body,
+      body: showErrorPage
+          ? FullscreenError(
+              onActionTapped: onErrorActionTapped ?? () {},
+              actionButtonLabel: errorActionButtonLabel,
+            )
+          : body,
     );
   }
 }

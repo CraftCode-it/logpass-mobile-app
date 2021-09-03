@@ -33,7 +33,7 @@ class AddNewDeviceCodePage extends HookWidget {
     );
 
     return CustomScaffold(
-      onTryAgain: () => cubit.loadCode(),
+      onErrorActionTapped: () => cubit.loadCode(),
       showErrorPage: state.maybeMap(
         error: (_) => true,
         orElse: () => false,
