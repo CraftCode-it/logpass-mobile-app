@@ -26,33 +26,48 @@ class IncomingActionDTOToIncomingActionMapper implements DataMapper<IncomingActi
   @override
   IncomingAction call(IncomingActionDTO data) {
     final uri = Uri.parse(data.link);
+    final isShortUri = uri.queryParameters.isEmpty;
 
     if (uri.isScheme(deepLinkScheme)) {
-      return _parseDeepLinkAction(uri);
+      return _parseDeepLinkAction(uri, isShortUri);
     } else if (uri.isScheme(appLinkScheme)) {
-      return _parseAppLinkAction(uri);
+      return _parseAppLinkAction(uri, isShortUri);
     } else {
       throw Exception('Unhandled scheme for action: ${uri.toString()}');
     }
   }
 
-  IncomingAction _parseDeepLinkAction(Uri uri) {
+  IncomingAction _parseDeepLinkAction(Uri uri, bool isShortUri) {
     final actionType = _mapActionType(uri.host);
-    final actionId = uri.pathSegments.isNotEmpty ? uri.pathSegments.first : throw Exception('Lack of action id');
 
-    return IncomingAction(actionType, actionId);
+    if (isShortUri) {
+      final actionId = uri.pathSegments.isNotEmpty ? uri.pathSegments.first : throw Exception('Lack of action id');
+      return IncomingAction(actionType, actionId, null);
+    } else {
+      final queryParameters = uri.queryParameters;
+      return IncomingAction(actionType, null, queryParameters);
+    }
   }
 
-  IncomingAction _parseAppLinkAction(Uri uri) {
+  IncomingAction _parseAppLinkAction(Uri uri, bool isShortUri) {
     if (uri.pathSegments.length >= 2) {
       final nonEmptyPathSegments = uri.pathSegments.where((e) => e.isNotEmpty).toList();
-      final actionPathSegmentIndex = nonEmptyPathSegments.length - 2;
-      final actionIdPathSegmentIndex = nonEmptyPathSegments.length - 1;
 
-      final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
-      final actionId = nonEmptyPathSegments[actionIdPathSegmentIndex];
+      if (isShortUri) {
+        final actionPathSegmentIndex = nonEmptyPathSegments.length - 2;
+        final actionIdPathSegmentIndex = nonEmptyPathSegments.length - 1;
 
-      return IncomingAction(actionType, actionId);
+        final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
+        final actionId = nonEmptyPathSegments[actionIdPathSegmentIndex];
+
+        return IncomingAction(actionType, actionId, null);
+      } else {
+        final actionPathSegmentIndex = nonEmptyPathSegments.length - 1;
+        final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
+        final queryParameters = uri.queryParameters;
+
+        return IncomingAction(actionType, null, queryParameters);
+      }
     }
 
     throw Exception('Invalid path for app link action: ${uri.toString()}');

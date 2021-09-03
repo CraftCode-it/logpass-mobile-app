@@ -30,9 +30,10 @@ const _arrowIconSize = 24.0;
 const _elemenetIconSize = 20.0;
 
 class AuthorizePage extends HookWidget {
-  final String authorizationAttemptId;
+  final String? authorizationAttemptId;
+  final Map<String, String>? authParameters;
 
-  const AuthorizePage(this.authorizationAttemptId);
+  const AuthorizePage(this.authorizationAttemptId, this.authParameters);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class AuthorizePage extends HookWidget {
     );
 
     useEffect(() {
-      cubit.init(authorizationAttemptId);
+      cubit.init(authorizationAttemptId, authParameters);
     }, [cubit]);
 
     return CustomScaffold(

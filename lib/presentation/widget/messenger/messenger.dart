@@ -82,8 +82,12 @@ class Messenger extends HookWidget {
           action: LocaleKeys.main_openActionLabel.tr(),
           onAction: () {
             state.action.actionType.when(
-              authorize: () =>
-                  AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: state.action.actionId)),
+              authorize: () => AutoRouter.of(context).push(
+                AuthorizePageRoute(
+                  authorizationAttemptId: state.action.actionId,
+                  authParameters: state.action.queryParameters,
+                ),
+              ),
               confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
               updateAccount: () {},
             );

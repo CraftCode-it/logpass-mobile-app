@@ -46,7 +46,7 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
 
   void _runTimer() {
     _timer = Timer.periodic(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: 100),
       (timer) {
         if (_oneTimeCode.isExpired) {
           refreshOneTimeCode();
