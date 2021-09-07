@@ -57,7 +57,7 @@ void main() {
   });
 
   group('initialize', () {
-    final incomingAction = IncomingAction(ActionType.authorize(), 'link');
+    final incomingAction = IncomingAction(ActionType.authorize(), 'link', {'key': 'value'});
     const failureMessage = 'Error message';
 
     blocTest<MainPageCubit, MainPageState>(
