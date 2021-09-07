@@ -7,6 +7,7 @@ import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometric
 import 'package:logpass_me/domain/app_security/use_case/is_biometric_available_use_case.dart';
 import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
 import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_changed_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
@@ -61,6 +62,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   int _currentTrustLevel = 1;
   int _requiredTrustLevel = 1;
 
+  late IncomingAction _incomingAction;
   String? _authorizationAttemptId;
   Map<String, String>? _authParameters;
 
@@ -87,23 +89,23 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._initUserAuthUseCase,
   ) : super(const AuthorizePageState.loading());
 
-  Future<void> init(String? authorizationAttemptId, Map<String, String>? authParameters) async {
-    _authorizationAttemptId = authorizationAttemptId;
-    _authParameters = authParameters;
-    final requiresUserAssign = _authorizationAttemptId != null;
+  Future<void> init(IncomingAction incomingAction) async {
+    _incomingAction = incomingAction;
+    _authorizationAttemptId = incomingAction.actionId;
+    _authParameters = incomingAction.queryParameters;
 
-    await _startAuthorizationAttempt(requiresUserAssign);
+    await _startAuthorizationAttempt(_authorizationAttemptId == null);
   }
 
-  Future<void> _startAuthorizationAttempt(bool requiresUserAssign) async {
+  Future<void> _startAuthorizationAttempt(bool lacksAuthorizationAttemptId) async {
     try {
       final phoneNumber = await _getUserPhoneNumberUseCase();
 
-      if (requiresUserAssign) {
+      if (!lacksAuthorizationAttemptId) {
         // TODO: adjust handling phone number after 'Add new device' flow will be ready
         await _assignToOAuthAttemptUseCase(_authorizationAttemptId!, phoneNumber!);
       }
-      final oAuthApplication = await _getOAuthApplicationDetails(requiresUserAssign);
+      final oAuthApplication = await _getOAuthApplicationDetails(lacksAuthorizationAttemptId, phoneNumber!);
 
       _service = oAuthApplication.service;
       _agreements = oAuthApplication.service.agreements;
@@ -118,22 +120,21 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
-      _notifiyActionsChanged();
+      _notifyActionsChangedUseCase(_incomingAction);
       emit(const AuthorizePageState.error(true));
     }
   }
 
-  void _notifiyActionsChanged() {
-    if (_authorizationAttemptId != null) _notifyActionsChangedUseCase(_authorizationAttemptId!);
-  }
-
-  Future<OAuthApplication> _getOAuthApplicationDetails(bool userAlreadyAssigned) async {
-    if (userAlreadyAssigned) {
-      return await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId!);
-    } else {
+  Future<OAuthApplication> _getOAuthApplicationDetails(bool lacksAuthorizationAttemptId, String phoneNumber) async {
+    if (lacksAuthorizationAttemptId) {
       final oAuthApplication = await _initUserAuthUseCase(_authParameters!);
+      await _assignToOAuthAttemptUseCase(oAuthApplication.id, phoneNumber);
+
       _authorizationAttemptId = oAuthApplication.id;
+
       return oAuthApplication;
+    } else {
+      return await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId!);
     }
   }
 
@@ -235,8 +236,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
       await _notifyDataChangedUseCase(DataChangedType.service);
-      _notifiyActionsChanged();
-      await _loadOneTimeCodeUseCase();
+      _notifyActionsChangedUseCase(_incomingAction);
+      await _loadOneTimeCodeUseCase(forceRefresh: true);
 
       emit(AuthorizePageState.confirmed(redirectUri));
     } on GeneralConnectionError catch (e) {
@@ -260,8 +261,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       final confirmation = await _denyOAuthAttemptUseCase(_authorizationAttemptId!);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
-      _notifiyActionsChanged();
-      await _loadOneTimeCodeUseCase();
+      _notifyActionsChangedUseCase(_incomingAction);
+      await _loadOneTimeCodeUseCase(forceRefresh: true);
 
       emit(AuthorizePageState.denied(redirectUri));
     } on GeneralConnectionError catch (e) {
