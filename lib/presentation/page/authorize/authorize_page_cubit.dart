@@ -15,6 +15,7 @@ import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
+import 'package:logpass_me/domain/oauth/use_case/init_user_auth_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
@@ -37,6 +38,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final AssignToOAuthAttemptUseCase _assignToOAuthAttemptUseCase;
   final DenyOAuthAttemptUseCase _denyOAuthAttemptUseCase;
   final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
+  final InitUserAuthUseCase _initUserAuthUseCase;
 
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
@@ -82,6 +84,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getDefaultUserAddressUseCase,
     this._getDefaultUserEmailUseCase,
     this._getUserPhoneNumberUseCase,
+    this._initUserAuthUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(String? authorizationAttemptId, Map<String, String>? authParameters) async {
@@ -128,8 +131,9 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     if (userAlreadyAssigned) {
       return await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId!);
     } else {
-      // TODO: get oAuth2App from another use case
-      throw UnimplementedError();
+      final oAuthApplication = await _initUserAuthUseCase(_authParameters!);
+      _authorizationAttemptId = oAuthApplication.id;
+      return oAuthApplication;
     }
   }
 
