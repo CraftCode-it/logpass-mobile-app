@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
-import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/subscribe_to_one_time_code_use_case.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
@@ -86,7 +86,7 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
       _timer?.cancel();
       emit(const OneTimeCodeContainerState.loadInProgress());
 
-      await _loadOneTimeCodeUseCase.call(forceRefresh: true);
+      await _loadOneTimeCodeUseCase.call();
     } catch (e, s) {
       Fimber.e('Error with OneTimeCode refresh', ex: e, stacktrace: s);
 

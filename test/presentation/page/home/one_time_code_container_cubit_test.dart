@@ -1,7 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
-import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/subscribe_to_one_time_code_use_case.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
 import 'package:mockito/annotations.dart';

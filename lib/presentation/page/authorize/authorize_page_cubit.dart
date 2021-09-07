@@ -17,7 +17,7 @@ import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_cas
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/init_user_auth_use_case.dart';
-import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
@@ -237,7 +237,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
       await _notifyDataChangedUseCase(DataChangedType.service);
       _notifyActionsChangedUseCase(_incomingAction);
-      await _loadOneTimeCodeUseCase(forceRefresh: true);
+      await _loadOneTimeCodeUseCase();
 
       emit(AuthorizePageState.confirmed(redirectUri));
     } on GeneralConnectionError catch (e) {
@@ -262,7 +262,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
       _notifyActionsChangedUseCase(_incomingAction);
-      await _loadOneTimeCodeUseCase(forceRefresh: true);
+      await _loadOneTimeCodeUseCase();
 
       emit(AuthorizePageState.denied(redirectUri));
     } on GeneralConnectionError catch (e) {
