@@ -62,7 +62,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
 
     _messagesStreamSubscription = _pushNotificationsManager.listenForForegroundMessages().listen((message) {
       final action = message.maybeMap(
-        authorize: (data) => IncomingAction(ActionType.authorize(), data.body.id),
+        authorize: (data) => IncomingAction(ActionType.authorize(), data.body.id, null),
         orElse: () => null,
       );
 

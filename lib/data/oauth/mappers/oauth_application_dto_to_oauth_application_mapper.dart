@@ -16,7 +16,7 @@ class OAuthApplicationDTOToOAuthApplicationMapper implements DataMapper<OAuthApp
   OAuthApplication call(OAuthApplicationDTO data) {
     return OAuthApplication(
       id: data.data.id,
-      user: data.data.user,
+      user: data.data.user ?? '',
       deviceType: data.data.deviceType,
       deviceName: data.data.deviceName,
       operatingSystem: data.data.operatingSystem,

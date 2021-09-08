@@ -19,6 +19,9 @@ abstract class OAuthApiDataSource {
   @GET('/auth/o/authorization-attempts/{authorizationAttemptId}/')
   Future<OAuthApplicationDTO> getOAuthApplicationDetails(@Path('authorizationAttemptId') String authorizationAttemptId);
 
+  @POST('/auth/o/authorization-attempts/')
+  Future<OAuthApplicationDTO> initializeUserAuth(@Body() Map<String, String> auuthorizationData);
+
   @POST('/auth/o/authorization-attempts/{authorizationAttemptId}/user/')
   Future<void> assignToOAuthAttempt(
     @Path('authorizationAttemptId') String authorizationAttemptId,

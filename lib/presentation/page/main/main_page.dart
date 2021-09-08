@@ -127,7 +127,9 @@ class MainPage extends HookWidget {
       error: (message) {},
       openAction: (action) {
         action.actionType.when(
-          authorize: () => AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId)),
+          authorize: () => AutoRouter.of(context).push(
+            AuthorizePageRoute(incomingAction: action),
+          ),
           confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
           updateAccount: () {},
         );

@@ -27,6 +27,15 @@ class OAuthRepositoryImpl implements OAuthRepository {
   );
 
   @override
+  Future<OAuthApplication> initializeUserAuth(Map<String, String> authorizationData) async {
+    final responseDTO = await callWithDioErrorResolver(
+      () => _oAuthApiDataSource.initializeUserAuth(authorizationData),
+    );
+    final oAuthApplication = _dtoToOAuthApplicationMapper(responseDTO);
+    return oAuthApplication;
+  }
+
+  @override
   Future<OAuthApplication> getOAuthApplicationDetails(String authorizationAttemptId) async {
     final responseDTO = await callWithDioErrorResolver(
       () => _oAuthApiDataSource.getOAuthApplicationDetails(authorizationAttemptId),

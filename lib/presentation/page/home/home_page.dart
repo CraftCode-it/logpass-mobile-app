@@ -190,7 +190,9 @@ class _PendingItem extends HookWidget {
     return InkWell(
       onTap: () {
         action.actionType.when(
-          authorize: () => AutoRouter.of(context).push(AuthorizePageRoute(authorizationAttemptId: action.actionId)),
+          authorize: () => AutoRouter.of(context).push(
+            AuthorizePageRoute(incomingAction: action),
+          ),
           confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
           updateAccount: () {},
         );

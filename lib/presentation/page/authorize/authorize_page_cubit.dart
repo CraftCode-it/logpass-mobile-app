@@ -7,6 +7,7 @@ import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometric
 import 'package:logpass_me/domain/app_security/use_case/is_biometric_available_use_case.dart';
 import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
 import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_changed_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/oauth/data/approve_attempt_args.dart';
@@ -15,7 +16,8 @@ import 'package:logpass_me/domain/oauth/use_case/approve_oauth_attempt_use_case.
 import 'package:logpass_me/domain/oauth/use_case/assign_to_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
-import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code.dart';
+import 'package:logpass_me/domain/oauth/use_case/init_user_auth_use_case.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
@@ -37,6 +39,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final AssignToOAuthAttemptUseCase _assignToOAuthAttemptUseCase;
   final DenyOAuthAttemptUseCase _denyOAuthAttemptUseCase;
   final ApproveOAuthAttemptUseCase _approveOAuthAttemptUseCase;
+  final InitUserAuthUseCase _initUserAuthUseCase;
 
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
@@ -59,7 +62,9 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   int _currentTrustLevel = 1;
   int _requiredTrustLevel = 1;
 
-  late String _authorizationAttemptId;
+  late IncomingAction _incomingAction;
+  String? _authorizationAttemptId;
+  Map<String, String>? _authParameters;
 
   bool get _canConfirm => _areScopesEligible && _areRequiredAgreementsAccepted && _trustLevelIsReached;
   bool get _areScopesEligible => _scopeElements.every((e) => e.isEligible());
@@ -81,21 +86,24 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getDefaultUserAddressUseCase,
     this._getDefaultUserEmailUseCase,
     this._getUserPhoneNumberUseCase,
+    this._initUserAuthUseCase,
   ) : super(const AuthorizePageState.loading());
 
-  Future<void> init(String authorizationAttemptId) async {
-    _authorizationAttemptId = authorizationAttemptId;
+  Future<void> init(IncomingAction incomingAction) async {
+    _incomingAction = incomingAction;
+    _authorizationAttemptId = incomingAction.actionId;
+    _authParameters = incomingAction.queryParameters;
 
     await _startAuthorizationAttempt();
   }
 
   Future<void> _startAuthorizationAttempt() async {
     try {
-      final oAuthApplication = await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId);
       final phoneNumber = await _getUserPhoneNumberUseCase();
 
       // TODO: adjust handling phone number after 'Add new device' flow will be ready
-      await _assignToOAuthAttemptUseCase(_authorizationAttemptId, phoneNumber!);
+      final oAuthApplication = await _getOAuthApplicationDetails(phoneNumber!);
+      await _assignToOAuthAttemptUseCase(oAuthApplication.id, phoneNumber);
 
       _service = oAuthApplication.service;
       _agreements = oAuthApplication.service.agreements;
@@ -110,8 +118,20 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       emit(AuthorizePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Failed to start authorization attempt', ex: e, stacktrace: s);
-      _notifyActionsChangedUseCase(_authorizationAttemptId);
+      _notifyActionsChangedUseCase(_incomingAction);
       emit(const AuthorizePageState.error(true));
+    }
+  }
+
+  Future<OAuthApplication> _getOAuthApplicationDetails(String phoneNumber) async {
+    if (_authorizationAttemptId == null) {
+      final oAuthApplication = await _initUserAuthUseCase(_authParameters!);
+
+      _authorizationAttemptId = oAuthApplication.id;
+
+      return oAuthApplication;
+    } else {
+      return await _getOAuthApplicationDetailsUseCase(_authorizationAttemptId!);
     }
   }
 
@@ -198,17 +218,22 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
   Future<void> approveAuthorizeAttempt({bool biometricConfirmed = false}) async {
     try {
+      if (_authorizationAttemptId == null) {
+        emit(AuthorizePageState.error(false, retryCallback: () => approveAuthorizeAttempt(biometricConfirmed: true)));
+        return;
+      }
+
       final verified = await _preAuthorizeWithBiometric(biometricConfirmed);
       if (!verified) return;
 
       emit(const AuthorizePageState.loading());
 
       final args = _prepareApproveAttemptArgs();
-      final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId, args);
+      final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId!, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
       await _notifyDataChangedUseCase(DataChangedType.service);
-      _notifyActionsChangedUseCase(_authorizationAttemptId);
+      _notifyActionsChangedUseCase(_incomingAction);
       await _loadOneTimeCodeUseCase();
 
       emit(AuthorizePageState.confirmed(redirectUri));
@@ -222,13 +247,18 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   }
 
   Future<void> denyAuthorizeAttempt() async {
-    emit(const AuthorizePageState.loading());
-
     try {
-      final confirmation = await _denyOAuthAttemptUseCase(_authorizationAttemptId);
+      if (_authorizationAttemptId == null) {
+        emit(AuthorizePageState.error(false, retryCallback: () => approveAuthorizeAttempt(biometricConfirmed: true)));
+        return;
+      }
+
+      emit(const AuthorizePageState.loading());
+
+      final confirmation = await _denyOAuthAttemptUseCase(_authorizationAttemptId!);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
-      _notifyActionsChangedUseCase(_authorizationAttemptId);
+      _notifyActionsChangedUseCase(_incomingAction);
       await _loadOneTimeCodeUseCase();
 
       emit(AuthorizePageState.denied(redirectUri));

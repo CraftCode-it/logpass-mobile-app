@@ -7,5 +7,5 @@ class LoadOneTimeCodeUseCase {
 
   LoadOneTimeCodeUseCase(this._repository);
 
-  Future<void> call({bool forceRefresh = false}) async => _repository.loadOneTimeCode(forceRefresh);
+  Future<void> call({bool forceRefresh = true}) async => _repository.loadOneTimeCode(forceRefresh);
 }

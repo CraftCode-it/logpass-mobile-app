@@ -33,7 +33,7 @@ class SetupInitialActionUseCase {
     await pushAction.maybeMap(
       authorize: (authorize) async {
         await _queuedIncomingActionRepository.queueIncomingAction(
-          IncomingAction(ActionType.authorize(), authorize.data.id),
+          IncomingAction(ActionType.authorize(), authorize.data.id, null),
         );
       },
       orElse: () async {},

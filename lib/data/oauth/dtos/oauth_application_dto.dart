@@ -22,7 +22,7 @@ class OAuthApplicationDTO {
 @JsonSerializable()
 class OAuthApplicationDataDTO {
   final String id;
-  final String user;
+  final String? user;
   final String deviceType;
   final String deviceName;
   final String operatingSystem;

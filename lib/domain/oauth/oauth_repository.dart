@@ -15,4 +15,6 @@ abstract class OAuthRepository {
     String tokenSub,
     ApproveAttemptArgs args,
   );
+
+  Future<OAuthApplication> initializeUserAuth(Map<String, String> authorizationData);
 }

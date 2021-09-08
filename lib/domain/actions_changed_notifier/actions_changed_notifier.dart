@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 
 @LazySingleton()
 class ActionsChangedNotifier {
-  final StreamController<String> _streamController = StreamController.broadcast();
+  final StreamController<IncomingAction> _streamController = StreamController.broadcast();
 
-  void notify(String actionId) => _streamController.sink.add(actionId);
+  void notify(IncomingAction incomingAction) => _streamController.sink.add(incomingAction);
 
-  Stream<String> listen() => _streamController.stream;
+  Stream<IncomingAction> listen() => _streamController.stream;
 }
