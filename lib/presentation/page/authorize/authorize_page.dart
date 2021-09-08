@@ -140,7 +140,7 @@ class AuthorizePage extends HookWidget {
   Future<void> _redirect(String? redirectUri) async {
     if (redirectUri != null) {
       if (await canLaunch(redirectUri)) {
-        await launch(redirectUri);
+        await launch(redirectUri, forceSafariVC: false);
       }
     }
   }

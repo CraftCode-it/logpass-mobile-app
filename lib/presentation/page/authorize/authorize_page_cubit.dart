@@ -94,18 +94,16 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     _authorizationAttemptId = incomingAction.actionId;
     _authParameters = incomingAction.queryParameters;
 
-    await _startAuthorizationAttempt(_authorizationAttemptId == null);
+    await _startAuthorizationAttempt();
   }
 
-  Future<void> _startAuthorizationAttempt(bool lacksAuthorizationAttemptId) async {
+  Future<void> _startAuthorizationAttempt() async {
     try {
       final phoneNumber = await _getUserPhoneNumberUseCase();
 
-      if (!lacksAuthorizationAttemptId) {
-        // TODO: adjust handling phone number after 'Add new device' flow will be ready
-        await _assignToOAuthAttemptUseCase(_authorizationAttemptId!, phoneNumber!);
-      }
-      final oAuthApplication = await _getOAuthApplicationDetails(lacksAuthorizationAttemptId, phoneNumber!);
+      // TODO: adjust handling phone number after 'Add new device' flow will be ready
+      final oAuthApplication = await _getOAuthApplicationDetails(phoneNumber!);
+      await _assignToOAuthAttemptUseCase(oAuthApplication.id, phoneNumber);
 
       _service = oAuthApplication.service;
       _agreements = oAuthApplication.service.agreements;
@@ -125,10 +123,9 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
   }
 
-  Future<OAuthApplication> _getOAuthApplicationDetails(bool lacksAuthorizationAttemptId, String phoneNumber) async {
-    if (lacksAuthorizationAttemptId) {
+  Future<OAuthApplication> _getOAuthApplicationDetails(String phoneNumber) async {
+    if (_authorizationAttemptId == null) {
       final oAuthApplication = await _initUserAuthUseCase(_authParameters!);
-      await _assignToOAuthAttemptUseCase(oAuthApplication.id, phoneNumber);
 
       _authorizationAttemptId = oAuthApplication.id;
 
