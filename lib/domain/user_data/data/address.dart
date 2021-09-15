@@ -8,6 +8,7 @@ class Address implements DefaultData {
   final String postCode;
   final String city;
   final String country;
+  @override
   final String uuid;
 
   @override

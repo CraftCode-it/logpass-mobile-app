@@ -3,7 +3,9 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/linking/linking_data_source.dart';
 import 'package:logpass_me/data/user_data/data_source/hive_user_data_data_source.dart';
 import 'package:logpass_me/data/user_data/dto/address_dto.dart';
+import 'package:logpass_me/data/user_data/dto/email_dto.dart';
 import 'package:logpass_me/data/user_data/dto/invoice_dto.dart';
+import 'package:logpass_me/data/user_data/dto/personal_data_dto.dart';
 
 @module
 abstract class DataSourceModule {
@@ -21,4 +23,16 @@ abstract class DataSourceModule {
     Box<InvoiceDto> box,
   ) =>
       HiveUserDataDataSource<InvoiceDto>(box);
+
+  @lazySingleton
+  HiveUserDataDataSource<EmailDto> getEmailsHiveDataSource(
+    Box<EmailDto> box,
+  ) =>
+      HiveUserDataDataSource<EmailDto>(box);
+
+  @lazySingleton
+  HiveUserDataDataSource<PersonalDataDto> getPersonalDataHiveDataSource(
+    Box<PersonalDataDto> box,
+  ) =>
+      HiveUserDataDataSource<PersonalDataDto>(box);
 }

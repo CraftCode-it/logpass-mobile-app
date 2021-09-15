@@ -11,6 +11,7 @@ class InvoiceData implements DefaultData {
   final String? apartmentNumber;
   final String postCode;
   final String city;
+  @override
   final String uuid;
 
   @override

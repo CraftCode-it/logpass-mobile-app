@@ -5,11 +5,13 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_email_use_case.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/utils/form_utils.dart';
+import 'package:logpass_me/presentation/utils/uuid.dart';
+import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+
+part 'data_emails_form_page_cubit.freezed.dart';
 
 part 'data_emails_form_page_state.dart';
-part 'data_emails_form_page_cubit.freezed.dart';
 
 @injectable
 class DataEmailsFormPageCubit extends Cubit<DataEmailsFormPageState> {
@@ -41,7 +43,10 @@ class DataEmailsFormPageCubit extends Cubit<DataEmailsFormPageState> {
     _emitIdleState();
   }
 
-  Email _createEmail() => Email(_email);
+  Email _createEmail() => Email(
+        _email,
+        uuid: uuid.v4(),
+      );
 
   void _emitIdleState() {
     emit(DataEmailsFormPageState.idle(canSave, _email.isNotEmpty));
