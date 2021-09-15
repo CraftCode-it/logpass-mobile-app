@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_address_use_case.dart';
+import 'package:logpass_me/presentation/utils/uuid.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 part 'data_addresses_form_page_state.dart';
@@ -108,6 +109,7 @@ class DataAddressesFormPageCubit extends Cubit<DataAddressesFormPageState> {
         city: _city,
         country: _country,
         apartmentNumber: _apartmentNumber,
+        uuid: uuid.v4(),
       );
 
   void _emitIdleState() => emit(DataAddressesFormPageState.idle(_canSave, _areSomeFieldsFilled));
