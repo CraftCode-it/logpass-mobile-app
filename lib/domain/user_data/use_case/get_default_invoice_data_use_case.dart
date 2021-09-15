@@ -1,21 +1,12 @@
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 @injectable
 class GetDefaultInvoiceDataUseCase {
-  // TODO: replace after implementation of UserDataRepository
-  Future<InvoiceData?> call() async => Future.delayed(
-        const Duration(milliseconds: 200),
-        () => InvoiceData(
-          name: 'John',
-          surname: 'Doe',
-          street: 'Some kind of street',
-          buildingNumber: '28',
-          apartmentNumber: '92',
-          postCode: '04-242',
-          city: 'Warsaw',
-          isDefault: true,
-          taxId: '58102591925',
-        ),
-      );
+  final UserDataRepository<InvoiceData> _repository;
+
+  GetDefaultInvoiceDataUseCase(this._repository);
+
+  Future<InvoiceData?> call() async => _repository.readDefault();
 }

@@ -1,18 +1,18 @@
-import 'package:logpass_me/data/user_data/data_source/hive_addresses_data_source.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_user_data_data_source.dart';
 import 'package:logpass_me/data/user_data/dto/address_dto.dart';
 import 'package:logpass_me/data/user_data/mapper/address_dto_to_address_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 class UserAddressDataRepository implements UserDataRepository<Address> {
-  final HiveAddressesDataSource _hiveAddressesDataSource;
+  final HiveUserDataDataSource<AddressDto> _hiveAddressesDataSource;
   final AddressDtoToAddressMapper _dtoMapper;
 
   UserAddressDataRepository(this._hiveAddressesDataSource, this._dtoMapper);
 
   @override
   Future create(Address value) async {
-    final dto = AddressDto.from(value);
+    final dto = _dtoMapper.to(value);
     return _hiveAddressesDataSource.create(dto);
   }
 
@@ -23,22 +23,22 @@ class UserAddressDataRepository implements UserDataRepository<Address> {
 
   @override
   Future<List<Address>> readAll() async {
-    return (await _hiveAddressesDataSource.all()).map(_dtoMapper.call).toList();
+    return (await _hiveAddressesDataSource.all()).map(_dtoMapper.from).toList();
   }
 
   @override
   Future update(Address value) async {
-    return _hiveAddressesDataSource.update(AddressDto.from(value));
+    return _hiveAddressesDataSource.update(_dtoMapper.to(value));
   }
 
   @override
   Future<Address?> readDefault() async {
-    final dto = await _hiveAddressesDataSource.getDefault();
-    return dto != null ? _dtoMapper(dto) : null;
+      final dto = await _hiveAddressesDataSource.getDefault();
+      return dto != null ? _dtoMapper.from(dto) : null;
   }
 
   @override
   Future setDefault(Address value) {
-    return _hiveAddressesDataSource.setDefault(AddressDto.from(value));
+    return _hiveAddressesDataSource.setDefault(_dtoMapper.to(value));
   }
 }

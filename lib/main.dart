@@ -13,6 +13,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
 import 'package:logpass_me/core/di/di_config.dart';
+import 'package:logpass_me/data/user_data/dto/address_dto.dart';
+import 'package:logpass_me/data/user_data/dto/invoice_dto.dart';
 import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/get_theme_brightness_use_case.dart';
@@ -21,7 +23,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/utils/brightness_utils.dart';
-import 'package:logpass_me/data/user_data/dto/address_dto.dart';
 
 Future<void> runMain(String env) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -87,8 +88,8 @@ Future<void> _precacheSvgImages() async {
   await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.failureDark), null);
 }
 
-
 Future<void> initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AddressDtoAdapter());
+  Hive.registerAdapter(InvoiceDtoAdapter());
 }

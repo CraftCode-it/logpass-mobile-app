@@ -7,6 +7,5 @@ class SetDefaultAddressUseCase {
   final UserDataRepository<Address> _repository;
 
   SetDefaultAddressUseCase(this._repository);
-  // TODO: replace after implementation of UserDataRepository
   Future<void> call(Address address) => _repository.setDefault(address.copyWith(isDefault: true));
 }
