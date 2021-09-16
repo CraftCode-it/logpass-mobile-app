@@ -1,9 +1,8 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/user_data/data_source/hive_user_data_data_source.dart';
-import 'package:logpass_me/data/user_data/dto/address_dto.dart';
-import 'package:logpass_me/data/user_data/dto/email_dto.dart';
-import 'package:logpass_me/data/user_data/dto/invoice_dto.dart';
-import 'package:logpass_me/data/user_data/dto/personal_data_dto.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_address_data_sorce.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_email_data_sorce.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_invoice_data_sorce.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_personal_data_data_sorce.dart';
 import 'package:logpass_me/data/user_data/mapper/address_dto_to_address_mapper.dart';
 import 'package:logpass_me/data/user_data/mapper/email_dto_mapper.dart';
 import 'package:logpass_me/data/user_data/mapper/invoice_dto_to_invoice_mapper.dart';
@@ -21,18 +20,19 @@ import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart
 @module
 abstract class RepositoryModule {
   @LazySingleton()
-  UserDataRepository<Address> addressRepository(
-          HiveUserDataDataSource<AddressDto> ds, AddressDtoToAddressMapper mapper) =>
+  UserDataRepository<Address> addressRepository(HiveAddressDataSource ds, AddressDtoToAddressMapper mapper) =>
       UserAddressDataRepository(ds, mapper);
 
-  UserDataRepository<InvoiceData> invoiceRepository(
-          HiveUserDataDataSource<InvoiceDto> ds, InvoiceDtoToInvoiceMapper mapper) =>
+  @LazySingleton()
+  UserDataRepository<InvoiceData> invoiceRepository(HiveInvoiceDataSource ds, InvoiceDtoToInvoiceMapper mapper) =>
       UserInvoiceDataRepository(ds, mapper);
 
-  UserDataRepository<Email> emailRepository(HiveUserDataDataSource<EmailDto> ds, EmailDtoMapper mapper) =>
+  @LazySingleton()
+  UserDataRepository<Email> emailRepository(HiveEmailDataSource ds, EmailDtoMapper mapper) =>
       UserEmailDataRepository(ds, mapper);
 
+  @LazySingleton()
   UserDataRepository<PersonalData> personalDataRepository(
-          HiveUserDataDataSource<PersonalDataDto> ds, PersonalDataDtoMapper mapper) =>
+          HivePersonalDataDataSource ds, PersonalDataDtoMapper mapper) =>
       UserPersonalDataRepository(ds, mapper);
 }

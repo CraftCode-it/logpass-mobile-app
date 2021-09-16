@@ -1,11 +1,11 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
-import 'package:logpass_me/data/user_data/dto/hive_dto.dart';import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/data/user_data/dto/hive_entity.dart';import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
-part 'personal_data_dto.g.dart';
+part 'personal_data_entity.g.dart';
 
 @HiveType(typeId: HiveTypesIds.PERSONAL_DATA_DTO_TYPE)
-class PersonalDataDto extends HiveObject implements HiveDto<PersonalDataDto> {
+class PersonalDataEntity extends HiveObject implements HiveEntity<PersonalDataEntity> {
   @HiveField(0)
   final String name;
   @HiveField(1)
@@ -19,7 +19,7 @@ class PersonalDataDto extends HiveObject implements HiveDto<PersonalDataDto> {
   @HiveField(3)
   final String uuid;
 
-  PersonalDataDto({
+  PersonalDataEntity({
     required this.name,
     required this.surname,
     required this.isDefault,
@@ -27,13 +27,13 @@ class PersonalDataDto extends HiveObject implements HiveDto<PersonalDataDto> {
   });
 
   @override
-  PersonalDataDto copyWith({
+  PersonalDataEntity copyWith({
     String? name,
     String? surname,
     bool? isDefault,
     String? uuid,
   }) {
-    return PersonalDataDto(
+    return PersonalDataEntity(
       name: name ?? this.name,
       surname: surname ?? this.surname,
       isDefault: isDefault ?? this.isDefault,

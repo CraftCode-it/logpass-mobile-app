@@ -1,11 +1,11 @@
-import 'package:logpass_me/data/user_data/data_source/hive_user_data_data_source.dart';
-import 'package:logpass_me/data/user_data/dto/invoice_dto.dart';
+import 'package:injectable/injectable.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_invoice_data_sorce.dart';
 import 'package:logpass_me/data/user_data/mapper/invoice_dto_to_invoice_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 class UserInvoiceDataRepository implements UserDataRepository<InvoiceData> {
-  final HiveUserDataDataSource<InvoiceDto> _hiveDataSource;
+  final HiveInvoiceDataSource _hiveDataSource;
   final InvoiceDtoToInvoiceMapper _dtoMapper;
 
   UserInvoiceDataRepository(this._hiveDataSource, this._dtoMapper);

@@ -1,12 +1,12 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/user_data/dto/address_dto.dart';
+import 'package:logpass_me/data/user_data/dto/address_entity.dart';
 import 'package:logpass_me/data/user_data/mapper/hive_dto_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 
 @injectable
-class AddressDtoToAddressMapper implements HiveDtoMapper<AddressDto, Address> {
+class AddressDtoToAddressMapper implements HiveDtoMapper<AddressEntity, Address> {
   @override
-  Address from(AddressDto dto) {
+  Address from(AddressEntity dto) {
     return Address(
       name: dto.name,
       street: dto.street,
@@ -20,8 +20,8 @@ class AddressDtoToAddressMapper implements HiveDtoMapper<AddressDto, Address> {
   }
 
   @override
-  AddressDto to(Address address) {
-    return AddressDto(
+  AddressEntity to(Address address) {
+    return AddressEntity(
       name: address.name,
       street: address.street,
       buildingNumber: address.buildingNumber,
