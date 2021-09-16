@@ -1,11 +1,12 @@
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 @injectable
 class DeleteEmailUseCase {
-  // TODO: replace after implementation of UserDataRepository
-  Future<void> call(Email email) => Future.delayed(
-        const Duration(milliseconds: 200),
-        () => null,
-      );
+  final UserDataRepository<Email> _repository;
+
+  DeleteEmailUseCase(this._repository);
+
+  Future<void> call(Email email) => _repository.delete(email);
 }

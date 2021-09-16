@@ -8,6 +8,8 @@ class Address implements DefaultData {
   final String postCode;
   final String city;
   final String country;
+  @override
+  final String uuid;
 
   @override
   final bool isDefault;
@@ -19,6 +21,7 @@ class Address implements DefaultData {
     required this.postCode,
     required this.city,
     required this.country,
+    required this.uuid,
     this.isDefault = false,
     this.apartmentNumber,
   });
@@ -42,7 +45,8 @@ class Address implements DefaultData {
           other.postCode == postCode &&
           other.city == city &&
           other.country == country &&
-          other.isDefault == isDefault;
+          other.isDefault == isDefault &&
+          other.uuid == uuid;
 
   @override
   int get hashCode {
@@ -53,7 +57,32 @@ class Address implements DefaultData {
         postCode.hashCode ^
         city.hashCode ^
         country.hashCode ^
+        uuid.hashCode ^
         isDefault.hashCode;
+  }
+
+  Address copyWith({
+    String? name,
+    String? street,
+    String? buildingNumber,
+    String? apartmentNumber,
+    String? postCode,
+    String? city,
+    String? country,
+    String? uuid,
+    bool? isDefault,
+  }) {
+    return Address(
+      name: name ?? this.name,
+      street: street ?? this.street,
+      buildingNumber: buildingNumber ?? this.buildingNumber,
+      apartmentNumber: apartmentNumber ?? this.apartmentNumber,
+      postCode: postCode ?? this.postCode,
+      city: city ?? this.city,
+      country: country ?? this.country,
+      uuid: uuid ?? this.uuid,
+      isDefault: isDefault ?? this.isDefault,
+    );
   }
 }
 

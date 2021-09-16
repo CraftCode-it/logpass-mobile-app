@@ -1,11 +1,12 @@
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/user_data/data/personal_data.dart';
+import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 @injectable
 class AddPersonalDataUseCase {
-  // TODO: replace after implementation of UserDataRepository
-  Future<void> call(PersonalData personalData) => Future.delayed(
-        const Duration(milliseconds: 200),
-        () => null,
-      );
+  final UserDataRepository<PersonalData> _repository;
+
+  AddPersonalDataUseCase(this._repository);
+
+  Future<void> call(PersonalData personalData) => _repository.create(personalData);
 }

@@ -11,6 +11,8 @@ class InvoiceData implements DefaultData {
   final String? apartmentNumber;
   final String postCode;
   final String city;
+  @override
+  final String uuid;
 
   @override
   final bool isDefault;
@@ -22,6 +24,7 @@ class InvoiceData implements DefaultData {
     required this.buildingNumber,
     required this.postCode,
     required this.city,
+    required this.uuid,
     this.isDefault = false,
     this.apartmentNumber,
     this.taxId,
@@ -50,6 +53,7 @@ class InvoiceData implements DefaultData {
         other.apartmentNumber == apartmentNumber &&
         other.postCode == postCode &&
         other.city == city &&
+        other.uuid == uuid &&
         other.isDefault == isDefault;
   }
 
@@ -63,7 +67,34 @@ class InvoiceData implements DefaultData {
         apartmentNumber.hashCode ^
         postCode.hashCode ^
         city.hashCode ^
+        uuid.hashCode ^
         isDefault.hashCode;
+  }
+
+  InvoiceData copyWith({
+    String? taxId,
+    String? name,
+    String? surname,
+    String? street,
+    String? buildingNumber,
+    String? apartmentNumber,
+    String? postCode,
+    String? city,
+    String? uuid,
+    bool? isDefault,
+  }) {
+    return InvoiceData(
+      taxId: taxId ?? this.taxId,
+      name: name ?? this.name,
+      surname: surname ?? this.surname,
+      street: street ?? this.street,
+      buildingNumber: buildingNumber ?? this.buildingNumber,
+      apartmentNumber: apartmentNumber ?? this.apartmentNumber,
+      postCode: postCode ?? this.postCode,
+      city: city ?? this.city,
+      uuid: uuid ?? this.uuid,
+      isDefault: isDefault ?? this.isDefault,
+    );
   }
 }
 

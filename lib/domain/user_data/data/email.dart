@@ -6,8 +6,12 @@ class Email implements DefaultData {
   @override
   final bool isDefault;
 
+  @override
+  final String uuid;
+
   Email(
     this.value, {
+    required this.uuid,
     this.isDefault = false,
   });
 
@@ -23,4 +27,16 @@ class Email implements DefaultData {
 
   @override
   int get hashCode => value.hashCode ^ isDefault.hashCode;
+
+  Email copyWith({
+    String? value,
+    bool? isDefault,
+    String? uuid,
+  }) {
+    return Email(
+      value ?? this.value,
+      isDefault: isDefault ?? this.isDefault,
+      uuid: uuid ?? this.uuid,
+    );
+  }
 }
