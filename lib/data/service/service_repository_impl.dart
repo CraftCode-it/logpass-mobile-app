@@ -46,6 +46,12 @@ class ServiceRepositoryImpl implements ServiceRepository {
       () => _serviceApiDataSource.endSession(session.id),
     );
   }
+  @override
+  Future<void> endAllSessions(Service service) async {
+    await callWithDioErrorResolver(
+      () => _serviceApiDataSource.endAllSessions(service.clientId),
+    );
+  }
 
   @override
   Future<Service> getServiceDetails(String clientId) async {

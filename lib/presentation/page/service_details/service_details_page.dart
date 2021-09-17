@@ -159,6 +159,7 @@ class _Content extends HookWidget {
                   onBackFromDetails: () {
                     cubit.refreshServiceData();
                   },
+                  onRevokeAllAgreementsPress: cubit.revokeAllAgreements,
                 ),
               ),
             ],

@@ -27,6 +27,9 @@ abstract class ServiceApiDataSource {
   @DELETE('/users/self/tokens/{tokenId}/')
   Future<void> endSession(@Path('tokenId') int token);
 
+  @DELETE('/users/self/authorized-applications/{clientId}/')
+  Future<void> endAllSessions(@Path('clientId') String clientId);
+
   @GET('/auth/o/applications/{clientId}/')
   Future<ServiceDetailsResponseDTO> getServiceDetails(@Path('clientId') String clientId);
 }
