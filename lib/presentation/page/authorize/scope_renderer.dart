@@ -18,34 +18,34 @@ class ScopeRenderer {
     Address? userAddress,
     InvoiceData? invoiceData,
   }) {
-    final list = supportedScopes
+    final list = requestedScopes
         .map((e) {
-          switch (e.scope) {
+          switch (e) {
             case Scope.address:
               return ScopeElement.address(
-                e.scope,
+                e,
                 LocaleKeys.authorize_addressScopeName.tr(),
                 LocaleKeys.authorize_addressScopeHint.tr(),
                 AppIcon.address,
-                requestedScopes.contains(e.scope),
+                requestedScopes.contains(e),
                 address: userAddress,
               );
             case Scope.email:
               return ScopeElement.email(
-                e.scope,
+                e,
                 LocaleKeys.authorize_emailScopeName.tr(),
                 LocaleKeys.authorize_emailScopeHint.tr(),
                 AppIcon.email,
-                requestedScopes.contains(e.scope),
+                requestedScopes.contains(e),
                 email: userEmail,
               );
             case Scope.invoice:
               return ScopeElement.invoice(
-                e.scope,
+                e,
                 LocaleKeys.authorize_invoiceScopeName.tr(),
                 LocaleKeys.authorize_invoiceScopeHint.tr(),
                 AppIcon.invoiceData,
-                requestedScopes.contains(e.scope),
+                requestedScopes.contains(e),
                 invoiceData: invoiceData,
               );
             default:
