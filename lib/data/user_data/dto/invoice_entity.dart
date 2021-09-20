@@ -1,12 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
-import 'package:logpass_me/data/user_data/dto/hive_dto.dart';
+import 'package:logpass_me/data/user_data/dto/hive_entity.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
-part 'invoice_dto.g.dart';
+part 'invoice_entity.g.dart';
 
 @HiveType(typeId: HiveTypesIds.SINGLE_INVOICE_DTO_TYPE)
-class InvoiceDto extends HiveObject implements HiveDto<InvoiceDto> {
+class InvoiceEntity extends HiveObject implements HiveEntity<InvoiceEntity> {
   @HiveField(0)
   final String? taxId;
   @HiveField(1)
@@ -32,7 +32,7 @@ class InvoiceDto extends HiveObject implements HiveDto<InvoiceDto> {
   @HiveField(9)
   final String uuid;
 
-  InvoiceDto({
+  InvoiceEntity({
     required this.name,
     required this.surname,
     required this.street,
@@ -46,7 +46,7 @@ class InvoiceDto extends HiveObject implements HiveDto<InvoiceDto> {
   });
 
   @override
-  InvoiceDto copyWith({
+  InvoiceEntity copyWith({
     String? taxId,
     String? name,
     String? surname,
@@ -58,7 +58,7 @@ class InvoiceDto extends HiveObject implements HiveDto<InvoiceDto> {
     bool? isDefault,
     String? uuid,
   }) {
-    return InvoiceDto(
+    return InvoiceEntity(
       taxId: taxId ?? this.taxId,
       name: name ?? this.name,
       surname: surname ?? this.surname,

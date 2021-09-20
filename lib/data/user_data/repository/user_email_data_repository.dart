@@ -1,14 +1,11 @@
-import 'package:logpass_me/data/user_data/data_source/hive_user_data_data_source.dart';
-import 'package:logpass_me/data/user_data/dto/email_dto.dart';
-import 'package:logpass_me/data/user_data/dto/personal_data_dto.dart';
+import 'package:injectable/injectable.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_email_data_sorce.dart';
 import 'package:logpass_me/data/user_data/mapper/email_dto_mapper.dart';
-import 'package:logpass_me/data/user_data/mapper/personal_data_dto_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
-import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 class UserEmailDataRepository implements UserDataRepository<Email> {
-  final HiveUserDataDataSource<EmailDto> _hiveDataSource;
+  final HiveEmailDataSource _hiveDataSource;
   final EmailDtoMapper _dtoMapper;
 
   UserEmailDataRepository(this._hiveDataSource, this._dtoMapper);

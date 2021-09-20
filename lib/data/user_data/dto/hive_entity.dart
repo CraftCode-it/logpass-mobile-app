@@ -1,8 +1,8 @@
-abstract class HiveDto<I> {
+abstract class HiveEntity<I> {
   final String uuid;
   final bool isDefault;
 
-  HiveDto(this.uuid, this.isDefault);
+  HiveEntity(this.uuid, this.isDefault);
 
   I copyWith({bool? isDefault});
 }

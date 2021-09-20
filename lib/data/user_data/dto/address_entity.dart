@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
-import 'package:logpass_me/data/user_data/dto/hive_dto.dart';
+import 'package:logpass_me/data/user_data/dto/hive_entity.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 
-part 'address_dto.g.dart';
+part 'address_entity.g.dart';
 
 @HiveType(typeId: HiveTypesIds.SINGLE_ADDRESS_DTO_TYPE)
-class AddressDto extends HiveObject implements HiveDto<AddressDto> {
+class AddressEntity extends HiveObject implements HiveEntity<AddressEntity> {
   @HiveField(0)
   final String name;
   @HiveField(1)
@@ -30,7 +30,7 @@ class AddressDto extends HiveObject implements HiveDto<AddressDto> {
   @HiveField(8)
   final String uuid;
 
-  AddressDto({
+  AddressEntity({
     required this.name,
     required this.street,
     required this.buildingNumber,
@@ -43,7 +43,7 @@ class AddressDto extends HiveObject implements HiveDto<AddressDto> {
   });
 
   @override
-  AddressDto copyWith({
+  AddressEntity copyWith({
     String? name,
     String? street,
     String? buildingNumber,
@@ -54,7 +54,7 @@ class AddressDto extends HiveObject implements HiveDto<AddressDto> {
     bool? isDefault,
     String? uuid,
   }) {
-    return AddressDto(
+    return AddressEntity(
       name: name ?? this.name,
       street: street ?? this.street,
       buildingNumber: buildingNumber ?? this.buildingNumber,

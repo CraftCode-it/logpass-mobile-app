@@ -2,10 +2,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
-import 'package:logpass_me/data/user_data/dto/address_dto.dart';
-import 'package:logpass_me/data/user_data/dto/email_dto.dart';
-import 'package:logpass_me/data/user_data/dto/invoice_dto.dart';
-import 'package:logpass_me/data/user_data/dto/personal_data_dto.dart';
+import 'package:logpass_me/data/user_data/dto/address_entity.dart';
+import 'package:logpass_me/data/user_data/dto/email_entity.dart';
+import 'package:logpass_me/data/user_data/dto/invoice_entity.dart';
+import 'package:logpass_me/data/user_data/dto/personal_data_entity.dart';
 import 'package:logpass_me/domain/app_security/app_security_store.dart';
 import 'package:logpass_me/domain/auth/auth_store.dart';
 import 'package:logpass_me/domain/common/clearable.dart';
@@ -38,23 +38,23 @@ abstract class StorageModule {
         phoneNumberStore,
       ];
 
-  @preResolve
-  Future<Box<AddressDto>> dashboardsBox(@Named('encryption_key') List<int> key) async {
-    return Hive.openBox<AddressDto>(DatabaseConfiguration.ADDRESSES_BOX, encryptionCipher: HiveAesCipher(key));
+  @lazySingleton
+  Future<Box<AddressEntity>> dashboardsBox(@Named('encryption_key') List<int> key) async {
+    return Hive.openBox<AddressEntity>(DatabaseConfiguration.ADDRESSES_BOX, encryptionCipher: HiveAesCipher(key));
   }
 
-  @preResolve
-  Future<Box<InvoiceDto>> invoicesBox(@Named('encryption_key') List<int> key) async {
-    return Hive.openBox<InvoiceDto>(DatabaseConfiguration.INVOICES_BOX, encryptionCipher: HiveAesCipher(key));
+  @lazySingleton
+  Future<Box<InvoiceEntity>> invoicesBox(@Named('encryption_key') List<int> key) async {
+    return Hive.openBox<InvoiceEntity>(DatabaseConfiguration.INVOICES_BOX, encryptionCipher: HiveAesCipher(key));
   }
 
-  @preResolve
-  Future<Box<EmailDto>> emailsBox(@Named('encryption_key') List<int> key) async {
-    return Hive.openBox<EmailDto>(DatabaseConfiguration.EMAILS_BOX, encryptionCipher: HiveAesCipher(key));
+  @lazySingleton
+  Future<Box<EmailEntity>> emailsBox(@Named('encryption_key') List<int> key) async {
+    return Hive.openBox<EmailEntity>(DatabaseConfiguration.EMAILS_BOX, encryptionCipher: HiveAesCipher(key));
   }
 
-  @preResolve
-  Future<Box<PersonalDataDto>> personalDataBox(@Named('encryption_key') List<int> key) async {
-    return Hive.openBox<PersonalDataDto>(DatabaseConfiguration.PERSONAL_DATA_BOX, encryptionCipher: HiveAesCipher(key));
+  @lazySingleton
+  Future<Box<PersonalDataEntity>> personalDataBox(@Named('encryption_key') List<int> key) async {
+    return Hive.openBox<PersonalDataEntity>(DatabaseConfiguration.PERSONAL_DATA_BOX, encryptionCipher: HiveAesCipher(key));
   }
 }

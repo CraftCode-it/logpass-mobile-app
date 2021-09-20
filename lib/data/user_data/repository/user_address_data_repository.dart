@@ -1,11 +1,11 @@
-import 'package:logpass_me/data/user_data/data_source/hive_user_data_data_source.dart';
-import 'package:logpass_me/data/user_data/dto/address_dto.dart';
+import 'package:injectable/injectable.dart';
+import 'package:logpass_me/data/user_data/data_source/hive_address_data_sorce.dart';
 import 'package:logpass_me/data/user_data/mapper/address_dto_to_address_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/repository/user_data_repository.dart';
 
 class UserAddressDataRepository implements UserDataRepository<Address> {
-  final HiveUserDataDataSource<AddressDto> _hiveAddressesDataSource;
+  final HiveAddressDataSource _hiveAddressesDataSource;
   final AddressDtoToAddressMapper _dtoMapper;
 
   UserAddressDataRepository(this._hiveAddressesDataSource, this._dtoMapper);
@@ -33,8 +33,8 @@ class UserAddressDataRepository implements UserDataRepository<Address> {
 
   @override
   Future<Address?> readDefault() async {
-      final dto = await _hiveAddressesDataSource.getDefault();
-      return dto != null ? _dtoMapper.from(dto) : null;
+    final dto = await _hiveAddressesDataSource.getDefault();
+    return dto != null ? _dtoMapper.from(dto) : null;
   }
 
   @override
