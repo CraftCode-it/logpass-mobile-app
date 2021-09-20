@@ -168,7 +168,7 @@ class _Content extends StatelessWidget {
         if (state.activeSessions) ...[
           CustomRectangularButton.outlined(
             text: tr(LocaleKeys.sessionListView_endAllSessions),
-            onPressed: () {},
+            onPressed: cubit.endAllSessions,
           ),
           const SizedBox(height: AppDimens.xl),
         ],

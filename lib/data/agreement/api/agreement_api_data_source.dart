@@ -17,6 +17,6 @@ abstract class AgreementApiDataSource {
   @DELETE('/agreements/{agreementId}/consents/')
   Future<void> revokeAgreement(@Path('agreementId') String agreementId);
 
-  @DELETE('/users/self/authorized-applications/{clientId}?has_revoke_agreements=True')
+  @DELETE('/users/self/authorized-applications/{clientId}/?has_revoke_agreements=True')
   Future<void> revokeAll(@Path('clientId') String clientId);
 }

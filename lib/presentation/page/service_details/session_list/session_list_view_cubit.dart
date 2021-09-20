@@ -5,6 +5,7 @@ import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
 import 'package:logpass_me/domain/data_changed_notifier/use_case/notify_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/use_case/end_all_sessions_use_case.dart';
 import 'package:logpass_me/domain/service/use_case/end_sessions_use_case.dart';
 import 'package:logpass_me/domain/service/use_case/get_page_of_service_sessions_use_case.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view_state.dart';
@@ -14,6 +15,7 @@ import 'package:logpass_me/presentation/page/service_details/session_list/sessio
 class SessionListViewCubit extends Cubit<SessionListViewState> {
   final GetPageOfServiceSessionsUseCase _getPageOfServiceSessionsUseCase;
   final EndSessionUseCase _endSessionUseCase;
+  final EndAllSessionsUseCase _endAllSessionsUseCase;
   final NotifyDataChangedUseCase _notifyDataChangedUseCase;
 
   late bool _activeSessions;
@@ -26,6 +28,7 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
   SessionListViewCubit(
     this._getPageOfServiceSessionsUseCase,
     this._endSessionUseCase,
+    this._endAllSessionsUseCase,
     this._notifyDataChangedUseCase,
   ) : super(SessionListViewState.loading());
 
@@ -124,6 +127,23 @@ class SessionListViewCubit extends Cubit<SessionListViewState> {
     } catch (e, s) {
       Fimber.e('Failed to end session', ex: e, stacktrace: s);
       _emitIdleWithUpdatedSession(sessionToEnd);
+    }
+  }
+
+  Future<void> endAllSessions() async {
+    try {
+      await _endAllSessionsUseCase(_service);
+      _sessionsWithState = [];
+      emit(SessionListViewState.endedSession());
+      await _notifyDataChangedUseCase(DataChangedType.service);
+      emit(SessionListViewState.empty(_activeSessions));
+
+    } on GeneralConnectionError catch (e) {
+      emit(SessionListViewState.connectionError(e));
+      emit(SessionListViewState.idle(_sessionsWithState, false, _activeSessions));
+    } catch (e, s) {
+      Fimber.e('Failed to end session', ex: e, stacktrace: s);
+      emit(SessionListViewState.idle(_sessionsWithState, false, _activeSessions));
     }
   }
 
