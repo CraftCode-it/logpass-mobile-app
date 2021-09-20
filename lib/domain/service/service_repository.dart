@@ -11,4 +11,6 @@ abstract class ServiceRepository {
   Future<void> endSession(ServiceSession session);
 
   Future<Service> getServiceDetails(String clientId);
+
+  Future<void> endAllSessions(Service session);
 }

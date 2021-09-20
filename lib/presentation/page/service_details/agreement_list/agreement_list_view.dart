@@ -9,11 +9,13 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 class AgreementListView extends StatelessWidget {
   final Service service;
   final Function()? onBackFromDetails;
+  final VoidCallback? onRevokeAllAgreementsPress;
 
   const AgreementListView({
     required this.service,
     this.onBackFromDetails,
     Key? key,
+    this.onRevokeAllAgreementsPress,
   }) : super(key: key);
 
   @override
@@ -35,7 +37,7 @@ class AgreementListView extends StatelessWidget {
         if (service.agreements.isNotEmpty) ...[
           CustomRectangularButton.outlined(
             text: tr(LocaleKeys.agreementList_revokeAllAction),
-            onPressed: () {},
+            onPressed: onRevokeAllAgreementsPress,
           ),
           const SizedBox(height: AppDimens.xl),
         ],

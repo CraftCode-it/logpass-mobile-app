@@ -22,4 +22,11 @@ class AgreementRepositoryImpl implements AgreementRepository {
       () => _agreementApiDataSource.revokeAgreement(agreementId),
     );
   }
+
+  @override
+  Future<void> revokeAll(String clientId) async {
+    await callWithDioErrorResolver(
+            () => _agreementApiDataSource.revokeAll(clientId),
+    );
+  }
 }
