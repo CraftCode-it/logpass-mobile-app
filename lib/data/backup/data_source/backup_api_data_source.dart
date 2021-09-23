@@ -16,7 +16,7 @@ abstract class BackupApiDataSource {
   Future<void> createEntry(@Body() BackupEntryDto body);
 
   @GET('/backups/')
-  Future<void> getAll();
+  Future<void> getAll(@Path('agreementId') String agreementId);
 
   @GET('/backups/{backupKey}')
   Future<void> getSingle(@Path('backupKey') String backupKey);
