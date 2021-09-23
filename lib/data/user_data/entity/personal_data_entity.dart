@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
-import 'package:logpass_me/data/user_data/dto/hive_entity.dart';import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/data/user_data/entity/hive_entity.dart';import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
 part 'personal_data_entity.g.dart';
 

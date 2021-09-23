@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/user_data/dto/personal_data_entity.dart';
-import 'package:logpass_me/data/user_data/mapper/hive_dto_mapper.dart';
+import 'package:logpass_me/data/user_data/entity/personal_data_entity.dart';
+import 'package:logpass_me/data/user_data/mapper/entity/hive_entity_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 
 @injectable
-class PersonalDataDtoMapper implements HiveDtoMapper<PersonalDataEntity, PersonalData> {
+class PersonalEntityDtoMapper implements HiveEntityMapper<PersonalDataEntity, PersonalData> {
   @override
   PersonalData from(PersonalDataEntity dto) {
     return PersonalData(
