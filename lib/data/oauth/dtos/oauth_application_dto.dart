@@ -81,11 +81,9 @@ class OAuthApplicationDataLinksDTO {
 @JsonSerializable()
 class OAuthApplicationLinksDTO {
   final String review;
-  final String websocket;
 
   OAuthApplicationLinksDTO(
     this.review,
-    this.websocket,
   );
 
   Map<String, dynamic> toJson() => _$OAuthApplicationLinksDTOToJson(this);
