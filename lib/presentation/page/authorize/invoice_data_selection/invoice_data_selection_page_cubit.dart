@@ -52,4 +52,8 @@ class InvoiceDataSelectionPageCubit extends Cubit<InvoiceDataSelectionPageState>
       emit(InvoiceDataSelectionPageState.idle(_invoiceDataList!, _selectedInvoiceData!));
     }
   }
+
+  void getInvoiceData() {
+    _loadInvoiceDatas();
+  }
 }
