@@ -8,5 +8,8 @@ class AddEmailUseCase {
 
   AddEmailUseCase(this._repository);
 
-  Future<void> call(Email email) => _repository.create(email);
+  Future<void> call(Email email) async {
+    final isFirst = (await _repository.readAll()).isEmpty;
+    return _repository.create(email.copyWith(isDefault: isFirst));
+  }
 }

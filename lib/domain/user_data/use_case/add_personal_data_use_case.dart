@@ -8,5 +8,8 @@ class AddPersonalDataUseCase {
 
   AddPersonalDataUseCase(this._repository);
 
-  Future<void> call(PersonalData personalData) => _repository.create(personalData);
+  Future<void> call(PersonalData personalData) async {
+    final isFirst = (await _repository.readAll()).isEmpty;
+    return _repository.create(personalData.copyWith(isDefault: isFirst));
+  }
 }
