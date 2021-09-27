@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -15,6 +16,7 @@ import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/radio_button_tile.dart';
+import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 
 class InvoiceDataSelectionPage extends HookWidget {
@@ -87,6 +89,7 @@ class InvoiceDataSelectionPage extends HookWidget {
                 selectedInvoiceData,
                 cubit,
               ),
+              empty: () => _NoContent(cubit: cubit),
               loading: () => const Loader(),
               orElse: () => const SizedBox(),
             ),
@@ -110,6 +113,34 @@ class InvoiceDataSelectionPage extends HookWidget {
     );
   }
 }
+
+class _NoContent extends StatelessWidget {
+  final InvoiceDataSelectionPageCubit cubit;
+
+  const _NoContent({required this.cubit, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppDimens.l),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            child: CustomRectangularButton.filled(
+              text: LocaleKeys.yourData_addNewOption.tr(),
+              onPressed: () => AutoRouter.of(context).push(DataInvoiceListFormPageRoute(
+                refreshListOnPagePop: cubit.getInvoiceData,
+              )),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class _Content extends StatelessWidget {
   final Service service;

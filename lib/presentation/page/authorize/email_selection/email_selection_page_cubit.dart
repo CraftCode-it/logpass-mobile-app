@@ -52,4 +52,8 @@ class EmailSelectionPageCubit extends Cubit<EmailSelectionPageState> {
       emit(EmailSelectionPageState.idle(_emails!, _selectedEmail!));
     }
   }
+
+  void getEmailList() {
+    _loadUserEmails();
+  }
 }

@@ -52,4 +52,8 @@ class AddressSelectionPageCubit extends Cubit<AddressSelectionPageState> {
       emit(AddressSelectionPageState.idle(_addresses!, _selectedAddress!));
     }
   }
+
+  void getAddresses() {
+    _loadUserAddresses();
+  }
 }
