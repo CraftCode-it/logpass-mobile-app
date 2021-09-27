@@ -8,5 +8,8 @@ class AddAddressUseCase {
 
   AddAddressUseCase(this._repository);
 
-  Future<void> call(Address address) => _repository.create(address);
+  Future<void> call(Address address) async {
+    final isFirst = (await _repository.readAll()).isEmpty;
+    return _repository.create(address.copyWith(isDefault: isFirst));
+  }
 }

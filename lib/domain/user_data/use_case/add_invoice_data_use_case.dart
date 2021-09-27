@@ -8,5 +8,8 @@ class AddInvoiceDataUseCase {
 
   AddInvoiceDataUseCase(this._repository);
 
-  Future<void> call(InvoiceData invoiceData) => _repository.create(invoiceData);
+  Future<void> call(InvoiceData invoiceData) async {
+    final isFirst = (await _repository.readAll()).isEmpty;
+    return _repository.create(invoiceData.copyWith(isDefault: isFirst));
+  }
 }
