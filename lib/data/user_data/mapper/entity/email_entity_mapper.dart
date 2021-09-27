@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/user_data/dto/email_entity.dart';
-import 'package:logpass_me/data/user_data/mapper/hive_dto_mapper.dart';
+import 'package:logpass_me/data/user_data/entity/email_entity.dart';
+import 'package:logpass_me/data/user_data/mapper/entity/hive_entity_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
 
 @injectable
-class EmailDtoMapper implements HiveDtoMapper<EmailEntity, Email> {
+class EmailEntityMapper implements HiveEntityMapper<EmailEntity, Email> {
   @override
   Email from(EmailEntity dto) {
     return Email(

@@ -1,69 +1,75 @@
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
-import 'package:logpass_me/data/user_data/dto/hive_entity.dart';
-import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/data/user_data/entity/hive_entity.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
-part 'address_entity.g.dart';
+part 'invoice_entity.g.dart';
 
-@HiveType(typeId: HiveTypesIds.SINGLE_ADDRESS_DTO_TYPE)
-class AddressEntity extends HiveObject implements HiveEntity<AddressEntity> {
+@HiveType(typeId: HiveTypesIds.SINGLE_INVOICE_DTO_TYPE)
+class InvoiceEntity extends HiveObject implements HiveEntity<InvoiceEntity> {
   @HiveField(0)
-  final String name;
+  final String? taxId;
   @HiveField(1)
-  final String street;
+  final String name;
   @HiveField(2)
-  final String buildingNumber;
+  final String surname;
   @HiveField(3)
-  final String? apartmentNumber;
+  final String street;
   @HiveField(4)
-  final String postCode;
+  final String buildingNumber;
   @HiveField(5)
-  final String city;
+  final String? apartmentNumber;
   @HiveField(6)
-  final String country;
-
-  @override
+  final String postCode;
   @HiveField(7)
-  final bool isDefault;
+  final String city;
 
   @override
   @HiveField(8)
+  final bool isDefault;
+
+  @override
+  @HiveField(9)
   final String uuid;
 
-  AddressEntity({
+  InvoiceEntity({
     required this.name,
+    required this.surname,
     required this.street,
     required this.buildingNumber,
-    required this.apartmentNumber,
     required this.postCode,
     required this.city,
-    required this.country,
     required this.isDefault,
     required this.uuid,
+    this.apartmentNumber,
+    this.taxId,
   });
 
   @override
-  AddressEntity copyWith({
+  InvoiceEntity copyWith({
+    String? taxId,
     String? name,
+    String? surname,
     String? street,
     String? buildingNumber,
     String? apartmentNumber,
     String? postCode,
     String? city,
-    String? country,
     bool? isDefault,
     String? uuid,
   }) {
-    return AddressEntity(
+    return InvoiceEntity(
+      taxId: taxId ?? this.taxId,
       name: name ?? this.name,
+      surname: surname ?? this.surname,
       street: street ?? this.street,
       buildingNumber: buildingNumber ?? this.buildingNumber,
       apartmentNumber: apartmentNumber ?? this.apartmentNumber,
       postCode: postCode ?? this.postCode,
       city: city ?? this.city,
-      country: country ?? this.country,
       isDefault: isDefault ?? this.isDefault,
       uuid: uuid ?? this.uuid,
     );
   }
+
 }

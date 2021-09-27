@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/user_data/dto/invoice_entity.dart';
-import 'package:logpass_me/data/user_data/mapper/hive_dto_mapper.dart';
+import 'package:logpass_me/data/user_data/entity/invoice_entity.dart';
+import 'package:logpass_me/data/user_data/mapper/entity/hive_entity_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
 @injectable
-class InvoiceDtoToInvoiceMapper implements HiveDtoMapper<InvoiceEntity, InvoiceData> {
+class InvoiceEntityToInvoiceMapper implements HiveEntityMapper<InvoiceEntity, InvoiceData> {
   @override
   InvoiceData from(InvoiceEntity dto) {
     return InvoiceData(

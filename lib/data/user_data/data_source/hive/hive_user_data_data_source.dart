@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logpass_me/data/user_data/dto/hive_entity.dart';
-import 'package:logpass_me/domain/crypto/crypto_keyh_provider.dart';
+import 'package:logpass_me/data/user_data/entity/hive_entity.dart';
+import 'package:logpass_me/domain/crypto/crypto_key_provider.dart';
 import 'package:logpass_me/domain/crypto/crypto_repository.dart';
 
 abstract class HiveUserDataDataSource<T extends HiveEntity<T>> {

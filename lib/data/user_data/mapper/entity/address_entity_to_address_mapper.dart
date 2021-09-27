@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
-import 'package:logpass_me/data/user_data/dto/address_entity.dart';
-import 'package:logpass_me/data/user_data/mapper/hive_dto_mapper.dart';
+import 'package:logpass_me/data/user_data/entity/address_entity.dart';
+import 'package:logpass_me/data/user_data/mapper/entity/hive_entity_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 
 @injectable
-class AddressDtoToAddressMapper implements HiveDtoMapper<AddressEntity, Address> {
+class AddressEntityToAddressEntityMapper implements HiveEntityMapper<AddressEntity, Address> {
   @override
   Address from(AddressEntity dto) {
     return Address(
