@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
 import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
+import 'package:logpass_me/data/incoming_actions/mappers/incoming_push_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
@@ -18,6 +19,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
   final IncomingActionsValidator _incomingActionsValidator;
   final IncomingActionDTOToIncomingActionMapper _incomingActionMapper;
+  final IncomingPushActionDTOToIncomingActionMapper _pushActionDTOToIncomingActionMapper;
 
   StreamSubscription? _messagesStreamSubscription;
   StreamSubscription? _webSocketStreamSubscription;
@@ -27,6 +29,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
     this._pushNotificationsManager,
     this._incomingActionMapper,
     this._incomingActionsValidator,
+    this._pushActionDTOToIncomingActionMapper,
   );
 
   @override
@@ -61,10 +64,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
     if (_messagesStreamSubscription != null) return;
 
     _messagesStreamSubscription = _pushNotificationsManager.listenForForegroundMessages().listen((message) {
-      final action = message.maybeMap(
-        authorize: (data) => IncomingAction(ActionType.authorize(), data.body.id, null),
-        orElse: () => null,
-      );
+      final action = _pushActionDTOToIncomingActionMapper(message);
 
       if (action == null) return;
 
@@ -76,5 +76,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   Future<void> clear() async {
     await _messagesStreamSubscription?.cancel();
     await _webSocketStreamSubscription?.cancel();
+    _messagesStreamSubscription = null;
+    _webSocketStreamSubscription = null;
   }
 }

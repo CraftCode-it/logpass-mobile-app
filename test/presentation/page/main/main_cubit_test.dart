@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_action_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_background_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
@@ -24,6 +25,7 @@ import 'main_cubit_test.mocks.dart';
     SubscribeToIncomingActionsFromLinkUseCase,
     GetQueuedIncomingActionUseCase,
     RegisterPushNotificationDeviceUseCase,
+    SubscribeToIncomingActionsFromBackgroundUseCase
   ],
 )
 void main() {
@@ -34,6 +36,7 @@ void main() {
   late SubscribeToIncomingActionsFromLinkUseCase subscribeToIncomingActionsFromLinkUseCase;
   late GetQueuedIncomingActionUseCase getQueuedIncomingActionUseCase;
   late RegisterPushNotificationDeviceUseCase registerPushNotificationDeviceUseCase;
+  late SubscribeToIncomingActionsFromBackgroundUseCase subscribeToIncomingActionsFromBackgroundUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
@@ -44,6 +47,7 @@ void main() {
     subscribeToIncomingActionsFromLinkUseCase = MockSubscribeToIncomingActionsFromLinkUseCase();
     getQueuedIncomingActionUseCase = MockGetQueuedIncomingActionUseCase();
     registerPushNotificationDeviceUseCase = MockRegisterPushNotificationDeviceUseCase();
+    subscribeToIncomingActionsFromBackgroundUseCase = MockSubscribeToIncomingActionsFromBackgroundUseCase();
 
     cubit = MainPageCubit(
       setupWebSocketChannelUseCase,
@@ -53,6 +57,7 @@ void main() {
       subscribeToIncomingActionsFromLinkUseCase,
       getQueuedIncomingActionUseCase,
       registerPushNotificationDeviceUseCase,
+      subscribeToIncomingActionsFromBackgroundUseCase,
     );
   });
 

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/push_notifications/api/dto/push_notification_message_dto.dart';
-import 'package:rxdart/rxdart.dart';
 
 @LazySingleton()
 class PushNotificationsManager {
@@ -23,12 +22,10 @@ class PushNotificationsManager {
     return _decodeMessage(message);
   }
 
-  Stream<PushNotificationMessageDTO> listenForForegroundMessages() => Rx.merge(
-        [
-          FirebaseMessaging.onMessage,
-          FirebaseMessaging.onMessageOpenedApp,
-        ],
-      ).map(_decodeMessage);
+  Stream<PushNotificationMessageDTO> listenForBackgroundMessages() =>
+      FirebaseMessaging.onMessageOpenedApp.map(_decodeMessage);
+
+  Stream<PushNotificationMessageDTO> listenForForegroundMessages() => FirebaseMessaging.onMessage.map(_decodeMessage);
 
   Future<String?> getRegistrationRefreshToken() => _firebaseMessaging.getToken();
 
