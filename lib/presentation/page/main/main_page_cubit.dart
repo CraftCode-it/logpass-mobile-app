@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_action_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_background_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
@@ -15,6 +16,7 @@ import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_u
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 
 part 'main_page_cubit.freezed.dart';
+
 part 'main_page_state.dart';
 
 @injectable
@@ -24,10 +26,12 @@ class MainPageCubit extends Cubit<MainPageState> {
   final InitNotificationsServicesUseCase _initNotificationsServicesUseCase;
   final SwitchPreLoginActionHandlerUseCase _switchPreLoginActionHandlerUseCase;
   final SubscribeToIncomingActionsFromLinkUseCase _subscribeToIncomingActionsFromLinkUseCase;
+  final SubscribeToIncomingActionsFromBackgroundUseCase _subscribeToIncomingActionsFromBackgroundUseCase;
   final GetQueuedIncomingActionUseCase _getQueuedIncomingActionUseCase;
   final RegisterPushNotificationDeviceUseCase _registerPushNotificationDeviceUseCase;
 
   StreamSubscription<IncomingAction>? _incomingActionsFromLinkSubscription;
+  StreamSubscription<IncomingAction>? _incomingActionsFromBackgroundSubscription;
   StreamSubscription<IncomingAction>? _incomingActionsSubscription;
 
   MainPageCubit(
@@ -38,6 +42,7 @@ class MainPageCubit extends Cubit<MainPageState> {
     this._subscribeToIncomingActionsFromLinkUseCase,
     this._getQueuedIncomingActionUseCase,
     this._registerPushNotificationDeviceUseCase,
+    this._subscribeToIncomingActionsFromBackgroundUseCase,
   ) : super(const MainPageState.idle());
 
   Future<void> init() async {
@@ -52,11 +57,14 @@ class MainPageCubit extends Cubit<MainPageState> {
     await _switchPreLoginActionHandlerUseCase(false);
     await _handleQueuedAction();
 
-    _subscribeToIncomingActionsFromLink();
+    _subscribeToIncomingActions();
   }
 
-  void _subscribeToIncomingActionsFromLink() {
+  void _subscribeToIncomingActions() {
     _incomingActionsFromLinkSubscription = _subscribeToIncomingActionsFromLinkUseCase().listen((event) {
+      emit(MainPageState.openAction(event));
+    });
+    _incomingActionsFromBackgroundSubscription = _subscribeToIncomingActionsFromBackgroundUseCase().listen((event) {
       emit(MainPageState.openAction(event));
     });
   }
@@ -100,6 +108,7 @@ class MainPageCubit extends Cubit<MainPageState> {
   Future<void> close() async {
     await _incomingActionsFromLinkSubscription?.cancel();
     await _incomingActionsSubscription?.cancel();
+    await _incomingActionsFromBackgroundSubscription?.cancel();
     await _switchPreLoginActionHandlerUseCase(true);
     _closeWebSocketChannel();
     return super.close();
