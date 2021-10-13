@@ -1,3 +1,5 @@
+import 'package:country_codes/country_codes.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/country_code/country_code_data_source.dart';
 import 'package:logpass_me/data/country_code/country_code_entity.dart';
@@ -18,6 +20,7 @@ class CountryCodeRepositoryImpl implements CountryCodeRepository {
     final cache = _countryCodeListCache;
     if (cache != null) return cache;
 
+    await CountryCodes.init(Locale(languageCode));
     final entityList = await _dataSource.load();
     final countryCodeList =
         entityList.map<CountryCode>((entity) => _mapper(entity, languageCode)).toList(growable: false);
