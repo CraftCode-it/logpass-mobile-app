@@ -81,7 +81,7 @@ class PinField extends HookWidget {
               padding: const EdgeInsets.all(AppDimens.xs),
               constraints: const BoxConstraints(),
               icon: SvgPicture.asset(
-                isObscured.value ? AppIcon.passwordEyeShow : AppIcon.passwordEyeHide,
+                isObscured.value ? AppIcon.passwordEyeHide : AppIcon.passwordEyeShow,
                 width: AppDimens.l,
                 height: AppDimens.l,
                 color: colors.text,
