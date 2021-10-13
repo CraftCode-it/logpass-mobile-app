@@ -24,6 +24,7 @@
     "page": {
       "header": "Oops,",
       "content": "Something went wrong. We could not perform required action.",
+      "action": "Try again",
       "tryAgainAction": "Try again",
       "goBackAction": "Go back"
     }
@@ -147,11 +148,7 @@
     "activeHeader": "With active sessions",
     "otherHeader": "Other services",
     "session": {
-      "zero": "{} sessions",
       "one": "{} session",
-      "two": "{} sessions",
-      "few": "{} sessions",
-      "many": "{} sessions",
       "other": "{} sessions"
     },
     "noServices": "You have no connected services.",
