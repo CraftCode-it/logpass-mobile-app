@@ -30,7 +30,7 @@ class InfoMessage extends HookWidget {
       content: action == null
           ? Text(
               content,
-              style: typography.input.copyWith(color: colors.textSpecial),
+              style: typography.body2.copyWith(color: colors.textSpecial),
               textAlign: TextAlign.center,
             )
           : Row(
@@ -39,7 +39,7 @@ class InfoMessage extends HookWidget {
                 Expanded(
                   child: Text(
                     content,
-                    style: typography.input.copyWith(color: colors.textSpecial),
+                    style: typography.body2.copyWith(color: colors.textSpecial),
                   ),
                 ),
                 const SizedBox(width: AppDimens.m),
@@ -50,7 +50,7 @@ class InfoMessage extends HookWidget {
                   },
                   child: Text(
                     action,
-                    style: typography.input.copyWith(color: colors.textSpecial),
+                    style: typography.body2.copyWith(color: colors.textSpecial),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -112,7 +112,7 @@ class _MessageView extends HookWidget {
       axis: Axis.vertical,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(AppDimens.s),
+        padding: const EdgeInsets.all(AppDimens.s + AppDimens.xs),
         color: background,
         child: content,
       ),
