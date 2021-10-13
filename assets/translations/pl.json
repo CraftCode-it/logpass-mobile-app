@@ -35,7 +35,8 @@
     "settings": "Opcje"
   },
   "countryCodePicker": {
-    "title": "Select your country"
+    "title": "Select your country",
+    "search": "Wyszukaj"
   },
   "onboarding": {
     "stepOneTitle": "Loguj się bezpiecznie do wszystkich usług online",
