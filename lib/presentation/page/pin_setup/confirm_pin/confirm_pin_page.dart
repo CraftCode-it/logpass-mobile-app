@@ -95,25 +95,18 @@ class _PinField extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final typography = useAppTypography();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
         PinField(
           onPinChanged: cubit.updatePin,
+          pinErrorText: state.maybeMap(
+            idle: (state) => state.wrong ? LocaleKeys.common_wrongCode.tr() : null,
+            orElse: () => null,
+          ),
         ),
         const SizedBox(height: AppDimens.s),
-        state.maybeMap(
-          idle: (state) => state.wrong
-              ? Text(
-                  LocaleKeys.common_wrongCode,
-                  style: typography.input.copyWith(color: AppColors.error100),
-                ).tr()
-              : const SizedBox.shrink(),
-          orElse: () => const SizedBox.shrink(),
-        ),
       ],
     );
   }

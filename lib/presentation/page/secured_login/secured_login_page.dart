@@ -197,31 +197,28 @@ class _AuthorizationOptionsContainer extends HookWidget {
 
     final typography = useAppTypography();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          LocaleKeys.securedLogin_pinCodeInfo,
-          textAlign: TextAlign.center,
-          style: typography.body1,
-        ).tr(),
-        const SizedBox(height: AppDimens.l),
-        PinField(
-          onPinChanged: cubit.updatePinCode,
-          autoFocus: type == AppSecurityType.code,
-          showSideIcon: false,
-        ),
-        if (pinError != null) ...[
-          const SizedBox(height: AppDimens.s),
-          Text(
-            pinError,
-            textAlign: TextAlign.center,
-            style: typography.input.copyWith(color: AppColors.error100),
+    return IntrinsicWidth(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            child: Text(
+              LocaleKeys.securedLogin_pinCodeInfo,
+              textAlign: TextAlign.center,
+              style: typography.body1,
+            ).tr(),
           ),
+          const SizedBox(height: AppDimens.l),
+          PinField(
+            onPinChanged: cubit.updatePinCode,
+            autoFocus: type == AppSecurityType.code,
+            showSideIcon: false,
+            pinErrorText: pinError,
+          ),
+          const SizedBox(height: AppDimens.xl),
+          if (_shouldShowBiometrics(type)) _OptionalBiometricsContainer(cubit: cubit),
         ],
-        const SizedBox(height: AppDimens.xl),
-        if (_shouldShowBiometrics(type)) _OptionalBiometricsContainer(cubit: cubit),
-      ],
+      ),
     );
   }
 

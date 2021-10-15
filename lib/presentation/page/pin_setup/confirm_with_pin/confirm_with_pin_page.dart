@@ -60,19 +60,10 @@ class ConfirmWithPinPage extends HookWidget {
               const SizedBox(height: AppDimens.l),
               PinField(
                 onPinChanged: cubit.updateCode,
-              ),
-              ...state.maybeMap(
-                idle: (state) => state.validCode
-                    ? []
-                    : [
-                        const SizedBox(height: AppDimens.s),
-                        Text(
-                          LocaleKeys.common_wrongCode.tr(),
-                          style: typography.info1.copyWith(color: AppColors.error100),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                orElse: () => [],
+                pinErrorText: state.maybeMap(
+                  idle: (state) => state.validCode ?  null : LocaleKeys.common_wrongCode.tr(),
+                  orElse: () => null,
+                ),
               ),
               const Spacer(),
               _Button(content: button, state: state, cubit: cubit),
