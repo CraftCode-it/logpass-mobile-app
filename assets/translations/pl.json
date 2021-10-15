@@ -4,38 +4,39 @@
     "skip": "Pomiń",
     "next": "Dalej",
     "start": "Rozpocznij",
-    "prefix": "Prefix",
-    "phoneNumber": "Mobile number",
-    "verify": "Verify",
-    "logout": "Logout",
-    "wrongCode": "Code is wrong",
-    "continue": "Continue",
-    "deactivate": "Deactivate",
-    "back": "Back",
-    "save": "Save",
-    "remove": "Remove",
-    "copied": "Copied",
-    "done": "Done"
+    "prefix": "Kod kraju",
+    "phoneNumber": "Numer komórkowy",
+    "verify": "Potwierdź",
+    "logout": "Wyloguj",
+    "wrongCode": "Kod jest niepoprawny",
+    "continue": "Przejdź dalej",
+    "deactivate": "Dezaktywuj",
+    "back": "Wróć",
+    "save": "Zapisz",
+    "remove": "Usuń",
+    "copied": "Skopiowano",
+    "done": "Zrobione"
   },
   "error": {
-    "noConnection": "It seems like you have no internet connection",
-    "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
-    "somethingWentWrong": "Something went wrong. Please try again.",
+    "noConnection": "Twoje urządzenia nie ma połączenia z internetem",
+    "timeout": "Operacja zajmuje zbyt dużo czasu, spróbuj ponownie później",
+    "somethingWentWrong": "Coś poszło nie tak, jak planowaliśmy. Spróbuj ponownie. ",
     "page": {
       "header": "Ups,",
-      "content": "Coś poszło nie tak. Nie udało nam się wykonać zleconej akcji.",
+      "content": "Coś poszło nie tak. Nie możemy dokończyć tego działania.",
+      "action": "Spróbuj ponownie",
       "tryAgainAction": "Spróbuj ponownie",
       "goBackAction": "Okej, wróć"
     }
   },
   "bottomBarNavigation": {
-    "home": "Home",
+    "home": "Strona główna",
     "services": "Serwisy",
-    "data": "Dane",
+    "data": "Twoje dane",
     "settings": "Opcje"
   },
   "countryCodePicker": {
-    "title": "Select your country",
+    "title": "Wybierz swój kraj",
     "search": "Wyszukaj"
   },
   "onboarding": {
@@ -48,27 +49,31 @@
   },
   "start": {
     "title": "Rejestracja",
-    "termsAcceptInfo": "By registering to the application, I accept ",
-    "termsAcceptHighlight": "Terms&Conditions of use",
-    "helpAction": "Need help?",
-    "addNewDeviceAction": "Add new device",
-    "addNewDeviceInfo": "Already registered but using different device?",
+    "termsAcceptInfo": "Rejestrując się, akceptuję",
+    "termsAcceptHighlight": "warunki użytkowania",
+    "helpAction": "Pomoc",
+    "addNewDeviceAction": "Dodaj nowe urządzenie",
+    "addNewDeviceInfo": "Używasz Logpassa na innym urządzeniu?",
     "phoneNumberFormatError": "Nieprawidłowy format numeru telefonu"
+  },
+  "main": {
+    "newAction": "Masz nowe zadanie",
+    "openActionLabel": "Otwórz"
   },
   "home": {
     "codeErrorPlaceholder": "XXXXXX",
     "activeInfo": "Kod jest aktywny przez {}",
     "copyCodeLabel": "kopiuj",
     "refreshCodeLabel": "odśwież",
-    "pendingActionsLabel": "Akcje oczekujące",
-    "pendingActionsEmpty": "Brak oczekujących akcji",
-    "pastActions": "Zobacz pozostałe",
+    "pendingActionsLabel": "Zadania oczekujące",
+    "pendingActionsEmpty": "Aktualnie nic nie wymaga Twojej uwagi",
+    "pastActions": "Zobacz poprzednie zadania",
     "actionTypeAuthorization": "Autoryzacja",
     "pendingItemTimeLeft": "Aktywne przez {}",
-    "codeCopied": "Code copied to clipboard"
+    "codeCopied": "Kod został skopiowany"
   },
   "authorize": {
-    "title": "Autoryzuj operację",
+    "title": "Autoryzuj działanie",
     "confirm_button": "Potwierdź",
     "reject_button": "Odrzuć",
     "addressScopeName": "Adres",
@@ -77,316 +82,310 @@
     "emailScopeHint": "Wybierz email",
     "invoiceScopeName": "Dane do faktury",
     "invoiceScopeHint": "Wybierz dane do faktury",
-    "serviceRules": "Service rules",
-    "trustLevelName": "Trust level",
-    "trustLevelDescription": "No additional confirmation required",
-    "trustLevelRequired": "*Confirmation on another device required",
-    "selectEmailTitle": "Select email",
-    "selectAddressTitle": "Select address",
-    "selectInvoiceData": "Select invoice data",
-    "biometricCheckDialogTitle": "Biometrics needed",
-    "biometricCheckDialogContent": "This operation requires additional verification via Touch / Face ID\n\nPlease add your biometric to proceed",
-    "biometricCheckDialogTopAction": "Allow biometrics",
-    "biometricCheckDialogBottomAction": "Reject operation",
-    "serviceRulesTitle": "Service rules",
-    "acceptAllRules": "Agree to all"
-  },
-  "main": {
-    "newAction": "Masz nową akcję",
-    "openActionLabel": "Otwórz"
+    "serviceRules": "Zasady użytkowania",
+    "trustLevelName": "Poziom zaufania",
+    "trustLevelDescription": "Dodatkowe potwierdzenie nie jest wymagane",
+    "trustLevelRequired": "*Wymagane jest dodatkowe potwierdzenie na innym urządzeniu",
+    "selectEmailTitle": "Wybierz email",
+    "selectAddressTitle": "Wybierz adres",
+    "selectInvoiceData": "Wybierz dane do faktury",
+    "biometricCheckDialogTitle": "Użyj danych biometrycznych",
+    "biometricCheckDialogContent": "Ta operacja wymaga zatwierdzenia przez TouchID lub FaceID\n\nProszę, dodaj dane biometryczne, by kontynuować",
+    "biometricCheckDialogTopAction": "Używaj danych biometrycznych",
+    "biometricCheckDialogBottomAction": "Odrzuć zadanie",
+    "serviceRulesTitle": "Reguły użytkowania",
+    "acceptAllRules": "Tak na wszystko"
   },
   "otpCode": {
-    "title": "Verify your number",
-    "info": "Please insert the code that we just send\nto provided phone number",
-    "codeLabel": "Code",
-    "resendInfo": "Did not get anything?",
-    "resendAction": "Resend code",
-    "codeResendSuccess": "Code resend"
+    "title": "Zweryfikuj swój numer",
+    "info": "Tu wpisz tu kod, który od nas otrzymasz na podany numer telefonu",
+    "codeLabel": "Kod",
+    "resendInfo": "Kod nie przyszedł?",
+    "resendAction": "Wyślij kod ponownie",
+    "codeResendSuccess": "Kod przesłany ponownie"
   },
   "loginSuccess": {
-    "header": "Done!",
-    "info": "You successfully accessed the account."
+    "header": "Gotowe!",
+    "info": "Zalogowano pomyślnie"
   },
   "getSafer": {
-    "title": "Get safer",
-    "info": "Choose preferred login method to be sure that only you have access to this account.",
-    "biometricInfo": "Allow this device to use biometrics for login verification",
-    "biometricAction": "Use biometrics",
-    "codeInfoPrimary": "Set unique PIN code ",
-    "codeInfoSecondary": "or simply set unique PIN code ",
-    "codeAction": "Set PIN code",
-    "skipAction": "Not now",
+    "title": "Zabezpiecz swoje dane",
+    "info": "Wybierz metodę logowania, by mieć pewność, że tylko Ty masz dostęp do tego konta. ",
+    "biometricInfo": "Loguj się używając TouchID lub FaceID ",
+    "biometricAction": "Użyj danych biometrycznych",
+    "codeInfoPrimary": "Ustaw kod PIN",
+    "codeInfoSecondary": "albo po prostu ustaw kod PIN",
+    "codeAction": "Ustaw kod PIN",
+    "skipAction": "Później",
     "skipDialog": {
-      "title": "Skip step",
-      "content": "Are you sure you do not need extra access validation?",
-      "action": "Yes, skip",
-      "backAction": "Go back"
+      "title": "Pomiń",
+      "content": "Na pewno chcesz pominąć ten krok? Rezygnujesz z dodatkowego zabezpieczenia. ",
+      "action": "Tak, rezygnuję",
+      "backAction": "Powrót"
     }
   },
   "newPin": {
-    "title": "Set PIN code",
-    "info": "Set unique PIN code that you will use for login into application"
+    "title": "Ustaw kod PIN",
+    "info": "Ustaw unikalny kod PIN, którym zalogujesz się do tej aplikacji"
   },
   "confirmPin": {
-    "title": "Set PIN code",
-    "info": "Repeat your PIN code"
+    "title": "Ustaw kod PIN",
+    "info": "Wprowadź ponownie PIN"
   },
   "pinSuccess": {
-    "header": "PIN code to the account successfully set"
+    "header": "Ustawienie kodu PIN zakończyło się pomyślnie"
   },
   "securedLogin": {
-    "header": "Welcome again!",
-    "pinCodeInfo": "Enter your pin code to proceed.",
-    "pinCodeInvalid": "Invalid pin code, try again",
-    "biometricInfo": "or use biometrics to enter",
-    "logoutInfo": "Forgot your passcode?\nLog in again to unlock your account.",
-    "needHelp": "Need help?"
+    "header": "Witamy ponownie!",
+    "pinCodeInfo": "Podaj swój kod PIN",
+    "pinCodeInvalid": "PIN niepoprawny, spróbuj ponownie",
+    "biometricInfo": "lub użyj danych FaceID lub TouchID",
+    "logoutInfo": "Nie pamiętasz hasła?\nZaloguj się ponownie, by odblokować konto. ",
+    "needHelp": "Potrzebujesz pomocy?"
   },
   "serviceList": {
-    "title": "Services",
-    "activeHeader": "With active sessions",
-    "otherHeader": "Other services",
+    "title": "Usługi",
+    "activeHeader": "Aktywne sesje",
+    "otherHeader": "Inne usługi",
     "session": {
-      "zero": "{} sesji",
       "one": "{} sesja",
-      "two": "{} sesje",
       "few": "{} sesje",
       "many": "{} sesji",
       "other": "{} sesji"
     },
-    "noServices": "You have no connected services.",
-    "noActiveSessions": "No active sessions"
+    "noServices": "To konto nie ma żadnych powiązanych usług. ",
+    "noActiveSessions": "Brak aktywnych sesji"
   },
   "serviceDetails": {
-    "title": "Service details",
-    "sessionsTab": "Active sessions",
-    "agreementsTab": "Agreements"
+    "title": "Szczegóły zabezpieczeń",
+    "sessionsTab": "Aktywne sesje",
+    "agreementsTab": "Udzielone zgody"
   },
   "sessionListView": {
-    "endAllSessions": "End all sessions",
-    "noActiveSessionsStart": "You have no active sessions for this service.\nGo to ",
-    "noActiveSessionsEnd": " to preview past ones.",
-    "noHistoricalSessions": "You have no historical sessions for this service.",
-    "sessionEnded": "Session ended"
+    "endAllSessions": "Zakończ wszystkie sesje",
+    "noActiveSessionsStart": "Nie masz żadnych aktywnych sesji u tego dostawcy.\nGo to ",
+    "noActiveSessionsEnd": "zobacz poprzednie zadania",
+    "noHistoricalSessions": "To konto nie ma żadnych poprzednich sesji powiązanych z tym dostawcą. ",
+    "sessionEnded": "Sesja zakończona"
   },
   "pastSessionsList": {
-    "title": "Past sessions"
+    "title": "Poprzednie sesje"
   },
   "sessionRow": {
-    "opened": "opened:",
-    "device": "device:",
-    "localization": "localization:",
+    "opened": "otwarte:",
+    "device": "urządzenie:",
+    "localization": "lokalizacja:",
     "ip": "IP:",
-    "valid": "valid:",
-    "endSessionAction": "End session"
+    "valid": "zgoda:",
+    "endSessionAction": "Zakończ sesję"
   },
   "agreementList": {
-    "revokeAllAction": "Revoke all agreements"
+    "revokeAllAction": "Odwołaj wszystkie zgody"
   },
   "agreementRow": {
-    "required": "Required",
-    "optional": "Optional",
-    "agreedOn": "Agreed on {}"
+    "required": "Wymagane",
+    "optional": "Opcja",
+    "agreedOn": "Zgoda na{}"
   },
   "agreementDetails": {
-    "title": "Agreement details",
+    "title": "Szczegóły udzielonej zgody",
     "type": "type:",
-    "typeOptional": "Optional",
-    "typeRequired": "Required",
-    "agreedOn": "agreed on:",
-    "revokeAction": "Revoke this agreement",
-    "confirmAction": "Confirm this agreement",
-    "agreementConfirmed": "Agreement confirmed",
-    "agreementRevoked": "Agreement revoked",
-    "revokeAgreementDialogTitle": "Revoke this agreement",
-    "revokeAgreementDialogContent": "Are you sure you want to revoke this agreement?\n\nAs this one is required, you will be automatically logged out of all sessions.",
-    "revokeAgreementDialogTopAction": "Revoke",
-    "revokeAgreementDialogBottomAction": "Back"
+    "typeOptional": "Opcja",
+    "typeRequired": "Wymagane",
+    "agreedOn": "zgoda na:",
+    "revokeAction": "Odwołaj tę zgodę",
+    "confirmAction": "Potwierdź tę zgodę. ",
+    "agreementConfirmed": "Potwiedzenie udzielenia zgody",
+    "agreementRevoked": "Zgoda wycofana",
+    "revokeAgreementDialogTitle": "Odwołaj tę zgodę",
+    "revokeAgreementDialogContent": "Na pewno chcesz wycofać tę zgodę? Jest ona konieczna do korzystania z usługi. Jeśli ją wycofasz, automatycznie wylogujesz się ze wszystkich sesji.\n\n",
+    "revokeAgreementDialogTopAction": "Odwołaj",
+    "revokeAgreementDialogBottomAction": "Wróc"
   },
   "settings": {
-    "title": "Settings",
-    "devices": "Your devices",
-    "security": "Security",
-    "darkMode": "Dark mode",
-    "language": "Language",
-    "terms": "Terms&Condition",
-    "help": "Help",
-    "logout": "Log out"
+    "title": "Ustawienia",
+    "devices": "Twoje urządzenia",
+    "security": "Bezpieczeństwo",
+    "darkMode": "Tryb ciemny",
+    "language": "Język",
+    "terms": "warunki użytkowania",
+    "help": "Pomoc",
+    "logout": "Wyloguj się"
   },
   "securitySettings": {
-    "title": "Security",
-    "biometrics": "Biometrics login",
-    "pin": "PIN code",
-    "changePin": "Change PIN code",
-    "deactivateBiometricsTitle": "Deactivate biometrics",
-    "deactivatePinTitle": "Deactivate PIN code",
+    "title": "Bezpieczeństwo",
+    "biometrics": "Logowanie TouchID lub FaceID",
+    "pin": "Kod PIN",
+    "changePin": "Zmień kod PIN",
+    "deactivateBiometricsTitle": "Wyłącz TouchID lub FaceID",
+    "deactivatePinTitle": "Wyłącz kod PIN",
     "turnOffSecurity": {
-      "title": "Turn off security",
-      "content": "Are you sure you want to turn this option off?\n\nIt will leave your login process without authentication.",
-      "action": "Turn off"
+      "title": "Wyłącz poziom bezpieczeństwa",
+      "content": "Na pewno chcesz wyłączyć tę opcję? Bez niej Twoje logowanie nie zostanie autoryzowane. \n\nIt will leave your login process without authentication.",
+      "action": "Wyłącz"
     },
     "changePinCode": {
-      "title": "Change PIN code",
-      "action": "Next"
+      "title": "Zmień kod PIN",
+      "action": "Dalej"
     }
   },
   "yourData": {
-    "title": "Your data",
-    "personalData": "Personal data",
-    "emails": "Emails",
-    "addresses": "Addresses",
-    "invoiceData": "Invoice data",
-    "addNewOption": "Add new",
-    "personalDataEmptyList": "You have no personal data added to your account.",
-    "emailEmptyList": "You have no emails added to your account.",
-    "invoiceDataEmptyList": "You have no invoice data added to your account.",
-    "addressesEmptyList": "You have no addresses added to your account.",
-    "removeDialogTitle": "Remove data",
-    "removeDialogDescription": "Are you sure you want to remove this data?",
-    "removeOption": "Remove",
-    "setDefaultOption": "Set as default",
-    "goBackOption": "Go back",
-    "dataRemoved": "Data removed",
-    "saveOption": "Save",
-    "leaveOption": "Leave",
-    "exitDialogTitle": "Exit adding",
-    "exitDialogDescription": "Are you sure you want to leave without saving?",
-    "addPersonalDataTitle": "Add personal data",
-    "addEmailTitle": "Add new email",
-    "addAddressTitle": "Add new address", 
-    "addInvoiceDataTitle": "Add new invoice data",
+    "title": "Twoje dane",
+    "personalData": "Dane osobowe",
+    "emails": "Emaile",
+    "addresses": "Adres",
+    "invoiceData": "Dane do faktury",
+    "addNewOption": "Dodaj nowe",
+    "personalDataEmptyList": "To konto nie ma przypisanych danych osobowych. ",
+    "emailEmptyList": "To konto nie ma przypisanego żadnego adresu email. ",
+    "addressesEmptyList": "To konto nie ma przypisanego żadnego adresu.",
+    "invoiceDataEmptyList": "To konto nie ma przypisanych danych do faktury.",
+    "removeDialogTitle": "Usuń dane",
+    "removeDialogDescription": "Na pewno chcesz wycofać swoje dane?",
+    "removeOption": "Usuń",
+    "setDefaultOption": "Ustaw jako domyślny",
+    "goBackOption": "Wróć",
+    "dataRemoved": "Dane zostały usunięte",
+    "saveOption": "Zapisz",
+    "leaveOption": "Wyjdź bez dodawania",
+    "exitDialogTitle": "Wyjdź bez dodawania",
+    "exitDialogDescription": "Na pewno chcesz wyjść bez zapisywania?",
+    "addPersonalDataTitle": "Dodaj dane osobowe",
+    "addEmailTitle": "Dodaj nowy email",
+    "addAddressTitle": "Dodaj nowy adres",
+    "addInvoiceDataTitle": "Dodaj nowe dane do faktury",
     "personalDataForm": {
-      "nameHint": "*Name",
-      "surnameHint": "*Surname"
+      "nameHint": "*Imię",
+      "surnameHint": "*Nazwisko"
     },
     "emailForm": {
       "emailHint": "*Email"
     },
     "addressForm": {
-      "nameHint": "*Name",
-      "streetHint": "*Street",
-      "buildingHint": "*Building number",
-      "apartmentHint": "Apartment number",
-      "postCodeHint": "*Postcode",
-      "cityHint": "*City",
-      "countryHint": "*Country"
+      "nameHint": "*Imię",
+      "streetHint": "*Ulica",
+      "buildingHint": "*Numer budynku",
+      "apartmentHint": "Numer mieszkania",
+      "postCodeHint": "*Kod Pocztowy",
+      "cityHint": "*Miasto",
+      "countryHint": "*Kraj"
     },
     "invoiceDataForm": {
-      "taxId": "NIP: {}",
+      "taxId": "*NIP",
       "taxIdHint": "NIP",
-      "nameHint": "*Name",
-      "surnameHint": "*Surname",
-      "streetHint": "*Street",
-      "buildingHint": "*Building number",
-      "apartmentHint": "Apartment number",
-      "postCodeHint": "*Postcode",
-      "cityHint": "*City"
+      "nameHint": "*Imię",
+      "surnameHint": "*Nazwisko",
+      "streetHint": "*Ulica",
+      "buildingHint": "*Numer budynku",
+      "apartmentHint": "Numer mieszkania",
+      "postCodeHint": "*Kod Pocztowy",
+      "cityHint": "*Miasto"
     }
   },
   "language": {
-    "title": "Wybierz twój język",
+    "title": "Wybierz język",
     "supportedLanguages": {
-      "english": "English",
+      "english": "Angielski",
       "polish": "Polski"
     }
   },
   "termsAndConditions": {
-    "title": "Terms & conditions"
+    "title": "warunki użytkowania"
   },
   "addNewDevice": {
     "title": "Dodaj nowe urządzenie",
-    "header": "How to link this device with your Logpass account",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "codeInstruction": "On already linked device, please go to",
-    "codeInstructionNavigation": "Settings > Your devices > Add new",
-    "codeInsert": "and enter below presented code",
-    "codeLabel": "Code",
+    "header": "Jak połączyć to urządzenie z Twoim kontem Logpass?",
+    "content": "Aplikację Logpass możesz zainstalować na dowolnej liczbie swoich urządzeń. Jeśli chcesz, by Twoje operacje były zabezpieczone, dodaj potwierdzanie operacji na kilku urządzeniach. ",
+    "codeInstruction": "Na połączonym urządzeniu idź do",
+    "codeInstructionNavigation": "Ustawienia > Twoje urządzenia > Dodaj nowe urządzenie",
+    "codeInsert": "i dodaj kod, który widzisz poniżej",
+    "codeLabel": "Kod",
     "codeHint": "000-000"
   },
   "needHelp": {
-    "title": "Help",
+    "title": "Pomoc",
     "needHelpTitle": "Czym jest",
     "needHelpDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "questionOneTitle": "How to start",
+    "questionOneTitle": "Jak zacząć?",
     "questionOneDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "questionTwoTitle": "Where is my data stored",
+    "questionTwoTitle": "Gdzie przechowywane są moje dane?",
     "questionTwoDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "questionThreeTitle": "What is Logpass?",
     "questionThreeDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "appVersion": "Currently you are using: "
+    "appVersion": "Aktualnie używasz:"
   },
   "trustLevel": {
-    "title": "Trust levels",
-    "header": "What is device trust level?",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "level": "Level {}",
+    "title": "Poziomy zaufania",
+    "header": "Jaki jest poziom zaufania tego urządzenia?",
+    "content": "Aby zapewnić najwyższy poziom bezpieczeństwa urządzenia, operacje należy potwierdzać na urządzeniu użytkownika. Różne urządzenia mają różny poziom bezpieczeństwa - w zależności od tego, jakiego urządzenia używasz, operacje musisz potwierdzać na jednym lub na dwóch należących do Ciebie urządzeniach. \n\nJaki poziom zaufania mają Twoje urządzenia?\n",
+    "level": "Poziom",
     "levelDescription": {
-      "1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "3": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "1": "\nLevel 1 - ten poziom zaufania otrzymuje domyślnie Twój komputer PC lub Mac\n",
+      "2": "Level 2 - ten poziom zaufania otrzymuje domyślnie Twój telefon i tablet",
+      "3": "Level 3 - ten poziom uzyskasz łącząc potwierdzenie na dwóch należących do Ciebie urządzeniach, których łączny poziom zaufania wynosi 3. Może to być np. Twój telefon i komputer albo Twój tablet i telefon"
     }
   },
   "deviceList": {
-    "title": "Your devices",
-    "addNewAction": "Add new",
-    "saveChangesInfo": "Remember to save changes",
-    "saveChanges": "Save changes",
-    "changeNameAction": "Change name",
-    "removeDeviceTitle": "Remove device",
-    "removeDeviceInfo": "Are you sure you want to remove this device?"
+    "title": "Twoje urządzenia",
+    "addNewAction": "Dodaj nowe urządzenie",
+    "saveChangesInfo": "Pamiętaj, by zapisać zmiany",
+    "saveChanges": "Zapisz zmiany",
+    "changeNameAction": "Zmień nazwę",
+    "removeDeviceTitle": "Usuń urządzenie",
+    "removeDeviceInfo": "Na pewno chcesz usunąć to urządzenie?"
   },
   "changeDeviceName": {
-    "title": "Change device name",
-    "name": "Name"
+    "title": "Zmień nazwę urządzenia",
+    "name": "Nazwa"
   },
   "addNewDeviceCode": {
-    "title": "Add new device",
-    "content": "If you want to add another device to your account do the following;",
+    "title": "Dodaj nowe urządzenie",
+    "content": "Jeśli chcesz dodać kolejne urządzenie, zrobisz to tak:",
     "steps": {
-      "1": "Open Logpass application on new device",
-      "2": "After open, click Add new device ",
-      "3": "Enter the code presented:"
+      "1": "Otwórz Logpass na nowym urządzeniu",
+      "2": "Po otwarciu, klikniej Dodaj nowe urządzenie",
+      "3": "Wpisz ten kod:"
     },
-    "copy": "click on the code to copy"
+    "copy": "kliknij na kod, by skopiować"
   },
   "loginReset": {
-    "title": "Login reset",
-    "description": "It seems like your account has been configured on other device.",
-    "header": "What can you do now?",
-    "newDeviceDescription": "Link this device to your account to proceed on it",
-    "newDeviceButton": "Add new device",
-    "resetAccountDescription": "Is this your default device or you do not recall using another one?",
-    "resetAccountButton": "Reset account"
+    "title": "Zresetuj login",
+    "description": "Wygląda na to, że masz już konto na innym urządzeniu.",
+    "header": "Co możesz teraz zrobić?",
+    "newDeviceDescription": "Połącz to urządzenie ze swoim kontem Logpass i kontynuuj. ",
+    "newDeviceButton": "Dodaj nowe urządzenie",
+    "resetAccountDescription": "Czy to Twoje domyślne urządzenie?",
+    "resetAccountButton": "Zresetuj konto"
   },
   "resetAccount": {
-    "title": "Reset account",
-    "header": "You are about to reset your account",
-    "firstParagraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "secondParagraph": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "firstWarningNote": "Please note, the data assigned to this account will be lost.",
-    "secondWarningNote": "Are you sure you want to proceed?",
-    "thirdWarningNote": "This action cannot be undone",
-    "resetAccountButton": "Reset"
+    "title": "Zresetuj konto",
+    "header": "Za chwilę zresetujesz konto",
+    "firstParagraph": "Czy na pewno? Twoje dane nie będą mogły być przywrócone.",
+    "secondParagraph": "To działanie wymaże wszystkie dane z Twojej aplikacji. ",
+    "firstWarningNote": "Wszystkie dane zostaną usunięte z tego konta.",
+    "secondWarningNote": "Czy na pewno chcesz kontynuować?",
+    "thirdWarningNote": "Tej operacji nie można cofnąć. ",
+    "resetAccountButton": "Zresetuj"
   },
   "bubbleLoader": {
-    "description": "Configuring your account.\nIt may take a minute."
+    "description": "Konfigurujemy Twoje konto. Może to zająć chwilę. "
   },
   "pastEvents": {
-    "title": "Events log",
+    "title": "Lista zdarzeń",
     "actionLabel": {
-      "authorize": "Authorization",
-      "confirm": "Confirmation",
-      "update": "Security update"
+      "authorize": "Autoryzacja",
+      "confirm": "Potwierdzenie",
+      "update": "Aktualizacja bezpieczeństwa"
     }
   },
   "trustLevelConfirmation": {
-    "title": "Trust level confirmation",
-    "requiresHigherLevel": "This operation requires higher trust level",
-    "currentLevel": "Currently reached level:",
-    "confirmOnDevices": "Please confirm operation on other devices linked to your account:"
+    "title": "Potwierdzenie poziomu zaufania",
+    "requiresHigherLevel": "Ta operacja wymaga wyższego poziomu zaufania",
+    "currentLevel": "Aktualny poziom zaufania:",
+    "confirmOnDevices": "Potwierdź to działanie na na innym urządzeniu połączonym z Twoim kontem"
   },
   "confirm": {
-    "title": "Confirm",
-    "header": "Do you want to confirm following operation?"
+    "title": "Potwierdź",
+    "header": "Czy chcesz potwierdzić tę operacje?"
   }
 }

@@ -37,7 +37,6 @@ Future<void> runMain(String env) async {
 
   await runZonedGuarded<Future<void>>(() async {
     await _precacheSvgImages();
-    await CountryCodes.init();
 
     await configureDependencies(env);
     setupFimber();
