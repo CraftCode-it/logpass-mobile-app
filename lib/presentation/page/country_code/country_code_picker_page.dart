@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -13,6 +14,7 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/country_flag.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
+import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 const _flagSize = 36.0;
@@ -37,9 +39,21 @@ class CountryCodePickerPage extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
     final scrollController = useScrollController();
+    final searchText = useState('');
 
     final groupedCountryList = useMemoized(
-      () => groupBy(countryCodeList, (CountryCode value) => value.countryName[0]),
+      () => groupBy(
+        countryCodeList.where(
+          (element) {
+            return element.countryName.toUpperCase().startsWith(
+                      searchText.value,
+                    ) ||
+                element.country.contains(searchText.value);
+          },
+        ),
+        (CountryCode value) => value.countryName[0],
+      ),
+      [searchText.value],
     );
 
     useEffect(() {
@@ -63,49 +77,63 @@ class CountryCodePickerPage extends HookWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            ...groupedCountryList.entries
-                .map((e) => [
-                      e.key,
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final countryCode = e.value[index];
-                            return Column(
-                              children: [
-                                _CountryCodeRow(
-                                  countryCode: countryCode,
-                                  selected: countryCode == selectedCountryCode,
-                                  codeVisible: includeCountryCodes,
-                                  onPressed: () => AutoRouter.of(context).pop(countryCode),
+        child: Column(
+          children: [
+            const SizedBox(height: AppDimens.s),
+            InputField(
+              onChanged: (String text) {
+                searchText.value = text.toUpperCase();
+              },
+              label: LocaleKeys.countryCodePicker_search.tr(),
+            ),
+            const SizedBox(height: AppDimens.s),
+            Expanded(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  ...groupedCountryList.entries
+                      .map((e) => [
+                            e.key,
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final countryCode = e.value[index];
+                                  return Column(
+                                    children: [
+                                      _CountryCodeRow(
+                                        countryCode: countryCode,
+                                        selected: countryCode == selectedCountryCode,
+                                        codeVisible: includeCountryCodes,
+                                        onPressed: () => AutoRouter.of(context).pop(countryCode),
+                                      ),
+                                      Separator.light(),
+                                    ],
+                                  );
+                                },
+                                childCount: e.value.length,
+                              ),
+                            ),
+                          ])
+                      .expand(
+                        (element) => [
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: _headerHeight,
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text(
+                                  element[0] as String,
+                                  style: typography.body1,
                                 ),
-                                Separator.light(),
-                              ],
-                            );
-                          },
-                          childCount: e.value.length,
-                        ),
-                      ),
-                    ])
-                .expand(
-                  (element) => [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: _headerHeight,
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            element[0] as String,
-                            style: typography.body1,
+                              ),
+                            ),
                           ),
-                        ),
+                          element[1] as Widget,
+                        ],
                       ),
-                    ),
-                    element[1] as Widget,
-                  ],
-                ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
