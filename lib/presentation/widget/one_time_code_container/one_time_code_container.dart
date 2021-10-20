@@ -160,10 +160,13 @@ class _CodeContainer extends HookWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Visibility(
-                      visible: oneTimeCode != null,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppDimens.s),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppDimens.s),
+                      child: Visibility(
+                        visible: oneTimeCode != null,
+                        replacement: const SizedBox(
+                          height: AppDimens.m,
+                        ),
                         child: Text(
                           LocaleKeys.home_activeInfo.tr(args: ['${oneTimeCode?.expirationTime.toCountdown()}']),
                           style: appTypography.info2.copyWith(color: colors.textSpecial),
