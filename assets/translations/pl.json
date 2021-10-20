@@ -215,6 +215,7 @@
   "securitySettings": {
     "title": "Bezpieczeństwo",
     "biometrics": "Logowanie TouchID lub FaceID",
+    "biometricsNotAvailable": "Logowanie TouchID lub FaceID nie dostępne",
     "pin": "Kod PIN",
     "changePin": "Zmień kod PIN",
     "deactivateBiometricsTitle": "Wyłącz TouchID lub FaceID",

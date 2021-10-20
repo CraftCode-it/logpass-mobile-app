@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/app_security/app_security_type.dart';
+import 'package:logpass_me/domain/app_security/exception/biometric_not_available_exception.dart';
 import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometrics_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/get_app_security_type_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/set_app_security_type_use_case.dart';
@@ -66,6 +67,8 @@ class SecuritySettingsPageCubit extends Cubit<SecuritySettingsPageState> {
       } else if (_securityType == AppSecurityType.none) {
         emit(SecuritySettingsPageState.setCode(AppSecurityType.biometric));
       }
+    } on BiometricNotAvailableException {
+      emit(SecuritySettingsPageState.biometricNotAvailable());
     } catch (e, s) {
       Fimber.e('Authorizing with biometrics on initialization failed', ex: e, stacktrace: s);
     }

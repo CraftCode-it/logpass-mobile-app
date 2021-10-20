@@ -14,5 +14,7 @@ class SecuritySettingsPageState with _$SecuritySettingsPageState {
 
   factory SecuritySettingsPageState.setCode(AppSecurityType type) = _SecuritySettingsPageStateSetCode;
 
+  factory SecuritySettingsPageState.biometricNotAvailable() = _SecuritySettingsPageStateBiometricNotAvailable;
+
   factory SecuritySettingsPageState.confirmWithCode(AppSecurityType type) = _SecuritySettingsPageStateConfirmWithCode;
 }
