@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/app_security/app_security_type.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page_cubit.dart';
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page_state.dart';
@@ -18,6 +19,7 @@ import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_switch.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
 class SecuritySettingsPage extends HookWidget {
@@ -28,6 +30,7 @@ class SecuritySettingsPage extends HookWidget {
     final cubit = useCubit<SecuritySettingsPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
+    final messangerController = useMessengerController();
 
     useCubitListener<SecuritySettingsPageCubit, SecuritySettingsPageState>(
       cubit,
@@ -35,6 +38,7 @@ class SecuritySettingsPage extends HookWidget {
         cubit,
         state,
         context,
+        messangerController,
       ),
     );
 
@@ -49,12 +53,15 @@ class SecuritySettingsPage extends HookWidget {
         title: LocaleKeys.securitySettings_title.tr(),
       ),
       body: SafeArea(
-        child: state.maybeMap(
-          idle: (state) => _Content(
-            securityType: state.appSecurityType,
-            cubit: cubit,
+        child: Messenger(
+          controller: messangerController,
+          child: state.maybeMap(
+            idle: (state) => _Content(
+              securityType: state.appSecurityType,
+              cubit: cubit,
+            ),
+            orElse: () => const Loader(),
           ),
-          orElse: () => const Loader(),
         ),
       ),
     );
@@ -64,10 +71,13 @@ class SecuritySettingsPage extends HookWidget {
     SecuritySettingsPageCubit cubit,
     SecuritySettingsPageState state,
     BuildContext context,
+    MessengerController messangerController,
   ) {
     state.maybeMap(
       setCode: (state) => _setCode(cubit, context, state.type),
       confirmWithCode: (state) => _confirmWithCode(cubit, context, state.type),
+      biometricNotAvailable: (_) =>
+          messangerController.showError(LocaleKeys.securitySettings_biometricsNotAvailable.tr()),
       orElse: () {},
     );
   }

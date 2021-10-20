@@ -213,6 +213,7 @@
   "securitySettings": {
     "title": "Security",
     "biometrics": "Biometrics login",
+    "biometricsNotAvailable": "Biometrics not available",
     "pin": "PIN code",
     "changePin": "Change PIN code",
     "deactivateBiometricsTitle": "Deactivate biometrics",
