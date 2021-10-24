@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logpass_me/domain/event_log/past_event.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'event_log_page_state.freezed.dart';
 

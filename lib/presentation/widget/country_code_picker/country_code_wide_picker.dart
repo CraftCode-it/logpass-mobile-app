@@ -13,7 +13,7 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_cubit.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';

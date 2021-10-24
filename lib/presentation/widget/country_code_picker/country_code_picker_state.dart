@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'country_code_picker_state.freezed.dart';
 

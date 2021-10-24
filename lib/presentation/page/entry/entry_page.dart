@@ -8,7 +8,8 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/app_life_cycyle_observer_hook.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 class EntryPage extends HookWidget {
   @override

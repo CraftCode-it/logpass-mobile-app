@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'logout_state.freezed.dart';
 
@@ -9,4 +9,6 @@ class LogoutState with _$LogoutState {
   factory LogoutState.idle() = LogoutStateIdle;
 
   factory LogoutState.logout() = LogoutStateLogout;
+
+  factory LogoutState.securedLogin() = LogoutStateSecuredLogin;
 }

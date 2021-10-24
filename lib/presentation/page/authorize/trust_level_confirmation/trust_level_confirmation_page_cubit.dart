@@ -8,7 +8,7 @@ import 'package:logpass_me/domain/device/device.dart';
 import 'package:logpass_me/domain/device/use_case/get_device_list_use_case.dart';
 import 'package:logpass_me/domain/device/use_case/subscribe_to_device_confirmation_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'trust_level_confirmation_page_state.dart';
 part 'trust_level_confirmation_page_cubit.freezed.dart';

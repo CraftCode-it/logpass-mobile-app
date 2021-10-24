@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_invoice_data_list_use_case.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'invoice_data_selection_page_state.dart';
 part 'invoice_data_selection_page_cubit.freezed.dart';

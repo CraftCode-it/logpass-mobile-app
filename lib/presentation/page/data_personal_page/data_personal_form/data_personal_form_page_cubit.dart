@@ -6,7 +6,7 @@ import 'package:logpass_me/domain/networking/error/general_connection_error.dart
 import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_personal_data_use_case.dart';
 import 'package:logpass_me/presentation/utils/uuid.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'data_personal_form_page_cubit.freezed.dart';
 

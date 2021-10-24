@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/presentation/page/secured_login/secured_login_page.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/app_life_cycyle_observer_hook.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/logout/logout_cubit.dart';
 import 'package:logpass_me/presentation/widget/logout/logout_state.dart';
 
@@ -14,7 +16,13 @@ class LogoutWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<LogoutCubit>();
-    useCubitListener(cubit, _logoutCubitListener, listenWhen: (state) => state is LogoutStateLogout);
+    useCubitListener(cubit, _logoutCubitListener, listenWhen: (state) => state is LogoutStateLogout || state is LogoutStateSecuredLogin);
+
+    useAppLifecycleStateListener((currentAppDState, previousAppState, ctx) {
+      if (currentAppDState == AppLifecycleState.resumed && previousAppState == AppLifecycleState.paused) {
+        cubit.appResumed();
+      }
+    }, context: context);
 
     useEffect(() {
       cubit.init();
@@ -30,11 +38,15 @@ class LogoutWidget extends HookWidget {
   ) {
     state.maybeMap(
       logout: (sate) => _navigateOnLogout(context),
+      securedLogin: (sate) => _navigateOnSecure(context),
       orElse: () {},
     );
   }
 
   void _navigateOnLogout(BuildContext context) {
     AutoRouter.of(context).replaceAll([const StartPageRoute()]);
+  }
+  void _navigateOnSecure(BuildContext context) {
+    AutoRouter.of(context).push(const SecuredLoginPageRoute());
   }
 }

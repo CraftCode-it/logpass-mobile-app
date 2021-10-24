@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/account_reset/use_case/reset_account_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'reset_account_page_state.dart';
 part 'reset_account_page_cubit.freezed.dart';

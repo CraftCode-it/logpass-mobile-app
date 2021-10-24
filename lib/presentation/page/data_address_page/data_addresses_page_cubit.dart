@@ -7,7 +7,7 @@ import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/use_case/delete_address_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_user_addresses_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/set_default_address_use_case.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'data_addresses_page_state.dart';
 part 'data_addresses_page_cubit.freezed.dart';

@@ -7,7 +7,7 @@ import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/delete_personal_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_personal_data_list_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/set_default_personal_data_use_case.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'data_personal_page_state.dart';
 part 'data_personal_page_cubit.freezed.dart';

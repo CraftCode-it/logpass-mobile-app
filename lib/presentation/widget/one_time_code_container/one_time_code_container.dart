@@ -10,7 +10,7 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/presentation/utils/text_utils.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
 
 class OneTimeCodeContainer extends HookWidget {
