@@ -6,11 +6,11 @@ typedef AppLifecycleListener = void Function(
 
 void useAppLifecycleStateListener(AppLifecycleListener listener, {BuildContext? context}) {
   useEffect(() {
-    final _hookContext = useContext();
-    final _internalCallback =
-        (AppLifecycleState state, AppLifecycleState prev) => listener(state, prev, context ?? _hookContext);
+    final hookContext = useContext();
+    final internalCallback =
+        (AppLifecycleState state, AppLifecycleState prev) => listener(state, prev, context ?? hookContext);
 
-    final observer = _AppLifecycleStateObserver(_internalCallback);
+    final observer = _AppLifecycleStateObserver(internalCallback);
     WidgetsBinding.instance!.addObserver(observer);
     return () {
       WidgetsBinding.instance!.removeObserver(observer);
