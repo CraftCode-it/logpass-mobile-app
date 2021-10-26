@@ -19,18 +19,20 @@ import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_u
 import 'package:logpass_me/domain/oauth/use_case/init_user_auth_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/get_default_personal_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_email_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_renderer.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
-import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'authorize_page_cubit.freezed.dart';
+
 part 'authorize_page_state.dart';
 
 @injectable
@@ -50,6 +52,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
   final GetUserPhoneNumberUseCase _getUserPhoneNumberUseCase;
   final GetDefaultInvoiceDataUseCase _getDefaultInvoiceDataUseCase;
+  final GetDefaultPersonalDataUseCase _getDefaultPersonalDataUseCase;
   final GetDefaultUserAddressUseCase _getDefaultUserAddressUseCase;
   final GetDefaultUserEmailUseCase _getDefaultUserEmailUseCase;
 
@@ -67,8 +70,11 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   Map<String, String>? _authParameters;
 
   bool get _canConfirm => _areScopesEligible && _areRequiredAgreementsAccepted && _trustLevelIsReached;
+
   bool get _areScopesEligible => _scopeElements.every((e) => e.isEligible());
+
   bool get _areRequiredAgreementsAccepted => _agreements.where((e) => e.isRequired).every((e) => e.isAccepted);
+
   bool get _trustLevelIsReached => _currentTrustLevel >= _requiredTrustLevel;
 
   AuthorizePageCubit(
@@ -87,6 +93,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getDefaultUserEmailUseCase,
     this._getUserPhoneNumberUseCase,
     this._initUserAuthUseCase,
+    this._getDefaultPersonalDataUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(IncomingAction incomingAction) async {
@@ -139,6 +146,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     final defaultEmail = await _getDefaultUserEmailUseCase();
     final defaultAddress = await _getDefaultUserAddressUseCase();
     final defaultInvoiceData = await _getDefaultInvoiceDataUseCase();
+    final defaultPersonalData = await _getDefaultPersonalDataUseCase();
 
     return _scopeRenderer.renderScopes(
       application.scopesRequested,
@@ -146,6 +154,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       userEmail: defaultEmail,
       userAddress: defaultAddress,
       invoiceData: defaultInvoiceData,
+      personalData: defaultPersonalData,
     );
   }
 
@@ -199,7 +208,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       );
     }
     // TODO: handle after backend's implementation
-    final personalData = 'John Smith';
+    final personalData = '';
 
     return ApproveAttemptArgs(
       email: _email ?? 'john.smith@example.com',

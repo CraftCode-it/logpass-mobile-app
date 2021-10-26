@@ -13,7 +13,7 @@ import 'package:logpass_me/domain/push_notifications/use_case/init_notifications
 import 'package:logpass_me/domain/push_notifications/use_case/register_push_notification_device_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'main_page_cubit.freezed.dart';
 

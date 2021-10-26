@@ -19,7 +19,7 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/done_keyboard_button.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/full_screen_loader.dart';
@@ -47,21 +47,24 @@ class SecuredLoginPage extends HookWidget {
       cubit.initialize();
     }, [cubit]);
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: CustomAppBar.smallLogo(
-        logoColor: colors.logo,
-        trailing: const NeedHelpButton(),
-      ),
-      body: SafeArea(
-        child: Messenger(
-          withActionHandler: false,
-          controller: messengerController,
-          child: KeyboardVisibilityBuilder(
-            builder: (context, keyboardVisible) => _Content(
-              state: state,
-              cubit: cubit,
-              keyboardVisible: keyboardVisible,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: CustomAppBar.smallLogo(
+          logoColor: colors.logo,
+          trailing: const NeedHelpButton(),
+        ),
+        body: SafeArea(
+          child: Messenger(
+            withActionHandler: false,
+            controller: messengerController,
+            child: KeyboardVisibilityBuilder(
+              builder: (context, keyboardVisible) => _Content(
+                state: state,
+                cubit: cubit,
+                keyboardVisible: keyboardVisible,
+              ),
             ),
           ),
         ),

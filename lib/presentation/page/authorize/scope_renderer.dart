@@ -1,13 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_supported_scopes.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 @injectable
 class ScopeRenderer {
@@ -17,6 +18,7 @@ class ScopeRenderer {
     Email? userEmail,
     Address? userAddress,
     InvoiceData? invoiceData,
+    PersonalData? personalData,
   }) {
     final list = requestedScopes
         .map((e) {

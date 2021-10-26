@@ -7,7 +7,7 @@ import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_email_use_case.dart';
 import 'package:logpass_me/presentation/utils/form_utils.dart';
 import 'package:logpass_me/presentation/utils/uuid.dart';
-import 'package:logpass_me/presentation/widget/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 part 'data_emails_form_page_cubit.freezed.dart';
 
