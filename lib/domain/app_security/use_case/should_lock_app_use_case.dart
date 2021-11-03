@@ -13,6 +13,11 @@ class ShouldLockAppUseCase {
   ShouldLockAppUseCase(this._appSecurityStore, this._appLifeCycleStore);
 
   Future<bool> call() async {
+    final wasAppInBackground = await _appLifeCycleStore.wasInBackground();
+    if (!wasAppInBackground) {
+      return false;
+    }
+
     final securityType = await _appSecurityStore.loadSecurityType();
     if (securityType == AppSecurityType.none) {
       return false;

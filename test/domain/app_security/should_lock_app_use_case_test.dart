@@ -24,6 +24,17 @@ void main() {
     securityStore = MockAppSecurityStore();
     appLifecycleStore = MockAppLifeCycleStore();
     useCase = ShouldLockAppUseCase(securityStore, appLifecycleStore);
+    when(appLifecycleStore.wasInBackground())
+        .thenAnswer((realInvocation) async => true);
+  });
+
+
+  test('when app was not in background, then should return false', () async {
+    when(securityStore.loadSecurityType()).thenAnswer((_) async => AppSecurityType.code);
+    when(appLifecycleStore.wasInBackground())
+        .thenAnswer((realInvocation) async => false);
+    final result = await useCase();
+    expect(result, false);
   });
 
   test('when app was longer in background than timeout time  and biometrics enabled then should return true', () async {
@@ -39,6 +50,8 @@ void main() {
     when(securityStore.loadSecurityType()).thenAnswer((_) async => AppSecurityType.code);
     when(appLifecycleStore.getAppBackgroundTime())
         .thenAnswer((realInvocation) async => DateTime.now().millisecondsSinceEpoch);
+    when(appLifecycleStore.wasInBackground())
+        .thenAnswer((realInvocation) async => true);
     final result = await useCase();
     expect(result, false);
   });
