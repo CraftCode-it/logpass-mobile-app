@@ -113,8 +113,8 @@ class _Selected extends HookWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.network(
-          countryFlagUrl(countryCode.country, true),
+        Image.asset(
+          countryFlagAssetPath(countryCode.country),
           width: _flagThumbnailSize,
           height: _flagThumbnailSize,
           errorBuilder: (context, _, __) => const SizedBox.shrink(),

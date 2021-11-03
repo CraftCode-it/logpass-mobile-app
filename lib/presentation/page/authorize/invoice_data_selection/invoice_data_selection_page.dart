@@ -12,8 +12,8 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/radio_button_tile.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -89,7 +89,9 @@ class InvoiceDataSelectionPage extends HookWidget {
                 selectedInvoiceData,
                 cubit,
               ),
-              empty: () => _NoContent(cubit: cubit),
+              empty: () => _NoContent(
+                cubit: cubit,
+              ),
               loading: () => const Loader(),
               orElse: () => const SizedBox(),
             ),
@@ -117,7 +119,10 @@ class InvoiceDataSelectionPage extends HookWidget {
 class _NoContent extends StatelessWidget {
   final InvoiceDataSelectionPageCubit cubit;
 
-  const _NoContent({required this.cubit, Key? key}) : super(key: key);
+  const _NoContent({
+    required this.cubit,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +135,9 @@ class _NoContent extends StatelessWidget {
           Container(
             child: CustomRectangularButton.filled(
               text: LocaleKeys.yourData_addNewOption.tr(),
-              onPressed: () => AutoRouter.of(context).push(DataInvoiceListFormPageRoute(
-                refreshListOnPagePop: cubit.getInvoiceData,
-              )),
+              onPressed: () => AutoRouter.of(context).push(
+                DataInvoiceListFormPageRoute(refreshListOnPagePop: cubit.getInvoiceData),
+              ),
             ),
           ),
         ],
@@ -140,7 +145,6 @@ class _NoContent extends StatelessWidget {
     );
   }
 }
-
 
 class _Content extends StatelessWidget {
   final Service service;

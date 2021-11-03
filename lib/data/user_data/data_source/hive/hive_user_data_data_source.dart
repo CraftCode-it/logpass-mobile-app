@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/data/user_data/entity/hive_entity.dart';
 import 'package:logpass_me/domain/crypto/crypto_key_provider.dart';
-import 'package:logpass_me/domain/crypto/crypto_repository.dart';
+import 'package:logpass_me/domain/user_data/exception/duplicated_entry_exception.dart';
 
 abstract class HiveUserDataDataSource<T extends HiveEntity<T>> {
   final CryptoKeyProvider keyProvider;
@@ -14,11 +14,17 @@ abstract class HiveUserDataDataSource<T extends HiveEntity<T>> {
   Future<Box<T>> get _hiveBox => getBox();
 
   Future create(T input) async {
-    return (await _hiveBox).put(input.uuid, input);
+    final entityHash = input.hashIt();
+    final box = await _hiveBox;
+    if (box.containsKey(entityHash)) {
+      throw DuplicatedEntryException();
+    }
+    return box.put(entityHash, input);
   }
 
-  Future delete(String id) async {
-    return (await _hiveBox).delete(id);
+  Future delete(T value) async {
+    final hash = value.hashIt();
+    return (await _hiveBox).delete(hash);
   }
 
   Future<List<T>> all() async {
@@ -26,7 +32,8 @@ abstract class HiveUserDataDataSource<T extends HiveEntity<T>> {
   }
 
   Future update(T input) async {
-    return (await _hiveBox).put(input.uuid, input);
+    final hash = input.hashIt();
+    return (await _hiveBox).put(hash, input);
   }
 
   Future<T?> getDefault() async {
@@ -37,9 +44,9 @@ abstract class HiveUserDataDataSource<T extends HiveEntity<T>> {
     final box = await _hiveBox;
     final currentDefault = box.values.firstWhereOrNull((element) => element.isDefault);
     if (currentDefault != null) {
-      await box.put(currentDefault.uuid, currentDefault.copyWith(isDefault: false));
+      await box.put(currentDefault.hashIt(), currentDefault.copyWith(isDefault: false));
     }
-    return box.put(dto.uuid, dto);
+    return box.put(dto.hashIt(), dto);
   }
 
   Future<Box<T>> getBox() async {

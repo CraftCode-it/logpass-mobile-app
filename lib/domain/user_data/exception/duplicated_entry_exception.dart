@@ -1,0 +1,3 @@
+class DuplicatedEntryException implements Exception {
+
+}

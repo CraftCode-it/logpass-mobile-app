@@ -15,4 +15,6 @@ class DataPersonalFormPageState with _$DataPersonalFormPageState {
       _DataPersonalFormPageStateConnectionError;
 
   factory DataPersonalFormPageState.savedSuccessful() = _DataPersonalFormPageStateSavedSuccessful;
+
+  factory DataPersonalFormPageState.duplicatedEntry() = _DataPersonalFormPageStateDuplicatedEntry;
 }

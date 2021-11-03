@@ -5,4 +5,6 @@ abstract class HiveEntity<I> {
   HiveEntity(this.uuid, this.isDefault);
 
   I copyWith({bool? isDefault});
+
+  int hashIt();
 }

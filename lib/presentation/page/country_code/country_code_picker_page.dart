@@ -166,8 +166,8 @@ class _CountryCodeRow extends HookWidget {
         height: _rowHeight,
         child: Row(
           children: [
-            Image.network(
-              countryFlagUrl(countryCode.country, true),
+            Image.asset(
+              countryFlagAssetPath(countryCode.country),
               width: _flagSize,
               height: _flagSize,
               errorBuilder: (context, _, __) => const SizedBox.shrink(),
