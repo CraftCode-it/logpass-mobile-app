@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/data_address_page/data_addresses_form_page/data_addresses_form_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -8,22 +11,22 @@ import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_wide_picker.dart';
-import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 const _scrollThreshold = 12.0;
 
 class DataAddressesFormPage extends HookWidget {
   final VoidCallback refreshListOnPagePop;
+  final Address? addressToEdit;
 
   const DataAddressesFormPage({
     required this.refreshListOnPagePop,
+    this.addressToEdit,
     Key? key,
   }) : super(key: key);
 
@@ -46,6 +49,10 @@ class DataAddressesFormPage extends HookWidget {
         messengerController,
       ),
     );
+
+    useEffect(() {
+      cubit.init(addressToEdit);
+    }, [cubit]);
 
     useEffect(() {
       scrollController.addListener(() {
@@ -94,6 +101,7 @@ class DataAddressesFormPage extends HookWidget {
               canSave: canSave,
               cubit: cubit,
               scrollController: scrollController,
+              address: addressToEdit,
             ),
             loading: () => const Loader(),
             orElse: () => const SizedBox(),
@@ -131,11 +139,13 @@ class _Content extends StatelessWidget {
   final bool canSave;
   final DataAddressesFormPageCubit cubit;
   final ScrollController scrollController;
+  final Address? address;
 
   const _Content({
     required this.canSave,
     required this.cubit,
     required this.scrollController,
+    this.address,
   });
 
   @override
@@ -152,6 +162,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.nameChanged,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.words,
+            initialValue: address?.name,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -159,6 +170,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.streetChanged,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.sentences,
+            initialValue: address?.street,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -166,6 +178,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.buildingNumberChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: address?.buildingNumber,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -173,6 +186,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.apartmentNumberChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: address?.apartmentNumber,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -180,6 +194,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.postCodeChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: address?.postCode,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -187,10 +202,12 @@ class _Content extends StatelessWidget {
             onChanged: cubit.cityChanged,
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.sentences,
+            initialValue: address?.city,
           ),
           const SizedBox(height: AppDimens.l),
           CountryCodeWidePicker(
-            onCountryCodeSelected: (code) => cubit.countyChanged(code.countryName),
+            onCountryCodeSelected: (code) => cubit.countyChanged(code),
+            initialCountry: address?.country,
           ),
           const SizedBox(height: AppDimens.xxxl),
           CustomRectangularButton.filled(

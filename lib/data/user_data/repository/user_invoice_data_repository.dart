@@ -27,11 +27,6 @@ class UserInvoiceDataRepository implements UserDataRepository<InvoiceData> {
   }
 
   @override
-  Future update(InvoiceData value) async {
-    return _hiveDataSource.update(_dtoMapper.to(value));
-  }
-
-  @override
   Future<InvoiceData?> readDefault() async {
     final dto = await _hiveDataSource.getDefault();
     return dto != null ? _dtoMapper.from(dto) : null;

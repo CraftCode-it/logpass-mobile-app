@@ -31,11 +31,6 @@ abstract class HiveUserDataDataSource<T extends HiveEntity<T>> {
     return (await _hiveBox).values.toList();
   }
 
-  Future update(T input) async {
-    final hash = input.hashIt();
-    return (await _hiveBox).put(hash, input);
-  }
-
   Future<T?> getDefault() async {
     return (await _hiveBox).values.firstWhereOrNull((element) => element.isDefault);
   }

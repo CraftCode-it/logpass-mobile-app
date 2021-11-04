@@ -16,6 +16,7 @@ class AddressEntityToAddressEntityMapper implements HiveEntityMapper<AddressEnti
       country: dto.country,
       uuid: dto.uuid,
       isDefault: dto.isDefault,
+      apartmentNumber: dto.apartmentNumber,
     );
   }
 

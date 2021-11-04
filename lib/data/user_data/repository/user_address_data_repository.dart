@@ -35,11 +35,6 @@ class UserAddressDataRepository implements UserDataRepository<Address> {
   }
 
   @override
-  Future update(Address value) async {
-    return _hiveAddressesDataSource.update(_entityMapper.to(value));
-  }
-
-  @override
   Future<Address?> readDefault() async {
     final dto = await _hiveAddressesDataSource.getDefault();
     return dto != null ? _entityMapper.from(dto) : null;

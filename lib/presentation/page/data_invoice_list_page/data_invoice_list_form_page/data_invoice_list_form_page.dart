@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_form_page/data_invoice_list_form_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -20,9 +21,11 @@ const _scrollThreshold = 12.0;
 
 class DataInvoiceListFormPage extends HookWidget {
   final VoidCallback refreshListOnPagePop;
+  final InvoiceData? invoiceData;
 
   const DataInvoiceListFormPage({
     required this.refreshListOnPagePop,
+    this.invoiceData,
     Key? key,
   }) : super(key: key);
 
@@ -35,6 +38,10 @@ class DataInvoiceListFormPage extends HookWidget {
     final messengerController = useMessengerController();
     final scrollController = useScrollController();
     final elevationState = useState(false);
+
+    useEffect(() {
+      cubit.init(invoiceData);
+    }, [cubit]);
 
     useCubitListener<DataInvoiceListFormPageCubit, DataInvoiceListFormPageState>(
       cubit,
@@ -93,6 +100,7 @@ class DataInvoiceListFormPage extends HookWidget {
               canSave: canSave,
               cubit: cubit,
               scrollController: scrollController,
+              invoiceData: invoiceData,
             ),
             loading: () => const Loader(),
             orElse: () => const SizedBox(),
@@ -130,11 +138,13 @@ class _Content extends StatelessWidget {
   final bool canSave;
   final DataInvoiceListFormPageCubit cubit;
   final ScrollController scrollController;
+  final InvoiceData? invoiceData;
 
   const _Content({
     required this.canSave,
     required this.cubit,
     required this.scrollController,
+    this.invoiceData,
   });
 
   @override
@@ -151,6 +161,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.taxIdChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: invoiceData?.taxId,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -158,6 +169,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.nameChanged,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.words,
+            initialValue: invoiceData?.name,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -165,6 +177,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.surnameChanged,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.words,
+            initialValue: invoiceData?.surname,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -172,6 +185,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.streetChanged,
             textInputAction: TextInputAction.next,
             textCapitalization: TextCapitalization.sentences,
+            initialValue: invoiceData?.street,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -179,6 +193,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.buildingNumberChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: invoiceData?.buildingNumber,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -186,6 +201,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.apartmentNumberChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: invoiceData?.apartmentNumber,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -193,6 +209,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.postCodeChanged,
             inputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            initialValue: invoiceData?.postCode,
           ),
           const SizedBox(height: AppDimens.l),
           InputField(
@@ -200,6 +217,7 @@ class _Content extends StatelessWidget {
             onChanged: cubit.cityChanged,
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.sentences,
+            initialValue: invoiceData?.city,
           ),
           const SizedBox(height: AppDimens.xxxl),
           CustomRectangularButton.filled(

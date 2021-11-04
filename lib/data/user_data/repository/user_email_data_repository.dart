@@ -27,11 +27,6 @@ class UserEmailDataRepository implements UserDataRepository<Email> {
   }
 
   @override
-  Future update(Email value) async {
-    return _hiveDataSource.update(_dtoMapper.to(value));
-  }
-
-  @override
   Future<Email?> readDefault() async {
     final dto = await _hiveDataSource.getDefault();
     return dto != null ? _dtoMapper.from(dto) : null;
@@ -41,4 +36,5 @@ class UserEmailDataRepository implements UserDataRepository<Email> {
   Future setDefault(Email value) {
     return _hiveDataSource.setDefault(_dtoMapper.to(value));
   }
+
 }

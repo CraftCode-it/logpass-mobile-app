@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -15,16 +17,16 @@ import 'package:logpass_me/presentation/widget/country_code_picker/country_code_
 import 'package:logpass_me/presentation/widget/country_code_picker/country_code_picker_state.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/input_field.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 const _arrowIconSize = 24.0;
 
 class CountryCodeWidePicker extends HookWidget {
   final Function(CountryCode countryCode) onCountryCodeSelected;
+  final String? initialCountry;
 
   const CountryCodeWidePicker({
     required this.onCountryCodeSelected,
+    this.initialCountry,
     Key? key,
   }) : super(key: key);
 
@@ -43,7 +45,7 @@ class CountryCodeWidePicker extends HookWidget {
     });
 
     useEffect(() {
-      cubit.initialize(_getSystemLocale());
+      cubit.initialize(initialCountry ?? _getSystemLocale());
     }, [cubit]);
 
     return InkWell(

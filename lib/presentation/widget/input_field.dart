@@ -17,6 +17,7 @@ class InputField extends HookWidget {
   final List<TextInputFormatter>? formatters;
   final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
+  final String? initialValue;
 
   const InputField({
     required this.label,
@@ -30,6 +31,7 @@ class InputField extends HookWidget {
     this.focusNode,
     this.formatters,
     this.textInputAction,
+    this.initialValue,
     Key? key,
   }) : super(key: key);
 
@@ -38,7 +40,7 @@ class InputField extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
 
-    return TextField(
+    return TextFormField(
       controller: controller,
       enabled: enabled,
       onChanged: onChanged,
@@ -48,6 +50,7 @@ class InputField extends HookWidget {
       textInputAction: textInputAction,
       inputFormatters: formatters,
       textCapitalization: textCapitalization,
+      initialValue: initialValue,
       decoration: InputDecoration(
         errorStyle: typography.input.copyWith(color: AppColors.error100),
         floatingLabelBehavior: FloatingLabelBehavior.auto,

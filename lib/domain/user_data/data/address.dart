@@ -8,6 +8,7 @@ class Address implements DefaultData {
   final String postCode;
   final String city;
   final String country;
+
   @override
   final String uuid;
 
@@ -71,6 +72,7 @@ class Address implements DefaultData {
     String? country,
     String? uuid,
     bool? isDefault,
+    String? countryCode,
   }) {
     return Address(
       name: name ?? this.name,

@@ -27,11 +27,6 @@ class UserPersonalDataRepository implements UserDataRepository<PersonalData> {
   }
 
   @override
-  Future update(PersonalData value) async {
-    return _hiveDataSource.update(_dtoMapper.to(value));
-  }
-
-  @override
   Future<PersonalData?> readDefault() async {
     final dto = await _hiveDataSource.getDefault();
     return dto != null ? _dtoMapper.from(dto) : null;
