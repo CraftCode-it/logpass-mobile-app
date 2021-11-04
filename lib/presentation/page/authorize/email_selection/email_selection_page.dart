@@ -12,8 +12,8 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/radio_button_tile.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
@@ -47,13 +47,12 @@ class EmailSelectionPage extends HookWidget {
 
     useCubitListener<EmailSelectionPageCubit, EmailSelectionPageState>(
       cubit,
-          (cubit, state, context) =>
-          _cubitListener(
-            cubit,
-            state,
-            context,
-            messengerController,
-          ),
+      (cubit, state, context) => _cubitListener(
+        cubit,
+        state,
+        context,
+        messengerController,
+      ),
     );
 
     useEffect(() {
@@ -80,14 +79,16 @@ class EmailSelectionPage extends HookWidget {
           child: Messenger(
             controller: messengerController,
             child: state.maybeWhen(
-              idle: (emails,
-                  selectedEmail,) =>
+              idle: (
+                emails,
+                selectedEmail,
+              ) =>
                   _Content(
-                    service,
-                    emails,
-                    selectedEmail,
-                    cubit,
-                  ),
+                service,
+                emails,
+                selectedEmail,
+                cubit,
+              ),
               loading: () => const Loader(),
               empty: () => _NoContent(cubit: cubit),
               orElse: () => const SizedBox(),
@@ -98,10 +99,12 @@ class EmailSelectionPage extends HookWidget {
     );
   }
 
-  void _cubitListener(EmailSelectionPageCubit cubit,
-      EmailSelectionPageState state,
-      BuildContext context,
-      MessengerController controller,) {
+  void _cubitListener(
+    EmailSelectionPageCubit cubit,
+    EmailSelectionPageState state,
+    BuildContext context,
+    MessengerController controller,
+  ) {
     state.maybeMap(
       connectionError: (state) async {
         controller.showError(getConnectionErrorString(state.error));
@@ -114,7 +117,10 @@ class EmailSelectionPage extends HookWidget {
 class _NoContent extends StatelessWidget {
   final EmailSelectionPageCubit cubit;
 
-  const _NoContent({required this.cubit, Key? key}) : super(key: key);
+  const _NoContent({
+    required this.cubit,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -127,10 +133,9 @@ class _NoContent extends StatelessWidget {
           Container(
             child: CustomRectangularButton.filled(
               text: LocaleKeys.yourData_addNewOption.tr(),
-              onPressed: () =>
-                  AutoRouter.of(context).push(DataEmailsFormPageRoute(
-                    refreshListOnPagePop: cubit.getEmailList,
-                  )),
+              onPressed: () => AutoRouter.of(context).push(DataEmailsFormPageRoute(
+                refreshListOnPagePop: cubit.getEmailList,
+              )),
             ),
           ),
         ],
@@ -139,17 +144,18 @@ class _NoContent extends StatelessWidget {
   }
 }
 
-
 class _Content extends StatelessWidget {
   final Service service;
   final List<Email> emails;
   final Email selectedEmail;
   final EmailSelectionPageCubit cubit;
 
-  const _Content(this.service,
-      this.emails,
-      this.selectedEmail,
-      this.cubit,);
+  const _Content(
+    this.service,
+    this.emails,
+    this.selectedEmail,
+    this.cubit,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -164,17 +170,15 @@ class _Content extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppDimens.l),
             child: ListView.builder(
-              itemBuilder: (context, index) =>
-                  RadioButtonTile(
-                    title: emails[index].value,
-                    isSelected: emails[index] == selectedEmail,
-                    onTapAction: () => cubit.selectEmail(emails[index]),
-                  ),
+              itemBuilder: (context, index) => RadioButtonTile(
+                title: emails[index].value,
+                isSelected: emails[index] == selectedEmail,
+                onTapAction: () => cubit.selectEmail(emails[index]),
+              ),
               itemCount: emails.length,
             ),
           ),
         ),
-
       ],
     );
   }

@@ -15,4 +15,5 @@ class DataEmailsFormPageState with _$DataEmailsFormPageState {
       _DataEmailsFormPageStateConnectionError;
 
   factory DataEmailsFormPageState.savedSuccessful() = _DataEmailsFormPageStateSavedSuccessful;
+  factory DataEmailsFormPageState.duplicatedEntry() = _DataEmailsFormPageStateDuplicatedEntry;
 }

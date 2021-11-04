@@ -77,7 +77,7 @@ class ErrorMessage extends HookWidget {
       background: AppColors.error100,
       content: Text(
         content,
-        style: typography.input.copyWith(color: colors.textSpecial),
+        style: typography.body2.copyWith(color: colors.textSpecial),
         textAlign: TextAlign.center,
       ),
     );

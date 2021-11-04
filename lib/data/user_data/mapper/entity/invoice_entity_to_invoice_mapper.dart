@@ -32,6 +32,8 @@ class InvoiceEntityToInvoiceMapper implements HiveEntityMapper<InvoiceEntity, In
       city: invoice.city,
       isDefault: invoice.isDefault,
       uuid: invoice.uuid,
+      taxId: invoice.taxId,
+      apartmentNumber: invoice.apartmentNumber,
     );
   }
 }

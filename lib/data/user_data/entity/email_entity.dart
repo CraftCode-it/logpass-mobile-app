@@ -35,4 +35,7 @@ class EmailEntity extends HiveObject implements HiveEntity<EmailEntity> {
       uuid: uuid ?? this.uuid,
     );
   }
+
+  @override
+  int hashIt() => value.hashCode;
 }

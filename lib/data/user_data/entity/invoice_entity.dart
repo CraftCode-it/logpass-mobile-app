@@ -1,7 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
 import 'package:logpass_me/data/user_data/entity/hive_entity.dart';
-import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 
 part 'invoice_entity.g.dart';
 
@@ -72,4 +71,31 @@ class InvoiceEntity extends HiveObject implements HiveEntity<InvoiceEntity> {
     );
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InvoiceEntity &&
+          runtimeType == other.runtimeType &&
+          taxId == other.taxId &&
+          name == other.name &&
+          surname == other.surname &&
+          street == other.street &&
+          buildingNumber == other.buildingNumber &&
+          apartmentNumber == other.apartmentNumber &&
+          postCode == other.postCode &&
+          city == other.city &&
+          isDefault == other.isDefault &&
+          uuid == other.uuid;
+
+  @override
+  int hashIt() =>
+      taxId.hashCode ^
+      name.hashCode ^
+      surname.hashCode ^
+      street.hashCode ^
+      buildingNumber.hashCode ^
+      apartmentNumber.hashCode ^
+      postCode.hashCode ^
+      city.hashCode ^
+      isDefault.hashCode;
 }

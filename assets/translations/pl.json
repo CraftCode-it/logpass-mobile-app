@@ -281,7 +281,8 @@
       "apartmentHint": "Numer mieszkania",
       "postCodeHint": "*Kod Pocztowy",
       "cityHint": "*Miasto"
-    }
+    },
+    "duplicatedEntry": "Wpis z podanymi danymi już istnieje."
   },
   "language": {
     "title": "Wybierz język",

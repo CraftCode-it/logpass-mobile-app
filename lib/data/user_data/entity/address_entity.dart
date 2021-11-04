@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:logpass_me/data/database/database_configuration.dart';
 import 'package:logpass_me/data/user_data/entity/hive_entity.dart';
-import 'package:logpass_me/domain/user_data/data/address.dart';
 
 part 'address_entity.g.dart';
 
@@ -66,4 +65,15 @@ class AddressEntity extends HiveObject implements HiveEntity<AddressEntity> {
       uuid: uuid ?? this.uuid,
     );
   }
+
+  @override
+  int hashIt() =>
+      name.hashCode ^
+      street.hashCode ^
+      buildingNumber.hashCode ^
+      apartmentNumber.hashCode ^
+      postCode.hashCode ^
+      city.hashCode ^
+      country.hashCode ^
+      isDefault.hashCode;
 }

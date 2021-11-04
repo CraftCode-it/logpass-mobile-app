@@ -1,4 +1,3 @@
-import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/user_data/data_source/hive/hive_email_data_sorce.dart';
 import 'package:logpass_me/data/user_data/mapper/entity/email_entity_mapper.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
@@ -18,7 +17,8 @@ class UserEmailDataRepository implements UserDataRepository<Email> {
 
   @override
   Future delete(Email value) async {
-    return _hiveDataSource.delete(value.uuid);
+    final entity = _dtoMapper.to(value);
+    return _hiveDataSource.delete(entity);
   }
 
   @override

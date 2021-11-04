@@ -279,7 +279,8 @@
       "apartmentHint": "Apartment number",
       "postCodeHint": "*Postcode",
       "cityHint": "*City"
-    }
+    },
+    "duplicatedEntry": "Record with this values, already exists."
   },
   "language": {
     "title": "Select your language",

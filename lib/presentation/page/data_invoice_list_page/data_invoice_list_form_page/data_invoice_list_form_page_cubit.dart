@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/exception/duplicated_entry_exception.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_invoice_data_use_case.dart';
 import 'package:logpass_me/presentation/utils/uuid.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
@@ -105,6 +106,9 @@ class DataInvoiceListFormPageCubit extends Cubit<DataInvoiceListFormPageState> {
       emit(DataInvoiceListFormPageState.savedSuccessful());
     } on GeneralConnectionError catch (e) {
       emit(DataInvoiceListFormPageState.connectionError(e));
+    } on DuplicatedEntryException catch (_) {
+      emit(DataInvoiceListFormPageState.duplicatedEntry());
+      emit(const DataInvoiceListFormPageState.idle(false, false));
     } catch (e, s) {
       Fimber.e('Failed to save Invoice Data', ex: e, stacktrace: s);
     }

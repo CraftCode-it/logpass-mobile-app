@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger_state.dart';
 
-const _messageDuration = Duration(seconds: 3);
+const _messageDuration = Duration(seconds: 5);
 
 @injectable
 class MessengerCubit extends Cubit<MessengerState> {

@@ -15,4 +15,6 @@ class DataInvoiceListFormPageState with _$DataInvoiceListFormPageState {
       _DataInvoiceListFormPageStateConnectionError;
 
   factory DataInvoiceListFormPageState.savedSuccessful() = _DataInvoiceListFormPageStateSavedSuccessful;
+
+  factory DataInvoiceListFormPageState.duplicatedEntry() = _DataInvoiceListFormPageStateDuplicatedEntry;
 }

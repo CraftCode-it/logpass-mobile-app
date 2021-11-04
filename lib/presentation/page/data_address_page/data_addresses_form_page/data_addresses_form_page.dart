@@ -119,6 +119,9 @@ class DataAddressesFormPage extends HookWidget {
           getConnectionErrorString(state.error),
         );
       },
+      duplicatedEntry: (_) {
+        controller.showError(LocaleKeys.yourData_duplicatedEntry.tr());
+      },
       orElse: () {},
     );
   }

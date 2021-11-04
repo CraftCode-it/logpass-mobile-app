@@ -25,7 +25,8 @@ class UserAddressDataRepository implements UserDataRepository<Address> {
 
   @override
   Future delete(Address value) async {
-    return _hiveAddressesDataSource.delete(value.uuid);
+    final entity = _entityMapper.to(value);
+    return _hiveAddressesDataSource.delete(entity);
   }
 
   @override

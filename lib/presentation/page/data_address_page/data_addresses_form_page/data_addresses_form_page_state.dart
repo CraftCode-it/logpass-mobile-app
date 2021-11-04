@@ -15,4 +15,6 @@ class DataAddressesFormPageState with _$DataAddressesFormPageState {
       _DataAddressesFormPageStateConnectionError;
 
   factory DataAddressesFormPageState.savedSuccessful() = _DataAddressesFormPageStateSavedSuccessful;
+
+  factory DataAddressesFormPageState.duplicatedEntry() = _DataAddressesFormPageStateDuplicatedEntry;
 }

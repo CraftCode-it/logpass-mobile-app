@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/exception/duplicated_entry_exception.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_email_use_case.dart';
 import 'package:logpass_me/presentation/utils/form_utils.dart';
 import 'package:logpass_me/presentation/utils/uuid.dart';
@@ -33,6 +34,9 @@ class DataEmailsFormPageCubit extends Cubit<DataEmailsFormPageState> {
       emit(DataEmailsFormPageState.savedSuccessful());
     } on GeneralConnectionError catch (e) {
       emit(DataEmailsFormPageState.connectionError(e));
+    } on DuplicatedEntryException catch (_) {
+        emit(DataEmailsFormPageState.duplicatedEntry());
+        emit(const DataEmailsFormPageState.idle(false, false));
     } catch (e, s) {
       Fimber.e('Failed to save email', ex: e, stacktrace: s);
     }
