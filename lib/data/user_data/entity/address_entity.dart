@@ -52,6 +52,7 @@ class AddressEntity extends HiveObject implements HiveEntity<AddressEntity> {
     String? country,
     bool? isDefault,
     String? uuid,
+    String? countryCode,
   }) {
     return AddressEntity(
       name: name ?? this.name,

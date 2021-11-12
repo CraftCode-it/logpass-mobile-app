@@ -280,7 +280,8 @@
       "postCodeHint": "*Postcode",
       "cityHint": "*City"
     },
-    "duplicatedEntry": "Record with this values, already exists."
+    "duplicatedEntry": "Record with this values, already exists.",
+    "edit": "Edit"
   },
   "language": {
     "title": "Select your language",

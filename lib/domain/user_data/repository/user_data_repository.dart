@@ -9,7 +9,5 @@ abstract class UserDataRepository<T extends DefaultData> {
 
   Future setDefault(T value);
 
-  Future update(T value);
-
   Future delete(T value);
 }

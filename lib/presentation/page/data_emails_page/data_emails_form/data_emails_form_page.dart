@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/data_emails_page/data_emails_form/data_emails_form_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -18,9 +19,11 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class DataEmailsFormPage extends HookWidget {
   final VoidCallback refreshListOnPagePop;
+  final Email? email;
 
   const DataEmailsFormPage({
     required this.refreshListOnPagePop,
+    this.email,
     Key? key,
   }) : super(key: key);
 
@@ -31,6 +34,10 @@ class DataEmailsFormPage extends HookWidget {
 
     final colors = useAppThemeColors();
     final messengerController = useMessengerController();
+
+    useEffect(() {
+      cubit.init(email);
+    }, [cubit]);
 
     useCubitListener<DataEmailsFormPageCubit, DataEmailsFormPageState>(
       cubit,
@@ -77,6 +84,7 @@ class DataEmailsFormPage extends HookWidget {
             idle: (state) => _Content(
               canSave: state.canSave,
               cubit: cubit,
+              email: email,
             ),
             loading: (state) => const Loader(),
             orElse: () => const SizedBox(),
@@ -113,10 +121,11 @@ class DataEmailsFormPage extends HookWidget {
 class _Content extends StatelessWidget {
   final bool canSave;
   final DataEmailsFormPageCubit cubit;
-
+  final Email? email;
   const _Content({
     required this.canSave,
     required this.cubit,
+    this.email,
   });
 
   @override
@@ -131,6 +140,7 @@ class _Content extends StatelessWidget {
             label: LocaleKeys.yourData_emailForm_emailHint.tr(),
             onChanged: cubit.emailChanged,
             inputType: TextInputType.emailAddress,
+            initialValue: email?.value,
           ),
           const Spacer(),
           CustomRectangularButton.filled(

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/data_emails_page/data_emails_page_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
@@ -175,15 +176,18 @@ class _EmailList extends StatelessWidget {
         return UserDataTile(
           title: emailList[index].toString(),
           isDefault: emailList[index].isDefault,
-          onMoreTapped: () => showMore<Email>(
-            context,
-            emailList[index],
-            cubit.ensureRemoval,
-            cubit.setEmailAsDefault,
-          ),
+          onMoreTapped: () => showMore<Email>(context, emailList[index], cubit.ensureRemoval, cubit.setEmailAsDefault,
+              (email) => _onEdit(context, email)),
         );
       },
       itemCount: emailList.length,
     );
+  }
+
+  void _onEdit(BuildContext context, Email value) {
+    AutoRouter.of(context).push(DataEmailsFormPageRoute(
+      refreshListOnPagePop: cubit.getEmailList,
+      email: value,
+    ));
   }
 }

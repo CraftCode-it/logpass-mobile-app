@@ -6,6 +6,7 @@ import 'package:logpass_me/domain/networking/error/general_connection_error.dart
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
 import 'package:logpass_me/domain/user_data/exception/duplicated_entry_exception.dart';
 import 'package:logpass_me/domain/user_data/use_case/add_invoice_data_use_case.dart';
+import 'package:logpass_me/domain/user_data/use_case/update_invoice_data_use_case.dart';
 import 'package:logpass_me/presentation/utils/uuid.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
@@ -16,6 +17,7 @@ part 'data_invoice_list_form_page_state.dart';
 @injectable
 class DataInvoiceListFormPageCubit extends Cubit<DataInvoiceListFormPageState> {
   final AddInvoiceDataUseCase _addInvoiceDataUseCase;
+  final UpdateInvoiceDataUseCase _updateInvoiceDataUseCase;
 
   String _name = '';
   String _surname = '';
@@ -25,6 +27,9 @@ class DataInvoiceListFormPageCubit extends Cubit<DataInvoiceListFormPageState> {
   String _postCode = '';
   String _city = '';
   String? _taxId;
+  InvoiceData? _oldInvoiceData;
+
+  bool get _editMode => _oldInvoiceData != null;
 
   bool get _canSave =>
       _name.isNotEmpty && _street.isNotEmpty && _buildingNumber.isNotEmpty && _postCode.isNotEmpty && _city.isNotEmpty;
@@ -53,8 +58,24 @@ class DataInvoiceListFormPageCubit extends Cubit<DataInvoiceListFormPageState> {
     return false;
   }
 
-  DataInvoiceListFormPageCubit(this._addInvoiceDataUseCase)
-      : super(const DataInvoiceListFormPageState.idle(false, false));
+  DataInvoiceListFormPageCubit(
+    this._addInvoiceDataUseCase,
+    this._updateInvoiceDataUseCase,
+  ) : super(const DataInvoiceListFormPageState.idle(false, false));
+
+  void init(InvoiceData? invoiceData) {
+    if (invoiceData == null) return;
+    _oldInvoiceData = invoiceData;
+
+    _name = invoiceData.name;
+    _surname = invoiceData.surname;
+    _street = invoiceData.street;
+    _buildingNumber = invoiceData.buildingNumber;
+    _postCode = invoiceData.postCode;
+    _city = invoiceData.city;
+    _taxId = invoiceData.taxId;
+    _apartmentNumber = invoiceData.apartmentNumber;
+  }
 
   void nameChanged(String value) {
     _name = value.trim();
@@ -101,7 +122,11 @@ class DataInvoiceListFormPageCubit extends Cubit<DataInvoiceListFormPageState> {
 
     try {
       final invoiceData = _createInvoiceData();
-      await _addInvoiceDataUseCase(invoiceData);
+      if (_editMode) {
+        await _updateInvoiceDataUseCase(_oldInvoiceData!, invoiceData);
+      } else {
+        await _addInvoiceDataUseCase(invoiceData);
+      }
 
       emit(DataInvoiceListFormPageState.savedSuccessful());
     } on GeneralConnectionError catch (e) {
@@ -124,6 +149,7 @@ class DataInvoiceListFormPageCubit extends Cubit<DataInvoiceListFormPageState> {
         taxId: _taxId,
         apartmentNumber: _apartmentNumber,
         uuid: uuid.v4(),
+        isDefault: _oldInvoiceData?.isDefault ?? false,
       );
 
   void _emitIdleState() => emit(DataInvoiceListFormPageState.idle(_canSave, _areSomeFieldsFilled));

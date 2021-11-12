@@ -282,7 +282,8 @@
       "postCodeHint": "*Kod Pocztowy",
       "cityHint": "*Miasto"
     },
-    "duplicatedEntry": "Wpis z podanymi danymi już istnieje."
+    "duplicatedEntry": "Wpis z podanymi danymi już istnieje.",
+    "edit": "Edytuj"
   },
   "language": {
     "title": "Wybierz język",

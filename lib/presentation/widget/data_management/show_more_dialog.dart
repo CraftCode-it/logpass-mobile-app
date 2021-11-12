@@ -1,20 +1,21 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/user_data/default_data.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog_base.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 Future<void> showMore<T extends DefaultData>(
   BuildContext context,
   T object,
-  Function(T) onRemoveCallback,
-  Function(T) onSetDefaultCallback,
+  ValueChanged<T> onRemoveCallback,
+  ValueChanged<T> onSetDefaultCallback,
+  ValueChanged<T> onEditCallback,
 ) async {
   final isDefault = object.isDefault;
 
@@ -24,6 +25,7 @@ Future<void> showMore<T extends DefaultData>(
       return LogpassDialogBase(
         child: CustomContentDialog(
           widgets: [
+            _EditDataAsDefaultDialogContent(object, onEditCallback),
             if (!isDefault) _SetDataAsDefaultDialogContent(object, onSetDefaultCallback),
             _RemoveDataDialogContent(object, onRemoveCallback, isOptionFilled: isDefault),
           ],
@@ -95,5 +97,32 @@ class _RemoveDataDialogContent<T extends DefaultData> extends HookWidget {
               onRemoveCallback(object);
             },
           );
+  }
+}
+
+class _EditDataAsDefaultDialogContent<T extends DefaultData> extends HookWidget {
+  final T object;
+  final ValueChanged<T> onCopyCallback;
+
+  const _EditDataAsDefaultDialogContent(
+    this.object,
+    this.onCopyCallback,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+
+    return CustomRectangularButton.filled(
+      text: LocaleKeys.yourData_edit.tr(),
+      fillColor: AppColors.success100,
+      borderColor: AppColors.success100,
+      textColor: colors.textSpecial,
+      onPressed: () {
+        AutoRouter.of(context).pop();
+        onCopyCallback(object);
+      },
+      leadingIconPath: AppIcon.copy,
+    );
   }
 }
