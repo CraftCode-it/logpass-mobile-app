@@ -4,7 +4,7 @@ import 'package:logpass_me/domain/app_security/app_lifecycle_store.dart';
 @LazySingleton(as: AppLifeCycleStore)
 class AppLifeCycleStoreImpl implements AppLifeCycleStore {
   int? backgroundTime;
-  bool inBackground = false;
+  bool? inBackground;
 
   @override
   Future<void> appSentToBackground() async {
@@ -19,5 +19,5 @@ class AppLifeCycleStoreImpl implements AppLifeCycleStore {
   }
 
   @override
-  Future<bool> wasInBackground() => Future.value(inBackground);
+  Future<bool?> wasInBackground() => Future.value(inBackground);
 }

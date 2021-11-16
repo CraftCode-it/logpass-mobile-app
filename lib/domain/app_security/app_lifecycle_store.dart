@@ -4,5 +4,5 @@ abstract class AppLifeCycleStore {
 
   Future<int?> getAppBackgroundTime();
 
-  Future<bool> wasInBackground();
+  Future<bool?> wasInBackground();
 }
