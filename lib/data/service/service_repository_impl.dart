@@ -26,7 +26,8 @@ class ServiceRepositoryImpl implements ServiceRepository {
 
   @override
   Future<ServicesBundle> getPageOfServices(int page) async {
-    final responseDTO = await callWithDioErrorResolver(() => _serviceApiDataSource.getServiceList(page));
+    final responseDTO = await
+    callWithDioErrorResolver(() => _serviceApiDataSource.getServiceList(page));
     final servicesBundle = _serviceBundleDTOMapper(responseDTO);
     return servicesBundle;
   }

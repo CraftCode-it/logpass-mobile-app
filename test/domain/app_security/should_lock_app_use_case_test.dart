@@ -24,17 +24,8 @@ void main() {
     securityStore = MockAppSecurityStore();
     appLifecycleStore = MockAppLifeCycleStore();
     useCase = ShouldLockAppUseCase(securityStore, appLifecycleStore);
-    when(appLifecycleStore.wasInBackground())
-        .thenAnswer((realInvocation) async => true);
-  });
-
-
-  test('when app was not in background, then should return false', () async {
-    when(securityStore.loadSecurityType()).thenAnswer((_) async => AppSecurityType.code);
-    when(appLifecycleStore.wasInBackground())
-        .thenAnswer((realInvocation) async => false);
-    final result = await useCase();
-    expect(result, false);
+    when(appLifecycleStore.wasInBackground()).thenAnswer((realInvocation) async => null);
+    when(appLifecycleStore.getAppBackgroundTime()).thenAnswer((realInvocation) async => null);
   });
 
   test('when app was longer in background than timeout time  and biometrics enabled then should return true', () async {
@@ -50,22 +41,19 @@ void main() {
     when(securityStore.loadSecurityType()).thenAnswer((_) async => AppSecurityType.code);
     when(appLifecycleStore.getAppBackgroundTime())
         .thenAnswer((realInvocation) async => DateTime.now().millisecondsSinceEpoch);
-    when(appLifecycleStore.wasInBackground())
-        .thenAnswer((realInvocation) async => true);
+    when(appLifecycleStore.wasInBackground()).thenAnswer((realInvocation) async => true);
     final result = await useCase();
     expect(result, false);
   });
 
   test('when app runs from killed state and biometrics enabled then should return true', () async {
     when(securityStore.loadSecurityType()).thenAnswer((_) async => AppSecurityType.code);
-    when(appLifecycleStore.getAppBackgroundTime()).thenAnswer((realInvocation) async => null);
     final result = await useCase();
     expect(result, true);
   });
 
   test('when app runs from killed state and biometrics disabled then should return false', () async {
     when(securityStore.loadSecurityType()).thenAnswer((_) async => AppSecurityType.none);
-    when(appLifecycleStore.getAppBackgroundTime()).thenAnswer((realInvocation) async => null);
     final result = await useCase();
     expect(result, false);
   });
