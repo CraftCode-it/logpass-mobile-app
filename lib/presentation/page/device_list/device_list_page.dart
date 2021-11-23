@@ -122,7 +122,18 @@ class DeviceListPage extends HookWidget {
       LocaleKeys.common_back.tr(),
     );
 
-    if (shouldRemove) {
+    if(!shouldRemove) {
+      return;
+    }
+
+    final success = await AutoRouter.of(context).push(
+      ConfirmWithPinPageRoute(
+        title: LocaleKeys.deviceList_removeDeviceTitle.tr(),
+        button: LocaleKeys.common_remove.tr(),
+      ),
+    );
+
+    if (success == true) {
       cubit.remove(device);
     }
   }
