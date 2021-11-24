@@ -133,7 +133,8 @@
     "info": "Repeat your PIN code"
   },
   "pinSuccess": {
-    "header": "PIN code to the account successfully set"
+    "set": "PIN code to the account successfully set",
+    "changed": "PIN code to the account successfully changed"
   },
   "securedLogin": {
     "header": "Welcome again!",
