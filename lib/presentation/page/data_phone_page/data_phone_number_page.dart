@@ -21,7 +21,7 @@ class DataPhoneNumberPage extends HookWidget {
 
     useEffect(() {
       cubit.initialize();
-    });
+    }, [cubit]);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -33,7 +33,7 @@ class DataPhoneNumberPage extends HookWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: state.maybeWhen(
-            idle: (phoneNumber) => UserPhoneTile(title: phoneNumber),
+            idle: (phoneNumber) => _UserPhoneTile(title: phoneNumber),
             loading: () => const Loader(),
             orElse: () => const SizedBox(),
           ),
@@ -43,10 +43,10 @@ class DataPhoneNumberPage extends HookWidget {
   }
 }
 
-class UserPhoneTile extends HookWidget {
+class _UserPhoneTile extends HookWidget {
   final String title;
 
-  const UserPhoneTile({
+  const _UserPhoneTile({
     required this.title,
   });
 
