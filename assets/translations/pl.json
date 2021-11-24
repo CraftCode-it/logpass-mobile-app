@@ -49,7 +49,7 @@
   },
   "start": {
     "title": "Rejestracja",
-    "termsAcceptInfo": "Rejestrując się, akceptuję",
+    "termsAcceptInfo": "Rejestrując się, akceptuję ",
     "termsAcceptHighlight": "warunki użytkowania",
     "helpAction": "Pomoc",
     "addNewDeviceAction": "Dodaj nowe urządzenie",
@@ -209,7 +209,7 @@
     "security": "Bezpieczeństwo",
     "darkMode": "Tryb ciemny",
     "language": "Język",
-    "terms": "warunki użytkowania",
+    "terms": "Warunki użytkowania",
     "help": "Pomoc",
     "logout": "Wyloguj się"
   },
