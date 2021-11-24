@@ -133,7 +133,8 @@
     "info": "Wprowadź ponownie PIN"
   },
   "pinSuccess": {
-    "header": "Ustawienie kodu PIN zakończyło się pomyślnie"
+    "set": "Ustawienie kodu PIN zakończyło się pomyślnie",
+    "changed": "Zmiana kodu PIN zakończyło się pomyślnie"
   },
   "securedLogin": {
     "header": "Witamy ponownie!",
