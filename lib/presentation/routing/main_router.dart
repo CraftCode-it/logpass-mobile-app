@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice
 import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_page.dart';
 import 'package:logpass_me/presentation/page/data_personal_page/data_personal_form/data_personal_form_page.dart';
 import 'package:logpass_me/presentation/page/data_personal_page/data_personal_page.dart';
+import 'package:logpass_me/presentation/page/data_phone_page/data_phone_number_page.dart';
 import 'package:logpass_me/presentation/page/device_list/change_device_name/change_device_name_page.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page.dart';
@@ -80,6 +81,7 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: NeedHelpPage),
     AutoRoute(page: QuestionPage),
     AutoRoute(page: DataPersonalFormPage),
+    AutoRoute(page: DataPhoneNumberPage),
     AutoRoute(page: DataEmailsPage),
     AutoRoute(page: DataEmailsFormPage),
     AutoRoute(page: DataAddressesPage),
