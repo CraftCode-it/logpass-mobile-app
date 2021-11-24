@@ -50,7 +50,6 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     await _smsAutoFill.listenForCode;
     _codeSubscription = _smsAutoFill.code.listen((event) {
       emit(OTPCodePageState.otpAutofill(event));
-      updateCode(event);
     });
 
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
