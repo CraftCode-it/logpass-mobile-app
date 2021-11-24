@@ -22,9 +22,6 @@ class PinSuccessPage extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
 
-    LocaleKeys.pinSuccess_set.tr();
-    LocaleKeys.pinSuccess_changed.tr();
-
     return Scaffold(
       backgroundColor: AppColors.success100,
       body: SafeArea(
