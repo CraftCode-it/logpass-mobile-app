@@ -204,10 +204,6 @@ class _TermsAndConditionsCheck extends HookWidget {
                     style: typography.body1,
                   ),
                   TextSpan(
-                    text: ' ',
-                    style: typography.body1,
-                  ),
-                  TextSpan(
                     text: tr(LocaleKeys.start_termsAcceptHighlight),
                     style: typography.body3.copyWith(decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
