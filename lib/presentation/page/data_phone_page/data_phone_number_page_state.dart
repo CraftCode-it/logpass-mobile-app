@@ -7,4 +7,7 @@ class DataPhoneNumberPageState with _$DataPhoneNumberPageState {
 
   @Implements(BuildState)
   factory DataPhoneNumberPageState.loading() = _DataPhoneNumberPageStateLoading;
+
+  @Implements(BuildState)
+  factory DataPhoneNumberPageState.empty() = _DataPhoneNumberPageStateEmpty;
 }

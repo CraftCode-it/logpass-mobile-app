@@ -25,7 +25,7 @@ void main() {
 
   group('initialize', () {
     blocTest<DataPhoneNumberPageCubit, DataPhoneNumberPageState>(
-      'get phone number',
+      'initialize not empty phone number',
       build: () {
         when(getUserPhoneNumberUseCase()).thenAnswer((value) async => phoneNumber);
         return cubit;
@@ -34,6 +34,19 @@ void main() {
       expect: () =>
       [
         DataPhoneNumberPageState.idle(phoneNumber),
+      ],
+    );
+
+    blocTest<DataPhoneNumberPageCubit, DataPhoneNumberPageState>(
+      'initialize empty phone number',
+      build: () {
+        when(getUserPhoneNumberUseCase()).thenAnswer((value) async => null);
+        return cubit;
+      },
+      act: (cubit) => cubit.initialize(),
+      expect: () =>
+      [
+        DataPhoneNumberPageState.empty(),
       ],
     );
   });

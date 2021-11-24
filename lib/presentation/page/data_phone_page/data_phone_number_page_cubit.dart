@@ -16,6 +16,11 @@ class DataPhoneNumberPageCubit extends Cubit<DataPhoneNumberPageState> {
 
   Future<void> initialize() async {
     final phoneNumber = await _getUserPhoneNumberUseCase();
-    emit(DataPhoneNumberPageState.idle(phoneNumber!));
+
+    if(phoneNumber != null && phoneNumber.isNotEmpty) {
+      emit(DataPhoneNumberPageState.idle(phoneNumber));
+    } else {
+      emit(DataPhoneNumberPageState.empty());
+    }
   }
 }

@@ -34,6 +34,7 @@ class DataPhoneNumberPage extends HookWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: state.maybeWhen(
             idle: (phoneNumber) => _UserPhoneTile(title: phoneNumber),
+            empty: () => _EmptyPhoneNumberMessage(),
             loading: () => const Loader(),
             orElse: () => const SizedBox(),
           ),
@@ -73,6 +74,23 @@ class _UserPhoneTile extends HookWidget {
       child: Text(
         title,
         style: typography.body3,
+      ),
+    );
+  }
+}
+
+class _EmptyPhoneNumberMessage extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+      child: Text(
+        LocaleKeys.yourData_phoneEmpty.tr(),
+        style: typography.body1.copyWith(color: colors.secondaryText),
+        textAlign: TextAlign.center,
       ),
     );
   }
