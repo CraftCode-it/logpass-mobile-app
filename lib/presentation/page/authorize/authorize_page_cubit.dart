@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -194,7 +196,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     return [..._scopeRequested, ...acceptedOptionalAgreements];
   }
 
-  ApproveAttemptArgs _prepareApproveAttemptArgs() {
+  Future<ApproveAttemptArgs> _prepareApproveAttemptArgs() async {
     String? _email;
     Address? _address;
     InvoiceData? _invoiceData;
@@ -209,14 +211,23 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     }
     // TODO: handle after backend's implementation
     final personalData = '';
+    final phoneNumber = await _getUserPhoneNumberUseCase();
+
+    print('ANDRII localeName: ${Platform.localeName}');
+    print('ANDRII localHostname: ${Platform.localHostname}');
+    print('ANDRII phoneNumber: ${phoneNumber}');
 
     return ApproveAttemptArgs(
       email: _email ?? 'john.smith@example.com',
       emailVerified: false,
-      name: personalData,
+      name: null,
       extraScopes: _prepareExtraScopeList(),
       address: _address,
       invoice: _invoiceData,
+      phoneNumberVerified: true,
+      phoneNumber: phoneNumber,
+      locale: 'en-GB',
+      surname: null,
     );
   }
 
@@ -237,7 +248,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
       emit(const AuthorizePageState.loading());
 
-      final args = _prepareApproveAttemptArgs();
+      final args = await _prepareApproveAttemptArgs();
       final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId!, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
