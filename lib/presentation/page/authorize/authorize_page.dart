@@ -9,6 +9,7 @@ import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
+import 'package:logpass_me/presentation/page/authorize/personal_data_selection/personal_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
 import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -350,6 +351,7 @@ class _ScopeFormElement extends StatelessWidget {
       address: (state) => (state.address != null) ? state.address.toString() : placeholder,
       email: (state) => (state.email != null) ? state.email.toString() : placeholder,
       invoice: (state) => (state.invoiceData != null) ? state.invoiceData.toString() : placeholder,
+      profile: (state) => (state.personalData != null) ? state.personalData.toString() : placeholder,
       orElse: () => placeholder,
     );
   }
@@ -375,6 +377,13 @@ class _ScopeFormElement extends StatelessWidget {
           service: service,
           invoiceData: state.invoiceData,
           onPagePop: (invoice) => onScopeElementChange(state.copyWith(invoiceData: invoice)),
+        ));
+      },
+      profile: (state) => () {
+        AutoRouter.of(context).push(PersonalDataSelectionPageRoute(
+          service: service,
+          personalData: state.personalData,
+          onPagePop: (personalData) => onScopeElementChange(state.copyWith(personalData: personalData)),
         ));
       },
       orElse: () {},

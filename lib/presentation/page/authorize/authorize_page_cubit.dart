@@ -24,6 +24,7 @@ import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_personal_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
@@ -200,34 +201,33 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     String? _email;
     Address? _address;
     InvoiceData? _invoiceData;
+    PersonalData? _personalData;
 
     for (final element in _scopeElements) {
       element.maybeMap(
         email: (state) => _email = state.email?.value,
         address: (state) => _address = state.address,
         invoice: (state) => _invoiceData = state.invoiceData,
+        profile: (state) => _personalData = state.personalData,
         orElse: () {},
       );
     }
-    // TODO: handle after backend's implementation
-    final personalData = '';
-    final phoneNumber = await _getUserPhoneNumberUseCase();
 
-    print('ANDRII localeName: ${Platform.localeName}');
-    print('ANDRII localHostname: ${Platform.localHostname}');
-    print('ANDRII phoneNumber: ${phoneNumber}');
+    //TODO getting locale
+    final locale = 'en_GB';
+    final phoneNumber = await _getUserPhoneNumberUseCase();
 
     return ApproveAttemptArgs(
       email: _email ?? 'john.smith@example.com',
       emailVerified: false,
-      name: null,
+      name: _personalData?.name,
+      surname: _personalData?.surname,
       extraScopes: _prepareExtraScopeList(),
       address: _address,
       invoice: _invoiceData,
       phoneNumberVerified: true,
       phoneNumber: phoneNumber,
-      locale: 'en-GB',
-      surname: null,
+      locale: locale,
     );
   }
 

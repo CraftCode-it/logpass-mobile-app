@@ -77,12 +77,8 @@ class OAuthRepositoryImpl implements OAuthRepository {
     String tokenSub,
     ApproveAttemptArgs args,
   ) async {
-    // final mappedScopes = args.extraScopes.map((e) => e.toString().split('.').last).toList();
-    print('');
-    final mappedScopes = args.extraScopes.map(_scopeDTOMapper.from).map((e) {
-      print("ANDRII scope: $e");
-      return e;
-    }).toList();
+
+    final mappedScopes = args.extraScopes.map(_scopeDTOMapper.from).toList();
     final userInfoDTO = ApproveAttemptUserInfoDTO(
         tokenSub,
         args.email,

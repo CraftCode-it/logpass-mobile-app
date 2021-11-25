@@ -8,6 +8,7 @@ import 'package:logpass_me/presentation/page/authorize/agreement_content_preview
 import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
 import 'package:logpass_me/presentation/page/authorize/email_selection/email_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/personal_data_selection/personal_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/service_rules/service_rules_page.dart';
 import 'package:logpass_me/presentation/page/authorize/trust_level_confirmation/trust_level_confirmation_page.dart';
 import 'package:logpass_me/presentation/page/confirm/confirm_page.dart';
@@ -70,6 +71,7 @@ import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
     AutoRoute(page: AgreementDetailsPage),
     AutoRoute(page: EmailSelectionPage),
     AutoRoute(page: AddressSelectionPage),
+    AutoRoute(page: PersonalDataSelectionPage),
     AutoRoute(page: InvoiceDataSelectionPage),
     AutoRoute(page: SecuritySettingsPage),
     AutoRoute(page: ConfirmWithPinPage),
