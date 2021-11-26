@@ -38,6 +38,7 @@ class AuthorizePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale;
     final cubit = useCubit<AuthorizePageCubit>();
     final state = useCubitBuilder(cubit);
     final messengerController = useMessengerController();
@@ -53,8 +54,8 @@ class AuthorizePage extends HookWidget {
     );
 
     useEffect(() {
-      cubit.init(incomingAction);
-    }, [cubit]);
+      cubit.init(incomingAction, locale);
+    }, [cubit, locale]);
 
     return CustomScaffold(
       appBar: CustomAppBar.smallTitle(

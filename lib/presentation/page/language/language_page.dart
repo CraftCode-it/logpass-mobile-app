@@ -69,7 +69,8 @@ class _Content extends HookWidget {
         language: availableLanguages[index],
         selected: availableLanguages[index].code == selectedLanguageCode,
         onTap: () {
-          EasyLocalization.of(context)?.setLocale(Locale(availableLanguages[index].code));
+          final locale = availableLanguages[index];
+          EasyLocalization.of(context)?.setLocale(Locale(locale.code, locale.countryCode));
           onLanguageTap(availableLanguages[index].code);
         },
       ),
@@ -124,11 +125,13 @@ class _LanguageRow extends HookWidget {
 class _Language {
   final String name;
   final String code;
+  final String? countryCode;
 
-  _Language._(this.name, this.code);
+  _Language._(this.name, this.code, this.countryCode);
 
   static _Language fromEntry(MapEntry<LanguageCode, Locale> entry) {
-    return _Language._(_mapCodeToLanguageName(entry.key), entry.value.languageCode);
+    final locale = entry.value;
+    return _Language._(_mapCodeToLanguageName(entry.key), locale.languageCode, locale.countryCode);
   }
 
   static String _mapCodeToLanguageName(LanguageCode code) {

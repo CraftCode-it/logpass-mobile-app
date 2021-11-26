@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
@@ -69,6 +69,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   int _requiredTrustLevel = 1;
 
   late IncomingAction _incomingAction;
+  late Locale _locale;
   String? _authorizationAttemptId;
   Map<String, String>? _authParameters;
 
@@ -99,7 +100,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getDefaultPersonalDataUseCase,
   ) : super(const AuthorizePageState.loading());
 
-  Future<void> init(IncomingAction incomingAction) async {
+  Future<void> init(IncomingAction incomingAction, Locale locale) async {
+    _locale = locale;
     _incomingAction = incomingAction;
     _authorizationAttemptId = incomingAction.actionId;
     _authParameters = incomingAction.queryParameters;
@@ -213,9 +215,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
       );
     }
 
-    //TODO getting locale
-    final locale = 'en_GB';
     final phoneNumber = await _getUserPhoneNumberUseCase();
+    final locale = _locale.toLanguageTag();
 
     return ApproveAttemptArgs(
       email: _email ?? 'john.smith@example.com',

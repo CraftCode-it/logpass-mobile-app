@@ -161,20 +161,11 @@ class _Content extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppDimens.l),
             child: ListView.builder(
-              itemBuilder: (context, index) {
-                print('ANDRII isSelected: ${personalDataList[index] == selectedPersonalData}');
-
-                return RadioButtonTile(
-                  title: personalDataList[index].toString(),
-                  isSelected: personalDataList[index] == selectedPersonalData,
-                  onTapAction: () => cubit.selectPersonalData(personalDataList[index]),
-                );
-              },
-              // itemBuilder: (context, index) => RadioButtonTile(
-              //   title: personalDataList[index].toString(),
-              //   isSelected: personalDataList[index] == selectedPersonalData,
-              //   onTapAction: () => cubit.selectPersonalData(personalDataList[index]),
-              // ),
+              itemBuilder: (context, index) => RadioButtonTile(
+                title: personalDataList[index].toString(),
+                isSelected: personalDataList[index] == selectedPersonalData,
+                onTapAction: () => cubit.selectPersonalData(personalDataList[index]),
+              ),
               itemCount: personalDataList.length,
             ),
           ),
