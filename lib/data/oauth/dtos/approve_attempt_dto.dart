@@ -18,11 +18,8 @@ class ApproveAttemptDTO {
 class ApproveAttemptUserInfoDTO {
   final String sub;
   final String email;
-  @JsonKey(name: 'email_verified')
   final bool emailVerified;
-  @JsonKey(name: 'phone_number')
   final String? phoneNumber;
-  @JsonKey(name: 'phone_number_verified')
   final bool phoneNumberVerified;
   @JsonKey(name: 'given_name')
   final String? name;
@@ -54,9 +51,7 @@ class ApproveAttemptUserInfoDTO {
 class ApproveAttemptAddressInfoDTO {
   final String name;
   final String street;
-  @JsonKey(name: 'building_number')
   final String buildingNumber;
-  @JsonKey(name: 'apartment_number')
   final String? apartmentNumber;
   @JsonKey(name: 'postcode')
   final String postCode;
@@ -80,13 +75,10 @@ class ApproveAttemptAddressInfoDTO {
 
 @JsonSerializable()
 class ApproveAttemptInvoiceInfoDTO {
-  @JsonKey(name: 'tax_id')
   final String? taxId;
   final String surname;
   final String street;
-  @JsonKey(name: 'building_number')
   final String buildingNumber;
-  @JsonKey(name: 'apartment_number')
   final String? apartmentNumber;
   @JsonKey(name: 'postcode')
   final String postCode;
