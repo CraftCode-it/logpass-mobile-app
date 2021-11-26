@@ -4,9 +4,7 @@ part 'approve_attempt_dto.g.dart';
 
 @JsonSerializable()
 class ApproveAttemptDTO {
-  @JsonKey(name: 'user_info')
   final ApproveAttemptUserInfoDTO userInfo;
-  @JsonKey(name: 'extra_scopes')
   final List<String> extraScopes;
 
   ApproveAttemptDTO(this.userInfo, this.extraScopes);
