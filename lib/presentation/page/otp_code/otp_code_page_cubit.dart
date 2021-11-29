@@ -6,8 +6,8 @@ import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/auth/error/login_verification_error.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
-import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
+import 'package:logpass_me/domain/auth/use_case/retry_sign_up_sms_code_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
@@ -19,10 +19,11 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   static const resendDelayDuration = Duration(minutes: 1);
 
   final VerifyOTPSignUpUseCase _verifyOTPSignUpUseCase;
-  final SignUpUsingOTPCodeUseCase _signUpUsingOTPCodeUseCase;
+  final RetrySignUpSmsCodeUseCase _retrySignUpSmsCodeUseCase;
   final SaveUserPhoneNumberUseCase _saveUserPhoneNumberUseCase;
   final SmsAutoFill _smsAutoFill;
 
+  late String _phoneNumber;
   late SignUpVerification _signUpVerification;
   late DateTime _resendTimestamp;
 
@@ -31,7 +32,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   OTPCodePageCubit(
     this._verifyOTPSignUpUseCase,
-    this._signUpUsingOTPCodeUseCase,
+    this._retrySignUpSmsCodeUseCase,
     this._saveUserPhoneNumberUseCase,
     this._smsAutoFill,
   ) : super(OTPCodePageState.loading());
@@ -43,8 +44,9 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     return super.close();
   }
 
-  Future<void> initialize(SignUpVerification verification) async {
+  Future<void> initialize(String phoneNumber, SignUpVerification verification) async {
     _signUpVerification = verification;
+    _phoneNumber = phoneNumber;
     _resendTimestamp = clock.now().add(resendDelayDuration);
 
     await _smsAutoFill.listenForCode;
@@ -66,7 +68,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
     try {
       await _verifyOTPSignUpUseCase(_signUpVerification.verificationUrl, _code);
-      await _saveUserPhoneNumberUseCase(_signUpVerification.phoneNumber);
+      await _saveUserPhoneNumberUseCase(_phoneNumber);
       emit(OTPCodePageState.success());
     } on LoginVerificationError catch (error) {
       _handleLoginVerificationError(error);
@@ -84,7 +86,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     emit(OTPCodePageState.resending(_code));
 
     try {
-      _signUpVerification = await _signUpUsingOTPCodeUseCase(_signUpVerification.phoneNumber);
+      _signUpVerification = await _retrySignUpSmsCodeUseCase(_signUpVerification.id);
       _resendTimestamp = clock.now().add(resendDelayDuration);
       emit(OTPCodePageState.resendSuccess());
     } on GeneralConnectionError catch (e) {

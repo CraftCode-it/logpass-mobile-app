@@ -37,7 +37,21 @@ class AuthRepositoryImpl implements AuthRepository {
     );
 
     return SignUpVerification(
-      phoneNumber,
+      response.data.id,
+      _verificationMethodMapper.to(response.data.verificationMethod),
+      response.links.verification,
+      response.data.verificationData?.toSign,
+    );
+  }
+
+  @override
+  Future<SignUpVerification> retrySignUp(String attemptId) async {
+    final response = await callWithDioErrorResolver(
+      () => _authApiDataSource.retryLoginProcess(attemptId),
+    );
+
+    return SignUpVerification(
+      response.data.id,
       _verificationMethodMapper.to(response.data.verificationMethod),
       response.links.verification,
       response.data.verificationData?.toSign,

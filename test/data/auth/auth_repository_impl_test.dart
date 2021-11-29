@@ -65,12 +65,13 @@ void main() {
           'https://some.url/verify',
         ),
         InitializeLoginResultDataDTO(
+          'id',
           'otp_code',
           null,
         ),
       );
 
-      final expected = SignUpVerification(phoneNumber, VerificationMethod.otpCode, 'https://some.url/verify', null);
+      final expected = SignUpVerification('id', VerificationMethod.otpCode, 'https://some.url/verify', null);
 
       when(authApiDataSource.initializeLoginProcess(any)).thenAnswer((realInvocation) async => apiResult);
       when(verificationMethodMapper.to('otp_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
@@ -144,6 +145,42 @@ void main() {
       when(loginVerificationErrorMapper(apiError.logpassApiError)).thenAnswer((realInvocation) => expected);
 
       expect(authRepositoryImpl.verifyOTPSignUp(url, code), throwsA(expected));
+    });
+  });
+
+  group('retryOTPSignUp', () {
+    test('returns verification result on success', () async {
+      const id = 'abcd==';
+
+      final apiResult = InitializeLoginResultDTO(
+        InitializeLoginLinksDTO(
+          'https://some.url/verify',
+        ),
+        InitializeLoginResultDataDTO(
+          'abcd==',
+          'otp_code',
+          null,
+        ),
+      );
+
+      final expected = SignUpVerification('abcd==', VerificationMethod.otpCode, 'https://some.url/verify', null);
+
+      when(authApiDataSource.retryLoginProcess(any)).thenAnswer((realInvocation) async => apiResult);
+      when(verificationMethodMapper.to('otp_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
+
+      final actual = await authRepositoryImpl.retrySignUp(id);
+
+      expect(actual, expected);
+    });
+
+    test('throws error when api call fails', () async {
+      const id = 'abcd==';
+
+      final expected = Error();
+
+      when(authApiDataSource.retryLoginProcess(any)).thenAnswer((realInvocation) => throw expected);
+
+      expect(authRepositoryImpl.retrySignUp(id), throwsA(expected));
     });
   });
 }
