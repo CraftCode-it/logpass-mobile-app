@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/use_case/sign_up_using_otp_code_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
+import 'package:logpass_me/domain/auth/use_case/retry_sign_up_sms_code_use_case.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
-import 'package:logpass_me/domain/user_data/use_case/get_user_phone_number_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
@@ -30,40 +30,44 @@ class FakeSmsAutofill extends Fake implements SmsAutoFill {
 @GenerateMocks(
   [
     VerifyOTPSignUpUseCase,
+    RetrySignUpSmsCodeUseCase,
     SignUpUsingOTPCodeUseCase,
     SaveUserPhoneNumberUseCase,
   ],
 )
 void main() {
   late MockVerifyOTPSignUpUseCase verifyOTPSignUpUseCase;
+  late MockRetrySignUpSmsCodeUseCase retrySignUpSmsCodeUseCase;
   late MockSignUpUsingOTPCodeUseCase signUpUsingOTPCodeUseCase;
   late MockSaveUserPhoneNumberUseCase saveUserPhoneNumberUseCase;
   late OTPCodePageCubit cubit;
 
   setUp(() {
     verifyOTPSignUpUseCase = MockVerifyOTPSignUpUseCase();
+    retrySignUpSmsCodeUseCase = MockRetrySignUpSmsCodeUseCase();
     signUpUsingOTPCodeUseCase = MockSignUpUsingOTPCodeUseCase();
     saveUserPhoneNumberUseCase = MockSaveUserPhoneNumberUseCase();
     cubit = OTPCodePageCubit(
-        verifyOTPSignUpUseCase, signUpUsingOTPCodeUseCase, saveUserPhoneNumberUseCase, FakeSmsAutofill());
+        verifyOTPSignUpUseCase, retrySignUpSmsCodeUseCase, saveUserPhoneNumberUseCase, FakeSmsAutofill());
   });
 
   final nowDateTime = DateTime(2021);
+  final phoneNumber = '+49123123123';
   final basicResendTimestamp = nowDateTime.add(OTPCodePageCubit.resendDelayDuration);
-  final verification = SignUpVerification('+49123123123', VerificationMethod.otpCode, 'https://url', null);
+  final verification = SignUpVerification('id', VerificationMethod.otpCode, 'https://url', null);
 
   group('initialize', () {
     blocTest<OTPCodePageCubit, OTPCodePageState>(
       'emits idle state after initialization',
       build: () => cubit,
-      act: (cubit) => withClock(Clock.fixed(nowDateTime), () => cubit.initialize(verification)),
+      act: (cubit) => withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification)),
       expect: () => [OTPCodePageState.idle('', false, basicResendTimestamp)],
     );
   });
 
   group('updateCode', () {
     setUp(() {
-      withClock(Clock.fixed(nowDateTime), () => cubit.initialize(verification));
+      withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification));
     });
 
     blocTest<OTPCodePageCubit, OTPCodePageState>(
@@ -89,16 +93,16 @@ void main() {
   });
 
   group('resendCode', () {
-    final newVerification = SignUpVerification('+49123123123', VerificationMethod.otpCode, 'https://url/2', null);
+    final newVerification = SignUpVerification('id', VerificationMethod.otpCode, 'https://url/2', null);
 
     setUp(() {
-      withClock(Clock.fixed(nowDateTime), () => cubit.initialize(verification));
+      withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification));
     });
 
     blocTest<OTPCodePageCubit, OTPCodePageState>(
       'emits [Resending, Idle] states on success',
       build: () {
-        when(signUpUsingOTPCodeUseCase(verification.phoneNumber)).thenAnswer((realInvocation) async => newVerification);
+        when(retrySignUpSmsCodeUseCase(verification.id)).thenAnswer((realInvocation) async => newVerification);
 
         return cubit;
       },
@@ -117,8 +121,8 @@ void main() {
     blocTest<OTPCodePageCubit, OTPCodePageState>(
       'after resend verify is being called with new url',
       build: () {
-        when(signUpUsingOTPCodeUseCase(verification.phoneNumber)).thenAnswer((realInvocation) async => newVerification);
-        when(verifyOTPSignUpUseCase(verification.verificationUrl, '123456')).thenAnswer((invocation) async {});
+        when(retrySignUpSmsCodeUseCase(verification.id)).thenAnswer((realInvocation) async => newVerification);
+        when(verifyOTPSignUpUseCase(newVerification.verificationUrl, '123456')).thenAnswer((invocation) async {});
 
         return cubit;
       },
@@ -143,7 +147,7 @@ void main() {
     blocTest<OTPCodePageCubit, OTPCodePageState>(
       'emits [Processing, Error, Idle] states on error',
       build: () {
-        when(signUpUsingOTPCodeUseCase(any)).thenAnswer((realInvocation) => throw GeneralConnectionError.timeout());
+        when(retrySignUpSmsCodeUseCase(any)).thenAnswer((realInvocation) => throw GeneralConnectionError.timeout());
         return cubit;
       },
       act: (cubit) {
@@ -162,7 +166,7 @@ void main() {
 
   group('verify', () {
     setUp(() {
-      withClock(Clock.fixed(nowDateTime), () => cubit.initialize(verification));
+      withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification));
     });
 
     blocTest<OTPCodePageCubit, OTPCodePageState>(

@@ -28,10 +28,11 @@ class InitializeLoginLinksDTO {
 
 @JsonSerializable()
 class InitializeLoginResultDataDTO {
+  final String id;
   final String verificationMethod;
   final InitializeLoginResultVerificationDataDTO? verificationData;
 
-  InitializeLoginResultDataDTO(this.verificationMethod, this.verificationData);
+  InitializeLoginResultDataDTO(this.id, this.verificationMethod, this.verificationData);
 
   Map<String, dynamic> toJson() => _$InitializeLoginResultDataDTOToJson(this);
 

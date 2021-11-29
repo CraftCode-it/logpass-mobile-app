@@ -117,7 +117,7 @@ class StartPage extends HookWidget {
   ) {
     state.maybeMap(
       successOTP: (state) {
-        AutoRouter.of(context).push(OTPCodePageRoute(verification: state.verification));
+        AutoRouter.of(context).push(OTPCodePageRoute(phoneNumber: state.phoneNumber, verification: state.verification));
       },
       successSignature: (state) {
         AutoRouter.of(context).replaceAll([const LoginSuccessPageRoute()]);

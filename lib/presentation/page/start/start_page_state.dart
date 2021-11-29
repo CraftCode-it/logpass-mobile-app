@@ -17,7 +17,7 @@ class StartPageState with _$StartPageState {
   @Implements(BuildState)
   factory StartPageState.processing() = _StartPageStateProcessing;
 
-  factory StartPageState.successOTP(SignUpVerification verification) = _StartPageStateSuccessOTP;
+  factory StartPageState.successOTP(String phoneNumber, SignUpVerification verification) = _StartPageStateSuccessOTP;
 
   factory StartPageState.successSignature() = _StartPageStateSuccessSignature;
 

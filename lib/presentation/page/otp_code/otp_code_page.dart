@@ -26,9 +26,11 @@ import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart'
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class OTPCodePage extends HookWidget {
+  final String phoneNumber;
   final SignUpVerification verification;
 
   const OTPCodePage({
+    required this.phoneNumber,
     required this.verification,
     Key? key,
   }) : super(key: key);
@@ -54,7 +56,7 @@ class OTPCodePage extends HookWidget {
     );
 
     useEffect(() {
-      cubit.initialize(verification);
+      cubit.initialize(phoneNumber, verification);
     }, [cubit]);
 
     return Scaffold(
