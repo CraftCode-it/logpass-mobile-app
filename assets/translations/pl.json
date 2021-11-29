@@ -81,7 +81,7 @@
     "emailScopeName": "Email",
     "emailScopeHint": "Wybierz email",
     "invoiceScopeName": "Dane do faktury",
-    "profileScopeName": "Dane profil",
+    "profileScopeName": "Dane profilu",
     "invoiceScopeHint": "Wybierz dane do faktury",
     "profileScopeHint": "Wybierz dane profilu",
     "serviceRules": "Zasady użytkowania",
