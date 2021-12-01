@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logpass_me/domain/incoming_actions/action_type.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/push_notifications/push_notifications_repository.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/mark_firebase_notification_as_received_use_case.dart';
 import 'package:mockito/annotations.dart';
@@ -23,12 +25,13 @@ void main() {
   });
 
   const notificationId = 'id';
+  final action = IncomingAction(ActionType.authorize(), 'id', null);
 
   test('it calls with success', () async {
 
     when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) async {});
 
-    await markFirebaseNotificationAsReceivedUseCase(notificationId);
+    await markFirebaseNotificationAsReceivedUseCase(action);
 
     verify(pushNotificationsRepository.markNotificationAsReceived(notificationId)).called(1);
   });
@@ -38,6 +41,6 @@ void main() {
 
     when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) => throw expected);
 
-    expect(markFirebaseNotificationAsReceivedUseCase(notificationId), throwsA(expected));
+    expect(markFirebaseNotificationAsReceivedUseCase(action), throwsA(expected));
   });
 }

@@ -93,14 +93,12 @@ class MainPageCubit extends Cubit<MainPageState> {
   }
 
   Future<void> _markNotificationAsReceived(IncomingAction incomingAction) async {
-    if(incomingAction.actionId != null && incomingAction.isFromFirebase) {
-      try {
-        await _markFirebaseNotificationAsReceivedUseCase(incomingAction.actionId!);
-      } on GeneralConnectionError catch (e) {
-        Fimber.e('No connection', ex: e);
-      } catch (e, s) {
-        Fimber.e('Mark notification failed', ex: e, stacktrace: s);
-      }
+    try {
+      await _markFirebaseNotificationAsReceivedUseCase(incomingAction);
+    } on GeneralConnectionError catch (e) {
+      Fimber.e('No connection', ex: e);
+    } catch (e, s) {
+      Fimber.e('Mark notification failed', ex: e, stacktrace: s);
     }
   }
 
