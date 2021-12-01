@@ -54,7 +54,6 @@ class OTPCodePage extends HookWidget {
         state,
         context,
         messengerController,
-        otpReceivedCode,
       ),
     );
 
@@ -162,7 +161,6 @@ class OTPCodePage extends HookWidget {
     OTPCodePageState state,
     BuildContext context,
     MessengerController controller,
-    ValueNotifier<String> otpCodeNotifier,
   ) {
     state.maybeMap(
       connectionError: (state) => controller.showError(
@@ -175,7 +173,6 @@ class OTPCodePage extends HookWidget {
         );
       },
       tooManyAttempts: (state) => controller.showError(state.message),
-      otpAutofill: (state) => otpCodeNotifier.value = state.code,
       resendSuccess: (_) => controller.showInfo(
         tr(LocaleKeys.otpCode_codeResendSuccess),
       ),
