@@ -25,9 +25,9 @@ void main() {
   });
 
   const notificationId = 'id';
-  final action = IncomingAction(ActionType.authorize(), 'id', null);
 
-  test('it calls with success', () async {
+  test('it executes when id is not null and notification is from firebase', () async {
+    final action = IncomingAction(ActionType.authorize(), 'id', null, true);
 
     when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) async {});
 
@@ -36,7 +36,38 @@ void main() {
     verify(pushNotificationsRepository.markNotificationAsReceived(notificationId)).called(1);
   });
 
-  test('it throws error on failure', () async {
+  test('it does not execute when id is not null and notification is not from firebase', () async {
+    final action = IncomingAction(ActionType.authorize(), 'id', null, false);
+
+    when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) async {});
+
+    await markFirebaseNotificationAsReceivedUseCase(action);
+
+    verifyNever(pushNotificationsRepository.markNotificationAsReceived(notificationId));
+  });
+
+  test('it does not execute when id is null and notification is not from firebase', () async {
+    final action = IncomingAction(ActionType.authorize(), null, null, false);
+
+    when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) async {});
+
+    await markFirebaseNotificationAsReceivedUseCase(action);
+
+    verifyNever(pushNotificationsRepository.markNotificationAsReceived(notificationId));
+  });
+
+  test('it does not execute when id is null but notification is from firebase', () async {
+    final action = IncomingAction(ActionType.authorize(), null, null, true);
+
+    when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) async {});
+
+    await markFirebaseNotificationAsReceivedUseCase(action);
+
+    verifyNever(pushNotificationsRepository.markNotificationAsReceived(notificationId));
+  });
+
+  test('it throws error during executing when action is from firebase', () async {
+    final action = IncomingAction(ActionType.authorize(), 'id', null, true);
     final expected = Error();
 
     when(pushNotificationsRepository.markNotificationAsReceived(notificationId)).thenAnswer((_) => throw expected);
