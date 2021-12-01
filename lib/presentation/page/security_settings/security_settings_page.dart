@@ -86,7 +86,12 @@ class SecuritySettingsPage extends HookWidget {
     final success = await AutoRouter.of(context).push(const NewPinPageRoute());
     if (success == true) {
       await cubit.applySecurityChange(type);
-      await AutoRouter.of(context).push(PinSuccessPageRoute(route: const SecuritySettingsPageRoute()));
+      await AutoRouter.of(context).push(
+        PinSuccessPageRoute(
+          title: LocaleKeys.pinSuccess_set.tr(),
+          route: const SecuritySettingsPageRoute()
+        )
+      );
     }
   }
 
@@ -193,7 +198,12 @@ class _Content extends HookWidget {
       final pinCodeSet = await AutoRouter.of(context).push(const NewPinPageRoute());
 
       if (pinCodeSet == true) {
-        await AutoRouter.of(context).push(PinSuccessPageRoute(route: const SecuritySettingsPageRoute()));
+        await AutoRouter.of(context).push(
+          PinSuccessPageRoute(
+            title: LocaleKeys.pinSuccess_changed.tr(),
+            route: const SecuritySettingsPageRoute()
+          )
+        );
       }
     }
   }

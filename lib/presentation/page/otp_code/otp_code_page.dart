@@ -29,9 +29,11 @@ import 'package:sms_user_consent/sms_user_consent.dart';
 final _codeRegexp = RegExp(r'[0-9]{6}');
 
 class OTPCodePage extends HookWidget {
+  final String phoneNumber;
   final SignUpVerification verification;
 
   const OTPCodePage({
+    required this.phoneNumber,
     required this.verification,
     Key? key,
   }) : super(key: key);
@@ -64,7 +66,7 @@ class OTPCodePage extends HookWidget {
     });
 
     useEffect(() {
-      cubit.initialize(verification);
+      cubit.initialize(phoneNumber, verification);
     }, [cubit]);
 
     useEffect(() {

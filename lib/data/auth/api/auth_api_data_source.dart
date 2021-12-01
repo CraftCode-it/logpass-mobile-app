@@ -35,4 +35,7 @@ abstract class _AuthApiDataSource {
 
   @DELETE('/users/login-attempts/{tokenId}/')
   Future<void> revokeAccessToken(@Path('tokenId') String tokenId);
+
+  @POST('/auth/users/login-attempts/{loginAttemptId}/retries/')
+  Future<InitializeLoginResultDTO> retryLoginProcess(@Path('loginAttemptId') String attemptId);
 }

@@ -12,8 +12,9 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class PinSuccessPage extends HookWidget {
   final PageRouteInfo route;
+  final String title;
 
-  const PinSuccessPage({required this.route, Key? key}) : super(key: key);
+  const PinSuccessPage({required this.route, required this.title, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class PinSuccessPage extends HookWidget {
             children: [
               const SizedBox(height: AppDimens.xl),
               Text(
-                LocaleKeys.pinSuccess_header,
+                title,
                 style: typography.h7.copyWith(color: colors.textSpecial),
               ).tr(),
               Expanded(

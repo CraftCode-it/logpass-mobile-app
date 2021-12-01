@@ -49,7 +49,7 @@
   },
   "start": {
     "title": "Rejestracja",
-    "termsAcceptInfo": "Rejestrując się, akceptuję",
+    "termsAcceptInfo": "Rejestrując się, akceptuję ",
     "termsAcceptHighlight": "warunki użytkowania",
     "helpAction": "Pomoc",
     "addNewDeviceAction": "Dodaj nowe urządzenie",
@@ -133,7 +133,8 @@
     "info": "Wprowadź ponownie PIN"
   },
   "pinSuccess": {
-    "header": "Ustawienie kodu PIN zakończyło się pomyślnie"
+    "set": "Ustawienie kodu PIN zakończyło się pomyślnie",
+    "changed": "Zmiana kodu PIN zakończyło się pomyślnie"
   },
   "securedLogin": {
     "header": "Witamy ponownie!",
@@ -208,7 +209,7 @@
     "security": "Bezpieczeństwo",
     "darkMode": "Tryb ciemny",
     "language": "Język",
-    "terms": "warunki użytkowania",
+    "terms": "Warunki użytkowania",
     "help": "Pomoc",
     "logout": "Wyloguj się"
   },
@@ -234,9 +235,11 @@
     "title": "Twoje dane",
     "personalData": "Dane osobowe",
     "emails": "Emaile",
+    "phone": "Phone",
     "addresses": "Adres",
     "invoiceData": "Dane do faktury",
     "addNewOption": "Dodaj nowe",
+    "phoneEmpty": "To konto nie ma przypisanego żadnego numeru telefonu.",
     "personalDataEmptyList": "To konto nie ma przypisanych danych osobowych. ",
     "emailEmptyList": "To konto nie ma przypisanego żadnego adresu email. ",
     "addressesEmptyList": "To konto nie ma przypisanego żadnego adresu.",
