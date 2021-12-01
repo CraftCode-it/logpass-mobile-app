@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:clock/clock.dart';
@@ -13,8 +12,6 @@ import 'package:logpass_me/domain/networking/error/general_connection_error.dart
 import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:sms_user_consent/sms_user_consent.dart';
-
-final _codeRegexp = RegExp(r'[0-9]{6}');
 
 @Injectable()
 class OTPCodePageCubit extends Cubit<OTPCodePageState> {
@@ -40,7 +37,6 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   @override
   Future<void> close() async {
-    smsUserConsent.dispose();
     await _codeSubscription?.cancel();
     return super.close();
   }
@@ -48,9 +44,6 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   Future<void> initialize(SignUpVerification verification) async {
     _signUpVerification = verification;
     _resendTimestamp = clock.now().add(resendDelayDuration);
-
-    smsUserConsent = SmsUserConsent(smsListener: _listenSmsCode);
-    smsUserConsent.requestSms();
 
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
   }
@@ -110,16 +103,5 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   void _emitIdleState({String? error}) {
     final isValid = _code.length == otpCodeLength;
     emit(OTPCodePageState.idle(_code, isValid, _resendTimestamp, codeError: error));
-  }
-
-  void _listenSmsCode() {
-    final sms = smsUserConsent.receivedSms;
-    if(sms == null) return;
-
-    final code = _codeRegexp.stringMatch(sms);
-
-    if(code != null && Platform.isAndroid) {
-      emit(OTPCodePageState.otpAutofill(code));
-    }
   }
 }

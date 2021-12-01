@@ -24,6 +24,9 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:sms_user_consent/sms_user_consent.dart';
+
+final _codeRegexp = RegExp(r'[0-9]{6}');
 
 class OTPCodePage extends HookWidget {
   final SignUpVerification verification;
@@ -35,6 +38,7 @@ class OTPCodePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    SmsUserConsent? smsUserConsent;
     final cubit = useCubit<OTPCodePageCubit>();
     final state = useCubitBuilder(cubit);
     final otpReceivedCode = useState('');
@@ -63,6 +67,17 @@ class OTPCodePage extends HookWidget {
     useEffect(() {
       cubit.initialize(verification);
     }, [cubit]);
+
+    useEffect(() {
+      if (Platform.isAndroid) {
+        smsUserConsent = SmsUserConsent(
+          smsListener: () => _handleSms(smsUserConsent, otpReceivedCode),
+        );
+        smsUserConsent?.requestSms();
+        return smsUserConsent?.dispose;
+      }
+      return () {};
+    }, [otpReceivedCode]);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -169,6 +184,14 @@ class OTPCodePage extends HookWidget {
       },
       orElse: () {},
     );
+  }
+
+  void _handleSms(SmsUserConsent? smsUserConsent, otpCodeNotifier) {
+    if(smsUserConsent != null && smsUserConsent.receivedSms != null) {
+      final code = _codeRegexp.stringMatch(smsUserConsent.receivedSms!);
+
+      otpCodeNotifier.value = code;
+    }
   }
 }
 
