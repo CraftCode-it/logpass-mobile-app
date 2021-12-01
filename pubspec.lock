@@ -819,13 +819,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.0"
-  pin_input_text_field:
-    dependency: transitive
-    description:
-      name: pin_input_text_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.0"
   pinput:
     dependency: "direct main"
     description:
@@ -992,13 +985,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  sms_autofill:
+  sms_user_consent:
     dependency: "direct main"
     description:
-      name: sms_autofill
+      name: sms_user_consent
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "0.1.0"
   socket_io:
     dependency: "direct main"
     description:
