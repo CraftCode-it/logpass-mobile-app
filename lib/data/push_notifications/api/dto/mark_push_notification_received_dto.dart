@@ -4,7 +4,6 @@ part 'mark_push_notification_received_dto.g.dart';
 
 @JsonSerializable()
 class MarkPushNotificationReceivedDTO {
-
   final String deliveredAt;
 
   MarkPushNotificationReceivedDTO(this.deliveredAt);

@@ -93,7 +93,7 @@ class MainPageCubit extends Cubit<MainPageState> {
   }
 
   Future<void> _markNotificationAsReceived(IncomingAction incomingAction) async {
-    if(incomingAction.actionId != null) {
+    if(incomingAction.actionId != null && incomingAction.isFromFirebase) {
       try {
         await _markFirebaseNotificationAsReceivedUseCase(incomingAction.actionId!);
       } on GeneralConnectionError catch (e) {
