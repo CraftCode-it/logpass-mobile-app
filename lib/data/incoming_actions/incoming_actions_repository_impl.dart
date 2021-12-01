@@ -8,7 +8,6 @@ import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_push_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
-import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_actions_repository.dart';
 
