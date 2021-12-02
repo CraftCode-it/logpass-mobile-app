@@ -381,10 +381,20 @@
   },
   "pastEvents": {
     "title": "Lista zdarzeń",
+    "noEvents": "Nie masz żadnych przeszłych zdarzeń.",
     "actionLabel": {
-      "authorize": "Autoryzacja",
-      "confirm": "Potwierdzenie",
-      "update": "Aktualizacja bezpieczeństwa"
+      "loginAttemptCreated": "Autoryzacja",
+      "loginAttemptVerificationFailed": "Autoryzacja",
+      "loginAttemptVerificationRetry": "Potwierdzenie",
+      "loginAttemptVerificationFinished": "Aktualizacja bezpieczeństwa",
+      "authorizationAttemptCreated": "Potwierdzenie",
+      "authorizationAttemptApproved": "Aktualizacja bezpieczeństwa",
+      "authorizationAttemptDenied": "Autoryzacja",
+      "agreementAccepted": "Autoryzacja",
+      "agreementRevoked": "Potwierdzenie",
+      "backupEntryCreated": "Aktualizacja bezpieczeństwa",
+      "backupEntryUpdated": "Potwierdzenie",
+      "backupEntryDeleted": "Autoryzacja"
     }
   },
   "trustLevelConfirmation": {

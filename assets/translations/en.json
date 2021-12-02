@@ -379,10 +379,20 @@
   },
   "pastEvents": {
     "title": "Events log",
+    "noEvents": "You have no any past events.",
     "actionLabel": {
-      "authorize": "Authorization",
-      "confirm": "Confirmation",
-      "update": "Security update"
+      "loginAttemptCreated": "Authorization",
+      "loginAttemptVerificationFailed": "Authorization",
+      "loginAttemptVerificationRetry": "Confirmation",
+      "loginAttemptVerificationFinished": "Security update",
+      "authorizationAttemptCreated": "Confirmation",
+      "authorizationAttemptApproved": "Security update",
+      "authorizationAttemptDenied": "Authorization",
+      "agreementAccepted": "Authorization",
+      "agreementRevoked": "Confirmation",
+      "backupEntryCreated": "Security update",
+      "backupEntryUpdated": "Confirmation",
+      "backupEntryDeleted": "Authorization"
     }
   },
   "trustLevelConfirmation": {
