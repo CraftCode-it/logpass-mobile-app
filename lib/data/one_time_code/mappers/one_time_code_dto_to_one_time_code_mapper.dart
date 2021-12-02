@@ -7,11 +7,14 @@ import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
 class OneTimeCodeDTOToOneTimeCodeMapper implements DataMapper<OneTimeCodeDTO, OneTimeCode> {
   @override
   OneTimeCode call(OneTimeCodeDTO data) {
+    final expirationSec = _getExpirationInSec(data.data.expiresIn);
+    final expirationTime = DateTime.now().add(expirationSec);
+
     return OneTimeCode(
       data.data.code,
-      _getExpirationInSec(data.data.expiresIn),
+      expirationSec,
       data.data.generatedAt.toLocal(),
-      data.data.validUntil.toLocal(),
+      expirationTime,
     );
   }
 
