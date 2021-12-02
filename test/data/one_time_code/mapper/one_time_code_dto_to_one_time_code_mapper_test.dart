@@ -13,7 +13,7 @@ void main() {
 
   const expiresIn = 2;
   final createdDate = DateTime(2021, 12, 2, 12, 00, 00);
-  final expirationDate = DateTime(2021, 12, 2, 12, 02, 00);
+  final expirationDate = DateTime(2022, 12, 2, 12, 35, 00);
 
   test('returns mapped oneTimeCode model', () async {
 
@@ -24,7 +24,7 @@ void main() {
         final oneTimeCodeDTO = OneTimeCodeDTO(data);
 
         final action = mapper(oneTimeCodeDTO);
-        final expectedExpiration = createdDate.add(const Duration(seconds: expiresIn));
+        final expectedExpiration = DateTime(2021, 12, 2, 12, 00, 02);
 
         expect(
             action,
