@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/common/data_mapper.dart';
 import 'package:logpass_me/data/one_time_code/dtos/one_time_code_dto.dart';
@@ -8,7 +9,7 @@ class OneTimeCodeDTOToOneTimeCodeMapper implements DataMapper<OneTimeCodeDTO, On
   @override
   OneTimeCode call(OneTimeCodeDTO data) {
     final expirationSec = _getExpirationInSec(data.data.expiresIn);
-    final expirationTime = DateTime.now().add(expirationSec);
+    final expirationTime = clock.now().add(expirationSec);
 
     return OneTimeCode(
       data.data.code,
