@@ -10,9 +10,6 @@ class GetOAuthApplicationDetailsUseCase {
   GetOAuthApplicationDetailsUseCase(this._repository);
 
   Future<OAuthApplication> call(String authorizationAttemptId) async {
-    final applicationDetails = await  _repository.getOAuthApplicationDetails(authorizationAttemptId);
-
-    applicationDetails.scopesRequested.add(Scope.profile);
-    return applicationDetails;
+    return await  _repository.getOAuthApplicationDetails(authorizationAttemptId);
   }
 }

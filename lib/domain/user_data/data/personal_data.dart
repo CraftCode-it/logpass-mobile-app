@@ -20,6 +20,23 @@ class PersonalData implements DefaultData {
   @override
   String toString() => '$name $surname';
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is PersonalData &&
+              other.name == name &&
+              other.surname == surname &&
+              other.isDefault == isDefault &&
+              other.uuid == uuid;
+
+  @override
+  int get hashCode {
+    return name.hashCode ^
+    surname.hashCode ^
+    uuid.hashCode ^
+    isDefault.hashCode;
+  }
+
   PersonalData copyWith({
     String? name,
     String? surname,

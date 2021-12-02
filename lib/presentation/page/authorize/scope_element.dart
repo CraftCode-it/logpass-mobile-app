@@ -3,6 +3,7 @@ import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/email.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 
 part 'scope_element.freezed.dart';
 
@@ -38,6 +39,15 @@ class ScopeElement with _$ScopeElement {
     bool isRequired, {
     Address? address,
   }) = ScopeElementAddress;
+
+  const factory ScopeElement.profile(
+    Scope scope,
+    String name,
+    String hint,
+    String imagePath,
+    bool isRequired, {
+    PersonalData? personalData,
+  }) = ScopeElementProfile;
 }
 
 extension SubmitCheck on ScopeElement {
@@ -52,6 +62,9 @@ extension SubmitCheck on ScopeElement {
       invoice: (state) {
         return state.invoiceData != null;
       },
+      profile: (state) {
+        return state.personalData != null;
+      }
     );
     return !isRequired || isRequired && hasData;
   }
