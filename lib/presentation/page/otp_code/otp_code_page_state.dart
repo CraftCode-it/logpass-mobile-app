@@ -25,6 +25,8 @@ class OTPCodePageState with _$OTPCodePageState {
 
   factory OTPCodePageState.success() = _OTPCodePageStateSuccess;
 
+  factory OTPCodePageState.otpAutofill(String code) = _OTPCodePageStateOTPAutofill;
+
   factory OTPCodePageState.resendSuccess() = _OTPCodePageStateResendSuccess;
 
   factory OTPCodePageState.accountAlreadyExists() = _OTPCodePageStateAccountAlreadyExists;

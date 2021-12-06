@@ -66,7 +66,7 @@ void main() {
         ),
         InitializeLoginResultDataDTO(
           'id',
-          'otp_code',
+          'sms_code',
           null,
         ),
       );
@@ -74,7 +74,7 @@ void main() {
       final expected = SignUpVerification('id', VerificationMethod.otpCode, 'https://some.url/verify', null);
 
       when(authApiDataSource.initializeLoginProcess(any)).thenAnswer((realInvocation) async => apiResult);
-      when(verificationMethodMapper.to('otp_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
+      when(verificationMethodMapper.to('sms_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
 
       final actual = await authRepositoryImpl.signUp(phoneNumber, verifyKey, publicKey);
 
@@ -158,7 +158,7 @@ void main() {
         ),
         InitializeLoginResultDataDTO(
           'abcd==',
-          'otp_code',
+          'sms_code',
           null,
         ),
       );
@@ -166,7 +166,7 @@ void main() {
       final expected = SignUpVerification('abcd==', VerificationMethod.otpCode, 'https://some.url/verify', null);
 
       when(authApiDataSource.retryLoginProcess(any)).thenAnswer((realInvocation) async => apiResult);
-      when(verificationMethodMapper.to('otp_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
+      when(verificationMethodMapper.to('sms_code')).thenAnswer((realInvocation) => VerificationMethod.otpCode);
 
       final actual = await authRepositoryImpl.retrySignUp(id);
 
