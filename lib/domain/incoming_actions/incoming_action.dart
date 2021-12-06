@@ -3,11 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 
 class IncomingAction {
+  final bool isFromFirebase;
   final ActionType actionType;
   final String? actionId;
   final Map<String, String>? queryParameters;
 
-  IncomingAction(this.actionType, this.actionId, this.queryParameters);
+  IncomingAction(this.actionType, this.actionId, this.queryParameters, [this.isFromFirebase = true]);
 
   @override
   bool operator ==(Object other) {

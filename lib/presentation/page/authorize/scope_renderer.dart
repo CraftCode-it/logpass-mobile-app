@@ -50,6 +50,15 @@ class ScopeRenderer {
                 requestedScopes.contains(e),
                 invoiceData: invoiceData,
               );
+            case Scope.profile:
+              return ScopeElement.profile(
+                e,
+                LocaleKeys.authorize_profileScopeName.tr(),
+                LocaleKeys.authorize_profileScopeHint.tr(),
+                AppIcon.personalData,
+                requestedScopes.contains(e),
+                personalData: personalData,
+              );
             default:
               break;
           }

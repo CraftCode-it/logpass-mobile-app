@@ -18,4 +18,6 @@ abstract class PushNotificationsRepository {
   Future<void> deactivateDevice(String token);
 
   Future<void> updateDevice(PushNotificationDevice updatedDevice);
+
+  Future<void> markNotificationAsReceived(String notificationId);
 }

@@ -60,13 +60,13 @@ class IncomingActionDTOToIncomingActionMapper implements DataMapper<IncomingActi
         final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
         final actionId = nonEmptyPathSegments[actionIdPathSegmentIndex];
 
-        return IncomingAction(actionType, actionId, null);
+        return IncomingAction(actionType, actionId, null, false);
       } else {
         final actionPathSegmentIndex = nonEmptyPathSegments.length - 1;
         final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
         final queryParameters = uri.queryParameters;
 
-        return IncomingAction(actionType, null, queryParameters);
+        return IncomingAction(actionType, null, queryParameters, false);
       }
     }
 

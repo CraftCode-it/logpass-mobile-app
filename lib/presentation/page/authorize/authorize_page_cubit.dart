@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -22,6 +24,7 @@ import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
 import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_invoice_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_personal_data_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/get_default_user_address_use_case.dart';
@@ -66,6 +69,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   int _requiredTrustLevel = 1;
 
   late IncomingAction _incomingAction;
+  late Locale _locale;
   String? _authorizationAttemptId;
   Map<String, String>? _authParameters;
 
@@ -96,7 +100,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getDefaultPersonalDataUseCase,
   ) : super(const AuthorizePageState.loading());
 
-  Future<void> init(IncomingAction incomingAction) async {
+  Future<void> init(IncomingAction incomingAction, Locale locale) async {
+    _locale = locale;
     _incomingAction = incomingAction;
     _authorizationAttemptId = incomingAction.actionId;
     _authParameters = incomingAction.queryParameters;
@@ -194,29 +199,36 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     return [..._scopeRequested, ...acceptedOptionalAgreements];
   }
 
-  ApproveAttemptArgs _prepareApproveAttemptArgs() {
+  Future<ApproveAttemptArgs> _prepareApproveAttemptArgs() async {
     String? _email;
     Address? _address;
     InvoiceData? _invoiceData;
+    PersonalData? _personalData;
 
     for (final element in _scopeElements) {
       element.maybeMap(
         email: (state) => _email = state.email?.value,
         address: (state) => _address = state.address,
         invoice: (state) => _invoiceData = state.invoiceData,
+        profile: (state) => _personalData = state.personalData,
         orElse: () {},
       );
     }
-    // TODO: handle after backend's implementation
-    final personalData = '';
+
+    final phoneNumber = await _getUserPhoneNumberUseCase();
+    final locale = _locale.toLanguageTag();
 
     return ApproveAttemptArgs(
       email: _email ?? 'john.smith@example.com',
       emailVerified: false,
-      name: personalData,
+      name: _personalData?.name,
+      surname: _personalData?.surname,
       extraScopes: _prepareExtraScopeList(),
       address: _address,
       invoice: _invoiceData,
+      phoneNumberVerified: true,
+      phoneNumber: phoneNumber,
+      locale: locale,
     );
   }
 
@@ -237,7 +249,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
 
       emit(const AuthorizePageState.loading());
 
-      final args = _prepareApproveAttemptArgs();
+      final args = await _prepareApproveAttemptArgs();
       final confirmation = await _approveOAuthAttemptUseCase(_authorizationAttemptId!, args);
       final redirectUri = _shouldRedirect ? confirmation.redirectUri : null;
 
