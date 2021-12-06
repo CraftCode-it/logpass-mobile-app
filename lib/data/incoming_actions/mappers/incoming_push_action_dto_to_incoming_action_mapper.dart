@@ -8,8 +8,9 @@ import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 class IncomingPushActionDTOToIncomingActionMapper implements DataMapper<PushNotificationMessageDTO, IncomingAction?> {
   @override
   IncomingAction? call(PushNotificationMessageDTO message) {
+
     final action =  message.maybeMap(
-      authorize: (data) => IncomingAction(ActionType.authorize(), data.body.id, null),
+      authorize: (data) => IncomingAction.createFromFirebase(ActionType.authorize(), data.body.id, null),
       orElse: () => null,
     );
     return action;

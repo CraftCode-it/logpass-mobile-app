@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/domain/actions_changed_notifier/use_case/listen_for_actions_change_use_case.dart';
+import 'package:logpass_me/domain/actions_changed_notifier/use_case/notify_actions_changed_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
@@ -16,6 +17,7 @@ part 'home_cubit.freezed.dart';
 
 @injectable
 class HomeCubit extends Cubit<HomeState> {
+  final NotifyActionsChangedUseCase _notifyActionsChangedUseCase;
   final SubscribeToIncomingActionsUseCase _subscribeToIncomingActionsUseCase;
   final ListenForActionsChangeUseCase _listenForActionsChangeUseCase;
   final SubscribeToIncomingActionsFromLinkUseCase _subscribeToIncomingActionsFromLinkUseCase;
@@ -26,6 +28,7 @@ class HomeCubit extends Cubit<HomeState> {
   StreamSubscription<IncomingAction>? _actionsChangedSubscription;
 
   HomeCubit(
+    this._notifyActionsChangedUseCase,
     this._subscribeToIncomingActionsUseCase,
     this._listenForActionsChangeUseCase,
     this._subscribeToIncomingActionsFromLinkUseCase,
@@ -42,6 +45,10 @@ class HomeCubit extends Cubit<HomeState> {
   void emitCopyInformation() {
     emit(const HomeState.codeCopied());
     _emitIdleState();
+  }
+
+  void removeAction(IncomingAction action) {
+    _notifyActionsChangedUseCase(action);
   }
 
   void _subscribeToChangedActionsState() {
