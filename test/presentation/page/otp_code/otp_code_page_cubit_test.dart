@@ -7,28 +7,20 @@ import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart
 import 'package:logpass_me/domain/auth/use_case/retry_sign_up_sms_code_use_case.dart';
 import 'package:logpass_me/domain/auth/verification_method.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
+import 'package:logpass_me/domain/sms_code/use_case/dispose_sms_code_listener_use_case.dart';
+import 'package:logpass_me/domain/sms_code/use_case/listen_sms_code_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 import 'otp_code_page_cubit_test.mocks.dart';
 
-class FakeSmsAutofill extends Fake implements SmsAutoFill {
-  @override
-  Stream<String> get code => const Stream.empty();
-
-  @override
-  Future<void> unregisterListener() => Future.value();
-
-  @override
-  Future<void> get listenForCode => Future.value();
-}
-
 @GenerateMocks(
   [
+    ListenSmsCodeUseCase,
+    DisposeSmsCodeListenerUseCase,
     VerifyOTPSignUpUseCase,
     RetrySignUpSmsCodeUseCase,
     SignUpUsingOTPCodeUseCase,
@@ -36,19 +28,25 @@ class FakeSmsAutofill extends Fake implements SmsAutoFill {
   ],
 )
 void main() {
+  late MockListenSmsCodeUseCase listenSmsCodeUseCase;
+  late MockDisposeSmsCodeListenerUseCase disposeSmsCodeListenerUseCase;
   late MockVerifyOTPSignUpUseCase verifyOTPSignUpUseCase;
   late MockRetrySignUpSmsCodeUseCase retrySignUpSmsCodeUseCase;
-  late MockSignUpUsingOTPCodeUseCase signUpUsingOTPCodeUseCase;
   late MockSaveUserPhoneNumberUseCase saveUserPhoneNumberUseCase;
   late OTPCodePageCubit cubit;
 
   setUp(() {
+    listenSmsCodeUseCase = MockListenSmsCodeUseCase();
+    disposeSmsCodeListenerUseCase = MockDisposeSmsCodeListenerUseCase();
     verifyOTPSignUpUseCase = MockVerifyOTPSignUpUseCase();
     retrySignUpSmsCodeUseCase = MockRetrySignUpSmsCodeUseCase();
-    signUpUsingOTPCodeUseCase = MockSignUpUsingOTPCodeUseCase();
     saveUserPhoneNumberUseCase = MockSaveUserPhoneNumberUseCase();
     cubit = OTPCodePageCubit(
-        verifyOTPSignUpUseCase, retrySignUpSmsCodeUseCase, saveUserPhoneNumberUseCase, FakeSmsAutofill());
+        listenSmsCodeUseCase,
+        disposeSmsCodeListenerUseCase,
+        verifyOTPSignUpUseCase,
+        retrySignUpSmsCodeUseCase,
+        saveUserPhoneNumberUseCase);
   });
 
   final nowDateTime = DateTime(2021);
@@ -67,6 +65,7 @@ void main() {
 
   group('updateCode', () {
     setUp(() {
+      when(listenSmsCodeUseCase()).thenAnswer((_) => Stream.value(''));
       withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification));
     });
 
@@ -96,6 +95,7 @@ void main() {
     final newVerification = SignUpVerification('id', VerificationMethod.otpCode, 'https://url/2', null);
 
     setUp(() {
+      when(listenSmsCodeUseCase()).thenAnswer((_) => Stream.value(''));
       withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification));
     });
 
@@ -166,6 +166,7 @@ void main() {
 
   group('verify', () {
     setUp(() {
+      when(listenSmsCodeUseCase()).thenAnswer((_) => Stream.value(''));
       withClock(Clock.fixed(nowDateTime), () => cubit.initialize(phoneNumber, verification));
     });
 

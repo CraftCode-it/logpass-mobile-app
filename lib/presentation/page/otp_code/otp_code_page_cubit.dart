@@ -9,38 +9,39 @@ import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/auth/use_case/verify_otp_sign_up_use_case.dart';
 import 'package:logpass_me/domain/auth/use_case/retry_sign_up_sms_code_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
+import 'package:logpass_me/domain/sms_code/use_case/dispose_sms_code_listener_use_case.dart';
+import 'package:logpass_me/domain/sms_code/use_case/listen_sms_code_use_case.dart';
 import 'package:logpass_me/domain/user_data/use_case/save_user_phone_number_use_case.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 @Injectable()
 class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   static const otpCodeLength = 6;
   static const resendDelayDuration = Duration(minutes: 1);
 
+  final ListenSmsCodeUseCase _listenSmsCodeUseCase;
+  final DisposeSmsCodeListenerUseCase _disposeSmsCodeListenerUseCase;
   final VerifyOTPSignUpUseCase _verifyOTPSignUpUseCase;
   final RetrySignUpSmsCodeUseCase _retrySignUpSmsCodeUseCase;
   final SaveUserPhoneNumberUseCase _saveUserPhoneNumberUseCase;
-  final SmsAutoFill _smsAutoFill;
 
-  late String _phoneNumber;
   late SignUpVerification _signUpVerification;
+  late String _phoneNumber;
   late DateTime _resendTimestamp;
 
-  StreamSubscription? _codeSubscription;
   String _code = '';
 
   OTPCodePageCubit(
+    this._listenSmsCodeUseCase,
+    this._disposeSmsCodeListenerUseCase,
     this._verifyOTPSignUpUseCase,
     this._retrySignUpSmsCodeUseCase,
     this._saveUserPhoneNumberUseCase,
-    this._smsAutoFill,
   ) : super(OTPCodePageState.loading());
 
   @override
   Future<void> close() async {
-    await _codeSubscription?.cancel();
-    await _smsAutoFill.unregisterListener();
+    await _disposeSmsCodeListenerUseCase();
     return super.close();
   }
 
@@ -49,13 +50,9 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     _phoneNumber = phoneNumber;
     _resendTimestamp = clock.now().add(resendDelayDuration);
 
-    await _smsAutoFill.listenForCode;
-    _codeSubscription = _smsAutoFill.code.listen((event) {
-      emit(OTPCodePageState.otpAutofill(event));
-      updateCode(event);
-    });
-
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
+
+    _listenSmsCode();
   }
 
   void updateCode(String? code) {
@@ -113,5 +110,11 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   void _emitIdleState({String? error}) {
     final isValid = _code.length == otpCodeLength;
     emit(OTPCodePageState.idle(_code, isValid, _resendTimestamp, codeError: error));
+  }
+
+  void _listenSmsCode() {
+    _listenSmsCodeUseCase().listen((code) {
+      emit(OTPCodePageState.otpAutofill(code));
+    });
   }
 }

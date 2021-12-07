@@ -24,6 +24,7 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:sms_user_consent/sms_user_consent.dart';
 
 class OTPCodePage extends HookWidget {
   final String phoneNumber;
@@ -39,6 +40,7 @@ class OTPCodePage extends HookWidget {
   Widget build(BuildContext context) {
     final cubit = useCubit<OTPCodePageCubit>();
     final state = useCubitBuilder(cubit);
+    final otpReceivedCode = useState('');
     final colors = useAppThemeColors();
     final typography = useAppTypography();
     final otpCodeController = useTextEditingController();
@@ -50,10 +52,16 @@ class OTPCodePage extends HookWidget {
         cubit,
         state,
         context,
-        otpCodeController,
         messengerController,
+        otpReceivedCode
       ),
     );
+
+    useEffect(() {
+      otpCodeController.addListener(() {
+        cubit.updateCode(otpCodeController.text);
+      });
+    });
 
     useEffect(() {
       cubit.initialize(phoneNumber, verification);
@@ -86,7 +94,11 @@ class OTPCodePage extends HookWidget {
                           style: typography.body1,
                         ).tr(),
                         const SizedBox(height: AppDimens.xl),
-                        _CodeField(cubit: cubit, state: state),
+                        _CodeField(
+                          state: state,
+                          cubit: cubit,
+                          otpCodeController: otpCodeController,
+                        ),
                         const SizedBox(height: AppDimens.xxl),
                         _VerifyButton(state: state, cubit: cubit),
                         const SizedBox(height: AppDimens.xl),
@@ -107,6 +119,23 @@ class OTPCodePage extends HookWidget {
                       left: AppDimens.zero,
                       child: DoneKeyboardButton(),
                     ),
+
+                  if (isKeyboardVisible && Platform.isAndroid)... [
+                    Positioned(
+                      bottom: AppDimens.zero,
+                      right: AppDimens.zero,
+                      left: AppDimens.zero,
+                      child: ReceivedCodeKeyboardButton(
+                        otpReceivedCode: otpReceivedCode.value,
+                        onCodeClick: (code) {
+                          otpCodeController.text = code;
+                          otpCodeController.selection = TextSelection.fromPosition(
+                              TextPosition(offset: code.length)
+                          );
+                        },
+                      ),
+                    ),
+                  ]
                 ],
               );
             },
@@ -120,13 +149,14 @@ class OTPCodePage extends HookWidget {
     OTPCodePageCubit cubit,
     OTPCodePageState state,
     BuildContext context,
-    TextEditingController otpController,
     MessengerController controller,
+    ValueNotifier<String> otpReceivedCode,
   ) {
     state.maybeMap(
       connectionError: (state) => controller.showError(
         getConnectionErrorString(state.error),
       ),
+      otpAutofill: (state) => otpReceivedCode.value = state.code,
       success: (state) {
         AutoRouter.of(context).pushAndPopUntil(
           const LoginSuccessPageRoute(),
@@ -134,7 +164,6 @@ class OTPCodePage extends HookWidget {
         );
       },
       tooManyAttempts: (state) => controller.showError(state.message),
-      otpAutofill: (state) => otpController.text = state.code,
       resendSuccess: (_) => controller.showInfo(
         tr(LocaleKeys.otpCode_codeResendSuccess),
       ),
@@ -149,10 +178,12 @@ class OTPCodePage extends HookWidget {
 class _CodeField extends HookWidget {
   final OTPCodePageCubit cubit;
   final OTPCodePageState state;
+  final TextEditingController otpCodeController;
 
   const _CodeField({
-    required this.state,
     required this.cubit,
+    required this.state,
+    required this.otpCodeController,
     Key? key,
   }) : super(key: key);
 
@@ -176,6 +207,7 @@ class _CodeField extends HookWidget {
         inputType: TextInputType.phone,
         error: error,
         formatters: [mask],
+        controller: otpCodeController,
       );
 }
 
@@ -237,5 +269,53 @@ class _ResendButton extends StatelessWidget {
       text: tr(LocaleKeys.otpCode_resendAction),
       onPressed: enabled ? () => cubit.resendCode() : null,
     );
+  }
+}
+
+class ReceivedCodeKeyboardButton extends HookWidget {
+  final String otpReceivedCode;
+  final Function(String code) onCodeClick;
+
+  const ReceivedCodeKeyboardButton({
+    required this.otpReceivedCode,
+    required this.onCodeClick,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+    final separateIndex = useMemoized(() => OTPCodePageCubit.otpCodeLength ~/ 2);
+
+    return otpReceivedCode.isNotEmpty ? Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimens.m),
+      decoration: BoxDecoration(
+        color: colors.background,
+        border: Border(
+          top: BorderSide(
+            color: colors.dividerLight,
+          ),
+        ),
+      ),
+      child: Align(
+        alignment: Alignment.center,
+        child: TextButton(
+          style: ButtonStyle(
+            overlayColor: MaterialStateColor.resolveWith(
+                  (states) => colors.text.withOpacity(0.15),
+            ),
+          ),
+          onPressed: () {
+            final formattedCode = otpReceivedCode.substring(0, separateIndex) + '-'
+                + otpReceivedCode.substring(separateIndex, otpReceivedCode.length);
+            onCodeClick(formattedCode);
+          },
+          child: Text(
+            otpReceivedCode,
+            style: typography.info1,
+          ),
+        ),
+      ),
+    ) : const SizedBox();
   }
 }

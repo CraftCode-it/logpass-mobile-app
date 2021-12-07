@@ -47,7 +47,7 @@ dependencies:
   libphonenumber: 2.0.2
   flutter_keyboard_visibility: 5.0.3
   pinput: 1.2.0
-  sms_autofill: 2.1.2
+  sms_user_consent: ^0.1.0
   clock: 1.1.0
   local_auth: 1.1.7
   web_socket_channel: 2.1.0
