@@ -13,6 +13,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
@@ -102,7 +103,7 @@ class _HomePageContent extends HookWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                  child: _PendingActions(state, isSmallSize),
+                  child: _PendingActions(cubit, state, isSmallSize),
                 ),
               ),
             ],
@@ -114,10 +115,11 @@ class _HomePageContent extends HookWidget {
 }
 
 class _PendingActions extends HookWidget {
+  final HomeCubit cubit;
   final HomeState state;
   final bool isSmallSize;
 
-  const _PendingActions(this.state, this.isSmallSize);
+  const _PendingActions(this.cubit, this.state, this.isSmallSize);
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +136,7 @@ class _PendingActions extends HookWidget {
           ),
           SizedBox(height: isSmallSize ? AppDimens.zero : AppDimens.s),
           state.maybeWhen(
-            idle: (pendingActions) => _PendingItemsList(pendingActions),
+            idle: (pendingActions) => _PendingItemsList(pendingActions, cubit),
             orElse: () => const SizedBox.shrink(),
             loadInProgress: () => const Loader(),
           ),
@@ -148,9 +150,10 @@ class _PendingActions extends HookWidget {
 }
 
 class _PendingItemsList extends HookWidget {
+  final HomeCubit cubit;
   final List<IncomingAction> pendingActions;
 
-  const _PendingItemsList(this.pendingActions);
+  const _PendingItemsList(this.pendingActions, this.cubit);
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +165,9 @@ class _PendingItemsList extends HookWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return _PendingItem(pendingActions[index]);
+              return _PendingItem(pendingActions[index], (action) {
+                cubit.removeAction(action);
+              });
             },
             itemCount: pendingActions.length,
           )
@@ -179,13 +184,27 @@ class _PendingItemsList extends HookWidget {
 
 class _PendingItem extends HookWidget {
   final IncomingAction action;
+  final Function(IncomingAction action) onRemove;
 
-  const _PendingItem(this.action);
+  const _PendingItem(this.action, this.onRemove);
 
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
     final colors = useAppThemeColors();
+    final countDownValue = useState('');
+
+    final tickerProvider = useSingleTickerProvider();
+
+    useEffect(() {
+      final ticker = tickerProvider.createTicker((_) {
+        _verifyExpirationActionTime(countDownValue);
+      });
+
+      ticker.start();
+
+      return ticker.dispose;
+    }, [tickerProvider, countDownValue]);
 
     return InkWell(
       onTap: () {
@@ -249,9 +268,8 @@ class _PendingItem extends HookWidget {
                     ],
                   ),
                   const SizedBox(height: AppDimens.s),
-                  // TODO: replace it with remaining time value
                   Text(
-                    LocaleKeys.home_pendingItemTimeLeft.tr(args: ['5:00 min']),
+                    LocaleKeys.home_pendingItemTimeLeft.tr(args: [countDownValue.value]),
                     style: typography.info2,
                   ),
                 ],
@@ -261,6 +279,14 @@ class _PendingItem extends HookWidget {
         ),
       ),
     );
+  }
+
+  void _verifyExpirationActionTime(ValueNotifier<String> countDownValue) {
+    countDownValue.value = action.expirationTime.toCountdown();
+
+    if(action.isExpired) {
+      onRemove(action);
+    }
   }
 }
 

@@ -42,10 +42,10 @@ class IncomingActionDTOToIncomingActionMapper implements DataMapper<IncomingActi
 
     if (isShortUri) {
       final actionId = uri.pathSegments.isNotEmpty ? uri.pathSegments.first : throw Exception('Lack of action id');
-      return IncomingAction(actionType, actionId, null);
+      return IncomingAction.createFromWebSocket(actionType, actionId, null);
     } else {
       final queryParameters = uri.queryParameters;
-      return IncomingAction(actionType, null, queryParameters);
+      return IncomingAction.createFromWebSocket(actionType, null, queryParameters);
     }
   }
 
@@ -60,13 +60,13 @@ class IncomingActionDTOToIncomingActionMapper implements DataMapper<IncomingActi
         final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
         final actionId = nonEmptyPathSegments[actionIdPathSegmentIndex];
 
-        return IncomingAction(actionType, actionId, null, false);
+        return IncomingAction.createFromWebSocket(actionType, actionId, null);
       } else {
         final actionPathSegmentIndex = nonEmptyPathSegments.length - 1;
         final actionType = _mapActionType(nonEmptyPathSegments[actionPathSegmentIndex]);
         final queryParameters = uri.queryParameters;
 
-        return IncomingAction(actionType, null, queryParameters, false);
+        return IncomingAction.createFromWebSocket(actionType, null, queryParameters);
       }
     }
 

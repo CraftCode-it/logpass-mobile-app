@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
@@ -6,9 +7,34 @@ class IncomingAction {
   final bool isFromFirebase;
   final ActionType actionType;
   final String? actionId;
+  final DateTime expirationTime;
   final Map<String, String>? queryParameters;
 
-  IncomingAction(this.actionType, this.actionId, this.queryParameters, [this.isFromFirebase = true]);
+  const IncomingAction._(this.actionType, this.actionId, this.queryParameters, this.expirationTime, this.isFromFirebase);
+
+  factory IncomingAction.createFromFirebase(
+    ActionType actionType,
+    String? actionId,
+    Map<String, String>? queryParameters,
+  ) => IncomingAction._(
+        actionType,
+        actionId,
+        queryParameters,
+        clock.now().add(const Duration(minutes: 5)),
+        true
+      );
+
+  factory IncomingAction.createFromWebSocket(
+    ActionType actionType,
+    String? actionId,
+    Map<String, String>? queryParameters,
+  ) => IncomingAction._(
+        actionType,
+        actionId,
+        queryParameters,
+        clock.now().add(const Duration(minutes: 5)),
+        false
+      );
 
   @override
   bool operator ==(Object other) {
@@ -22,4 +48,9 @@ class IncomingAction {
 
   @override
   int get hashCode => actionType.hashCode ^ actionId.hashCode ^ queryParameters.hashCode;
+
+  bool get isExpired {
+    final now = DateTime.now();
+    return now.millisecondsSinceEpoch >= expirationTime.millisecondsSinceEpoch;
+  }
 }
