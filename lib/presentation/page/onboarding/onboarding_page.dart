@@ -11,19 +11,22 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/page_indicator.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 class OnboardingPage extends HookWidget {
   static const _lastPageIndex = 2;
+  final String? logoutMessage;
 
-  const OnboardingPage({Key? key}) : super(key: key);
+  const OnboardingPage({this.logoutMessage, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final colors = useAppThemeColors();
     final controller = usePageController();
+    final messengerController = useMessengerController();
     final onboardingSteps = useMemoized(
       () => [
         OnboardingStep(
@@ -54,51 +57,59 @@ class OnboardingPage extends HookWidget {
     );
     final index = useState(0);
 
+    useEffect(() {
+      _showMessage(messengerController);
+    }, []);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
         backgroundColor: colors.darkBackground,
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _SkipButton(
-                  index: index.value,
-                  onSkip: _navigateToLoginPage,
-                ),
-                Expanded(
-                  child: PageView(
-                    controller: controller,
-                    onPageChanged: (page) => index.value = page,
-                    children: onboardingSteps,
+        body: Messenger(
+          floating: true,
+          controller: messengerController,
+          child: SafeArea(
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _SkipButton(
+                    index: index.value,
+                    onSkip: _navigateToLoginPage,
                   ),
-                ),
-                const SizedBox(height: AppDimens.xxl),
-                _NavigationButton(
-                  page: index.value,
-                  nextPressed: () => controller.nextPage(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
+                  Expanded(
+                    child: PageView(
+                      controller: controller,
+                      onPageChanged: (page) => index.value = page,
+                      children: onboardingSteps,
+                    ),
                   ),
-                  startPressed: () => _navigateToLoginPage(context),
-                ),
-                const SizedBox(height: AppDimens.l),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List<Widget>.generate(
-                      onboardingSteps.length,
-                      (indicatorIndex) => PageIndicator(
-                        isActive: index.value == indicatorIndex,
-                        activeColor: AppColors.secondary,
-                        inactiveColor: AppColors.secondary.withOpacity(0.5),
+                  const SizedBox(height: AppDimens.xxl),
+                  _NavigationButton(
+                    page: index.value,
+                    nextPressed: () => controller.nextPage(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                    ),
+                    startPressed: () => _navigateToLoginPage(context),
+                  ),
+                  const SizedBox(height: AppDimens.l),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List<Widget>.generate(
+                        onboardingSteps.length,
+                        (indicatorIndex) => PageIndicator(
+                          isActive: index.value == indicatorIndex,
+                          activeColor: AppColors.secondary,
+                          inactiveColor: AppColors.secondary.withOpacity(0.5),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: AppDimens.m),
-              ],
+                  const SizedBox(height: AppDimens.m),
+                ],
+              ),
             ),
           ),
         ),
@@ -107,6 +118,13 @@ class OnboardingPage extends HookWidget {
   }
 
   void _navigateToLoginPage(BuildContext context) => AutoRouter.of(context).replace(const StartPageRoute());
+
+  void _showMessage(MessengerController messengerController) {
+    if(logoutMessage != null) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) =>
+          messengerController.showInfo(logoutMessage!));
+    }
+  }
 }
 
 class _SkipButton extends HookWidget {

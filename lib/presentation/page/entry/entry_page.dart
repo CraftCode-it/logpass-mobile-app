@@ -8,7 +8,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:logpass_me/presentation/widget/hooks/app_life_cycyle_observer_hook.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 class EntryPage extends HookWidget {
@@ -40,7 +39,7 @@ class EntryPage extends HookWidget {
     state.maybeMap(
       onboarding: (_) async {
         await _precacheOnboardingImages(context);
-        await AutoRouter.of(context).replace(const OnboardingPageRoute());
+        await AutoRouter.of(context).replace(OnboardingPageRoute());
       },
       home: (_) => AutoRouter.of(context).replace(const MainPageRoute()),
       securedLogin: (_) => AutoRouter.of(context).replace(const SecuredLoginPageRoute()),
