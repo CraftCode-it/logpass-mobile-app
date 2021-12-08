@@ -111,6 +111,9 @@
     "header": "Gotowe!",
     "info": "Zalogowano pomyślnie"
   },
+  "logoutSuccess": {
+    "info": "Wyrejestrowano pomyślnie."
+  },
   "getSafer": {
     "title": "Zabezpiecz swoje dane",
     "info": "Wybierz metodę logowania, by mieć pewność, że tylko Ty masz dostęp do tego konta. ",

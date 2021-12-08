@@ -111,6 +111,9 @@
     "header": "Done!",
     "info": "You successfully accessed the account."
   },
+  "logoutSuccess": {
+    "info": "Checked out successfully."
+  },
   "getSafer": {
     "title": "Get safer",
     "info": "Choose preferred login method to be sure that only you have access to this account.",
