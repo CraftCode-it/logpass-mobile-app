@@ -4,19 +4,16 @@ class AppEnv {
 
   final String name;
   final String apiUrl;
-  final String wsUrl;
 
   AppEnv._(
     this.name, {
     required this.apiUrl,
-    required this.wsUrl,
   });
 
   factory AppEnv.development() {
     return AppEnv._(
       devName,
       apiUrl: 'https://api.logpass.dev/',
-      wsUrl: 'wss://ws.logpass.dev/',
     );
   }
 
@@ -24,7 +21,6 @@ class AppEnv {
     return AppEnv._(
       prodName,
       apiUrl: 'https://api.logpass.dev/',
-      wsUrl: 'wss://ws.logpass.dev/',
     );
   }
 }

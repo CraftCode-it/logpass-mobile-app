@@ -7,7 +7,7 @@ import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incomin
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
-import 'package:logpass_me/domain/push_notifications/use_case/mark_firebase_notification_as_received_use_case.dart';
+import 'package:logpass_me/domain/push_notifications/use_case/mark_notification_as_received_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/register_push_notification_device_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
@@ -27,7 +27,6 @@ import 'main_cubit_test.mocks.dart';
     GetQueuedIncomingActionUseCase,
     RegisterPushNotificationDeviceUseCase,
     SubscribeToIncomingActionsFromBackgroundUseCase,
-    MarkFirebaseNotificationAsReceivedUseCase
   ],
 )
 void main() {
@@ -39,7 +38,6 @@ void main() {
   late GetQueuedIncomingActionUseCase getQueuedIncomingActionUseCase;
   late RegisterPushNotificationDeviceUseCase registerPushNotificationDeviceUseCase;
   late SubscribeToIncomingActionsFromBackgroundUseCase subscribeToIncomingActionsFromBackgroundUseCase;
-  late MarkFirebaseNotificationAsReceivedUseCase markFirebaseNotificationAsReceivedUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
@@ -51,7 +49,6 @@ void main() {
     getQueuedIncomingActionUseCase = MockGetQueuedIncomingActionUseCase();
     registerPushNotificationDeviceUseCase = MockRegisterPushNotificationDeviceUseCase();
     subscribeToIncomingActionsFromBackgroundUseCase = MockSubscribeToIncomingActionsFromBackgroundUseCase();
-    markFirebaseNotificationAsReceivedUseCase = MockMarkFirebaseNotificationAsReceivedUseCase();
 
     cubit = MainPageCubit(
       setupWebSocketChannelUseCase,
@@ -62,12 +59,11 @@ void main() {
       getQueuedIncomingActionUseCase,
       registerPushNotificationDeviceUseCase,
       subscribeToIncomingActionsFromBackgroundUseCase,
-      markFirebaseNotificationAsReceivedUseCase
     );
   });
 
   group('initialize', () {
-    final incomingAction = IncomingAction.createFromWebSocket(ActionType.authorize(), 'link', {'key': 'value'});
+    final incomingAction = IncomingAction.create(ActionType.authorize(), 'link', 'sendAttemptId',  {'key': 'value'});
     const failureMessage = 'Error message';
 
     blocTest<MainPageCubit, MainPageState>(

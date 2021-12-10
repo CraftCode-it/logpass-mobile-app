@@ -70,7 +70,6 @@ dependencies:
   hive: 2.0.4
   hive_flutter: 1.1.0
   uuid:
-  intl: 0.17.0
   connectivity: 3.0.6
   logpass_crypto:
     path: ./logpass_crypto

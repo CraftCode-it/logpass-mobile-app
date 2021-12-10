@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
 import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
-import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_push_action_dto_to_incoming_action_mapper.dart';
+import 'package:logpass_me/data/incoming_actions/mappers/web_socket_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
@@ -17,7 +17,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   final PushNotificationsManager _pushNotificationsManager;
   final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
   final IncomingActionsValidator _incomingActionsValidator;
-  final IncomingActionDTOToIncomingActionMapper _incomingActionMapper;
+  final WebSocketActionDTOToIncomingActionMapper _webSocketActionDTOToIncomingActionMapper;
   final IncomingPushActionDTOToIncomingActionMapper _pushActionDTOToIncomingActionMapper;
 
   StreamSubscription? _messagesStreamSubscription;
@@ -26,7 +26,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   IncomingActionsRepositoryImpl(
     this._webSocketManager,
     this._pushNotificationsManager,
-    this._incomingActionMapper,
+    this._webSocketActionDTOToIncomingActionMapper,
     this._incomingActionsValidator,
     this._pushActionDTOToIncomingActionMapper,
   );
@@ -40,7 +40,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
 
   IncomingAction _mapIncomingActionDto(Map<String, dynamic> jsonMap) {
     final actionDto = IncomingActionDTO.fromJson(jsonMap);
-    return _incomingActionMapper(actionDto);
+    return _webSocketActionDTOToIncomingActionMapper(actionDto);
   }
 
   void _dispatchAction(IncomingAction action) {

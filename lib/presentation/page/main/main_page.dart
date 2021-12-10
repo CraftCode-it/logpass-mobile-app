@@ -132,6 +132,7 @@ class MainPage extends HookWidget {
           ),
           confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
           updateAccount: () {},
+          refreshUserCode: () {},
         );
       },
       orElse: () {},

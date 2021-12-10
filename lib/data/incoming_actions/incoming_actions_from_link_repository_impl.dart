@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
 import 'package:logpass_me/data/incoming_actions/linking/linking_data_source.dart';
-import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
+import 'package:logpass_me/data/incoming_actions/mappers/link_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_actions_from_link_repository.dart';
 
@@ -9,7 +9,7 @@ import 'package:logpass_me/domain/incoming_actions/incoming_actions_from_link_re
 class IncomingActionsFromLinkRepositoryImpl implements IncomingActionsFromLinkRepository {
   final LinkingDataSource _linkingDataSource;
   final IncomingActionsValidator _incomingActionsValidator;
-  final IncomingActionDTOToIncomingActionMapper _actionMapper;
+  final LinkDTOToIncomingActionMapper _actionMapper;
 
   IncomingActionsFromLinkRepositoryImpl(this._linkingDataSource, this._incomingActionsValidator, this._actionMapper);
 

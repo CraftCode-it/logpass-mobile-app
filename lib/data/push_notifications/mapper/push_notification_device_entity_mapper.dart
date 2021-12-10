@@ -18,6 +18,7 @@ class PushNotificationDeviceEntityMapper
       name: data.name,
       type: _deviceTypeEntityMapper.from(data.type),
       isActive: data.isActive,
+      webSocketUrl: data.webSocketUrl
     );
   }
 
@@ -28,6 +29,7 @@ class PushNotificationDeviceEntityMapper
       name: data.name,
       type: _deviceTypeEntityMapper.to(data.type),
       isActive: data.isActive,
+      webSocketUrl: data.webSocketUrl
     );
   }
 }

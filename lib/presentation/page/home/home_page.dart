@@ -211,12 +211,14 @@ class _PendingItem extends HookWidget {
 
     return InkWell(
       onTap: () {
+        //TODO change 'when' to 'maybeWhen' when all kind notification will be implemented
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(
             AuthorizePageRoute(incomingAction: action),
           ),
           confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
           updateAccount: () {},
+          refreshUserCode: () {},
         );
       },
       child: Container(

@@ -5,7 +5,7 @@ part 'push_notification_message.freezed.dart';
 
 @freezed
 class PushNotificationMessage with _$PushNotificationMessage {
-  factory PushNotificationMessage.authorize(PushNotificationAuthorizeData data) = _PushNotificationMessageAuthorize;
+  factory PushNotificationMessage.authorize(String sendAttemptId, PushNotificationAuthorizeData data) = _PushNotificationMessageAuthorize;
 
-  factory PushNotificationMessage.unknown(String action) = _PushNotificationMessageUnknown;
+  factory PushNotificationMessage.unknown(String sendAttemptId, String action) = _PushNotificationMessageUnknown;
 }

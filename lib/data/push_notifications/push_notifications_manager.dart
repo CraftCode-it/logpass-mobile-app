@@ -36,6 +36,7 @@ class PushNotificationsManager {
 
     final data = {
       'action': message.data['action'] as String,
+      'send_attempt_id': message.data['send_attempt_id'] as String,
       if (decoded != null) 'body': decoded,
     };
 
