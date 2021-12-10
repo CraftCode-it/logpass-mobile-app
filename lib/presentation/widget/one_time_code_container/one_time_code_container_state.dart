@@ -6,8 +6,13 @@ class OneTimeCodeContainerState with _$OneTimeCodeContainerState {
   const factory OneTimeCodeContainerState.loadInProgress() = LoadInProgress;
 
   @Implements(BuildState)
-  const factory OneTimeCodeContainerState.idle(OneTimeCode oneTimeCode, double remainingProgress) = Idle;
+  const factory OneTimeCodeContainerState.idle(OneTimeCode oneTimeCode) = Idle;
+
+  @Implements(BuildState)
+  const factory OneTimeCodeContainerState.internetConnection(bool hasInternetConnection) = InternetConnection;
 
   @Implements(BuildState)
   const factory OneTimeCodeContainerState.error() = Error;
+
+  const factory OneTimeCodeContainerState.connectionError(GeneralConnectionError error) = ConnectionError;
 }

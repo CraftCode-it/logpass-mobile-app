@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/auth_token_interceptor.dart';
@@ -73,6 +74,9 @@ abstract class NetworkModule {
         contentTypeInterceptor,
         _logger,
       ];
+
+  @LazySingleton()
+  Connectivity get connectivity => Connectivity();
 }
 
 PrettyDioLogger get _logger => PrettyDioLogger(

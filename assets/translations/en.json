@@ -18,6 +18,7 @@
     "done": "Done"
   },
   "error": {
+    "couldNotLoadData": "Could not load data",
     "noConnection": "It seems like you have no internet connection",
     "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
     "somethingWentWrong": "Something went wrong. Please try again.",

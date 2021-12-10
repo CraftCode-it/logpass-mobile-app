@@ -1,5 +1,9 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/dispose_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/get_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/listen_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/subscribe_to_one_time_code_use_case.dart';
@@ -14,27 +18,51 @@ import 'one_time_code_container_cubit_test.mocks.dart';
   [
     LoadOneTimeCodeUseCase,
     SubscribeToOnetimeCodeUseCase,
+    GetInternetConnectionUseCase,
+    ListenInternetConnectionUseCase,
+    DisposeInternetConnectionUseCase
+
   ],
 )
 void main() {
   late LoadOneTimeCodeUseCase loadOneTimeCodeUseCase;
   late SubscribeToOnetimeCodeUseCase subscribeToOnetimeCodeUseCase;
+  late GetInternetConnectionUseCase getInternetConnectionUseCase;
+  late ListenInternetConnectionUseCase listenInternetConnectionUseCase;
+  late DisposeInternetConnectionUseCase disposeInternetConnectionUseCase;
   late OneTimeCodeContainerCubit cubit;
 
   setUp(() {
     loadOneTimeCodeUseCase = MockLoadOneTimeCodeUseCase();
     subscribeToOnetimeCodeUseCase = MockSubscribeToOnetimeCodeUseCase();
-    cubit = OneTimeCodeContainerCubit(loadOneTimeCodeUseCase, subscribeToOnetimeCodeUseCase);
+    getInternetConnectionUseCase = MockGetInternetConnectionUseCase();
+    listenInternetConnectionUseCase = MockListenInternetConnectionUseCase();
+    disposeInternetConnectionUseCase = MockDisposeInternetConnectionUseCase();
+
+    cubit = OneTimeCodeContainerCubit(
+      loadOneTimeCodeUseCase,
+      subscribeToOnetimeCodeUseCase,
+      getInternetConnectionUseCase,
+      listenInternetConnectionUseCase,
+      disposeInternetConnectionUseCase,
+    );
   });
 
+  final noConnectionError = GeneralConnectionError.noConnection();
+  final now = DateTime.now();
+  final oneTimeCode = OneTimeCode(
+    'code',
+    const Duration(minutes: 10),
+    now,
+    now.add(const Duration(minutes: 10)),
+  );
+
   group('initialize', () {
-    final now = DateTime.now();
-    final oneTimeCode = OneTimeCode(
-      'code',
-      const Duration(minutes: 10),
-      now,
-      now.add(const Duration(minutes: 10)),
-    );
+    const internetConnected = true;
+
+    setUp(() {
+      when(getInternetConnectionUseCase()).thenAnswer((realInvocation) async => internetConnected);
+    });
 
     blocTest<OneTimeCodeContainerCubit, OneTimeCodeContainerState>(
       'emits idle state with code after init\'s load',
@@ -44,13 +72,10 @@ void main() {
 
         return cubit;
       },
-      act: (cubit) async {
-        await withClock(Clock.fixed(now), cubit.init);
-      },
-      wait: const Duration(seconds: 2),
+      act: (cubit) => cubit.init(),
       expect: () => [
         const OneTimeCodeContainerState.loadInProgress(),
-        OneTimeCodeContainerState.idle(oneTimeCode, 1.0),
+        OneTimeCodeContainerState.idle(oneTimeCode),
       ],
     );
 
@@ -71,25 +96,52 @@ void main() {
     );
 
     blocTest<OneTimeCodeContainerCubit, OneTimeCodeContainerState>(
-      'verify code refresh after its expiration time',
+      'emits ConnectionError state during initializing when internet is connected',
       build: () {
-        final expiredCode = OneTimeCode(
-          'code',
-          const Duration(seconds: 1),
-          now,
-          now.subtract(const Duration(seconds: 1)),
-        );
-        when(loadOneTimeCodeUseCase()).thenAnswer((realInvocation) async => {});
-        when(subscribeToOnetimeCodeUseCase()).thenAnswer((realInvocation) => Stream.value(expiredCode));
+        when(loadOneTimeCodeUseCase()).thenAnswer((realInvocation) async => throw noConnectionError);
+        when(subscribeToOnetimeCodeUseCase()).thenAnswer((realInvocation) => Stream.value(null));
 
         return cubit;
       },
-      act: (cubit) async {
-        await withClock(Clock.fixed(now), cubit.init);
-      },
-      wait: const Duration(seconds: 1),
+      act: (cubit) => cubit.init(),
       expect: () => [
         const OneTimeCodeContainerState.loadInProgress(),
+        OneTimeCodeContainerState.connectionError(noConnectionError),
+        const OneTimeCodeContainerState.internetConnection(true),
+        const OneTimeCodeContainerState.error(),
+      ],
+    );
+
+    blocTest<OneTimeCodeContainerCubit, OneTimeCodeContainerState>(
+      'emits ConnectionError state during initializing when internet is disconnected',
+      build: () {
+        when(getInternetConnectionUseCase()).thenAnswer((realInvocation) async => false);
+        when(loadOneTimeCodeUseCase()).thenAnswer((realInvocation) async => throw noConnectionError);
+        when(subscribeToOnetimeCodeUseCase()).thenAnswer((realInvocation) => Stream.value(null));
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        const OneTimeCodeContainerState.loadInProgress(),
+        OneTimeCodeContainerState.connectionError(noConnectionError),
+        const OneTimeCodeContainerState.internetConnection(false),
+        const OneTimeCodeContainerState.error(),
+      ],
+    );
+
+    blocTest<OneTimeCodeContainerCubit, OneTimeCodeContainerState>(
+      'verify code refresh after its expiration time',
+      build: () {
+        when(loadOneTimeCodeUseCase()).thenAnswer((realInvocation) async => {});
+        when(subscribeToOnetimeCodeUseCase()).thenAnswer((realInvocation) => Stream.value(oneTimeCode));
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        const OneTimeCodeContainerState.loadInProgress(),
+        OneTimeCodeContainerState.idle(oneTimeCode)
       ],
       verify: (cubit) {
         verify(cubit.refreshOneTimeCode());

@@ -18,6 +18,7 @@
     "done": "Zrobione"
   },
   "error": {
+    "couldNotLoadData": "Nie udało się wczytać danych",
     "noConnection": "Twoje urządzenia nie ma połączenia z internetem",
     "timeout": "Operacja zajmuje zbyt dużo czasu, spróbuj ponownie później",
     "somethingWentWrong": "Coś poszło nie tak, jak planowaliśmy. Spróbuj ponownie. ",

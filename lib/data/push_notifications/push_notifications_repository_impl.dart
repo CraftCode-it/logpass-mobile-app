@@ -72,6 +72,7 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
       isActive: true,
     );
 
+    //TODO here we get websocket link
     final device = await callWithDioErrorResolver(
       () => _pushNotificationsApiDataSource.registerDevice(registerDevice),
     );

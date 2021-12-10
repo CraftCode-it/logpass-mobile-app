@@ -99,7 +99,10 @@ class _HomePageContent extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              OneTimeCodeContainer(onCopyCallback: cubit.emitCopyInformation),
+              OneTimeCodeContainer(
+                onCopyCallback: cubit.emitCopyInformation,
+                messengerController :messengerController
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),

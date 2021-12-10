@@ -6,6 +6,10 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/dispose_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/get_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/listen_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/subscribe_to_one_time_code_use_case.dart';
@@ -18,20 +22,28 @@ part 'one_time_code_container_cubit.freezed.dart';
 class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final SubscribeToOnetimeCodeUseCase _subscribeToOneTimeCodeUseCase;
+  final GetInternetConnectionUseCase _getInternetConnectionUseCase;
+  final ListenInternetConnectionUseCase _listenInternetConnectionUseCase;
+  final DisposeInternetConnectionUseCase _disposeInternetConnectionUseCase;
 
   late StreamSubscription<OneTimeCode?> _oneTimeCodeSubscription;
   late OneTimeCode _oneTimeCode;
-  Timer? _timer;
+  bool _hasInternetConnection = true;
 
   OneTimeCodeContainerCubit(
     this._loadOneTimeCodeUseCase,
     this._subscribeToOneTimeCodeUseCase,
+    this._getInternetConnectionUseCase,
+    this._listenInternetConnectionUseCase,
+    this._disposeInternetConnectionUseCase,
   ) : super(const OneTimeCodeContainerState.loadInProgress());
 
   Future init() async {
+    _hasInternetConnection = await _getInternetConnectionUseCase();
     await refreshOneTimeCode();
 
     _listenForOneTimeCode();
+    _listenInternetConnection();
   }
 
   void _listenForOneTimeCode() {
@@ -44,32 +56,10 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
     }
   }
 
-  void _runTimer() {
-    _timer = Timer.periodic(
-      const Duration(milliseconds: 100),
-      (timer) {
-        if (_oneTimeCode.isExpired) {
-          refreshOneTimeCode();
-        } else {
-          _emitIdleState();
-        }
-      },
-    );
-  }
-
-  void _cancelTimerIfActive() {
-    final isActive = _timer?.isActive ?? false;
-    if (isActive) {
-      emit(const OneTimeCodeContainerState.loadInProgress());
-      _timer?.cancel();
-    }
-  }
-
   void _onCodeChange(OneTimeCode? oneTimeCode) {
     if (oneTimeCode != null) {
-      _cancelTimerIfActive();
       _oneTimeCode = oneTimeCode;
-      _runTimer();
+      _emitIdleState();
     } else {
       Fimber.e('OneTimeCode is null');
 
@@ -83,10 +73,12 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
 
   Future refreshOneTimeCode() async {
     try {
-      _timer?.cancel();
       emit(const OneTimeCodeContainerState.loadInProgress());
 
       await _loadOneTimeCodeUseCase.call();
+    } on GeneralConnectionError catch (e) {
+      emit(OneTimeCodeContainerState.connectionError(e));
+      emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection));
     } catch (e, s) {
       Fimber.e('Error with OneTimeCode refresh', ex: e, stacktrace: s);
 
@@ -95,22 +87,26 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   }
 
   void _emitIdleState() {
-    emit(OneTimeCodeContainerState.idle(_oneTimeCode, _getRemainingTime()));
-  }
-
-  double _getRemainingTime() {
-    if (_oneTimeCode.isExpired) return 0.0;
-
-    final currentDuration = clock.now().difference(_oneTimeCode.expirationTime);
-    final ratio = currentDuration.inMilliseconds / _oneTimeCode.expirationSec.inMilliseconds;
-
-    return ratio.abs();
+    emit(OneTimeCodeContainerState.idle(_oneTimeCode));
   }
 
   @override
-  Future<void> close() {
-    _oneTimeCodeSubscription.cancel();
-    _timer?.cancel();
+  Future<void> close() async {
+    await _disposeInternetConnectionUseCase();
+    await _oneTimeCodeSubscription.cancel();
     return super.close();
+  }
+
+  void _listenInternetConnection() {
+    _listenInternetConnectionUseCase().listen((hasConnection) {
+      _hasInternetConnection = hasConnection;
+
+      state.maybeWhen(
+        error: () => OneTimeCodeContainerState.internetConnection(_hasInternetConnection),
+        internetConnection: (_) =>
+            emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection)),
+        orElse: () {}
+      );
+    });
   }
 }

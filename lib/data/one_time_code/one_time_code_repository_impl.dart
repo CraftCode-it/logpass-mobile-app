@@ -1,7 +1,9 @@
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/data/networking/error/dio_error_resolver.dart';
 import 'package:logpass_me/data/one_time_code/api/one_time_code_api_data_source.dart';
 import 'package:logpass_me/data/one_time_code/dtos/one_time_code_parameter_dto.dart';
 import 'package:logpass_me/data/one_time_code/mappers/one_time_code_dto_to_one_time_code_mapper.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code_repository.dart';
 import 'package:rxdart/subjects.dart';
@@ -17,7 +19,11 @@ class OneTimeCodeRepositoryImpl implements OneTimeCodeRepository {
   @override
   Future<void> loadOneTimeCode(bool forceRefresh) async {
     final parameterDto = OneTimeCodeParameterDTO(forceRefresh);
-    final dto = await _apiDataSource.getOneTimeCode(parameterDto);
+
+    final dto = await callWithDioErrorResolver(
+      () => _apiDataSource.getOneTimeCode(parameterDto),
+    );
+
     final oneTimeCode = _mapper.call(dto);
 
     _setOneTimeCode(oneTimeCode);
