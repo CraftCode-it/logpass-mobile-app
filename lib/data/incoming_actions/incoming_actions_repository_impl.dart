@@ -9,13 +9,14 @@ import 'package:logpass_me/data/incoming_actions/mappers/web_socket_action_dto_t
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
-import 'package:logpass_me/domain/incoming_actions/incoming_actions_repository.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_with_splitted_actions_repository.dart';
 
-@Singleton(as: IncomingActionsRepository)
-class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
+@Singleton(as: IncomingWithSplittedActionsRepository)
+class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsRepository {
   final WebSocketManager _webSocketManager;
   final PushNotificationsManager _pushNotificationsManager;
-  final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
+  final StreamController<IncomingAction> _incomingUsersActionsBroadcast = StreamController.broadcast();
+  final StreamController<IncomingAction> _incomingRefreshCodeActionsBroadcast = StreamController.broadcast();
   final IncomingActionsValidator _incomingActionsValidator;
   final WebSocketActionDTOToIncomingActionMapper _webSocketActionDTOToIncomingActionMapper;
   final IncomingPushActionDTOToIncomingActionMapper _pushActionDTOToIncomingActionMapper;
@@ -35,8 +36,12 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   Stream<IncomingAction> listenForIncomingActions() {
     _setupForegroundMessagesListener();
     _setupWebSocketChannelListener();
-    return _incomingActionsBroadcast.stream;
+    return _incomingUsersActionsBroadcast.stream;
   }
+
+  @override
+  Stream<IncomingAction> listenForIncomingRefreshCodeActions() =>
+      _incomingRefreshCodeActionsBroadcast.stream;
 
   IncomingAction _mapIncomingActionDto(Map<String, dynamic> jsonMap) {
     final actionDto = IncomingActionDTO.fromJson(jsonMap);
@@ -45,7 +50,10 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
 
   void _dispatchAction(IncomingAction action) {
     if (_incomingActionsValidator.canInvoke(action)) {
-      _incomingActionsBroadcast.add(action);
+      action.actionType.maybeMap(
+        refreshUserCode: (_) => _incomingRefreshCodeActionsBroadcast.add(action),
+        orElse: () => _incomingUsersActionsBroadcast.add(action)
+      );
     }
   }
 

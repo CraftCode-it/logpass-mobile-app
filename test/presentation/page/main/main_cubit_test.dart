@@ -3,9 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_action_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_refresh_code_actions_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_background_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/mark_notification_as_received_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/register_push_notification_device_use_case.dart';
@@ -27,6 +29,9 @@ import 'main_cubit_test.mocks.dart';
     GetQueuedIncomingActionUseCase,
     RegisterPushNotificationDeviceUseCase,
     SubscribeToIncomingActionsFromBackgroundUseCase,
+    SubscribeToRefreshCodeActionsUseCase,
+    LoadOneTimeCodeUseCase,
+    MarkNotificationAsReceivedUseCase
   ],
 )
 void main() {
@@ -38,6 +43,9 @@ void main() {
   late GetQueuedIncomingActionUseCase getQueuedIncomingActionUseCase;
   late RegisterPushNotificationDeviceUseCase registerPushNotificationDeviceUseCase;
   late SubscribeToIncomingActionsFromBackgroundUseCase subscribeToIncomingActionsFromBackgroundUseCase;
+  late SubscribeToRefreshCodeActionsUseCase subscribeToRefreshCodeActionsUseCase;
+  late LoadOneTimeCodeUseCase loadOneTimeCodeUseCase;
+  late MarkNotificationAsReceivedUseCase markNotificationAsReceivedUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
@@ -49,6 +57,9 @@ void main() {
     getQueuedIncomingActionUseCase = MockGetQueuedIncomingActionUseCase();
     registerPushNotificationDeviceUseCase = MockRegisterPushNotificationDeviceUseCase();
     subscribeToIncomingActionsFromBackgroundUseCase = MockSubscribeToIncomingActionsFromBackgroundUseCase();
+    subscribeToRefreshCodeActionsUseCase = MockSubscribeToRefreshCodeActionsUseCase();
+    loadOneTimeCodeUseCase = MockLoadOneTimeCodeUseCase();
+    markNotificationAsReceivedUseCase = MockMarkNotificationAsReceivedUseCase();
 
     cubit = MainPageCubit(
       setupWebSocketChannelUseCase,
@@ -59,6 +70,9 @@ void main() {
       getQueuedIncomingActionUseCase,
       registerPushNotificationDeviceUseCase,
       subscribeToIncomingActionsFromBackgroundUseCase,
+      subscribeToRefreshCodeActionsUseCase,
+      loadOneTimeCodeUseCase,
+      markNotificationAsReceivedUseCase
     );
   });
 
@@ -71,6 +85,7 @@ void main() {
       build: () {
         final expect = Exception();
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => throw expect);
+        when(subscribeToRefreshCodeActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
 
         return cubit;
       },
@@ -86,6 +101,7 @@ void main() {
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
         when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => incomingAction);
         when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+        when(subscribeToRefreshCodeActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
 
         return cubit;
       },
@@ -101,6 +117,7 @@ void main() {
         when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
         when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => null);
         when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => Stream.value(incomingAction));
+        when(subscribeToRefreshCodeActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
 
         return cubit;
       },
@@ -122,5 +139,46 @@ void main() {
       act: (cubit) => cubit.init(),
       expect: () => [],
     );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'verify markNotificationAsReceivedUseCase, loadOneTimeCodeUseCase and emits [OpenAction] when there is queued incoming action',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => incomingAction);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+        when(subscribeToRefreshCodeActionsUseCase()).thenAnswer((invocation) => Stream.value(incomingAction));
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        MainPageState.openAction(incomingAction),
+      ],
+      verify: (cubit) {
+        verify(loadOneTimeCodeUseCase()).called(1);
+        verify(markNotificationAsReceivedUseCase(incomingAction)).called(1);
+      },
+    );
+
+    blocTest<MainPageCubit, MainPageState>(
+      'verifyNever markNotificationAsReceivedUseCase, loadOneTimeCodeUseCase and emits [OpenAction] when there is queued incoming action',
+      build: () {
+        when(setupWebSocketChannelUseCase()).thenAnswer((invocation) async => {});
+        when(getQueuedIncomingActionUseCase()).thenAnswer((realInvocation) async => incomingAction);
+        when(subscribeToIncomingActionsFromLinkUseCase()).thenAnswer((realInvocation) => const Stream.empty());
+        when(subscribeToRefreshCodeActionsUseCase()).thenAnswer((invocation) => const Stream.empty());
+
+        return cubit;
+      },
+      act: (cubit) => cubit.init(),
+      expect: () => [
+        MainPageState.openAction(incomingAction),
+      ],
+      verify: (cubit) {
+        verifyNever(loadOneTimeCodeUseCase());
+        verifyNever(markNotificationAsReceivedUseCase(incomingAction));
+      },
+    );
+
   });
 }

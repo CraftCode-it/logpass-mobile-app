@@ -29,7 +29,8 @@ class IncomingActionDataDTO {
 
   Map<String, dynamic> toJson() => _$IncomingActionDataDTOToJson(this);
 
-  factory IncomingActionDataDTO.fromJson(Map<String, dynamic> json) => _$IncomingActionDataDTOFromJson(json);
+  factory IncomingActionDataDTO.fromJson(Map<String, dynamic> json) =>
+      _$IncomingActionDataDTOFromJson(json);
 }
 
 @JsonSerializable()
@@ -43,5 +44,6 @@ class IncomingActionDataFieldsDTO {
 
   Map<String, dynamic> toJson() => _$IncomingActionDataFieldsDTOToJson(this);
 
-  factory IncomingActionDataFieldsDTO.fromJson(Map<String, dynamic> json) => _$IncomingActionDataFieldsDTOFromJson(json);
+  factory IncomingActionDataFieldsDTO.fromJson(Map<String, dynamic> json) =>
+      _$IncomingActionDataFieldsDTOFromJson(json);
 }

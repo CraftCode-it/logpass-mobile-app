@@ -29,15 +29,22 @@ class IncomingAction {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is IncomingAction &&
-        other.actionType == actionType &&
-        other.actionId == actionId &&
-        other.sendAttemptId == sendAttemptId &&
-        mapEquals(other.queryParameters, queryParameters);
+    final isSameActionType = other is IncomingAction && other.actionType == actionType;
+    final isSameActionId = other is IncomingAction && other.actionId == actionId;
+    final isSameQueryParameters = other is IncomingAction && mapEquals(other.queryParameters, queryParameters);
+    final isSameSendAttemptId = other is IncomingAction && other.sendAttemptId == sendAttemptId;
+
+    return actionType.maybeWhen(
+      authorize: () => isSameActionType && isSameActionId && isSameQueryParameters,
+      orElse: () => isSameActionType && isSameActionId && isSameQueryParameters && isSameSendAttemptId
+    );
   }
 
   @override
-  int get hashCode => actionType.hashCode ^ actionId.hashCode ^ queryParameters.hashCode ^ sendAttemptId.hashCode;
+  int get hashCode => actionType.maybeWhen(
+    authorize: () => actionType.hashCode ^ actionId.hashCode ^ queryParameters.hashCode,
+    orElse: () => actionType.hashCode ^ actionId.hashCode ^ queryParameters.hashCode ^ sendAttemptId.hashCode
+  );
 
   bool get isExpired {
     final now = DateTime.now();
