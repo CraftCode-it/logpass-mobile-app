@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logpass_me/domain/event_log/past_event.dart';
-import 'package:logpass_me/domain/incoming_actions/action_type.dart';
+import 'package:logpass_me/domain/event_log/event_log.dart';
+import 'package:logpass_me/domain/event_log/event_type.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/presentation/page/event_log/event_log_page_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -39,12 +39,16 @@ class EventLogPage extends HookWidget {
       body: Messenger(
         controller: messengerController,
         child: state.maybeMap(
-          idle: (state) => _EventsContent(events: state.events),
+          idle: (state) => _EventsContent(
+            cubit: cubit,
+            events: state.events,
+          ),
+          empty: (state) => _EmptyEvents(cubit: cubit,),
           loading: (_) => const Loader(),
           orElse: () => const SizedBox.shrink(),
         ),
       ),
-      onErrorActionTapped: () => cubit.load(),
+      onErrorActionTapped: () => cubit.loadFirstPage(),
       showErrorPage: state.maybeMap(
         error: (_) => true,
         orElse: () => false,
@@ -54,29 +58,34 @@ class EventLogPage extends HookWidget {
 }
 
 class _EventsContent extends StatelessWidget {
-  final List<PastEvent> events;
+  final List<EventLog> events;
+  final EventLogPageCubit cubit;
 
   const _EventsContent({
     required this.events,
+    required this.cubit,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimens.l,
-        vertical: AppDimens.m,
+    return RefreshIndicator(
+      onRefresh: () => cubit.loadFirstPage(),
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimens.l,
+          vertical: AppDimens.m,
+        ),
+        itemBuilder: (context, index) => _EventRow(pastEvent: events[index]),
+        separatorBuilder: (context, index) => const SizedBox(height: AppDimens.l),
+        itemCount: events.length,
       ),
-      itemBuilder: (context, index) => _EventRow(pastEvent: events[index]),
-      separatorBuilder: (context, index) => const SizedBox(height: AppDimens.l),
-      itemCount: events.length,
     );
   }
 }
 
 class _EventRow extends HookWidget {
-  final PastEvent pastEvent;
+  final EventLog pastEvent;
 
   const _EventRow({
     required this.pastEvent,
@@ -104,10 +113,11 @@ class _EventRow extends HookWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(
-              pastEvent.logo,
-              height: AppDimens.l,
-              width: AppDimens.l,
+            pastEvent.logo.maybeMap(
+              network: (value) => _NetworkImage(value.url),
+              local: (value) => _AssetImage(value.path),
+              none: (_) => const SizedBox(),
+              orElse: () => const SizedBox(),
             ),
             const SizedBox(width: AppDimens.l),
             SvgPicture.asset(
@@ -116,7 +126,7 @@ class _EventRow extends HookWidget {
             ),
             const SizedBox(width: AppDimens.l),
             Text(
-              _getActionName(pastEvent.actionType),
+              _getActionName(pastEvent.eventType),
               style: typography.body3,
             ),
           ],
@@ -134,11 +144,81 @@ class _EventRow extends HookWidget {
     return dateFormat.format(pastEvent.dateTime);
   }
 
-  String _getActionName(ActionType type) {
-    return type.when(
-      authorize: () => LocaleKeys.pastEvents_actionLabel_authorize.tr(),
-      confirm: () => LocaleKeys.pastEvents_actionLabel_confirm.tr(),
-      updateAccount: () => LocaleKeys.pastEvents_actionLabel_update.tr(),
+  //TODO add strings for every type
+  String _getActionName(EventType type) {
+    return type.map(
+      loginAttemptCreated: (_) => LocaleKeys.pastEvents_actionLabel_loginAttemptCreated.tr(),
+      loginAttemptVerificationFailed: (_) => LocaleKeys.pastEvents_actionLabel_loginAttemptVerificationFailed.tr(),
+      loginAttemptVerificationRetry: (_) => LocaleKeys.pastEvents_actionLabel_loginAttemptVerificationRetry.tr(),
+      loginAttemptVerificationFinished: (_) => LocaleKeys.pastEvents_actionLabel_loginAttemptVerificationFinished.tr(),
+      authorizationAttemptCreated: (_) => LocaleKeys.pastEvents_actionLabel_authorizationAttemptCreated.tr(),
+      authorizationAttemptApproved: (_) => LocaleKeys.pastEvents_actionLabel_authorizationAttemptApproved.tr(),
+      authorizationAttemptDenied: (_) => LocaleKeys.pastEvents_actionLabel_authorizationAttemptDenied.tr(),
+      agreementAccepted: (_) => LocaleKeys.pastEvents_actionLabel_agreementAccepted.tr(),
+      agreementRevoked: (_) => LocaleKeys.pastEvents_actionLabel_agreementRevoked.tr(),
+      backupEntryCreated: (_) => LocaleKeys.pastEvents_actionLabel_backupEntryCreated.tr(),
+      backupEntryUpdated: (_) => LocaleKeys.pastEvents_actionLabel_backupEntryUpdated.tr(),
+      backupEntryDeleted: (_) => LocaleKeys.pastEvents_actionLabel_backupEntryDeleted.tr(),
+    );
+  }
+}
+
+class _EmptyEvents extends HookWidget {
+  final EventLogPageCubit cubit;
+
+  const _EmptyEvents({required this.cubit, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return RefreshIndicator(
+      onRefresh: () => cubit.loadFirstPage(),
+      child: Container(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Center(
+            child: Text(
+              LocaleKeys.pastEvents_noEvents,
+              textAlign: TextAlign.center,
+              style: typography.body1.copyWith(color: colors.secondaryText),
+            ).tr(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NetworkImage extends HookWidget {
+  final String url;
+
+  const _NetworkImage(this.url);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      url,
+      height: AppDimens.l,
+      width: AppDimens.l,
+    );
+  }
+}
+
+class _AssetImage extends HookWidget {
+  final String path;
+
+  const _AssetImage(this.path);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      path,
+      height: AppDimens.l,
+      width: AppDimens.l,
     );
   }
 }
