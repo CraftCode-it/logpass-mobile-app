@@ -1,5 +1,7 @@
+import 'package:clock/clock.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
@@ -10,19 +12,29 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 import 'package:logpass_me/presentation/utils/text_utils.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/one_time_code_container/one_time_code_container_cubit.dart';
 
 class OneTimeCodeContainer extends HookWidget {
   final VoidCallback onCopyCallback;
+  final MessengerController messengerController;
 
-  const OneTimeCodeContainer({required this.onCopyCallback});
+  const OneTimeCodeContainer({
+    required this.onCopyCallback,
+    required this.messengerController,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<OneTimeCodeContainerCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
+
+    useCubitListener<OneTimeCodeContainerCubit, OneTimeCodeContainerState>(
+      cubit, (cubit, state, context) => _cubitListener(cubit, state, context),
+    );
 
     useEffect(() {
       cubit.init();
@@ -38,10 +50,9 @@ class OneTimeCodeContainer extends HookWidget {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
         child: state.maybeWhen(
-          idle: (oneTimeCode, remainingProgress) => _CodeContainer(
+          idle: (oneTimeCode) => _CodeContainer(
             key: ValueKey(oneTimeCode),
             oneTimeCode: oneTimeCode,
-            remainingProgress: remainingProgress,
             onRefreshAction: cubit.refreshOneTimeCode,
             onCopyAction: cubit.copyOneTimeCodeToClipboard,
             onCopyCallback: onCopyCallback,
@@ -49,7 +60,6 @@ class OneTimeCodeContainer extends HookWidget {
           ),
           loadInProgress: () => _CodeContainer(
             oneTimeCode: null,
-            remainingProgress: null,
             onRefreshAction: null,
             onCopyAction: null,
             progressSize: size,
@@ -57,11 +67,16 @@ class OneTimeCodeContainer extends HookWidget {
           ),
           error: () => _CodeContainer(
             oneTimeCode: null,
-            remainingProgress: null,
             onRefreshAction: cubit.refreshOneTimeCode,
             onCopyAction: cubit.copyOneTimeCodeToClipboard,
             progressSize: size,
-            isError: true,
+          ),
+          internetConnection: (hasInternetConnection) => _CodeContainer(
+            oneTimeCode: null,
+            onRefreshAction: cubit.refreshOneTimeCode,
+            onCopyAction: cubit.copyOneTimeCodeToClipboard,
+            hasInternetConnection: hasInternetConnection,
+            progressSize: size,
           ),
           orElse: () => SizedBox(
             width: size,
@@ -71,16 +86,23 @@ class OneTimeCodeContainer extends HookWidget {
       ),
     );
   }
+
+  void _cubitListener(OneTimeCodeContainerCubit cubit, OneTimeCodeContainerState state, BuildContext context) {
+    state.maybeWhen(
+      connectionError: (error, ) => messengerController.showError(getConnectionErrorString(error)),
+      error: () => messengerController.showError(LocaleKeys.error_couldNotLoadData.tr()),
+      orElse: () {},
+    );
+  }
 }
 
 class _CodeContainer extends HookWidget {
   final OneTimeCode? oneTimeCode;
-  final double? remainingProgress;
   final VoidCallback? onRefreshAction;
   final VoidCallback? onCopyAction;
   final VoidCallback? onCopyCallback;
   final double progressSize;
-  final bool isError;
+  final bool hasInternetConnection;
   final bool isLoading;
 
   const _CodeContainer({
@@ -89,14 +111,17 @@ class _CodeContainer extends HookWidget {
     required this.progressSize,
     this.oneTimeCode,
     this.onCopyCallback,
-    this.remainingProgress,
-    this.isError = false,
+    this.hasInternetConnection = true,
     this.isLoading = false,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Ticker? ticker;
+    final progress = useState(0.0);
+    final tickerProvider = useSingleTickerProvider();
+
     final appTypography = useAppTypography();
     final colors = useAppThemeColors();
     final inactiveColor = colors.textSpecial.withOpacity(0.15);
@@ -108,6 +133,19 @@ class _CodeContainer extends HookWidget {
     useMemoized(() {
       controller.forward();
     });
+
+    useEffect(() {
+      ticker = tickerProvider.createTicker((_) {
+        progress.value = _getRemainingTimeProgress();
+        _checkExpirationCode(ticker);
+      });
+
+      if(oneTimeCode != null) {
+        ticker?.start();
+      }
+
+      return ticker?.dispose;
+    }, [tickerProvider]);
 
     return Stack(
       fit: StackFit.loose,
@@ -127,16 +165,16 @@ class _CodeContainer extends HookWidget {
           height: progressSize,
           child: RotatedBox(
             quarterTurns: 2,
-            child: oneTimeCode == null
-                ? CircularProgressIndicator(
+            child: oneTimeCode != null
+              ? CircularProgressIndicator(
+                value: progress.value,
+                strokeWidth: AppDimens.oneTimeCodeProgressWidth,
+                valueColor: animation,
+              ) : isLoading
+                ? const CircularProgressIndicator(
                     strokeWidth: AppDimens.oneTimeCodeProgressWidth,
-                    color: isError ? AppColors.error100 : AppColors.success100,
-                  )
-                : CircularProgressIndicator(
-                    value: remainingProgress,
-                    strokeWidth: AppDimens.oneTimeCodeProgressWidth,
-                    valueColor: animation,
-                  ),
+                    color: AppColors.success100,
+                  ) : null,
           ),
         ),
         SizedBox(
@@ -151,7 +189,7 @@ class _CodeContainer extends HookWidget {
                   LocaleKeys.home_refreshCodeLabel.tr(),
                   AppIcon.refresh,
                   onTapAction: onRefreshAction,
-                  isActive: !isLoading,
+                  isActive: oneTimeCode != null || hasInternetConnection,
                 ),
               ),
               Expanded(
@@ -200,6 +238,30 @@ class _CodeContainer extends HookWidget {
         ),
       ],
     );
+  }
+
+  double _getRemainingTimeProgress() {
+    if (oneTimeCode == null || oneTimeCode!.isExpired) {
+      return 0.0;
+    }
+    final _oneTimeCode = oneTimeCode!;
+
+    final currentDuration = clock.now().difference(_oneTimeCode.expirationTime);
+    final ratio = currentDuration.inMilliseconds / _oneTimeCode.expirationSec.inMilliseconds;
+
+    return ratio.abs();
+  }
+
+  void _checkExpirationCode(Ticker? ticker) {
+    final isCodeExpired = oneTimeCode != null && oneTimeCode!.isExpired;
+    final isCodeNull = oneTimeCode == null;
+
+    if(isCodeExpired) {
+      ticker?.stop();
+      onRefreshAction?.call();
+    } else if(isCodeNull) {
+      ticker?.stop();
+    }
   }
 }
 
