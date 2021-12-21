@@ -10,7 +10,7 @@ class IncomingPushActionDTOToIncomingActionMapper implements DataMapper<PushNoti
   IncomingAction? call(PushNotificationMessageDTO message) {
 
     final action =  message.maybeMap(
-      authorize: (data) => IncomingAction.createFromFirebase(ActionType.authorize(), data.body.id, null),
+      authorize: (data) => IncomingAction.create(ActionType.authorize(), data.body.id, message.sendAttemptId, null),
       orElse: () => null,
     );
     return action;

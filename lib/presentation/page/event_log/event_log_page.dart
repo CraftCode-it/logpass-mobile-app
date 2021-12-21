@@ -204,6 +204,7 @@ class _NetworkImage extends HookWidget {
       url,
       height: AppDimens.l,
       width: AppDimens.l,
+      errorBuilder: (context, error, stacktrace) => Container(),
     );
   }
 }

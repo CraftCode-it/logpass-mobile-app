@@ -87,6 +87,7 @@ class Messenger extends HookWidget {
               ),
               confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
               updateAccount: () {},
+              refreshUserCode: () {  },
             );
           },
         ),

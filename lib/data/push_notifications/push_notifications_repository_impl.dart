@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:intl/intl.dart';
 import 'package:logpass_me/data/networking/error/dio_error_resolver.dart';
 import 'package:logpass_me/data/push_notifications/api/dto/mark_push_notification_received_dto.dart';
 import 'package:logpass_me/data/push_notifications/api/dto/register_push_notification_device_dto.dart';
@@ -15,12 +14,13 @@ import 'package:logpass_me/domain/push_notifications/push_notification_device.da
 import 'package:logpass_me/domain/push_notifications/push_notification_device_type.dart';
 import 'package:logpass_me/domain/push_notifications/push_notification_message.dart';
 import 'package:logpass_me/domain/push_notifications/push_notifications_repository.dart';
-
-const timeFormat = 'yyyy-MM-ddTHH:mm:ssZ';
+import 'package:logpass_me/presentation/utils/date_time_utils.dart';
 
 @LazySingleton(as: PushNotificationsRepository)
 class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
-  final PushNotificationsApiDataSource _pushNotificationsApiDataSource;
+  //TODO change from PushNotificationNotifierApiDataSource to PushNotificationsApiDataSource
+  //TODO when one url host will be ready
+  final PushNotificationNotifierApiDataSource _pushNotificationsApiDataSource;
   final PushNotificationsManager _pushNotificationsManager;
   final PushNotificationDeviceTypeDTOMapper _pushTokenDeviceTypeDTOMapper;
   final PushNotificationDeviceFromDTOMapper _pushNotificationDeviceFromDTOMapper;
@@ -103,10 +103,9 @@ class PushNotificationsRepositoryImpl implements PushNotificationsRepository {
 
   @override
   Future<void> markNotificationAsReceived(String notificationId) async {
-    final now = DateTime.now();
-    final formatter = DateFormat(timeFormat);
+    final now = DateTime.now().toIso8601String();
 
-    final body = MarkPushNotificationReceivedDTO(formatter.format(now));
+    final body = MarkPushNotificationReceivedDTO(now);
 
     await callWithDioErrorResolver(
       () => _pushNotificationsApiDataSource.markAsReceived(notificationId, body),

@@ -33,7 +33,7 @@ class SetupInitialActionUseCase {
     await pushAction.maybeMap(
       authorize: (authorize) async {
         await _queuedIncomingActionRepository.queueIncomingAction(
-          IncomingAction.createFromFirebase(ActionType.authorize(), authorize.data.id, null),
+          IncomingAction.create(ActionType.authorize(), authorize.data.id, pushAction.sendAttemptId, null),
         );
       },
       orElse: () async {},

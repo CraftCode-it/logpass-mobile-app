@@ -4,20 +4,21 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
 import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
-import 'package:logpass_me/data/incoming_actions/mappers/incoming_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_push_action_dto_to_incoming_action_mapper.dart';
+import 'package:logpass_me/data/incoming_actions/mappers/web_socket_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/push_notifications/push_notifications_manager.dart';
 import 'package:logpass_me/data/web_socket/web_socket_manager.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
-import 'package:logpass_me/domain/incoming_actions/incoming_actions_repository.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_with_splitted_actions_repository.dart';
 
-@Singleton(as: IncomingActionsRepository)
-class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
+@Singleton(as: IncomingWithSplittedActionsRepository)
+class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsRepository {
   final WebSocketManager _webSocketManager;
   final PushNotificationsManager _pushNotificationsManager;
-  final StreamController<IncomingAction> _incomingActionsBroadcast = StreamController.broadcast();
+  final StreamController<IncomingAction> _incomingUsersActionsBroadcast = StreamController.broadcast();
+  final StreamController<IncomingAction> _incomingRefreshCodeActionsBroadcast = StreamController.broadcast();
   final IncomingActionsValidator _incomingActionsValidator;
-  final IncomingActionDTOToIncomingActionMapper _incomingActionMapper;
+  final WebSocketActionDTOToIncomingActionMapper _webSocketActionDTOToIncomingActionMapper;
   final IncomingPushActionDTOToIncomingActionMapper _pushActionDTOToIncomingActionMapper;
 
   StreamSubscription? _messagesStreamSubscription;
@@ -26,7 +27,7 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   IncomingActionsRepositoryImpl(
     this._webSocketManager,
     this._pushNotificationsManager,
-    this._incomingActionMapper,
+    this._webSocketActionDTOToIncomingActionMapper,
     this._incomingActionsValidator,
     this._pushActionDTOToIncomingActionMapper,
   );
@@ -35,17 +36,24 @@ class IncomingActionsRepositoryImpl implements IncomingActionsRepository {
   Stream<IncomingAction> listenForIncomingActions() {
     _setupForegroundMessagesListener();
     _setupWebSocketChannelListener();
-    return _incomingActionsBroadcast.stream;
+    return _incomingUsersActionsBroadcast.stream;
   }
+
+  @override
+  Stream<IncomingAction> listenForIncomingRefreshCodeActions() =>
+      _incomingRefreshCodeActionsBroadcast.stream;
 
   IncomingAction _mapIncomingActionDto(Map<String, dynamic> jsonMap) {
     final actionDto = IncomingActionDTO.fromJson(jsonMap);
-    return _incomingActionMapper(actionDto);
+    return _webSocketActionDTOToIncomingActionMapper(actionDto);
   }
 
   void _dispatchAction(IncomingAction action) {
     if (_incomingActionsValidator.canInvoke(action)) {
-      _incomingActionsBroadcast.add(action);
+      action.actionType.maybeMap(
+        refreshUserCode: (_) => _incomingRefreshCodeActionsBroadcast.add(action),
+        orElse: () => _incomingUsersActionsBroadcast.add(action)
+      );
     }
   }
 

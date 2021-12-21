@@ -5,12 +5,14 @@ class PushNotificationDevice {
   final String name;
   final PushTokenDeviceType type;
   final bool isActive;
+  final String webSocketUrl;
 
   PushNotificationDevice({
     required this.id,
     required this.name,
     required this.type,
     required this.isActive,
+    required this.webSocketUrl,
   });
 
   @override
@@ -21,8 +23,9 @@ class PushNotificationDevice {
           id == other.id &&
           name == other.name &&
           type == other.type &&
+          webSocketUrl == other.webSocketUrl &&
           isActive == other.isActive;
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ type.hashCode ^ isActive.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ type.hashCode ^ isActive.hashCode ^webSocketUrl.hashCode;
 }

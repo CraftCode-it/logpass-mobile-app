@@ -17,6 +17,7 @@ class PushNotificationDeviceFromDTOMapper implements DataMapper<PushNotification
       name: data.name,
       type: _pushNotificationDeviceTypeDTOMapper.to(data.type),
       isActive: data.isActive,
+      webSocketUrl: data.links.websocket
     );
   }
 }

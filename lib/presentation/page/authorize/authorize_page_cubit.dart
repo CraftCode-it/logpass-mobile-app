@@ -20,6 +20,7 @@ import 'package:logpass_me/domain/oauth/use_case/deny_oauth_attempt_use_case.dar
 import 'package:logpass_me/domain/oauth/use_case/get_oauth_application_details_use_case.dart';
 import 'package:logpass_me/domain/oauth/use_case/init_user_auth_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
+import 'package:logpass_me/domain/push_notifications/use_case/mark_notification_as_received_use_case.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';
@@ -58,6 +59,8 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
   final GetDefaultPersonalDataUseCase _getDefaultPersonalDataUseCase;
   final GetDefaultUserAddressUseCase _getDefaultUserAddressUseCase;
   final GetDefaultUserEmailUseCase _getDefaultUserEmailUseCase;
+
+  final MarkNotificationAsReceivedUseCase _markNotificationAsReceivedUseCase;
 
   bool _shouldRedirect = false;
   List<ScopeElement> _scopeElements = [];
@@ -98,6 +101,7 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     this._getUserPhoneNumberUseCase,
     this._initUserAuthUseCase,
     this._getDefaultPersonalDataUseCase,
+    this._markNotificationAsReceivedUseCase,
   ) : super(const AuthorizePageState.loading());
 
   Future<void> init(IncomingAction incomingAction, Locale locale) async {
@@ -106,7 +110,18 @@ class AuthorizePageCubit extends Cubit<AuthorizePageState> {
     _authorizationAttemptId = incomingAction.actionId;
     _authParameters = incomingAction.queryParameters;
 
+    await _markNotificationAsReceived(incomingAction);
     await _startAuthorizationAttempt();
+  }
+
+  Future<void> _markNotificationAsReceived(IncomingAction incomingAction) async {
+    try {
+      await _markNotificationAsReceivedUseCase(incomingAction);
+    } on GeneralConnectionError catch (e) {
+      Fimber.e('No connection', ex: e);
+    } catch (e, s) {
+      Fimber.e('Mark notification failed', ex: e, stacktrace: s);
+    }
   }
 
   Future<void> _startAuthorizationAttempt() async {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/log_pass_dio.dart';
@@ -9,8 +11,26 @@ import 'package:retrofit/retrofit.dart';
 
 part 'push_notifications_api_data_source.g.dart';
 
+@Singleton()
+class PushNotificationNotifierApiDataSource extends _PushNotificationsApiDataSource implements PushNotificationsApiDataSource {
+
+  PushNotificationNotifierApiDataSource(LogPassDio dio) : super(dio);
+
+  @override
+  Future<void> markAsReceived(String sendAttemptId, MarkPushNotificationReceivedDTO body) async {
+    final url = 'https://api.notifier.logpass.dev/send-attempts/$sendAttemptId/';
+    final headers = {
+      HttpHeaders.acceptHeader: 'application/json',
+    };
+
+    final options = Options(method: HttpMethod.PATCH, headers: headers)
+        .compose(_dio.options, url, data: body.toJson());
+
+    await _dio.fetch(options);
+  }
+}
+
 @RestApi()
-@lazySingleton
 abstract class PushNotificationsApiDataSource {
   @factoryMethod
   factory PushNotificationsApiDataSource(LogPassDio dio) = _PushNotificationsApiDataSource;
@@ -24,6 +44,6 @@ abstract class PushNotificationsApiDataSource {
   @DELETE('/push-notifications/devices/{token}/')
   Future<void> unregisterDevice(@Path() String token);
 
-  @PATCH('/send-attempts/{sendAttemptId}')
+  @PATCH('/send-attempts/{sendAttemptId}/')
   Future<void> markAsReceived(@Path() String sendAttemptId, @Body() MarkPushNotificationReceivedDTO body);
 }

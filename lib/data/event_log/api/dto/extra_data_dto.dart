@@ -16,7 +16,7 @@ class ExtraDataDTO {
   final String? acceptedAt;
   final String? browser;
   final String? country;
-  final String createdAt;
+  final String? createdAt;
   final String? ipAddress;
   final String? updatedAt;
   final String? deviceName;

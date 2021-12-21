@@ -13,8 +13,8 @@ class PushNotificationMessageDTOMapper implements DataMapper<PushNotificationMes
   @override
   PushNotificationMessage call(PushNotificationMessageDTO data) {
     return data.map(
-      authorize: (data) => PushNotificationMessage.authorize(_pushNotificationAuthorizeDTOMapper(data.body)),
-      unknown: (data) => PushNotificationMessage.unknown(data.action),
+      authorize: (data) => PushNotificationMessage.authorize(data.sendAttemptId, _pushNotificationAuthorizeDTOMapper(data.body)),
+      unknown: (data) => PushNotificationMessage.unknown(data.sendAttemptId, data.action),
     );
   }
 }

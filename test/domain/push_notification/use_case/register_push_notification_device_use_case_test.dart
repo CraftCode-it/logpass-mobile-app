@@ -49,6 +49,7 @@ void main() {
       name: deviceName,
       type: deviceType,
       isActive: true,
+      webSocketUrl: 'url'
     );
 
     when(deviceInfoRepository.getDeviceName()).thenAnswer((realInvocation) async => deviceName);
@@ -71,6 +72,7 @@ void main() {
       name: deviceName,
       type: deviceType,
       isActive: true,
+      webSocketUrl: 'url',
     );
 
     when(pushNotificationDeviceStore.load()).thenAnswer((realInvocation) async => null);
@@ -95,6 +97,7 @@ void main() {
       name: deviceName,
       type: deviceType,
       isActive: true,
+      webSocketUrl: 'oldUr'
     );
 
     final device = PushNotificationDevice(
@@ -102,6 +105,7 @@ void main() {
       name: deviceName,
       type: deviceType,
       isActive: true,
+      webSocketUrl: 'url'
     );
 
     when(pushNotificationDeviceStore.load()).thenAnswer((realInvocation) async => oldDevice);

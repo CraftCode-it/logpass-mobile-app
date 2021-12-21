@@ -8,12 +8,14 @@ class PushNotificationDeviceEntity {
   final String name;
   final String type;
   final bool isActive;
+  final String webSocketUrl;
 
   PushNotificationDeviceEntity({
     required this.id,
     required this.name,
     required this.type,
     required this.isActive,
+    required this.webSocketUrl,
   });
 
   Map<String, dynamic> toJson() => _$PushNotificationDeviceEntityToJson(this);
