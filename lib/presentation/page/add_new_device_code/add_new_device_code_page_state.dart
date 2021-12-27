@@ -5,12 +5,12 @@ part 'add_new_device_code_page_state.freezed.dart';
 
 @freezed
 class AddNewDeviceCodePageState with _$AddNewDeviceCodePageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AddNewDeviceCodePageState.loading() = _AddNewDeviceCodePageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AddNewDeviceCodePageState.idle(String code) = _AddNewDeviceCodePageStateCode;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AddNewDeviceCodePageState.error() = _AddNewDeviceCodePageStateError;
 }

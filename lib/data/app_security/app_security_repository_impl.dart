@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:injectable/injectable.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:logpass_me/data/app_security/biometric_data_source.dart';
@@ -17,6 +19,16 @@ class AppSecurityRepositoryImpl implements AppSecurityRepository {
   @override
   Future<bool> supportsBiometric() async {
     final availableBiometrics = await _biometricDataSource.availableBiometrics();
-    return availableBiometrics.any((element) => element == BiometricType.face || element == BiometricType.fingerprint);
+
+    final isBiometricSupports = availableBiometrics.any((element) =>
+        element == BiometricType.face ||
+        element == BiometricType.fingerprint
+    );
+
+    if(Platform.isIOS && !isBiometricSupports) {
+      return _biometricDataSource.isBiometricIOSDeviceSupported();
+    }
+
+    return isBiometricSupports;
   }
 }

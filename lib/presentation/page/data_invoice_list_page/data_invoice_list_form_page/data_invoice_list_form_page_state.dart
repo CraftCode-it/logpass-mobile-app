@@ -2,10 +2,10 @@ part of 'data_invoice_list_form_page_cubit.dart';
 
 @freezed
 class DataInvoiceListFormPageState with _$DataInvoiceListFormPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataInvoiceListFormPageState.loading() = _DataInvoiceListFormPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataInvoiceListFormPageState.idle(
     bool canSave,
     bool areSomeFieldsFilled,

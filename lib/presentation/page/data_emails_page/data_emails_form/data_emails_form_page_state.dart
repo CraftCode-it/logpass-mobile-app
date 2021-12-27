@@ -2,10 +2,10 @@ part of 'data_emails_form_page_cubit.dart';
 
 @freezed
 class DataEmailsFormPageState with _$DataEmailsFormPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataEmailsFormPageState.loading() = _DataEmailsFormPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataEmailsFormPageState.idle(
     bool canSave,
     bool isFieldFilled,

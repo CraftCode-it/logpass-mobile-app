@@ -6,10 +6,10 @@ part 'otp_code_page_state.freezed.dart';
 
 @freezed
 class OTPCodePageState with _$OTPCodePageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory OTPCodePageState.loading() = _OTPCodePageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory OTPCodePageState.idle(
     String code,
     bool valid,
@@ -17,10 +17,10 @@ class OTPCodePageState with _$OTPCodePageState {
     String? codeError,
   }) = _OTPCodePageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory OTPCodePageState.verifying(String code) = _OTPCodePageStateVeryfying;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory OTPCodePageState.resending(String code) = _OTPCodePageStateProcessingResending;
 
   factory OTPCodePageState.success() = _OTPCodePageStateSuccess;

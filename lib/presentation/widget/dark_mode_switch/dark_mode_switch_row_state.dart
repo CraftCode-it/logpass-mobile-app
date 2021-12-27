@@ -6,9 +6,9 @@ part 'dark_mode_switch_row_state.freezed.dart';
 
 @freezed
 class DarkModeSwitchRowState with _$DarkModeSwitchRowState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory DarkModeSwitchRowState.loading() = _DarkModeSwitchRowStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory DarkModeSwitchRowState.idle(ThemeBrightness themeBrightness) = _DarkModeSwitchRowStateIdle;
 }

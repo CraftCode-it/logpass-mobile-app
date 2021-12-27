@@ -22,6 +22,7 @@
     "noConnection": "Twoje urządzenia nie ma połączenia z internetem",
     "timeout": "Operacja zajmuje zbyt dużo czasu, spróbuj ponownie później",
     "somethingWentWrong": "Coś poszło nie tak, jak planowaliśmy. Spróbuj ponownie. ",
+    "permissionDenied": "Odmowa pozwolenia",
     "page": {
       "header": "Ups,",
       "content": "Coś poszło nie tak. Nie możemy dokończyć tego działania.",
@@ -228,6 +229,7 @@
     "changePin": "Zmień kod PIN",
     "deactivateBiometricsTitle": "Wyłącz TouchID lub FaceID",
     "deactivatePinTitle": "Wyłącz kod PIN",
+    "openAppSettingsBiometric": "Otwórz ustawienia i włącz uwierzytelnianie biometryczne",
     "turnOffSecurity": {
       "title": "Wyłącz poziom bezpieczeństwa",
       "content": "Na pewno chcesz wyłączyć tę opcję? Bez niej Twoje logowanie nie zostanie autoryzowane. \n\nIt will leave your login process without authentication.",

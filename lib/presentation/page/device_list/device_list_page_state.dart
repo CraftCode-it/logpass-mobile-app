@@ -7,13 +7,13 @@ part 'device_list_page_state.freezed.dart';
 
 @freezed
 class DeviceListPageState with _$DeviceListPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory DeviceListPageState.loading() = _DeviceListPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory DeviceListPageState.idle(List<Device> deviceList, bool modified) = _DeviceListPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory DeviceListPageState.loadingError() = _DeviceListPageStateError;
 
   factory DeviceListPageState.connectionError(GeneralConnectionError error) = _DeviceListPageStateConnectionError;

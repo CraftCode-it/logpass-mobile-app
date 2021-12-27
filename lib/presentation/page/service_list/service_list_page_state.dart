@@ -7,17 +7,17 @@ part 'service_list_page_state.freezed.dart';
 
 @freezed
 class ServiceListPageState with _$ServiceListPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ServiceListPageState.loading() = _ServiceListPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ServiceListPageState.idle(
     List<ServiceWithTokens> activeServices,
     List<ServiceWithTokens> otherServices,
     bool loadingMore,
   ) = ServiceListPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ServiceListPageState.empty() = _ServiceListPageStateEmpty;
 
   factory ServiceListPageState.connectionError(GeneralConnectionError error) = _ServiceListPageStateConnectionError;

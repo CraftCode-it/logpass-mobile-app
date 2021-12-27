@@ -2,7 +2,7 @@ part of 'trust_level_confirmation_page_cubit.dart';
 
 @freezed
 class TrustLevelConfirmationPageState with _$TrustLevelConfirmationPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory TrustLevelConfirmationPageState.idle(
     int currentTrustLevel,
     int requiredTrustLevel,
@@ -10,7 +10,7 @@ class TrustLevelConfirmationPageState with _$TrustLevelConfirmationPageState {
     List<Device> unavailableDevices,
   ) = _TrustLevelConfirmationPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory TrustLevelConfirmationPageState.loading() = _TrustLevelConfirmationPageStateLoading;
 
   const factory TrustLevelConfirmationPageState.connectionError(GeneralConnectionError error) =

@@ -5,10 +5,10 @@ part 'get_safer_page_state.freezed.dart';
 
 @freezed
 class GetSaferPageState with _$GetSaferPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory GetSaferPageState.loading() = _GetSaferPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory GetSaferPageState.idle(bool withBiometrics) = _GetSaferPageStateIdle;
 
   factory GetSaferPageState.setCodeForBiometrics() = _GetSaferPageStateSetCodeForBiometrics;

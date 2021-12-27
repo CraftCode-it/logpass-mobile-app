@@ -6,15 +6,15 @@ part 'messenger_state.freezed.dart';
 
 @freezed
 class MessengerState with _$MessengerState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory MessengerState.idle() = _MessengerStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory MessengerState.action(IncomingAction action) = _MessengerStateAction;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory MessengerState.info(String message, String? action, Function()? onAction) = _MessengerStateInfo;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory MessengerState.error(String message) = _MessengerStateError;
 }

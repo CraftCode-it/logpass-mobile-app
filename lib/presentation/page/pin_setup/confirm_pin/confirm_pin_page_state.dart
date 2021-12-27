@@ -5,10 +5,10 @@ part 'confirm_pin_page_state.freezed.dart';
 
 @freezed
 class ConfirmPinPageState with _$ConfirmPinPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ConfirmPinPageState.idle(bool valid, bool wrong) = _ConfirmPinPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ConfirmPinPageState.processing() = _ConfirmPinPageStateProcessing;
 
   factory ConfirmPinPageState.pinSaved() = _ConfirmPinPageStatePinSaved;

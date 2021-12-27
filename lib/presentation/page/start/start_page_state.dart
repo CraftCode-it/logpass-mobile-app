@@ -8,13 +8,13 @@ part 'start_page_state.freezed.dart';
 
 @freezed
 class StartPageState with _$StartPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory StartPageState.initial() = _StartPageStateInitial;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory StartPageState.idle(bool isValid, List<StartPageError> formErrors) = _StartPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory StartPageState.processing() = _StartPageStateProcessing;
 
   factory StartPageState.successOTP(String phoneNumber, SignUpVerification verification) = _StartPageStateSuccessOTP;

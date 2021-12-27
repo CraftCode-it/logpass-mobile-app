@@ -6,10 +6,10 @@ part 'country_code_picker_state.freezed.dart';
 
 @freezed
 class CountryCodePickerState with _$CountryCodePickerState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory CountryCodePickerState.loading() = _CountryCodePickerStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory CountryCodePickerState.selected(
     List<CountryCode> countryCodeList,
     CountryCode countryCode,

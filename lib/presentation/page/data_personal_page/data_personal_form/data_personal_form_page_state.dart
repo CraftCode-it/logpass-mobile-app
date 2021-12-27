@@ -2,10 +2,10 @@ part of 'data_personal_form_page_cubit.dart';
 
 @freezed
 class DataPersonalFormPageState with _$DataPersonalFormPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataPersonalFormPageState.loading() = _DataPersonalFormPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataPersonalFormPageState.idle(
     bool canSave,
     bool areSomeFieldsFilled,
