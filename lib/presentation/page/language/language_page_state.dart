@@ -5,9 +5,9 @@ part 'language_page_state.freezed.dart';
 
 @freezed
 class LanguagePageState with _$LanguagePageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory LanguagePageState.loading() = _LanguagePageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory LanguagePageState.idle(String languageCode) = _LanguagePageStateIdle;
 }

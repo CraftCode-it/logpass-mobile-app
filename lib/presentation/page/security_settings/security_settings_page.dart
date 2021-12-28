@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,20 @@ class SecuritySettingsPage extends HookWidget {
     state.maybeMap(
       setCode: (state) => _setCode(cubit, context, state.type),
       confirmWithCode: (state) => _confirmWithCode(cubit, context, state.type),
-      biometricNotAvailable: (_) =>
+      biometricNotAvailable: (_) async {
+        final confirmed = await showTwoOptionsDialog(
+          context,
+          LocaleKeys.error_permissionDenied.tr(),
+          LocaleKeys.securitySettings_openAppSettingsBiometric.tr(),
+          LocaleKeys.main_openActionLabel.tr(),
+          LocaleKeys.yourData_goBackOption.tr(),
+        );
+
+        if(confirmed) {
+          await AppSettings.openLocationSettings(asAnotherTask: true);
+        }
+      },
+      biometricNotSupported: (_) =>
           messangerController.showError(LocaleKeys.securitySettings_biometricsNotAvailable.tr()),
       orElse: () {},
     );

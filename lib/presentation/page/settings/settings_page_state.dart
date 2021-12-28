@@ -6,7 +6,7 @@ part 'settings_page_state.freezed.dart';
 
 @freezed
 class SettingsPageState with _$SettingsPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory SettingsPageState.idle() = _SettingsPageStateIdle;
 
   factory SettingsPageState.loggingOut() = _SettingsPageStateLoggingOut;

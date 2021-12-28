@@ -6,7 +6,7 @@ part 'add_new_device_page_state.freezed.dart';
 
 @freezed
 class AddNewDevicePageState with _$AddNewDevicePageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AddNewDevicePageState.idle(bool isCodeValid) = _AddNewDevicePageStateIdle;
 
   factory AddNewDevicePageState.processing() = _AddNewDevicePageStateProcessing;

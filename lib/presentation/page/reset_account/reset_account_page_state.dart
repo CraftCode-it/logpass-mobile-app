@@ -2,7 +2,7 @@ part of 'reset_account_page_cubit.dart';
 
 @freezed
 class ResetAccountPageState with _$ResetAccountPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ResetAccountPageState.idle() = _ResetAccountPageStateIdle;
 
   factory ResetAccountPageState.processing() = _ResetAccountPageStateProcessing;

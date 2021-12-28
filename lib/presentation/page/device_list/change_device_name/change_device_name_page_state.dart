@@ -5,10 +5,10 @@ part 'change_device_name_page_state.freezed.dart';
 
 @freezed
 class ChangeDeviceNamePageState with _$ChangeDeviceNamePageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ChangeDeviceNamePageState.initializing() = _ChangeDeviceNamePageStateInitializing;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ChangeDeviceNamePageState.idle(String name, bool canSave) = _ChangeDeviceNamePageStateIdle;
 
   factory ChangeDeviceNamePageState.initializeName(String name) = _ChangeDeviceNamePageStateInitializeName;

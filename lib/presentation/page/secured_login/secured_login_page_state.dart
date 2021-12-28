@@ -7,10 +7,10 @@ part 'secured_login_page_state.freezed.dart';
 
 @freezed
 class SecuredLoginPageState with _$SecuredLoginPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory SecuredLoginPageState.idle(AppSecurityType type, bool pinCodeError) = _SecuredLoginPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory SecuredLoginPageState.processing() = _SecuredLoginPageStateProcessing;
 
   factory SecuredLoginPageState.validated() =  _SecuredLoginPageStateValidated;

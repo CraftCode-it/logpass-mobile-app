@@ -7,13 +7,13 @@ part 'service_details_page_state.freezed.dart';
 
 @freezed
 class ServiceDetailsPageState with _$ServiceDetailsPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ServiceDetailsPageState.initializing() = _ServiceDetailsPageStateInitializing;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ServiceDetailsPageState.idle(Service service) = ServiceDetailsPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory ServiceDetailsPageState.processing(Service service) = ServiceDetailsPageStateProcessing;
 
   factory ServiceDetailsPageState.connectionError(GeneralConnectionError error) = _ServiceDetailsPageStateConnectionError;

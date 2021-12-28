@@ -7,16 +7,16 @@ part 'event_log_page_state.freezed.dart';
 
 @freezed
 class EventLogPageState with _$EventLogPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory EventLogPageState.loading() = _EventLogPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory EventLogPageState.idle(List<EventLog> events, bool loadingMore,) = _EventLogPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory EventLogPageState.empty() = _EventLogPageStateEmpty;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory EventLogPageState.error() = _EventLogPageStateError;
 
   factory EventLogPageState.connectionError(GeneralConnectionError error) = _EventLogPageStateConnectionError;

@@ -5,7 +5,7 @@ part 'entry_page_state.freezed.dart';
 
 @freezed
 class EntryPageState with _$EntryPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory EntryPageState.idle() = _EntryPageStateIdle;
 
   factory EntryPageState.onboarding() = _EntryPageStateOnboarding;

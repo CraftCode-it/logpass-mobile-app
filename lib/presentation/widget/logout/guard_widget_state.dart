@@ -5,7 +5,7 @@ part 'guard_widget_state.freezed.dart';
 
 @freezed
 class GuardWidgetState with _$GuardWidgetState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory GuardWidgetState.idle() = GuardWidgetStateIdle;
 
   factory GuardWidgetState.logout() = GuardWidgetStateLogout;

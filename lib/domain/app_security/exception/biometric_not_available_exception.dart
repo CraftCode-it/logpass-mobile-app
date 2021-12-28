@@ -1,3 +1,1 @@
-class BiometricNotAvailableException implements Exception {
-
-}
+class BiometricNotAvailableException implements Exception {}

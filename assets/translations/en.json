@@ -22,6 +22,7 @@
     "noConnection": "It seems like you have no internet connection",
     "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
     "somethingWentWrong": "Something went wrong. Please try again.",
+    "permissionDenied": "Permission denied",
     "page": {
       "header": "Oops,",
       "content": "Something went wrong. We could not perform required action.",
@@ -226,6 +227,7 @@
     "changePin": "Change PIN code",
     "deactivateBiometricsTitle": "Deactivate biometrics",
     "deactivatePinTitle": "Deactivate PIN code",
+    "openAppSettingsBiometric": "Open settings and switch on biometric authentication",
     "turnOffSecurity": {
       "title": "Turn off security",
       "content": "Are you sure you want to turn this option off?\n\nIt will leave your login process without authentication.",

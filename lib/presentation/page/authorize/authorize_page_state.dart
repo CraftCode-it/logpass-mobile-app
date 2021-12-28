@@ -2,10 +2,10 @@ part of 'authorize_page_cubit.dart';
 
 @freezed
 class AuthorizePageState with _$AuthorizePageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory AuthorizePageState.loading() = _AuthorizePageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory AuthorizePageState.idle(
     bool canConfirm,
     Service service,
@@ -19,7 +19,7 @@ class AuthorizePageState with _$AuthorizePageState {
 
   const factory AuthorizePageState.denied(String? redirectUri) = _AuthorizePageStateDenied;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory AuthorizePageState.error(bool actionExpired, {Function? retryCallback}) = _AuthorizePageStateError;
 
   const factory AuthorizePageState.connectionError(GeneralConnectionError error) = _AuthorizePageStateConnectionError;

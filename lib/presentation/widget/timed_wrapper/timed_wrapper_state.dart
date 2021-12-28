@@ -5,12 +5,12 @@ part 'timed_wrapper_state.freezed.dart';
 
 @freezed
 class TimedWrapperState with _$TimedWrapperState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory TimedWrapperState.loading() = _TimedWrapperStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory TimedWrapperState.ongoing() = _TimedWrapperStateOngoing;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory TimedWrapperState.passed() = _TimedWrapperStatePassed;
 }

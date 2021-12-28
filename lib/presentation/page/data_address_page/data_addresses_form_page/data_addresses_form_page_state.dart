@@ -2,10 +2,10 @@ part of 'data_addresses_form_page_cubit.dart';
 
 @freezed
 class DataAddressesFormPageState with _$DataAddressesFormPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataAddressesFormPageState.loading() = _DataAddressesFormPageStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory DataAddressesFormPageState.idle(
     bool canSave,
     bool areSomeFieldsFilled,

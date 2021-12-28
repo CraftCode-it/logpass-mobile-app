@@ -7,17 +7,17 @@ part 'session_list_view_state.freezed.dart';
 
 @freezed
 class SessionListViewState with _$SessionListViewState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory SessionListViewState.loading() = _SessionListViewStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory SessionListViewState.idle(
     List<SessionWithState> sessions,
     bool loadingMore,
     bool activeSessions,
   ) = SessionListViewStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory SessionListViewState.empty(bool activeSessions) = _SessionListViewStateEmpty;
 
   factory SessionListViewState.endedSession() = _SessionListViewStateEndedSession;

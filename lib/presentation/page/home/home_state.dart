@@ -2,11 +2,11 @@ part of 'home_cubit.dart';
 
 @freezed
 class HomeState with _$HomeState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory HomeState.loadInProgress() = _HomeStateLoadInProgress;
 
   // TODO: refactor in accordance to backend model
-  @Implements(BuildState)
+  @Implements<BuildState>()
   const factory HomeState.idle(List<IncomingAction> pendingActions) = _HomeStateIdle;
 
   const factory HomeState.codeCopied() = _HomeStateCodeCopied;

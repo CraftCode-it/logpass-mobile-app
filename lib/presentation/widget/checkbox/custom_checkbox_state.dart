@@ -6,9 +6,9 @@ part 'custom_checkbox_state.freezed.dart';
 
 @freezed
 class CustomCheckboxState with _$CustomCheckboxState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory CustomCheckboxState.loading() = _CustomCheckboxStateLoading;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory CustomCheckboxState.value(bool value, ThemeBrightness brightness) = _CustomCheckboxStateIdle;
 }

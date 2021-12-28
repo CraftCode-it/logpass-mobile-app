@@ -9,17 +9,17 @@ part 'agreement_details_page_state.freezed.dart';
 
 @freezed
 class AgreementDetailsPageState with _$AgreementDetailsPageState {
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AgreementDetailsPageState.initializing() = _AgreementDetailsPageStateInitializing;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AgreementDetailsPageState.loadingPdf(ServiceAgreement agreement) = _AgreementDetailsPageStateLoadingPdf;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AgreementDetailsPageState.idle(PdfController? pdfController, ServiceAgreement agreement) =
       _AgreementDetailsPageStateIdle;
 
-  @Implements(BuildState)
+  @Implements<BuildState>()
   factory AgreementDetailsPageState.processing(PdfController? pdfController, ServiceAgreement agreement) =
       _AgreementDetailsPageStateProcessing;
 
