@@ -55,11 +55,13 @@ class SecuredLoginPageCubit extends Cubit<SecuredLoginPageState> {
         emit(SecuredLoginPageState.validated());
       } else {
         await Future.delayed(const Duration(seconds: 1));
-        emit(SecuredLoginPageState.wrongPin());
         emit(SecuredLoginPageState.idle(_securityType, true));
       }
     } else {
-      emit(SecuredLoginPageState.idle(_securityType, false));
+      state.maybeWhen(
+        idle: (type, pinCodeError) => emit(SecuredLoginPageState.idle(type, pinCodeError)),
+        orElse: () => emit(SecuredLoginPageState.idle(_securityType, false))
+      );
     }
   }
 
