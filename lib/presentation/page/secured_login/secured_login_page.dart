@@ -36,12 +36,11 @@ class SecuredLoginPage extends HookWidget {
     final cubit = useCubit<SecuredLoginPageCubit>();
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
-    final pinFieldController = useTextEditingController();
     final messengerController = useMessengerController();
 
     useCubitListener<SecuredLoginPageCubit, SecuredLoginPageState>(
       cubit,
-      (cubit, state, context) => _listener(cubit, state, context, pinFieldController, messengerController),
+      (cubit, state, context) => _listener(cubit, state, context, messengerController),
     );
     useEffect(() {
       cubit.initialize();
@@ -76,11 +75,9 @@ class SecuredLoginPage extends HookWidget {
     SecuredLoginPageCubit cubit,
     SecuredLoginPageState state,
     BuildContext context,
-    TextEditingController pinController,
     MessengerController messengerController,
   ) {
     state.maybeMap(
-      wrongPin: (_) => pinController.clear(),
       validated: (_) => AutoRouter.of(context).replaceAll([const MainPageRoute()]),
       loggingOut: (_) {
         showFullScreenLoader(context);

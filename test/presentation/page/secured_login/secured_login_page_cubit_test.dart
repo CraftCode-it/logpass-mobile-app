@@ -124,12 +124,10 @@ void main() {
     );
 
     blocTest<SecuredLoginPageCubit, SecuredLoginPageState>(
-      'emits idle state when pin code is not long enough and last state is with error',
+      'emits nothing when pin code is not long enough and last state is with error',
       build: () => cubit,
       act: (cubit) => cubit.updatePinCode(''),
-      expect: () => [
-        SecuredLoginPageState.idle(AppSecurityType.biometric, false),
-      ],
+      expect: () => [], // Same state as seed emit
       seed: () => SecuredLoginPageState.idle(AppSecurityType.biometric, true),
     );
 
@@ -155,7 +153,6 @@ void main() {
       },
       expect: () => [
         SecuredLoginPageState.processing(),
-        SecuredLoginPageState.wrongPin(),
         SecuredLoginPageState.idle(AppSecurityType.biometric, true),
       ],
     );

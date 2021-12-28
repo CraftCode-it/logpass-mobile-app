@@ -19,8 +19,6 @@ class SecuredLoginPageState with _$SecuredLoginPageState {
 
   factory SecuredLoginPageState.error() = _SecuredLoginPageStateError;
 
-  factory SecuredLoginPageState.wrongPin() = _SecuredLoginPageStateClearPinCode;
-
   factory SecuredLoginPageState.loggingOut() = _SecuredLoginPageStateLoggingOut;
 
   factory SecuredLoginPageState.loggedOut() = _SecuredLoginPageStateLoggedOut;
