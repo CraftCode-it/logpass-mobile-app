@@ -18,6 +18,15 @@ class ForcedLogoutService implements LogoutService {
 
   @override
   Future<void> logout() async {
+    await _clearAll();
+
+    _logoutEventStreamController.sink.add(Object());
+  }
+
+  @override
+  Future<void> logoutWithoutListenableCallback() => _clearAll();
+
+  Future<void> _clearAll() async {
     for (final clearable in _clearables) {
       try {
         await clearable.clear();
@@ -25,7 +34,5 @@ class ForcedLogoutService implements LogoutService {
         Fimber.e('Failed to clear ${clearable.runtimeType}', ex: e, stacktrace: s);
       }
     }
-
-    _logoutEventStreamController.sink.add(Object());
   }
 }
