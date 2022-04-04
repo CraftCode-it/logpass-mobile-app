@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
@@ -33,6 +35,7 @@ Future<void> runMain(String env) async {
 
   await Firebase.initializeApp();
   await setupCrashlytics();
+  await setupCertificate();
 
   await runZonedGuarded<Future<void>>(() async {
     await _precacheSvgImages();
@@ -58,6 +61,11 @@ Future<void> runMain(String env) async {
       ),
     );
   }, FirebaseCrashlytics.instance.recordError);
+}
+
+Future<void> setupCertificate() async {
+  final data = await PlatformAssetBundle().load('assets/cert/lets-encrypt-r3.pem');
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
 }
 
 void setupFimber() => Fimber.plantTree(getIt());
