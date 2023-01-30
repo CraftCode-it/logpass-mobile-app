@@ -5,6 +5,7 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/actions_changed_notifier/use_case/listen_for_actions_change_use_case.dart';
 import 'package:logpass_me/domain/actions_changed_notifier/use_case/notify_actions_changed_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';

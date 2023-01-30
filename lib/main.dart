@@ -17,6 +17,7 @@ import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/data/user_data/entity/address_entity.dart';
 import 'package:logpass_me/data/user_data/entity/email_entity.dart';
 import 'package:logpass_me/data/user_data/entity/invoice_entity.dart';
+import 'package:logpass_me/data/user_data/entity/personal_data_entity.dart';
 import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/get_theme_brightness_use_case.dart';
@@ -25,7 +26,6 @@ import 'package:logpass_me/presentation/routing/main_router.gr.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/utils/brightness_utils.dart';
-import 'package:logpass_me/data/user_data/entity/personal_data_entity.dart';
 
 Future<void> runMain(String env) async {
   WidgetsFlutterBinding.ensureInitialized();
