@@ -1,0 +1,476 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/exports.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
+import 'package:logpass_me/presentation/page/authorize/personal_data_selection/personal_data_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
+import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_dimens.dart';
+import 'package:logpass_me/presentation/style/app_icon.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
+import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
+import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
+import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
+import 'package:logpass_me/presentation/widget/error_snackbar.dart';
+import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
+import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
+import 'package:logpass_me/presentation/widget/rounded_button.dart';
+import 'package:logpass_me/presentation/widget/service_header.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+const _arrowIconSize = 24.0;
+const _elemenetIconSize = 20.0;
+
+@RoutePage()
+class AuthorizePage extends HookWidget {
+  final IncomingAction incomingAction;
+
+  const AuthorizePage(this.incomingAction);
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = context.locale;
+    final cubit = useCubit<AuthorizePageCubit>();
+    final state = useCubitBuilder(cubit);
+    final messengerController = useMessengerController();
+
+    useCubitListener<AuthorizePageCubit, AuthorizePageState>(
+      cubit,
+      (cubit, state, context) => _cubitListener(
+        cubit,
+        state,
+        context,
+        messengerController,
+      ),
+    );
+
+    useEffect(() {
+      cubit.init(incomingAction, locale);
+    }, [cubit, locale]);
+
+    return CustomScaffold(
+      appBar: CustomAppBar.smallTitle(
+        title: LocaleKeys.authorize_title.tr(),
+        leading: NavigationButton.back(),
+      ),
+      body: SafeArea(
+        child: Messenger(
+          controller: messengerController,
+          child: state.maybeMap(
+            idle: (state) => _PageContent(
+              service: state.service,
+              canConfirm: state.canConfirm,
+              scopeElements: state.scopeElements,
+              agreementList: state.agreements,
+              cubit: cubit,
+              requiredTrustLevel: state.requiredTrustLevel,
+              currentTrustLevel: state.currentTrustLevel,
+            ),
+            loading: (_) => const Loader(),
+            orElse: () => const SizedBox(),
+          ),
+        ),
+      ),
+      onErrorActionTapped: state.maybeMap(
+        error: (errorState) {
+          if (errorState.actionExpired) {
+            return () => AutoRouter.of(context).pop();
+          } else {
+            if (errorState.retryCallback != null) return () => errorState.retryCallback!();
+          }
+        },
+        orElse: () {},
+      ),
+      errorActionButtonLabel: state.maybeMap(
+        error: (errorState) {
+          if (errorState.actionExpired) return LocaleKeys.error_page_goBackAction.tr();
+        },
+        orElse: () {},
+      ),
+      showErrorPage: state.maybeWhen(
+        error: (_, __) => true,
+        orElse: () => false,
+      ),
+    );
+  }
+
+  void _cubitListener(
+    AuthorizePageCubit cubit,
+    AuthorizePageState state,
+    BuildContext context,
+    MessengerController controller,
+  ) {
+    state.maybeMap(
+      confirmed: (state) async {
+        await _redirect(state.redirectUri);
+        await AutoRouter.of(context).pop();
+      },
+      denied: (state) async {
+        await _redirect(state.redirectUri);
+        await AutoRouter.of(context).pop();
+      },
+      biometricVerificationNeeded: (state) async {
+        final allowed = await showTwoOptionsDialog(
+          context,
+          LocaleKeys.authorize_biometricCheckDialogTitle.tr(),
+          LocaleKeys.authorize_biometricCheckDialogContent.tr(),
+          LocaleKeys.authorize_biometricCheckDialogTopAction.tr(),
+          LocaleKeys.authorize_biometricCheckDialogBottomAction.tr(),
+        );
+        if (allowed) {
+          await cubit.approveAuthorizeAttemptWithBiometric();
+        }
+      },
+      connectionError: (state) {
+        controller.showError(
+          getConnectionErrorString(state.error),
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  Future<void> _redirect(String? redirectUri) async {
+    if (redirectUri != null) {
+      if (await canLaunch(redirectUri)) {
+        await launch(redirectUri, forceSafariVC: false);
+      }
+    }
+  }
+}
+
+class _PageContent extends StatelessWidget {
+  final AuthorizePageCubit cubit;
+  final Service service;
+  final bool canConfirm;
+  final List<ScopeElement> scopeElements;
+  final List<ServiceAgreement> agreementList;
+  final int requiredTrustLevel;
+  final int currentTrustLevel;
+
+  const _PageContent({
+    required this.service,
+    required this.canConfirm,
+    required this.scopeElements,
+    required this.agreementList,
+    required this.cubit,
+    required this.requiredTrustLevel,
+    required this.currentTrustLevel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ServiceHeader(
+          name: service.name,
+          logoPath: service.logo,
+          serviceUrl: service.url,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _Form(
+                    service,
+                    scopeElements,
+                    agreementList,
+                    cubit.updateScopes,
+                    cubit.updateAgreements,
+                    requiredTrustLevel,
+                    currentTrustLevel,
+                    cubit.updateTrustLevel,
+                  ),
+                ),
+                const SizedBox(height: AppDimens.xl),
+                CustomRectangularButton.filled(
+                  text: LocaleKeys.authorize_confirm_button.tr(),
+                  onPressed: canConfirm ? cubit.approveAuthorizeAttempt : null,
+                ),
+                const SizedBox(height: AppDimens.l),
+                CustomRectangularButton.outlined(
+                  text: LocaleKeys.authorize_reject_button.tr(),
+                  onPressed: cubit.denyAuthorizeAttempt,
+                ),
+                const SizedBox(height: AppDimens.xl),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Form extends StatelessWidget {
+  final Service service;
+  final List<ScopeElement> scopeElements;
+  final List<ServiceAgreement> agreements;
+  final Function(ScopeElement) onScopeElementChange;
+  final Function(List<ServiceAgreement>) onAgreementsChange;
+  final int requiredTrustLevel;
+  final int currentTrustLevel;
+  final Function(int) onTrustLevelChange;
+
+  const _Form(
+    this.service,
+    this.scopeElements,
+    this.agreements,
+    this.onScopeElementChange,
+    this.onAgreementsChange,
+    this.requiredTrustLevel,
+    this.currentTrustLevel,
+    this.onTrustLevelChange,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _ServiceRulesElement(agreements, service, onAgreementsChange),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return _ScopeFormElement(
+                scopeElements[index],
+                service,
+                onScopeElementChange,
+              );
+            },
+            itemCount: scopeElements.length,
+          ),
+          _TrustLevelElement(
+            requiredTrustLevel: requiredTrustLevel,
+            currentTrustLevel: currentTrustLevel,
+            onTrustLevelChange: onTrustLevelChange,
+            service: service,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrustLevelElement extends StatelessWidget {
+  final int requiredTrustLevel;
+  final int currentTrustLevel;
+  final bool isActionRequired;
+  final Function(int) onTrustLevelChange;
+  final Service service;
+
+  const _TrustLevelElement({
+    required this.requiredTrustLevel,
+    required this.currentTrustLevel,
+    required this.onTrustLevelChange,
+    required this.service,
+  }) : isActionRequired = requiredTrustLevel > currentTrustLevel;
+
+  String _getContentDescription() {
+    return isActionRequired
+        ? LocaleKeys.authorize_trustLevelRequired.tr()
+        : LocaleKeys.authorize_trustLevelDescription.tr();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: LocaleKeys.authorize_trustLevelName.tr(),
+      content: _getContentDescription(),
+      imagePath: AppIcon.lock,
+      contentHasError: isActionRequired,
+      onTapAction: isActionRequired
+          ? () => AutoRouter.of(context).push(TrustLevelConfirmationPageRoute(
+                service: service,
+                initialTrustLevel: currentTrustLevel,
+                requiredTrustLevel: requiredTrustLevel,
+                onPagePop: (reachedLevel) => onTrustLevelChange(reachedLevel),
+              ))
+          : null,
+    );
+  }
+}
+
+class _ServiceRulesElement extends StatelessWidget {
+  final List<ServiceAgreement> agreements;
+  final Service service;
+  final Function(List<ServiceAgreement>) onAgreementsChange;
+
+  const _ServiceRulesElement(this.agreements, this.service, this.onAgreementsChange);
+
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: LocaleKeys.authorize_serviceRules.tr(),
+      imagePath: AppIcon.serviceRules,
+      onTapAction: () => AutoRouter.of(context).push(
+        ServiceRulesPageRoute(
+          agreements: agreements,
+          service: service,
+          onPagePop: (updatedAgreements) => onAgreementsChange(updatedAgreements),
+        ),
+      ),
+    );
+  }
+}
+
+class _ScopeFormElement extends StatelessWidget {
+  final ScopeElement element;
+  final Service service;
+  final Function(ScopeElement) onScopeElementChange;
+
+  const _ScopeFormElement(this.element, this.service, this.onScopeElementChange);
+
+  @override
+  Widget build(BuildContext context) {
+    return _FormElement(
+      title: element.name,
+      imagePath: element.imagePath,
+      onTapAction: _getOnTapAction(context, service),
+      content: _getItemDescription(element),
+      contentHasError: !element.isEligible(),
+    );
+  }
+
+  String _getItemDescription(ScopeElement element) {
+    final placeholder = element.isEligible() ? element.hint : element.requiredHint;
+
+    return element.maybeMap(
+      address: (state) => (state.address != null) ? state.address.toString() : placeholder,
+      email: (state) => (state.email != null) ? state.email.toString() : placeholder,
+      invoice: (state) => (state.invoiceData != null) ? state.invoiceData.toString() : placeholder,
+      profile: (state) => (state.personalData != null) ? state.personalData.toString() : placeholder,
+      orElse: () => placeholder,
+    );
+  }
+
+  VoidCallback? _getOnTapAction(BuildContext context, Service service) {
+    return element.maybeMap(
+      address: (state) => () {
+        AutoRouter.of(context).push(AddressSelectionPageRoute(
+          service: service,
+          address: state.address,
+          onPagePop: (address) => onScopeElementChange(state.copyWith(address: address)),
+        ));
+      },
+      email: (state) => () {
+        AutoRouter.of(context).push(EmailSelectionPageRoute(
+          service: service,
+          email: state.email,
+          onPagePop: (email) => onScopeElementChange(state.copyWith(email: email)),
+        ));
+      },
+      invoice: (state) => () {
+        AutoRouter.of(context).push(InvoiceDataSelectionPageRoute(
+          service: service,
+          invoiceData: state.invoiceData,
+          onPagePop: (invoice) => onScopeElementChange(state.copyWith(invoiceData: invoice)),
+        ));
+      },
+      profile: (state) => () {
+        AutoRouter.of(context).push(PersonalDataSelectionPageRoute(
+          service: service,
+          personalData: state.personalData,
+          onPagePop: (personalData) => onScopeElementChange(state.copyWith(personalData: personalData)),
+        ));
+      },
+      orElse: () {},
+    );
+  }
+}
+
+class _FormElement extends HookWidget {
+  final String title;
+  final String imagePath;
+  final VoidCallback? onTapAction;
+  final String? content;
+  final bool? contentHasError;
+
+  const _FormElement({
+    required this.title,
+    required this.imagePath,
+    this.onTapAction,
+    this.content,
+    this.contentHasError,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+
+    return InkWell(
+      onTap: onTapAction,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: colors.dividerLight,
+            ),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              imagePath,
+              colorFilter: ColorFilter.mode(colors.secondaryText, BlendMode.srcIn),
+              width: _elemenetIconSize,
+              height: _elemenetIconSize,
+            ),
+            const SizedBox(width: AppDimens.l),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: typography.body3,
+                        ),
+                      ),
+                      if (onTapAction != null)
+                        SvgPicture.asset(
+                          AppIcon.chevronRight,
+                          colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
+                          width: _arrowIconSize,
+                          height: _arrowIconSize,
+                        ),
+                    ],
+                  ),
+                  if (content != null && contentHasError != null) ...[
+                    const SizedBox(height: AppDimens.s),
+                    Text(
+                      content!,
+                      style: typography.info2.copyWith(
+                        color: contentHasError! ? AppColors.requiredElementColor : colors.text,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

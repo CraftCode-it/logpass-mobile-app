@@ -1,0 +1,13 @@
+name: logpass_crypto
+description: Cryptographic library for LogPass mobile app
+version: 1.0.0
+homepage: https://github.com/LogPass/logpass_crypto
+
+environment:
+  sdk: '>=2.14.2 <3.0.0'
+
+dev_dependencies:
+  lints: ^1.0.0
+  test: ^1.16.0
+dependencies: 
+  cryptography: ^2.0.2

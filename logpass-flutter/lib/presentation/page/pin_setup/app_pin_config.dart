@@ -1,0 +1,1 @@
+const appPinLength = 4;

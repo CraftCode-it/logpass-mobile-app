@@ -1,0 +1,1 @@
+class BiometricNotSupportedException implements Exception {}

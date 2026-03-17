@@ -1,0 +1,112 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:clock/clock.dart';
+import 'package:fimber/fimber.dart';
+import 'package:flutter/services.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/dispose_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/get_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/internet_connection/use_case/listen_internet_connection_use_case.dart';
+import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
+import 'package:logpass_me/domain/one_time_code/one_time_code.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
+import 'package:logpass_me/domain/one_time_code/use_case/subscribe_to_one_time_code_use_case.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
+
+part 'one_time_code_container_state.dart';
+part 'one_time_code_container_cubit.freezed.dart';
+
+@injectable
+class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
+  final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
+  final SubscribeToOnetimeCodeUseCase _subscribeToOneTimeCodeUseCase;
+  final GetInternetConnectionUseCase _getInternetConnectionUseCase;
+  final ListenInternetConnectionUseCase _listenInternetConnectionUseCase;
+  final DisposeInternetConnectionUseCase _disposeInternetConnectionUseCase;
+
+  late StreamSubscription<OneTimeCode?> _oneTimeCodeSubscription;
+  late OneTimeCode _oneTimeCode;
+  bool _hasInternetConnection = true;
+
+  OneTimeCodeContainerCubit(
+    this._loadOneTimeCodeUseCase,
+    this._subscribeToOneTimeCodeUseCase,
+    this._getInternetConnectionUseCase,
+    this._listenInternetConnectionUseCase,
+    this._disposeInternetConnectionUseCase,
+  ) : super(const OneTimeCodeContainerState.loadInProgress());
+
+  Future init() async {
+    _hasInternetConnection = await _getInternetConnectionUseCase();
+    await refreshOneTimeCode();
+
+    _listenForOneTimeCode();
+    _listenInternetConnection();
+  }
+
+  void _listenForOneTimeCode() {
+    try {
+      _oneTimeCodeSubscription = _subscribeToOneTimeCodeUseCase().listen(_onCodeChange);
+    } catch (e, s) {
+      Fimber.e('Error with OneTimeCode subscriber', ex: e, stacktrace: s);
+
+      emit(const OneTimeCodeContainerState.error());
+    }
+  }
+
+  void _onCodeChange(OneTimeCode? oneTimeCode) {
+    if (oneTimeCode != null) {
+      _oneTimeCode = oneTimeCode;
+      _emitIdleState();
+    } else {
+      Fimber.e('OneTimeCode is null');
+
+      emit(const OneTimeCodeContainerState.error());
+    }
+  }
+
+  Future copyOneTimeCodeToClipboard() async {
+    await Clipboard.setData(ClipboardData(text: _oneTimeCode.code));
+  }
+
+  Future refreshOneTimeCode() async {
+    try {
+      emit(const OneTimeCodeContainerState.loadInProgress());
+
+      await _loadOneTimeCodeUseCase.call();
+    } on GeneralConnectionError catch (e) {
+      emit(OneTimeCodeContainerState.connectionError(e));
+      emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection));
+    } catch (e, s) {
+      Fimber.e('Error with OneTimeCode refresh', ex: e, stacktrace: s);
+
+      emit(const OneTimeCodeContainerState.error());
+    }
+  }
+
+  void _emitIdleState() {
+    emit(OneTimeCodeContainerState.idle(_oneTimeCode));
+  }
+
+  @override
+  Future<void> close() async {
+    await _disposeInternetConnectionUseCase();
+    await _oneTimeCodeSubscription.cancel();
+    return super.close();
+  }
+
+  void _listenInternetConnection() {
+    _listenInternetConnectionUseCase().listen((hasConnection) {
+      _hasInternetConnection = hasConnection;
+
+      state.maybeWhen(
+        error: () => OneTimeCodeContainerState.internetConnection(_hasInternetConnection),
+        internetConnection: (_) =>
+            emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection)),
+        orElse: () {}
+      );
+    });
+  }
+}

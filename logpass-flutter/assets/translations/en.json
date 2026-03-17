@@ -1,0 +1,414 @@
+{
+  "common": {
+    "appName": "LogPass",
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start",
+    "prefix": "Prefix",
+    "phoneNumber": "Mobile number",
+    "verify": "Verify",
+    "logout": "Logout",
+    "wrongCode": "Code is wrong",
+    "continue": "Continue",
+    "deactivate": "Deactivate",
+    "back": "Back",
+    "save": "Save",
+    "remove": "Remove",
+    "copied": "Copied",
+    "done": "Done"
+  },
+  "error": {
+    "couldNotLoadData": "Could not load data",
+    "noConnection": "It seems like you have no internet connection",
+    "timeout": "Looks like the server is taking to long to respond, please try again in sometime",
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "permissionDenied": "Permission denied",
+    "page": {
+      "header": "Oops,",
+      "content": "Something went wrong. We could not perform required action.",
+      "action": "Try again",
+      "tryAgainAction": "Try again",
+      "goBackAction": "Go back"
+    }
+  },
+  "bottomBarNavigation": {
+    "home": "Home",
+    "services": "Services",
+    "data": "Your data",
+    "settings": "Settings"
+  },
+  "countryCodePicker": {
+    "title": "Select your country",
+    "search": "Search"
+  },
+  "onboarding": {
+    "stepOneTitle": "Security first",
+    "stepOneContent": "Thanks to Logpass you can safely log in to online shops, services and your accounts on different platforms",
+    "stepTwoTitle": "Protect your data",
+    "stepTwoContent": "A simple and safe way to control how much information you want to share with services that require sharing of information",
+    "stepThreeTitle": "Data at hand",
+    "stepThreeContent": "You can revoke access to your data with one click or erase all information in any give moment."
+  },
+  "start": {
+    "title": "Register",
+    "termsAcceptInfo": "By registering to the application, I accept ",
+    "termsAcceptHighlight": "Terms&Conditions of use",
+    "helpAction": "Need help?",
+    "addNewDeviceAction": "Add new device",
+    "addNewDeviceInfo": "Already registered but using different device?",
+    "phoneNumberFormatError": "Wrong phone number format"
+  },
+  "main": {
+    "newAction": "You have new pending action",
+    "openActionLabel": "Open"
+  },
+  "home": {
+    "codeErrorPlaceholder": "XXXXXX",
+    "activeInfo": "Code is active for {}",
+    "copyCodeLabel": "copy",
+    "refreshCodeLabel": "refresh",
+    "pendingActionsLabel": "Pending actions",
+    "pendingActionsEmpty": "Nothing requires your action now",
+    "pastActions": "See past events",
+    "actionTypeAuthorization": "Authorization",
+    "pendingItemTimeLeft": "Closes in {}",
+    "codeCopied": "Code copied to clipboard"
+  },
+  "authorize": {
+    "title": "Authorize operation",
+    "confirm_button": "Confirm",
+    "reject_button": "Reject",
+    "addressScopeName": "Address",
+    "addressScopeHint": "Select address data",
+    "emailScopeName": "Email",
+    "emailScopeHint": "Select email data",
+    "invoiceScopeName": "Invoice data",
+    "profileScopeName": "Profile data",
+    "invoiceScopeHint": "Select invoice data",
+    "profileScopeHint": "Select profile data",
+    "serviceRules": "Service rules",
+    "trustLevelName": "Trust level",
+    "trustLevelDescription": "No additional confirmation required",
+    "trustLevelRequired": "*Confirmation on another device required",
+    "selectEmailTitle": "Select email",
+    "selectAddressTitle": "Select address",
+    "selectInvoiceData": "Select invoice data",
+    "selectProfileData": "Select profile data",
+    "biometricCheckDialogTitle": "Biometrics needed",
+    "biometricCheckDialogContent": "This operation requires additional verification via Touch / Face ID\n\nPlease add your biometric to proceed",
+    "biometricCheckDialogTopAction": "Allow biometrics",
+    "biometricCheckDialogBottomAction": "Reject operation",
+    "serviceRulesTitle": "Service rules",
+    "acceptAllRules": "Agree to all"
+  },
+  "otpCode": {
+    "title": "Verify your number",
+    "info": "Please insert the code that we just send\nto provided phone number",
+    "codeLabel": "Code",
+    "resendInfo": "Did not get anything?",
+    "resendAction": "Resend code",
+    "codeResendSuccess": "Code resend"
+  },
+  "loginSuccess": {
+    "header": "Done!",
+    "info": "You successfully accessed the account."
+  },
+  "logoutSuccess": {
+    "info": "Checked out successfully."
+  },
+  "getSafer": {
+    "title": "Get safer",
+    "info": "Choose preferred login method to be sure that only you have access to this account.",
+    "biometricInfo": "Allow this device to use biometrics for login verification",
+    "biometricAction": "Use biometrics",
+    "codeInfoPrimary": "Set unique PIN code ",
+    "codeInfoSecondary": "or simply set unique PIN code ",
+    "codeAction": "Set PIN code",
+    "skipAction": "Not now",
+    "skipDialog": {
+      "title": "Skip step",
+      "content": "Are you sure you do not need extra access validation?",
+      "action": "Yes, skip",
+      "backAction": "Go back"
+    }
+  },
+  "newPin": {
+    "title": "Set PIN code",
+    "info": "Set unique PIN code that you will use for login into application"
+  },
+  "confirmPin": {
+    "title": "Set PIN code",
+    "info": "Repeat your PIN code"
+  },
+  "pinSuccess": {
+    "set": "PIN code to the account successfully set",
+    "changed": "PIN code to the account successfully changed"
+  },
+  "securedLogin": {
+    "header": "Welcome again!",
+    "pinCodeInfo": "Enter your pin code to proceed.",
+    "pinCodeInvalid": "Invalid pin code, try again",
+    "biometricInfo": "or use biometrics to enter",
+    "logoutInfo": "Forgot your passcode?\nLog in again to unlock your account.",
+    "needHelp": "Need help?"
+  },
+  "serviceList": {
+    "title": "Services",
+    "activeHeader": "With active sessions",
+    "otherHeader": "Other services",
+    "session": {
+      "one": "{} session",
+      "other": "{} sessions"
+    },
+    "noServices": "You have no connected services.",
+    "noActiveSessions": "No active sessions"
+  },
+  "serviceDetails": {
+    "title": "Service details",
+    "sessionsTab": "Active sessions",
+    "agreementsTab": "Agreements"
+  },
+  "sessionListView": {
+    "endAllSessions": "End all sessions",
+    "noActiveSessionsStart": "You have no active sessions for this service.\nGo to ",
+    "noActiveSessionsEnd": " to preview past ones.",
+    "noHistoricalSessions": "You have no historical sessions for this service.",
+    "sessionEnded": "Session ended"
+  },
+  "pastSessionsList": {
+    "title": "Past sessions"
+  },
+  "sessionRow": {
+    "opened": "opened:",
+    "device": "device:",
+    "localization": "localization:",
+    "ip": "IP:",
+    "valid": "valid:",
+    "endSessionAction": "End session"
+  },
+  "agreementList": {
+    "revokeAllAction": "Revoke all agreements"
+  },
+  "agreementRow": {
+    "required": "Required",
+    "optional": "Optional",
+    "agreedOn": "Agreed on {}"
+  },
+  "agreementDetails": {
+    "title": "Agreement details",
+    "type": "type:",
+    "typeOptional": "Optional",
+    "typeRequired": "Required",
+    "agreedOn": "agreed on:",
+    "revokeAction": "Revoke this agreement",
+    "confirmAction": "Confirm this agreement",
+    "agreementConfirmed": "Agreement confirmed",
+    "agreementRevoked": "Agreement revoked",
+    "revokeAgreementDialogTitle": "Revoke this agreement",
+    "revokeAgreementDialogContent": "Are you sure you want to revoke this agreement?\n\nAs this one is required, you will be automatically logged out of all sessions.",
+    "revokeAgreementDialogTopAction": "Revoke",
+    "revokeAgreementDialogBottomAction": "Back"
+  },
+  "settings": {
+    "title": "Settings",
+    "devices": "Your devices",
+    "security": "Security",
+    "darkMode": "Dark mode",
+    "language": "Language",
+    "terms": "Terms&Condition",
+    "help": "Help",
+    "logout": "Log out"
+  },
+  "securitySettings": {
+    "title": "Security",
+    "biometrics": "Biometrics login",
+    "biometricsNotAvailable": "Biometrics not available",
+    "pin": "PIN code",
+    "changePin": "Change PIN code",
+    "deactivateBiometricsTitle": "Deactivate biometrics",
+    "deactivatePinTitle": "Deactivate PIN code",
+    "openAppSettingsBiometric": "Open settings and switch on biometric authentication",
+    "turnOffSecurity": {
+      "title": "Turn off security",
+      "content": "Are you sure you want to turn this option off?\n\nIt will leave your login process without authentication.",
+      "action": "Turn off"
+    },
+    "changePinCode": {
+      "title": "Change PIN code",
+      "action": "Next"
+    }
+  },
+  "yourData": {
+    "title": "Your data",
+    "personalData": "Personal data",
+    "emails": "Emails",
+    "phone": "Phone",
+    "addresses": "Addresses",
+    "invoiceData": "Invoice data",
+    "addNewOption": "Add new",
+    "phoneEmpty": "You have no phone number added to your account.",
+    "personalDataEmptyList": "You have no personal data added to your account.",
+    "emailEmptyList": "You have no emails added to your account.",
+    "addressesEmptyList": "You have no addresses added to your account.",
+    "invoiceDataEmptyList": "You have no invoice data added to your account.",
+    "removeDialogTitle": "Remove data",
+    "removeDialogDescription": "Are you sure you want to remove this data?",
+    "removeOption": "Remove",
+    "setDefaultOption": "Set as default",
+    "goBackOption": "Go back",
+    "dataRemoved": "Data removed",
+    "saveOption": "Save",
+    "leaveOption": "Leave",
+    "exitDialogTitle": "Exit adding",
+    "exitDialogDescription": "Are you sure you want to leave without saving?",
+    "addPersonalDataTitle": "Add personal data",
+    "addEmailTitle": "Add new email",
+    "addAddressTitle": "Add new address",
+    "addInvoiceDataTitle": "Add new invoice data",
+    "personalDataForm": {
+      "nameHint": "*Name",
+      "surnameHint": "*Surname"
+    },
+    "emailForm": {
+      "emailHint": "*Email"
+    },
+    "addressForm": {
+      "nameHint": "*Name",
+      "streetHint": "*Street",
+      "buildingHint": "*Building number",
+      "apartmentHint": "Apartment number",
+      "postCodeHint": "*Postcode",
+      "cityHint": "*City",
+      "countryHint": "*Country"
+    },
+    "invoiceDataForm": {
+      "taxId": "TAX id: {}",
+      "taxIdHint": "TAX id",
+      "nameHint": "*Name",
+      "surnameHint": "*Surname",
+      "streetHint": "*Street",
+      "buildingHint": "*Building number",
+      "apartmentHint": "Apartment number",
+      "postCodeHint": "*Postcode",
+      "cityHint": "*City"
+    },
+    "duplicatedEntry": "Record with this values, already exists.",
+    "edit": "Edit"
+  },
+  "language": {
+    "title": "Select your language",
+    "supportedLanguages": {
+      "english": "English",
+      "polish": "Polski"
+    }
+  },
+  "termsAndConditions": {
+    "title": "Terms & conditions"
+  },
+  "addNewDevice": {
+    "title": "Add new device",
+    "header": "How to link this device with your Logpass account",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "codeInstruction": "On already linked device, please go to",
+    "codeInstructionNavigation": "Settings > Your devices > Add new",
+    "codeInsert": "and enter below presented code",
+    "codeLabel": "Code",
+    "codeHint": "000-000"
+  },
+  "needHelp": {
+    "title": "Help",
+    "needHelpTitle": "What is",
+    "needHelpDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionOneTitle": "How to start",
+    "questionOneDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionTwoTitle": "Where is my data stored",
+    "questionTwoDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionThreeTitle": "What is Logpass?",
+    "questionThreeDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "appVersion": "Currently you are using: "
+  },
+  "trustLevel": {
+    "title": "Trust levels",
+    "header": "What is device trust level?",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "level": "Level {}",
+    "levelDescription": {
+      "1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "3": "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    }
+  },
+  "deviceList": {
+    "title": "Your devices",
+    "addNewAction": "Add new",
+    "saveChangesInfo": "Remember to save changes",
+    "saveChanges": "Save changes",
+    "changeNameAction": "Change name",
+    "removeDeviceTitle": "Remove device",
+    "removeDeviceInfo": "Are you sure you want to remove this device?"
+  },
+  "changeDeviceName": {
+    "title": "Change device name",
+    "name": "Name"
+  },
+  "addNewDeviceCode": {
+    "title": "Add new device",
+    "content": "If you want to add another device to your account do the following;",
+    "steps": {
+      "1": "Open Logpass application on new device",
+      "2": "After open, click Add new device ",
+      "3": "Enter the code presented:"
+    },
+    "copy": "click on the code to copy"
+  },
+  "loginReset": {
+    "title": "Login reset",
+    "description": "It seems like your account has been configured on other device.",
+    "header": "What can you do now?",
+    "newDeviceDescription": "Link this device to your account to proceed on it",
+    "newDeviceButton": "Add new device",
+    "resetAccountDescription": "Is this your default device or you do not recall using another one?",
+    "resetAccountButton": "Reset account"
+  },
+  "resetAccount": {
+    "title": "Reset account",
+    "header": "You are about to reset your account",
+    "firstParagraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inostrud exercitaeu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "secondParagraph": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "firstWarningNote": "Please note, the data assigned to this account will be lost.",
+    "secondWarningNote": "Are you sure you want to proceed?",
+    "thirdWarningNote": "This action cannot be undone",
+    "resetAccountButton": "Reset"
+  },
+  "bubbleLoader": {
+    "description": "Configuring your account.\nIt may take a minute."
+  },
+  "pastEvents": {
+    "title": "Events log",
+    "noEvents": "You have no any past events.",
+    "actionLabel": {
+      "loginAttemptCreated": "Authorization",
+      "loginAttemptVerificationFailed": "Authorization",
+      "loginAttemptVerificationRetry": "Confirmation",
+      "loginAttemptVerificationFinished": "Security update",
+      "authorizationAttemptCreated": "Confirmation",
+      "authorizationAttemptApproved": "Security update",
+      "authorizationAttemptDenied": "Authorization",
+      "agreementAccepted": "Authorization",
+      "agreementRevoked": "Confirmation",
+      "backupEntryCreated": "Security update",
+      "backupEntryUpdated": "Confirmation",
+      "backupEntryDeleted": "Authorization"
+    }
+  },
+  "trustLevelConfirmation": {
+    "title": "Trust level confirmation",
+    "requiresHigherLevel": "This operation requires higher trust level",
+    "currentLevel": "Currently reached level:",
+    "confirmOnDevices": "Please confirm operation on other devices linked to your account:"
+  },
+  "confirm": {
+    "title": "Confirm",
+    "header": "Do you want to confirm following operation?"
+  }
+}

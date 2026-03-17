@@ -1,0 +1,416 @@
+{
+  "common": {
+    "appName": "LogPass",
+    "skip": "Pomiń",
+    "next": "Dalej",
+    "start": "Rozpocznij",
+    "prefix": "Kod kraju",
+    "phoneNumber": "Numer komórkowy",
+    "verify": "Potwierdź",
+    "logout": "Wyloguj",
+    "wrongCode": "Kod jest niepoprawny",
+    "continue": "Przejdź dalej",
+    "deactivate": "Dezaktywuj",
+    "back": "Wróć",
+    "save": "Zapisz",
+    "remove": "Usuń",
+    "copied": "Skopiowano",
+    "done": "Zrobione"
+  },
+  "error": {
+    "couldNotLoadData": "Nie udało się wczytać danych",
+    "noConnection": "Twoje urządzenia nie ma połączenia z internetem",
+    "timeout": "Operacja zajmuje zbyt dużo czasu, spróbuj ponownie później",
+    "somethingWentWrong": "Coś poszło nie tak, jak planowaliśmy. Spróbuj ponownie. ",
+    "permissionDenied": "Odmowa pozwolenia",
+    "page": {
+      "header": "Ups,",
+      "content": "Coś poszło nie tak. Nie możemy dokończyć tego działania.",
+      "action": "Spróbuj ponownie",
+      "tryAgainAction": "Spróbuj ponownie",
+      "goBackAction": "Okej, wróć"
+    }
+  },
+  "bottomBarNavigation": {
+    "home": "Strona główna",
+    "services": "Serwisy",
+    "data": "Twoje dane",
+    "settings": "Opcje"
+  },
+  "countryCodePicker": {
+    "title": "Wybierz swój kraj",
+    "search": "Wyszukaj"
+  },
+  "onboarding": {
+    "stepOneTitle": "Loguj się bezpiecznie do wszystkich usług online",
+    "stepOneContent": "Dzięki Logpass bezpiecznie zalogujesz się do sklepów internetowych, serwisów online czy swoich kont u różnych dostawców.",
+    "stepTwoTitle": "Odzyskaj kontrolę nad swoimi danymi",
+    "stepTwoContent": "Logpass pozwoli Ci kontrolować, ile informacji na swój temat udostępniasz dostawcom usług w internecie.",
+    "stepThreeTitle": "Nie pozwól się śledzić",
+    "stepThreeContent": "Jednym kliknięciem możesz zablokować przekazywanie informacji o swojej aktywności w sieci. Masz też prawo domagania się usunięcia swoich danych w dowolnym momencie."
+  },
+  "start": {
+    "title": "Rejestracja",
+    "termsAcceptInfo": "Rejestrując się, akceptuję ",
+    "termsAcceptHighlight": "warunki użytkowania",
+    "helpAction": "Pomoc",
+    "addNewDeviceAction": "Dodaj nowe urządzenie",
+    "addNewDeviceInfo": "Używasz Logpassa na innym urządzeniu?",
+    "phoneNumberFormatError": "Nieprawidłowy format numeru telefonu"
+  },
+  "main": {
+    "newAction": "Masz nowe zadanie",
+    "openActionLabel": "Otwórz"
+  },
+  "home": {
+    "codeErrorPlaceholder": "XXXXXX",
+    "activeInfo": "Kod jest aktywny przez {}",
+    "copyCodeLabel": "kopiuj",
+    "refreshCodeLabel": "odśwież",
+    "pendingActionsLabel": "Zadania oczekujące",
+    "pendingActionsEmpty": "Aktualnie nic nie wymaga Twojej uwagi",
+    "pastActions": "Zobacz poprzednie zadania",
+    "actionTypeAuthorization": "Autoryzacja",
+    "pendingItemTimeLeft": "Aktywne przez {}",
+    "codeCopied": "Kod został skopiowany"
+  },
+  "authorize": {
+    "title": "Autoryzuj działanie",
+    "confirm_button": "Potwierdź",
+    "reject_button": "Odrzuć",
+    "addressScopeName": "Adres",
+    "addressScopeHint": "Wybierz adres",
+    "emailScopeName": "Email",
+    "emailScopeHint": "Wybierz email",
+    "invoiceScopeName": "Dane do faktury",
+    "profileScopeName": "Dane profilu",
+    "invoiceScopeHint": "Wybierz dane do faktury",
+    "profileScopeHint": "Wybierz dane profilu",
+    "serviceRules": "Zasady użytkowania",
+    "trustLevelName": "Poziom zaufania",
+    "trustLevelDescription": "Dodatkowe potwierdzenie nie jest wymagane",
+    "trustLevelRequired": "*Wymagane jest dodatkowe potwierdzenie na innym urządzeniu",
+    "selectEmailTitle": "Wybierz email",
+    "selectAddressTitle": "Wybierz adres",
+    "selectInvoiceData": "Wybierz dane do faktury",
+    "selectProfileData": "Wybierz dane profilu",
+    "biometricCheckDialogTitle": "Użyj danych biometrycznych",
+    "biometricCheckDialogContent": "Ta operacja wymaga zatwierdzenia przez TouchID lub FaceID\n\nProszę, dodaj dane biometryczne, by kontynuować",
+    "biometricCheckDialogTopAction": "Używaj danych biometrycznych",
+    "biometricCheckDialogBottomAction": "Odrzuć zadanie",
+    "serviceRulesTitle": "Reguły użytkowania",
+    "acceptAllRules": "Tak na wszystko"
+  },
+  "otpCode": {
+    "title": "Zweryfikuj swój numer",
+    "info": "Tu wpisz tu kod, który od nas otrzymasz na podany numer telefonu",
+    "codeLabel": "Kod",
+    "resendInfo": "Kod nie przyszedł?",
+    "resendAction": "Wyślij kod ponownie",
+    "codeResendSuccess": "Kod przesłany ponownie"
+  },
+  "loginSuccess": {
+    "header": "Gotowe!",
+    "info": "Zalogowano pomyślnie"
+  },
+  "logoutSuccess": {
+    "info": "Wyrejestrowano pomyślnie."
+  },
+  "getSafer": {
+    "title": "Zabezpiecz swoje dane",
+    "info": "Wybierz metodę logowania, by mieć pewność, że tylko Ty masz dostęp do tego konta. ",
+    "biometricInfo": "Loguj się używając TouchID lub FaceID ",
+    "biometricAction": "Użyj danych biometrycznych",
+    "codeInfoPrimary": "Ustaw kod PIN",
+    "codeInfoSecondary": "albo po prostu ustaw kod PIN",
+    "codeAction": "Ustaw kod PIN",
+    "skipAction": "Później",
+    "skipDialog": {
+      "title": "Pomiń",
+      "content": "Na pewno chcesz pominąć ten krok? Rezygnujesz z dodatkowego zabezpieczenia. ",
+      "action": "Tak, rezygnuję",
+      "backAction": "Powrót"
+    }
+  },
+  "newPin": {
+    "title": "Ustaw kod PIN",
+    "info": "Ustaw unikalny kod PIN, którym zalogujesz się do tej aplikacji"
+  },
+  "confirmPin": {
+    "title": "Ustaw kod PIN",
+    "info": "Wprowadź ponownie PIN"
+  },
+  "pinSuccess": {
+    "set": "Ustawienie kodu PIN zakończyło się pomyślnie",
+    "changed": "Zmiana kodu PIN zakończyło się pomyślnie"
+  },
+  "securedLogin": {
+    "header": "Witamy ponownie!",
+    "pinCodeInfo": "Podaj swój kod PIN",
+    "pinCodeInvalid": "PIN niepoprawny, spróbuj ponownie",
+    "biometricInfo": "lub użyj danych FaceID lub TouchID",
+    "logoutInfo": "Nie pamiętasz hasła?\nZaloguj się ponownie, by odblokować konto. ",
+    "needHelp": "Potrzebujesz pomocy?"
+  },
+  "serviceList": {
+    "title": "Usługi",
+    "activeHeader": "Aktywne sesje",
+    "otherHeader": "Inne usługi",
+    "session": {
+      "one": "{} sesja",
+      "few": "{} sesje",
+      "many": "{} sesji",
+      "other": "{} sesji"
+    },
+    "noServices": "To konto nie ma żadnych powiązanych usług. ",
+    "noActiveSessions": "Brak aktywnych sesji"
+  },
+  "serviceDetails": {
+    "title": "Szczegóły zabezpieczeń",
+    "sessionsTab": "Aktywne sesje",
+    "agreementsTab": "Udzielone zgody"
+  },
+  "sessionListView": {
+    "endAllSessions": "Zakończ wszystkie sesje",
+    "noActiveSessionsStart": "Nie masz żadnych aktywnych sesji u tego dostawcy.\nGo to ",
+    "noActiveSessionsEnd": "zobacz poprzednie zadania",
+    "noHistoricalSessions": "To konto nie ma żadnych poprzednich sesji powiązanych z tym dostawcą. ",
+    "sessionEnded": "Sesja zakończona"
+  },
+  "pastSessionsList": {
+    "title": "Poprzednie sesje"
+  },
+  "sessionRow": {
+    "opened": "otwarte:",
+    "device": "urządzenie:",
+    "localization": "lokalizacja:",
+    "ip": "IP:",
+    "valid": "zgoda:",
+    "endSessionAction": "Zakończ sesję"
+  },
+  "agreementList": {
+    "revokeAllAction": "Odwołaj wszystkie zgody"
+  },
+  "agreementRow": {
+    "required": "Wymagane",
+    "optional": "Opcja",
+    "agreedOn": "Zgoda na{}"
+  },
+  "agreementDetails": {
+    "title": "Szczegóły udzielonej zgody",
+    "type": "type:",
+    "typeOptional": "Opcja",
+    "typeRequired": "Wymagane",
+    "agreedOn": "zgoda na:",
+    "revokeAction": "Odwołaj tę zgodę",
+    "confirmAction": "Potwierdź tę zgodę. ",
+    "agreementConfirmed": "Potwiedzenie udzielenia zgody",
+    "agreementRevoked": "Zgoda wycofana",
+    "revokeAgreementDialogTitle": "Odwołaj tę zgodę",
+    "revokeAgreementDialogContent": "Na pewno chcesz wycofać tę zgodę? Jest ona konieczna do korzystania z usługi. Jeśli ją wycofasz, automatycznie wylogujesz się ze wszystkich sesji.\n\n",
+    "revokeAgreementDialogTopAction": "Odwołaj",
+    "revokeAgreementDialogBottomAction": "Wróc"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "devices": "Twoje urządzenia",
+    "security": "Bezpieczeństwo",
+    "darkMode": "Tryb ciemny",
+    "language": "Język",
+    "terms": "Warunki użytkowania",
+    "help": "Pomoc",
+    "logout": "Wyloguj się"
+  },
+  "securitySettings": {
+    "title": "Bezpieczeństwo",
+    "biometrics": "Logowanie TouchID lub FaceID",
+    "biometricsNotAvailable": "Logowanie TouchID lub FaceID nie dostępne",
+    "pin": "Kod PIN",
+    "changePin": "Zmień kod PIN",
+    "deactivateBiometricsTitle": "Wyłącz TouchID lub FaceID",
+    "deactivatePinTitle": "Wyłącz kod PIN",
+    "openAppSettingsBiometric": "Otwórz ustawienia i włącz uwierzytelnianie biometryczne",
+    "turnOffSecurity": {
+      "title": "Wyłącz poziom bezpieczeństwa",
+      "content": "Na pewno chcesz wyłączyć tę opcję? Bez niej Twoje logowanie nie zostanie autoryzowane. \n\nIt will leave your login process without authentication.",
+      "action": "Wyłącz"
+    },
+    "changePinCode": {
+      "title": "Zmień kod PIN",
+      "action": "Dalej"
+    }
+  },
+  "yourData": {
+    "title": "Twoje dane",
+    "personalData": "Dane osobowe",
+    "emails": "Emaile",
+    "phone": "Phone",
+    "addresses": "Adres",
+    "invoiceData": "Dane do faktury",
+    "addNewOption": "Dodaj nowe",
+    "phoneEmpty": "To konto nie ma przypisanego żadnego numeru telefonu.",
+    "personalDataEmptyList": "To konto nie ma przypisanych danych osobowych. ",
+    "emailEmptyList": "To konto nie ma przypisanego żadnego adresu email. ",
+    "addressesEmptyList": "To konto nie ma przypisanego żadnego adresu.",
+    "invoiceDataEmptyList": "To konto nie ma przypisanych danych do faktury.",
+    "removeDialogTitle": "Usuń dane",
+    "removeDialogDescription": "Na pewno chcesz wycofać swoje dane?",
+    "removeOption": "Usuń",
+    "setDefaultOption": "Ustaw jako domyślny",
+    "goBackOption": "Wróć",
+    "dataRemoved": "Dane zostały usunięte",
+    "saveOption": "Zapisz",
+    "leaveOption": "Wyjdź bez dodawania",
+    "exitDialogTitle": "Wyjdź bez dodawania",
+    "exitDialogDescription": "Na pewno chcesz wyjść bez zapisywania?",
+    "addPersonalDataTitle": "Dodaj dane osobowe",
+    "addEmailTitle": "Dodaj nowy email",
+    "addAddressTitle": "Dodaj nowy adres",
+    "addInvoiceDataTitle": "Dodaj nowe dane do faktury",
+    "personalDataForm": {
+      "nameHint": "*Imię",
+      "surnameHint": "*Nazwisko"
+    },
+    "emailForm": {
+      "emailHint": "*Email"
+    },
+    "addressForm": {
+      "nameHint": "*Imię",
+      "streetHint": "*Ulica",
+      "buildingHint": "*Numer budynku",
+      "apartmentHint": "Numer mieszkania",
+      "postCodeHint": "*Kod Pocztowy",
+      "cityHint": "*Miasto",
+      "countryHint": "*Kraj"
+    },
+    "invoiceDataForm": {
+      "taxId": "*NIP",
+      "taxIdHint": "NIP",
+      "nameHint": "*Imię",
+      "surnameHint": "*Nazwisko",
+      "streetHint": "*Ulica",
+      "buildingHint": "*Numer budynku",
+      "apartmentHint": "Numer mieszkania",
+      "postCodeHint": "*Kod Pocztowy",
+      "cityHint": "*Miasto"
+    },
+    "duplicatedEntry": "Wpis z podanymi danymi już istnieje.",
+    "edit": "Edytuj"
+  },
+  "language": {
+    "title": "Wybierz język",
+    "supportedLanguages": {
+      "english": "Angielski",
+      "polish": "Polski"
+    }
+  },
+  "termsAndConditions": {
+    "title": "warunki użytkowania"
+  },
+  "addNewDevice": {
+    "title": "Dodaj nowe urządzenie",
+    "header": "Jak połączyć to urządzenie z Twoim kontem Logpass?",
+    "content": "Aplikację Logpass możesz zainstalować na dowolnej liczbie swoich urządzeń. Jeśli chcesz, by Twoje operacje były zabezpieczone, dodaj potwierdzanie operacji na kilku urządzeniach. ",
+    "codeInstruction": "Na połączonym urządzeniu idź do",
+    "codeInstructionNavigation": "Ustawienia > Twoje urządzenia > Dodaj nowe urządzenie",
+    "codeInsert": "i dodaj kod, który widzisz poniżej",
+    "codeLabel": "Kod",
+    "codeHint": "000-000"
+  },
+  "needHelp": {
+    "title": "Pomoc",
+    "needHelpTitle": "Czym jest",
+    "needHelpDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionOneTitle": "Jak zacząć?",
+    "questionOneDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionTwoTitle": "Gdzie przechowywane są moje dane?",
+    "questionTwoDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "questionThreeTitle": "What is Logpass?",
+    "questionThreeDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "appVersion": "Aktualnie używasz:"
+  },
+  "trustLevel": {
+    "title": "Poziomy zaufania",
+    "header": "Jaki jest poziom zaufania tego urządzenia?",
+    "content": "Aby zapewnić najwyższy poziom bezpieczeństwa urządzenia, operacje należy potwierdzać na urządzeniu użytkownika. Różne urządzenia mają różny poziom bezpieczeństwa - w zależności od tego, jakiego urządzenia używasz, operacje musisz potwierdzać na jednym lub na dwóch należących do Ciebie urządzeniach. \n\nJaki poziom zaufania mają Twoje urządzenia?\n",
+    "level": "Poziom",
+    "levelDescription": {
+      "1": "\nLevel 1 - ten poziom zaufania otrzymuje domyślnie Twój komputer PC lub Mac\n",
+      "2": "Level 2 - ten poziom zaufania otrzymuje domyślnie Twój telefon i tablet",
+      "3": "Level 3 - ten poziom uzyskasz łącząc potwierdzenie na dwóch należących do Ciebie urządzeniach, których łączny poziom zaufania wynosi 3. Może to być np. Twój telefon i komputer albo Twój tablet i telefon"
+    }
+  },
+  "deviceList": {
+    "title": "Twoje urządzenia",
+    "addNewAction": "Dodaj nowe urządzenie",
+    "saveChangesInfo": "Pamiętaj, by zapisać zmiany",
+    "saveChanges": "Zapisz zmiany",
+    "changeNameAction": "Zmień nazwę",
+    "removeDeviceTitle": "Usuń urządzenie",
+    "removeDeviceInfo": "Na pewno chcesz usunąć to urządzenie?"
+  },
+  "changeDeviceName": {
+    "title": "Zmień nazwę urządzenia",
+    "name": "Nazwa"
+  },
+  "addNewDeviceCode": {
+    "title": "Dodaj nowe urządzenie",
+    "content": "Jeśli chcesz dodać kolejne urządzenie, zrobisz to tak:",
+    "steps": {
+      "1": "Otwórz Logpass na nowym urządzeniu",
+      "2": "Po otwarciu, klikniej Dodaj nowe urządzenie",
+      "3": "Wpisz ten kod:"
+    },
+    "copy": "kliknij na kod, by skopiować"
+  },
+  "loginReset": {
+    "title": "Zresetuj login",
+    "description": "Wygląda na to, że masz już konto na innym urządzeniu.",
+    "header": "Co możesz teraz zrobić?",
+    "newDeviceDescription": "Połącz to urządzenie ze swoim kontem Logpass i kontynuuj. ",
+    "newDeviceButton": "Dodaj nowe urządzenie",
+    "resetAccountDescription": "Czy to Twoje domyślne urządzenie?",
+    "resetAccountButton": "Zresetuj konto"
+  },
+  "resetAccount": {
+    "title": "Zresetuj konto",
+    "header": "Za chwilę zresetujesz konto",
+    "firstParagraph": "Czy na pewno? Twoje dane nie będą mogły być przywrócone.",
+    "secondParagraph": "To działanie wymaże wszystkie dane z Twojej aplikacji. ",
+    "firstWarningNote": "Wszystkie dane zostaną usunięte z tego konta.",
+    "secondWarningNote": "Czy na pewno chcesz kontynuować?",
+    "thirdWarningNote": "Tej operacji nie można cofnąć. ",
+    "resetAccountButton": "Zresetuj"
+  },
+  "bubbleLoader": {
+    "description": "Konfigurujemy Twoje konto. Może to zająć chwilę. "
+  },
+  "pastEvents": {
+    "title": "Lista zdarzeń",
+    "noEvents": "Nie masz żadnych przeszłych zdarzeń.",
+    "actionLabel": {
+      "loginAttemptCreated": "Autoryzacja",
+      "loginAttemptVerificationFailed": "Autoryzacja",
+      "loginAttemptVerificationRetry": "Potwierdzenie",
+      "loginAttemptVerificationFinished": "Aktualizacja bezpieczeństwa",
+      "authorizationAttemptCreated": "Potwierdzenie",
+      "authorizationAttemptApproved": "Aktualizacja bezpieczeństwa",
+      "authorizationAttemptDenied": "Autoryzacja",
+      "agreementAccepted": "Autoryzacja",
+      "agreementRevoked": "Potwierdzenie",
+      "backupEntryCreated": "Aktualizacja bezpieczeństwa",
+      "backupEntryUpdated": "Potwierdzenie",
+      "backupEntryDeleted": "Autoryzacja"
+    }
+  },
+  "trustLevelConfirmation": {
+    "title": "Potwierdzenie poziomu zaufania",
+    "requiresHigherLevel": "Ta operacja wymaga wyższego poziomu zaufania",
+    "currentLevel": "Aktualny poziom zaufania:",
+    "confirmOnDevices": "Potwierdź to działanie na na innym urządzeniu połączonym z Twoim kontem"
+  },
+  "confirm": {
+    "title": "Potwierdź",
+    "header": "Czy chcesz potwierdzić tę operacje?"
+  }
+}

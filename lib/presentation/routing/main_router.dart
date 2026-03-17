@@ -1,0 +1,117 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
+import 'package:logpass_me/presentation/page/add_new_device_code/add_new_device_code_page.dart';
+import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
+import 'package:logpass_me/presentation/page/authorize/address_selection/address_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/agreement_content_preview/agreement_content_preview_page.dart';
+import 'package:logpass_me/presentation/page/authorize/authorize_page.dart';
+import 'package:logpass_me/presentation/page/authorize/email_selection/email_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/invoice_data_selection/invoice_data_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/personal_data_selection/personal_data_selection_page.dart';
+import 'package:logpass_me/presentation/page/authorize/service_rules/service_rules_page.dart';
+import 'package:logpass_me/presentation/page/authorize/trust_level_confirmation/trust_level_confirmation_page.dart';
+import 'package:logpass_me/presentation/page/confirm/confirm_page.dart';
+import 'package:logpass_me/presentation/page/country_code/country_code_picker_page.dart';
+import 'package:logpass_me/presentation/page/data_address_page/data_addresses_form_page/data_addresses_form_page.dart';
+import 'package:logpass_me/presentation/page/data_address_page/data_addresses_page.dart';
+import 'package:logpass_me/presentation/page/data_emails_page/data_emails_form/data_emails_form_page.dart';
+import 'package:logpass_me/presentation/page/data_emails_page/data_emails_page.dart';
+import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_form_page/data_invoice_list_form_page.dart';
+import 'package:logpass_me/presentation/page/data_invoice_list_page/data_invoice_list_page.dart';
+import 'package:logpass_me/presentation/page/data_personal_page/data_personal_form/data_personal_form_page.dart';
+import 'package:logpass_me/presentation/page/data_personal_page/data_personal_page.dart';
+import 'package:logpass_me/presentation/page/data_phone_page/data_phone_number_page.dart';
+import 'package:logpass_me/presentation/page/device_list/change_device_name/change_device_name_page.dart';
+import 'package:logpass_me/presentation/page/device_list/device_list_page.dart';
+import 'package:logpass_me/presentation/page/entry/entry_page.dart';
+import 'package:logpass_me/presentation/page/event_log/event_log_page.dart';
+import 'package:logpass_me/presentation/page/get_safer/get_safer_page.dart';
+import 'package:logpass_me/presentation/page/home/home_page.dart';
+import 'package:logpass_me/presentation/page/language/language_page.dart';
+import 'package:logpass_me/presentation/page/login_reset/login_reset_page.dart';
+import 'package:logpass_me/presentation/page/login_success/login_success_page.dart';
+import 'package:logpass_me/presentation/page/main/main_page.dart';
+import 'package:logpass_me/presentation/page/need_help/need_help_page.dart';
+import 'package:logpass_me/presentation/page/need_help/question_page.dart';
+import 'package:logpass_me/presentation/page/onboarding/onboarding_page.dart';
+import 'package:logpass_me/presentation/page/otp_code/otp_code_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/confirm_pin/confirm_pin_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/confirm_with_pin/confirm_with_pin_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/new_pin/new_pin_page.dart';
+import 'package:logpass_me/presentation/page/pin_setup/pin_success/pin_success_page.dart';
+import 'package:logpass_me/presentation/page/reset_account/reset_account_page.dart';
+import 'package:logpass_me/presentation/page/secured_login/secured_login_page.dart';
+import 'package:logpass_me/presentation/page/security_settings/security_settings_page.dart';
+import 'package:logpass_me/presentation/page/service_details/service_details_page.dart';
+import 'package:logpass_me/presentation/page/service_details/session_list/historical_session_list_page.dart';
+import 'package:logpass_me/presentation/page/start/start_page.dart';
+import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_conditions_page.dart';
+import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
+import 'package:logpass_me/presentation/page/wallet/credential_detail/credential_detail_page.dart';
+import 'package:logpass_me/presentation/page/wallet/proof_presentation/proof_presentation_page.dart';
+import 'package:logpass_me/presentation/page/wallet/qr_scan/qr_scan_page.dart';
+import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_page.dart';
+import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
+
+part 'main_router.gr.dart';
+
+@AutoRouterConfig(replaceInRouteName: 'Page,Route')
+class MainRouter extends RootStackRouter {
+  @override
+  List<AutoRoute> get routes => [
+    AutoRoute(page: EntryRoute.page, initial: true),
+    AutoRoute(page: OnboardingRoute.page),
+    AutoRoute(page: StartRoute.page),
+    AutoRoute(page: AddNewDeviceRoute.page),
+    AutoRoute(page: CountryCodePickerRoute.page),
+    AutoRoute(page: OTPCodeRoute.page),
+    AutoRoute(page: HomeRoute.page),
+    AutoRoute(page: GetSaferRoute.page),
+    AutoRoute(page: LoginSuccessRoute.page),
+    AutoRoute(page: MainRoute.page),
+    AutoRoute(page: NewPinRoute.page),
+    AutoRoute(page: ConfirmPinRoute.page),
+    AutoRoute(page: PinSuccessRoute.page),
+    AutoRoute(page: SecuredLoginRoute.page),
+    AutoRoute(page: ServiceDetailsRoute.page),
+    AutoRoute(page: HistoricalSessionListRoute.page),
+    AutoRoute(page: AuthorizeRoute.page),
+    AutoRoute(page: AgreementDetailsRoute.page),
+    AutoRoute(page: EmailSelectionRoute.page),
+    AutoRoute(page: AddressSelectionRoute.page),
+    AutoRoute(page: PersonalDataSelectionRoute.page),
+    AutoRoute(page: InvoiceDataSelectionRoute.page),
+    AutoRoute(page: SecuritySettingsRoute.page),
+    AutoRoute(page: ConfirmWithPinRoute.page),
+    AutoRoute(page: LanguageRoute.page),
+    AutoRoute(page: TermsAndConditionsRoute.page),
+    AutoRoute(page: ServiceRulesRoute.page),
+    AutoRoute(page: AgreementContentPreviewRoute.page),
+    AutoRoute(page: DataPersonalRoute.page),
+    AutoRoute(page: NeedHelpRoute.page),
+    AutoRoute(page: QuestionRoute.page),
+    AutoRoute(page: DataPersonalFormRoute.page),
+    AutoRoute(page: DataPhoneNumberRoute.page),
+    AutoRoute(page: DataEmailsRoute.page),
+    AutoRoute(page: DataEmailsFormRoute.page),
+    AutoRoute(page: DataAddressesRoute.page),
+    AutoRoute(page: DataAddressesFormRoute.page),
+    AutoRoute(page: DeviceListRoute.page),
+    AutoRoute(page: TrustLevelRoute.page),
+    AutoRoute(page: ChangeDeviceNameRoute.page),
+    AutoRoute(page: AddNewDeviceCodeRoute.page),
+    AutoRoute(page: DataInvoiceListRoute.page),
+    AutoRoute(page: DataInvoiceListFormRoute.page),
+    AutoRoute(page: LoginResetRoute.page),
+    AutoRoute(page: ResetAccountRoute.page),
+    AutoRoute(page: EventLogRoute.page),
+    AutoRoute(page: TrustLevelConfirmationRoute.page),
+    AutoRoute(page: ConfirmRoute.page),
+    AutoRoute(page: WalletHomeRoute.page),
+    AutoRoute(page: CredentialDetailRoute.page),
+    AutoRoute(page: ProofPresentationRoute.page),
+    AutoRoute(page: QrScanRoute.page),
+    AutoRoute(page: VerificationRequestRoute.page),
+  ];
+}
