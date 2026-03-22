@@ -62,3 +62,6 @@ ios/build/
 
 ### FVM related ###
 .fvm/flutter_sdk
+
+# Nested repo artefakt (nie commituj)
+logpass-flutter/
