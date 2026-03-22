@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,14 +8,16 @@ import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page.dart';
+import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
 import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/logout/guard_widget.dart';
 
+@RoutePage()
 class MainPage extends HookWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -51,6 +53,7 @@ class MainPage extends HookWidget {
                 children: const [
                   HomePage(),
                   ServiceListPage(),
+                  WalletHomePage(),
                   YourDataPage(),
                   SettingsPage(),
                 ],
@@ -70,44 +73,53 @@ class MainPage extends HookWidget {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcon.home,
-              color: colors.bottomBarInactiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarInactiveText, BlendMode.srcIn),
             ),
             activeIcon: SvgPicture.asset(
               AppIcon.homeActive,
-              color: colors.bottomBarActiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarActiveText, BlendMode.srcIn),
             ),
             label: tr(LocaleKeys.bottomBarNavigation_home),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcon.services,
-              color: colors.bottomBarInactiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarInactiveText, BlendMode.srcIn),
             ),
             activeIcon: SvgPicture.asset(
               AppIcon.servicesActive,
-              color: colors.bottomBarActiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarActiveText, BlendMode.srcIn),
             ),
             label: tr(LocaleKeys.bottomBarNavigation_services),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet_outlined,
+              color: colors.bottomBarInactiveText,
+            ),
+            activeIcon: Icon(Icons.account_balance_wallet,
+              color: colors.bottomBarActiveText,
+            ),
+            label: 'Wallet',
+          ),
+          BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcon.yourData,
-              color: colors.bottomBarInactiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarInactiveText, BlendMode.srcIn),
             ),
             activeIcon: SvgPicture.asset(
               AppIcon.yourDataActive,
-              color: colors.bottomBarActiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarActiveText, BlendMode.srcIn),
             ),
             label: tr(LocaleKeys.bottomBarNavigation_data),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               AppIcon.settings,
-              color: colors.bottomBarInactiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarInactiveText, BlendMode.srcIn),
             ),
             activeIcon: SvgPicture.asset(
               AppIcon.settingsActive,
-              color: colors.bottomBarActiveText,
+              colorFilter: ColorFilter.mode(colors.bottomBarActiveText, BlendMode.srcIn),
             ),
             label: tr(LocaleKeys.bottomBarNavigation_settings),
           ),
@@ -128,9 +140,9 @@ class MainPage extends HookWidget {
       openAction: (action) {
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(
-            AuthorizePageRoute(incomingAction: action),
+            AuthorizeRoute(incomingAction: action),
           ),
-          confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
+          confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
           updateAccount: () {},
           refreshUserCode: () {},
         );

@@ -6,8 +6,7 @@ import 'package:logpass_me/domain/networking/error/general_connection_error.dart
 import 'package:logpass_me/domain/pdf/use_case/get_agreement_pdf_file_use_case.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
-import 'package:native_pdf_renderer/native_pdf_renderer.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:pdfx/pdfx.dart';
 
 part 'agreement_content_preview_page_cubit.freezed.dart';
 part 'agreement_content_preview_page_state.dart';

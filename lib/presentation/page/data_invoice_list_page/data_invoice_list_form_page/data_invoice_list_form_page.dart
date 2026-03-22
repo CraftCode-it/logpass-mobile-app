@@ -19,6 +19,7 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 const _scrollThreshold = 12.0;
 
+@RoutePage()
 class DataInvoiceListFormPage extends HookWidget {
   final VoidCallback refreshListOnPagePop;
   final InvoiceData? invoiceData;

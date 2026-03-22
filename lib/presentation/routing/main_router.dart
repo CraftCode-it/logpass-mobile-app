@@ -1,5 +1,16 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
+import 'package:logpass_me/domain/need_help/question.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
+import 'package:logpass_me/domain/wallet/credential.dart';
 import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
 import 'package:logpass_me/presentation/page/add_new_device_code/add_new_device_code_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
@@ -45,60 +56,76 @@ import 'package:logpass_me/presentation/page/secured_login/secured_login_page.da
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/historical_session_list_page.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
+import 'package:logpass_me/presentation/page/settings/settings_page.dart';
 import 'package:logpass_me/presentation/page/start/start_page.dart';
 import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_conditions_page.dart';
 import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
+import 'package:logpass_me/presentation/page/wallet/credential_detail/credential_detail_page.dart';
+import 'package:logpass_me/presentation/page/wallet/proof_presentation/proof_presentation_page.dart';
+import 'package:logpass_me/presentation/page/wallet/qr_scan/qr_scan_page.dart';
+import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_page.dart';
+import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
+import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
 
-@AdaptiveAutoRouter(
-  routes: [
-    AutoRoute(page: EntryPage, initial: true),
-    AutoRoute(page: OnboardingPage),
-    AutoRoute(page: StartPage),
-    AutoRoute(page: AddNewDevicePage),
-    AutoRoute<CountryCode?>(page: CountryCodePickerPage),
-    AutoRoute(page: OTPCodePage),
-    AutoRoute(page: HomePage),
-    AutoRoute(page: GetSaferPage),
-    AutoRoute(page: LoginSuccessPage),
-    AutoRoute(page: MainPage),
-    AutoRoute(page: NewPinPage),
-    AutoRoute(page: ConfirmPinPage),
-    AutoRoute(page: PinSuccessPage),
-    AutoRoute(page: SecuredLoginPage),
-    AutoRoute(page: ServiceDetailsPage),
-    AutoRoute(page: HistoricalSessionListPage),
-    AutoRoute(page: AuthorizePage),
-    AutoRoute(page: AgreementDetailsPage),
-    AutoRoute(page: EmailSelectionPage),
-    AutoRoute(page: AddressSelectionPage),
-    AutoRoute(page: PersonalDataSelectionPage),
-    AutoRoute(page: InvoiceDataSelectionPage),
-    AutoRoute(page: SecuritySettingsPage),
-    AutoRoute(page: ConfirmWithPinPage),
-    AutoRoute(page: LanguagePage),
-    AutoRoute(page: TermsAndConditionsPage),
-    AutoRoute(page: ServiceRulesPage),
-    AutoRoute(page: AgreementContentPreviewPage),
-    AutoRoute(page: DataPersonalPage),
-    AutoRoute(page: NeedHelpPage),
-    AutoRoute(page: QuestionPage),
-    AutoRoute(page: DataPersonalFormPage),
-    AutoRoute(page: DataPhoneNumberPage),
-    AutoRoute(page: DataEmailsPage),
-    AutoRoute(page: DataEmailsFormPage),
-    AutoRoute(page: DataAddressesPage),
-    AutoRoute(page: DataAddressesFormPage),
-    AutoRoute(page: DeviceListPage),
-    AutoRoute(page: TrustLevelPage),
-    AutoRoute(page: ChangeDeviceNamePage),
-    AutoRoute(page: AddNewDeviceCodePage),
-    AutoRoute(page: DataInvoiceListPage),
-    AutoRoute(page: DataInvoiceListFormPage),
-    AutoRoute(page: LoginResetPage),
-    AutoRoute(page: ResetAccountPage),
-    AutoRoute(page: EventLogPage),
-    AutoRoute(page: TrustLevelConfirmationPage),
-    AutoRoute(page: ConfirmPage),
-  ],
-)
-class $MainRouter {}
+part 'main_router.gr.dart';
+
+@AutoRouterConfig(replaceInRouteName: 'Page,Route')
+class MainRouter extends _$MainRouter {
+  @override
+  List<AutoRoute> get routes => [
+    AutoRoute(page: EntryRoute.page, initial: true),
+    AutoRoute(page: OnboardingRoute.page),
+    AutoRoute(page: StartRoute.page),
+    AutoRoute(page: AddNewDeviceRoute.page),
+    AutoRoute(page: CountryCodePickerRoute.page),
+    AutoRoute(page: OTPCodeRoute.page),
+    AutoRoute(page: HomeRoute.page),
+    AutoRoute(page: GetSaferRoute.page),
+    AutoRoute(page: LoginSuccessRoute.page),
+    AutoRoute(page: MainRoute.page),
+    AutoRoute(page: NewPinRoute.page),
+    AutoRoute(page: ConfirmPinRoute.page),
+    AutoRoute(page: PinSuccessRoute.page),
+    AutoRoute(page: SecuredLoginRoute.page),
+    AutoRoute(page: ServiceDetailsRoute.page),
+    AutoRoute(page: HistoricalSessionListRoute.page),
+    AutoRoute(page: AuthorizeRoute.page),
+    AutoRoute(page: AgreementDetailsRoute.page),
+    AutoRoute(page: EmailSelectionRoute.page),
+    AutoRoute(page: AddressSelectionRoute.page),
+    AutoRoute(page: PersonalDataSelectionRoute.page),
+    AutoRoute(page: InvoiceDataSelectionRoute.page),
+    AutoRoute(page: SecuritySettingsRoute.page),
+    AutoRoute(page: ConfirmWithPinRoute.page),
+    AutoRoute(page: LanguageRoute.page),
+    AutoRoute(page: TermsAndConditionsRoute.page),
+    AutoRoute(page: ServiceRulesRoute.page),
+    AutoRoute(page: AgreementContentPreviewRoute.page),
+    AutoRoute(page: DataPersonalRoute.page),
+    AutoRoute(page: NeedHelpRoute.page),
+    AutoRoute(page: QuestionRoute.page),
+    AutoRoute(page: DataPersonalFormRoute.page),
+    AutoRoute(page: DataPhoneNumberRoute.page),
+    AutoRoute(page: DataEmailsRoute.page),
+    AutoRoute(page: DataEmailsFormRoute.page),
+    AutoRoute(page: DataAddressesRoute.page),
+    AutoRoute(page: DataAddressesFormRoute.page),
+    AutoRoute(page: DeviceListRoute.page),
+    AutoRoute(page: TrustLevelRoute.page),
+    AutoRoute(page: ChangeDeviceNameRoute.page),
+    AutoRoute(page: AddNewDeviceCodeRoute.page),
+    AutoRoute(page: DataInvoiceListRoute.page),
+    AutoRoute(page: DataInvoiceListFormRoute.page),
+    AutoRoute(page: LoginResetRoute.page),
+    AutoRoute(page: ResetAccountRoute.page),
+    AutoRoute(page: EventLogRoute.page),
+    AutoRoute(page: TrustLevelConfirmationRoute.page),
+    AutoRoute(page: ConfirmRoute.page),
+    AutoRoute(page: WalletHomeRoute.page),
+    AutoRoute(page: CredentialDetailRoute.page),
+    AutoRoute(page: ProofPresentationRoute.page),
+    AutoRoute(page: QrScanRoute.page),
+    AutoRoute(page: VerificationRequestRoute.page),
+  ];
+}

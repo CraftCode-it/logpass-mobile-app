@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,7 +9,7 @@ import 'package:logpass_me/presentation/page/service_details/agreement_list/agre
 import 'package:logpass_me/presentation/page/service_details/service_details_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page_state.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/session_list_view.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 
+@RoutePage()
 class ServiceDetailsPage extends HookWidget {
   final Service service;
 
@@ -46,10 +47,10 @@ class ServiceDetailsPage extends HookWidget {
         title: LocaleKeys.serviceDetails_title.tr(),
         leading: NavigationButton.back(),
         trailing: IconButton(
-          onPressed: () => AutoRouter.of(context).push(HistoricalSessionListPageRoute(service: service)),
+          onPressed: () => AutoRouter.of(context).push(HistoricalSessionListRoute(service: service)),
           icon: SvgPicture.asset(
             AppIcon.history,
-            color: colors.buttonFill,
+            colorFilter: ColorFilter.mode(colors.buttonFill, BlendMode.srcIn),
           ),
         ),
       ).copyWith(

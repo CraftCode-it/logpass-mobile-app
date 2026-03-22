@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -6,11 +7,11 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:native_pdf_renderer/native_pdf_renderer.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:pdfx/pdfx.dart';
 
 const _termsAssetPath = 'assets/documents/terms_and_conditions.pdf';
 
+@RoutePage()
 class TermsAndConditionsPage extends HookWidget {
   const TermsAndConditionsPage({Key? key}) : super(key: key);
 
@@ -29,7 +30,6 @@ class TermsAndConditionsPage extends HookWidget {
       ),
       body: PdfView(
         controller: controller,
-        documentLoader: const Loader(),
         scrollDirection: Axis.vertical,
       ),
     );

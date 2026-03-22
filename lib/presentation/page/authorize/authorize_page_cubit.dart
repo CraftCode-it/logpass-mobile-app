@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:injectable/injectable.dart';
+import 'package:injectable/injectable.dart' hide Scope;
 import 'package:logpass_me/domain/actions_changed_notifier/use_case/notify_actions_changed_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/authorize_with_biometrics_use_case.dart';
 import 'package:logpass_me/domain/app_security/use_case/is_biometric_available_use_case.dart';

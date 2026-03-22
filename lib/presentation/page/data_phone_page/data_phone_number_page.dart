@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,6 +13,7 @@ import 'package:logpass_me/presentation/widget/app_bar/navigation_button.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
+@RoutePage()
 class DataPhoneNumberPage extends HookWidget {
   @override
   Widget build(BuildContext context) {

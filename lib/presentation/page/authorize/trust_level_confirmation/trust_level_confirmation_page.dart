@@ -22,6 +22,7 @@ import 'package:logpass_me/presentation/utils/device_utils.dart';
 const _trustIndicatorSize = 40.0;
 const _trustIndicatorFontSize = 16.0;
 
+@RoutePage()
 class TrustLevelConfirmationPage extends HookWidget {
   final Service service;
   final int initialTrustLevel;
@@ -246,7 +247,7 @@ class _DeviceRow extends HookWidget {
             const SizedBox(width: AppDimens.m),
             SvgPicture.asset(
               device.getIconPath(),
-              color: colors.buttonFill,
+              colorFilter: ColorFilter.mode(colors.buttonFill, BlendMode.srcIn),
             ),
             const SizedBox(width: AppDimens.m),
             Expanded(

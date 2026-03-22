@@ -22,6 +22,7 @@ const _rowHeight = 64.0;
 const _headerHeight = 48.0;
 const _rowWithSeparatorHeight = _rowHeight + 1;
 
+@RoutePage()
 class CountryCodePickerPage extends HookWidget {
   final List<CountryCode> countryCodeList;
   final CountryCode selectedCountryCode;

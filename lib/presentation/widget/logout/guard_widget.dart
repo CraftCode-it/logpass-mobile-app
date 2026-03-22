@@ -1,9 +1,9 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/exports.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/widget/hooks/app_life_cycyle_observer_hook.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/logout/guard_widget_cubit.dart';
@@ -50,11 +50,11 @@ class GuardWidget extends HookWidget {
 
   void _navigateOnLogout(BuildContext context) {
     AutoRouter.of(context).replaceAll([
-      OnboardingPageRoute(logoutMessage: LocaleKeys.logoutSuccess_info.tr())
+      OnboardingRoute(logoutMessage: LocaleKeys.logoutSuccess_info.tr())
     ]);
   }
 
   void _navigateOnSecure(BuildContext context) {
-    AutoRouter.of(context).push(const SecuredLoginPageRoute());
+    AutoRouter.of(context).push(const SecuredLoginRoute());
   }
 }

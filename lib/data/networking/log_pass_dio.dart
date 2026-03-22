@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/app_env.dart';
 import 'package:logpass_me/core/di/network_module.dart';
@@ -17,16 +17,16 @@ class LogPassDio extends DioMixin implements Dio {
     List<Interceptor> interceptors,
   ) {
     options = BaseOptions(
-      baseUrl: appEnv.apiUrl,
+      baseUrl: AppEnv.apiUrl,
       headers: {
         HttpHeaders.acceptHeader: acceptHeaderValue,
       },
       followRedirects: false,
-      sendTimeout: _timeouts.inMilliseconds,
-      connectTimeout: _timeouts.inMilliseconds,
-      receiveTimeout: _timeouts.inMilliseconds,
+      sendTimeout: _timeouts,
+      connectTimeout: _timeouts,
+      receiveTimeout: _timeouts,
     );
-    httpClientAdapter = DefaultHttpClientAdapter();
+    httpClientAdapter = IOHttpClientAdapter();
     _setupInterceptors(interceptors);
   }
 

@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -21,8 +21,9 @@ import 'package:logpass_me/presentation/widget/input_field.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 
+@RoutePage()
 class AddNewDevicePage extends HookWidget {
   const AddNewDevicePage({Key? key}) : super(key: key);
 
@@ -81,7 +82,7 @@ class AddNewDevicePage extends HookWidget {
   ) {
     state.maybeMap(
       processing: (_) {},
-      orElse: () => AutoRouter.of(context).popUntil((route) => route.settings.name == AddNewDevicePageRoute.name),
+      orElse: () => AutoRouter.of(context).popUntil((route) => route.settings.name == AddNewDeviceRoute.name),
     );
 
     state.maybeMap(
@@ -93,7 +94,7 @@ class AddNewDevicePage extends HookWidget {
       },
       deviceAdded: (_) {
         AutoRouter.of(context).pushAndPopUntil(
-          const LoginSuccessPageRoute(),
+          const LoginSuccessRoute(),
           predicate: (route) => false,
         );
       },

@@ -5,7 +5,7 @@ import 'package:logpass_me/data/auth/api/initialize/initialize_login_result_dto.
 import 'package:logpass_me/data/auth/api/verify/tokens_result_dto.dart';
 import 'package:logpass_me/data/auth/api/verify/verify_login_dto.dart';
 import 'package:logpass_me/data/networking/log_pass_dio.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'auth_api_data_source.g.dart';
 

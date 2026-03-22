@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,7 +7,7 @@ import 'package:logpass_me/domain/need_help/need_help.dart';
 import 'package:logpass_me/domain/need_help/need_help_factory.dart';
 import 'package:logpass_me/domain/need_help/question.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -18,6 +18,7 @@ import 'package:logpass_me/presentation/widget/version_info/version_info.dart';
 
 const _arrowIconSize = 24.0;
 
+@RoutePage()
 class NeedHelpPage extends HookWidget {
   const NeedHelpPage({Key? key}) : super(key: key);
 
@@ -122,7 +123,7 @@ class _QuestionSectionItem extends HookWidget {
     final typography = useAppTypography();
 
     return InkWell(
-      onTap: () => AutoRouter.of(context).push(QuestionPageRoute(question: question)),
+      onTap: () => AutoRouter.of(context).push(QuestionRoute(question: question)),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: AppDimens.m),
         decoration: BoxDecoration(
@@ -143,7 +144,7 @@ class _QuestionSectionItem extends HookWidget {
             const SizedBox(width: AppDimens.m),
             SvgPicture.asset(
               AppIcon.chevronRight,
-              color: colors.text,
+              colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
               width: _arrowIconSize,
               height: _arrowIconSize,
             ),
@@ -204,7 +205,7 @@ class _AboutSectionHeader extends HookWidget {
               ),
               child: SvgPicture.asset(
                 AppIcon.logo,
-                color: colors.text,
+                colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
                 height: _customLogoHeight,
               ),
             ),

@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:injectable/injectable.dart';
+import 'package:injectable/injectable.dart' hide Scope;
 import 'package:logpass_me/domain/model/scope.dart';
 import 'package:logpass_me/domain/service/data/service_supported_scopes.dart';
 import 'package:logpass_me/domain/user_data/data/address.dart';

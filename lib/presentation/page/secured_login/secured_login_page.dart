@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -12,7 +12,7 @@ import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_cubit.dart';
 import 'package:logpass_me/presentation/page/secured_login/secured_login_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -28,6 +28,7 @@ import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
+@RoutePage()
 class SecuredLoginPage extends HookWidget {
   const SecuredLoginPage({Key? key}) : super(key: key);
 
@@ -78,23 +79,23 @@ class SecuredLoginPage extends HookWidget {
     MessengerController messengerController,
   ) {
     state.maybeMap(
-      validated: (_) => AutoRouter.of(context).replaceAll([const MainPageRoute()]),
+      validated: (_) => AutoRouter.of(context).replaceAll([const MainRoute()]),
       loggingOut: (_) {
         showFullScreenLoader(context);
       },
       loggedOut: (_) {
         AutoRouter.of(context).replaceAll(
           [
-            const StartPageRoute(),
+            const StartRoute(),
           ],
         );
       },
       connectionError: (state) {
-        AutoRouter.of(context).popUntil((route) => route.settings.name == SecuredLoginPageRoute.name);
+        AutoRouter.of(context).popUntil((route) => route.settings.name == SecuredLoginRoute.name);
         messengerController.showError(getConnectionErrorString(state.error));
       },
       error: (_) {
-        AutoRouter.of(context).popUntil((route) => route.settings.name == SecuredLoginPageRoute.name);
+        AutoRouter.of(context).popUntil((route) => route.settings.name == SecuredLoginRoute.name);
         messengerController.showError(getConnectionErrorString(GeneralConnectionError.somethingWentWrong()));
       },
       orElse: () {},

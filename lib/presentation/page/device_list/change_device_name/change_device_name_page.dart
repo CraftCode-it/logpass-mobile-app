@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 typedef OnNameChanged = Function(String name);
 
+@RoutePage()
 class ChangeDeviceNamePage extends HookWidget {
   final String currentName;
   final OnNameChanged onNameChanged;

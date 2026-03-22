@@ -1,11 +1,11 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_cubit.dart';
 import 'package:logpass_me/presentation/page/get_safer/get_safer_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -17,6 +17,7 @@ import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
+@RoutePage()
 class GetSaferPage extends HookWidget {
   const GetSaferPage({Key? key}) : super(key: key);
 
@@ -52,7 +53,7 @@ class GetSaferPage extends HookWidget {
   }
 
   Future<void> _setPinCode(BuildContext context, Function() onSuccess) async {
-    final success = await AutoRouter.of(context).push(const NewPinPageRoute());
+    final success = await AutoRouter.of(context).push(const NewPinRoute());
     if (success == true) {
       await onSuccess();
     }
@@ -62,9 +63,9 @@ class GetSaferPage extends HookWidget {
     state.maybeMap(
       setCodeForBiometrics: (_) => _setPinCode(context, cubit.setBiometricsSecurity),
       success: (_) => AutoRouter.of(context).popAndPush(
-        PinSuccessPageRoute(
+        PinSuccessRoute(
           title: LocaleKeys.pinSuccess_set.tr(),
-          route: const MainPageRoute()
+          route: const MainRoute()
         )
       ),
       orElse: () {},

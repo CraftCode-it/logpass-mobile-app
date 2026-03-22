@@ -5,37 +5,34 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 final lightTheme = ThemeData(
   brightness: Brightness.light,
   textTheme: GoogleFonts.poppinsTextTheme(),
-  backgroundColor: AppColors.backgroundDark,
-  // otherwise transition from native splash screen to flutter blinks with white color
+  colorScheme: ColorScheme.light(surface: AppColors.backgroundDark),
   scaffoldBackgroundColor: AppColors.backgroundDark,
   appBarTheme: AppBarTheme(
-    textTheme: GoogleFonts.poppinsTextTheme(),
-    color: AppColors.backgroundLight,
+    titleTextStyle: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w500),
+    toolbarTextStyle: GoogleFonts.poppins(),
+    backgroundColor: AppColors.backgroundLight,
     elevation: 0,
   ),
   tabBarTheme: TabBarTheme(
-    labelStyle: _tabBarSelectedTypography(),
-    unselectedLabelStyle: _tabBarUnselectedTypography(),
-    labelColor: AppColors.primary100,
-    unselectedLabelColor: AppColors.primary20,
+    labelStyle: _tabBarSelectedTypography().copyWith(color: AppColors.primary100),
+    unselectedLabelStyle: _tabBarUnselectedTypography().copyWith(color: AppColors.primary20),
   ),
 );
 
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   textTheme: GoogleFonts.poppinsTextTheme(),
-  backgroundColor: AppColors.backgroundDark,
+  colorScheme: ColorScheme.dark(surface: AppColors.backgroundDark),
   scaffoldBackgroundColor: AppColors.backgroundDark,
   appBarTheme: AppBarTheme(
-    textTheme: GoogleFonts.poppinsTextTheme(),
-    color: AppColors.backgroundDark,
+    titleTextStyle: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
+    toolbarTextStyle: GoogleFonts.poppins(color: Colors.white),
+    backgroundColor: AppColors.backgroundDark,
     elevation: 0,
   ),
   tabBarTheme: TabBarTheme(
-    labelStyle: _tabBarSelectedTypography(),
-    unselectedLabelStyle: _tabBarUnselectedTypography(),
-    labelColor: AppColors.primary10,
-    unselectedLabelColor: AppColors.primary80,
+    labelStyle: _tabBarSelectedTypography().copyWith(color: AppColors.primary10),
+    unselectedLabelStyle: _tabBarUnselectedTypography().copyWith(color: AppColors.primary80),
   ),
 );
 

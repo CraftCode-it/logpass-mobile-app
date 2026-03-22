@@ -1,9 +1,9 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/messenger/message_view.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger_cubit.dart';
@@ -83,9 +83,9 @@ class Messenger extends HookWidget {
           onAction: () {
             state.action.actionType.when(
               authorize: () => AutoRouter.of(context).push(
-                AuthorizePageRoute(incomingAction: state.action),
+                AuthorizeRoute(incomingAction: state.action),
               ),
-              confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
+              confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
               updateAccount: () {},
               refreshUserCode: () {  },
             );

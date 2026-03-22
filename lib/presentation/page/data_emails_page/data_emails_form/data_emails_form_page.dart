@@ -17,6 +17,7 @@ import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
+@RoutePage()
 class DataEmailsFormPage extends HookWidget {
   final VoidCallback refreshListOnPagePop;
   final Email? email;

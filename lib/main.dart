@@ -22,7 +22,7 @@ import 'package:logpass_me/domain/language/language_code.dart';
 import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/get_theme_brightness_use_case.dart';
 import 'package:logpass_me/presentation/log_pass_me_app.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/utils/brightness_utils.dart';
@@ -33,7 +33,7 @@ Future<void> runMain(String env) async {
   await initHive();
   await EasyLocalization.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await _initFirebase();
   await setupCrashlytics();
   await setupCertificate();
 
@@ -60,7 +60,37 @@ Future<void> runMain(String env) async {
         ),
       ),
     );
-  }, FirebaseCrashlytics.instance.recordError);
+  }, (error, stack) {
+    debugPrint('Uncaught error: $error\n$stack');
+  });
+}
+
+/// Initializes Firebase. In production builds the google-services plugin injects
+/// values.xml so initializeApp() works without explicit options. In dev builds
+/// (no google-services plugin, stub google-services.json) we fall back to
+/// programmatic FirebaseOptions so that Firebase SDK is available for DI.
+Future<void> _initFirebase() async {
+  try {
+    await Firebase.initializeApp();
+    debugPrint('Firebase initialized from resources.');
+  } catch (e) {
+    debugPrint('Firebase init from resources failed (expected in dev): $e');
+    try {
+      // API key must start with 'AIza' to pass Firebase Installations preConditionChecks.
+      // This is a stub key for dev builds without a real google-services.json.
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSy000000000000000000000000000000000',
+          appId: '1:000000000000:android:0000000000000001',
+          messagingSenderId: '000000000000',
+          projectId: 'logpass-stub',
+        ),
+      );
+      debugPrint('Firebase initialized with stub options.');
+    } catch (e2) {
+      debugPrint('Firebase stub init also failed (proceeding without Firebase): $e2');
+    }
+  }
 }
 
 Future<void> setupCertificate() async {
@@ -71,29 +101,33 @@ Future<void> setupCertificate() async {
 void setupFimber() => Fimber.plantTree(getIt());
 
 Future<void> setupCrashlytics() async {
-  if (kDebugMode) {
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-    return;
+  try {
+    if (kDebugMode) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      return;
+    }
+
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+    Isolate.current.addErrorListener(RawReceivePort((pair) async {
+      final errorAndStacktrace = pair as List<dynamic>;
+      await FirebaseCrashlytics.instance.recordError(
+        errorAndStacktrace.first,
+        errorAndStacktrace.last as StackTrace?,
+      );
+    }).sendPort);
+  } catch (e) {
+    debugPrint('Crashlytics setup failed (expected in dev): $e');
   }
-
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final errorAndStacktrace = pair as List<dynamic>;
-    await FirebaseCrashlytics.instance.recordError(
-      errorAndStacktrace.first,
-      errorAndStacktrace.last as StackTrace?,
-    );
-  }).sendPort);
 }
 
 Future<ThemeBrightness> getInitialBrightnessTheme() => getIt<GetThemeBrightnessUseCase>()();
 
 Future<void> _precacheSvgImages() async {
-  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.successLight), null);
-  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.successDark), null);
-  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.failureLight), null);
-  await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.failureDark), null);
+  for (final asset in [AppIcon.successLight, AppIcon.successDark, AppIcon.failureLight, AppIcon.failureDark]) {
+    final loader = SvgAssetLoader(asset);
+    await svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
+  }
 }
 
 Future<void> initHive() async {

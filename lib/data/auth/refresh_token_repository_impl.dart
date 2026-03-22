@@ -23,7 +23,7 @@ class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     try {
       final refreshedTokens = await _refreshTokenApiDataSource.refreshAccessToken(requestBody);
       return _userTokensDTOMapper(refreshedTokens);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.badRequest) {
         throw AuthException.refreshTokenExpired();
       }

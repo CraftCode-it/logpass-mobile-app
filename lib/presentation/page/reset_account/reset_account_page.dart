@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
@@ -15,8 +15,9 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 
+@RoutePage()
 class ResetAccountPage extends HookWidget {
   const ResetAccountPage({Key? key}) : super(key: key);
 
@@ -44,13 +45,13 @@ class ResetAccountPage extends HookWidget {
   ) {
     state.maybeMap(
       processing: (_) {},
-      orElse: () => AutoRouter.of(context).popUntil((route) => route.settings.name == ResetAccountPageRoute.name),
+      orElse: () => AutoRouter.of(context).popUntil((route) => route.settings.name == ResetAccountRoute.name),
     );
 
     state.maybeMap(
       accountResetSuccessful: (_) {
         AutoRouter.of(context).pushAndPopUntil(
-          const LoginSuccessPageRoute(),
+          const LoginSuccessRoute(),
           predicate: (route) => false,
         );
       },

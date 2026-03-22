@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
 const _scrollThreshold = 12.0;
 
+@RoutePage()
 class DataAddressesFormPage extends HookWidget {
   final VoidCallback refreshListOnPagePop;
   final Address? addressToEdit;

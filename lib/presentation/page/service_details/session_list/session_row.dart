@@ -42,14 +42,14 @@ class SessionRow extends HookWidget {
             TableRow(
               children: [
                 LabeledText(
-                  label: tr(LocaleKeys.sessionRow_opened),
+                  label: LocaleKeys.sessionRow_opened.tr(),
                   text: SessionDateFormatter.formatDateTime(session.session.createdAt),
                 ),
                 Row(
                   children: [
                     Expanded(
                       child: LabeledText(
-                        label: tr(LocaleKeys.sessionRow_device),
+                        label: LocaleKeys.sessionRow_device.tr(),
                         text: session.session.deviceName,
                       ),
                     ),
@@ -71,11 +71,11 @@ class SessionRow extends HookWidget {
               TableRow(
                 children: [
                   LabeledText(
-                    label: tr(LocaleKeys.sessionRow_localization),
+                    label: LocaleKeys.sessionRow_localization.tr(),
                     text: '${session.session.city}, ${session.session.country}',
                   ),
                   LabeledText(
-                    label: tr(LocaleKeys.sessionRow_ip),
+                    label: LocaleKeys.sessionRow_ip.tr(),
                     text: session.session.ipAddress ?? '-',
                   ),
                 ],
@@ -83,7 +83,7 @@ class SessionRow extends HookWidget {
               TableRow(
                 children: [
                   LabeledText(
-                    label: tr(LocaleKeys.sessionRow_valid),
+                    label: LocaleKeys.sessionRow_valid.tr(),
                     text: SessionDateFormatter.formatDateTime(session.session.expiresAt),
                   ),
                   if (session.session.isActive)
@@ -136,7 +136,7 @@ class _EndSessionCell extends HookWidget {
       return Align(
         alignment: Alignment.centerLeft,
         child: CustomRectangularButton.outlined(
-          text: tr(LocaleKeys.sessionRow_endSessionAction),
+          text: LocaleKeys.sessionRow_endSessionAction.tr(),
           onPressed: onEndSession,
           height: AppDimens.smallButtonHeight,
           textStyle: typography.body2,

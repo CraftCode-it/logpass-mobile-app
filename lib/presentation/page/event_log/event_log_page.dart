@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,6 +19,7 @@ import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
 
+@RoutePage()
 class EventLogPage extends HookWidget {
   const EventLogPage({Key? key}) : super(key: key);
 
@@ -122,7 +124,7 @@ class _EventRow extends HookWidget {
             const SizedBox(width: AppDimens.l),
             SvgPicture.asset(
               AppIcon.security,
-              color: colors.buttonFill,
+              colorFilter: ColorFilter.mode(colors.buttonFill, BlendMode.srcIn),
             ),
             const SizedBox(width: AppDimens.l),
             Text(

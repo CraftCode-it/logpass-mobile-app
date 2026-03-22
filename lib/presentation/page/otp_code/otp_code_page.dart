@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,7 +9,7 @@ import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -24,8 +24,7 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:sms_user_consent/sms_user_consent.dart';
-
+@RoutePage()
 class OTPCodePage extends HookWidget {
   final String phoneNumber;
   final SignUpVerification verification;
@@ -159,7 +158,7 @@ class OTPCodePage extends HookWidget {
       otpAutofill: (state) => otpReceivedCode.value = state.code,
       success: (state) {
         AutoRouter.of(context).pushAndPopUntil(
-          const LoginSuccessPageRoute(),
+          const LoginSuccessRoute(),
           predicate: (route) => false,
         );
       },
@@ -168,7 +167,7 @@ class OTPCodePage extends HookWidget {
         tr(LocaleKeys.otpCode_codeResendSuccess),
       ),
       accountAlreadyExists: (state) {
-        AutoRouter.of(context).replaceAll([const LoginResetPageRoute()]);
+        AutoRouter.of(context).replaceAll([const LoginResetRoute()]);
       },
       orElse: () {},
     );

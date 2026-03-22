@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/pin_field.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
+@RoutePage()
 class ConfirmPinPage extends HookWidget {
   final String pin;
 

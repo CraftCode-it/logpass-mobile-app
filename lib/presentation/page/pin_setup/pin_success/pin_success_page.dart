@@ -10,6 +10,7 @@ import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
+@RoutePage()
 class PinSuccessPage extends HookWidget {
   final PageRouteInfo route;
   final String title;

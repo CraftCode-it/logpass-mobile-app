@@ -1,15 +1,16 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page_cubit.dart';
 import 'package:logpass_me/presentation/page/entry/entry_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
+@RoutePage()
 class EntryPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,10 @@ class EntryPage extends HookWidget {
     state.maybeMap(
       onboarding: (_) async {
         await _precacheOnboardingImages(context);
-        await AutoRouter.of(context).replace(OnboardingPageRoute());
+        await AutoRouter.of(context).replace(OnboardingRoute());
       },
-      home: (_) => AutoRouter.of(context).replace(const MainPageRoute()),
-      securedLogin: (_) => AutoRouter.of(context).replace(const SecuredLoginPageRoute()),
+      home: (_) => AutoRouter.of(context).replace(const MainRoute()),
+      securedLogin: (_) => AutoRouter.of(context).replace(const SecuredLoginRoute()),
       orElse: () {},
     );
   }
@@ -50,14 +51,14 @@ class EntryPage extends HookWidget {
   Future<void> _precacheOnboardingImages(BuildContext context) async {
     final brightness = Theme.of(context).brightness;
 
-    if (brightness == Brightness.light) {
-      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding1Light), context);
-      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding2Light), context);
-      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding3Light), context);
-    } else {
-      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding1Dark), context);
-      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding2Dark), context);
-      await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, AppIcon.onboarding3Dark), context);
+    final assets = brightness == Brightness.light
+        ? [AppIcon.onboarding1Light, AppIcon.onboarding2Light, AppIcon.onboarding3Light]
+        : [AppIcon.onboarding1Dark, AppIcon.onboarding2Dark, AppIcon.onboarding3Dark];
+
+    for (final asset in assets) {
+      final loader = SvgAssetLoader(asset);
+      await svg.cache
+          .putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
     }
   }
 }

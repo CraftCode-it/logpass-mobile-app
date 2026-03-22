@@ -2,25 +2,20 @@ class AppEnv {
   static const devName = 'dev';
   static const prodName = 'prod';
 
-  final String name;
-  final String apiUrl;
+  static const apiUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://logpass.me/api/',
+  );
 
-  AppEnv._(
-    this.name, {
-    required this.apiUrl,
-  });
+  final String name;
+
+  AppEnv._(this.name);
 
   factory AppEnv.development() {
-    return AppEnv._(
-      devName,
-      apiUrl: 'https://api.logpass.dev/',
-    );
+    return AppEnv._(devName);
   }
 
   factory AppEnv.production() {
-    return AppEnv._(
-      prodName,
-      apiUrl: 'https://api.logpass.dev/',
-    );
+    return AppEnv._(prodName);
   }
 }

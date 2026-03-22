@@ -1,4 +1,4 @@
-package me.logpass_me
+package me.logpass.mobile
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine

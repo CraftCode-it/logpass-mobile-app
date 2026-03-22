@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ import 'package:logpass_me/presentation/widget/radio_button_tile.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/service_header.dart';
 
+@RoutePage()
 class PersonalDataSelectionPage extends HookWidget {
   final Service service;
   final PersonalData? personalData;
@@ -123,7 +124,7 @@ class _NoContent extends StatelessWidget {
           Container(
             child: CustomRectangularButton.filled(
               text: LocaleKeys.yourData_addNewOption.tr(),
-              onPressed: () => AutoRouter.of(context).push(DataPersonalFormPageRoute(
+              onPressed: () => AutoRouter.of(context).push(DataPersonalFormRoute(
                 refreshListOnPagePop: cubit.getPersonalDataList,
               )),
             ),

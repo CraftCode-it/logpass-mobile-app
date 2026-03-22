@@ -2,8 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
-import 'package:native_pdf_renderer/native_pdf_renderer.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:pdfx/pdfx.dart';
 
 part 'agreement_details_page_state.freezed.dart';
 

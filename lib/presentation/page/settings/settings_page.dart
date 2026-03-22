@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,7 +7,7 @@ import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_cubit.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -23,6 +23,7 @@ import 'package:logpass_me/presentation/widget/separator.dart';
 
 const _logoutBorderSideWidth = 0.5;
 
+@RoutePage()
 class SettingsPage extends HookWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
@@ -38,11 +39,11 @@ class SettingsPage extends HookWidget {
           showFullScreenLoader(context);
         },
         connectionError: (state) {
-          AutoRouter.of(context).popUntil((route) => route.settings.name == MainPageRoute.name);
+          AutoRouter.of(context).popUntil((route) => route.settings.name == MainRoute.name);
           messengerController.showError(getConnectionErrorString(state.error));
         },
         error: (_) {
-          AutoRouter.of(context).popUntil((route) => route.settings.name == MainPageRoute.name);
+          AutoRouter.of(context).popUntil((route) => route.settings.name == MainRoute.name);
           messengerController.showError(getConnectionErrorString(GeneralConnectionError.somethingWentWrong()));
         },
         orElse: () {},
@@ -68,13 +69,13 @@ class SettingsPage extends HookWidget {
                       NavigationRow.withIcon(
                         AppIcon.device,
                         LocaleKeys.settings_devices.tr(),
-                        () => AutoRouter.of(context).push(const DeviceListPageRoute()),
+                        () => AutoRouter.of(context).push(const DeviceListRoute()),
                       ),
                       Separator.light(),
                       NavigationRow.withIcon(
                         AppIcon.security,
                         LocaleKeys.settings_security.tr(),
-                        () => AutoRouter.of(context).push(const SecuritySettingsPageRoute()),
+                        () => AutoRouter.of(context).push(const SecuritySettingsRoute()),
                       ),
                       Separator.light(),
                       const SizedBox(height: AppDimens.xc),
@@ -82,17 +83,17 @@ class SettingsPage extends HookWidget {
                       Separator.light(),
                       NavigationRow.titled(
                         LocaleKeys.settings_language.tr(),
-                        () => AutoRouter.of(context).push(const LanguagePageRoute()),
+                        () => AutoRouter.of(context).push(const LanguageRoute()),
                       ),
                       Separator.light(),
                       NavigationRow.titled(
                         LocaleKeys.settings_terms.tr(),
-                        () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
+                        () => AutoRouter.of(context).push(const TermsAndConditionsRoute()),
                       ),
                       Separator.light(),
                       NavigationRow.titled(
                         LocaleKeys.settings_help.tr(),
-                        () => AutoRouter.of(context).push(const NeedHelpPageRoute()),
+                        () => AutoRouter.of(context).push(const NeedHelpRoute()),
                       ),
                       Separator.light(),
                       const SizedBox(height: AppDimens.xxl),

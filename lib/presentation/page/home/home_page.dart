@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +8,7 @@ import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -25,6 +25,7 @@ const _pendingItemIconSize = 20.0;
 const _buttonBorderWidth = 1.5;
 const _smallerSizePhoneThreshold = 672.0;
 
+@RoutePage()
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -214,9 +215,9 @@ class _PendingItem extends HookWidget {
         //TODO change 'when' to 'maybeWhen' when all kind notification will be implemented
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(
-            AuthorizePageRoute(incomingAction: action),
+            AuthorizeRoute(incomingAction: action),
           ),
-          confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
+          confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
           updateAccount: () {},
           refreshUserCode: () {},
         );
@@ -250,7 +251,7 @@ class _PendingItem extends HookWidget {
                     children: [
                       SvgPicture.asset(
                         AppIcon.lock,
-                        color: colors.secondaryText,
+                        colorFilter: ColorFilter.mode(colors.secondaryText, BlendMode.srcIn),
                         width: _pendingItemIconSize,
                         height: _pendingItemIconSize,
                       ),
@@ -266,7 +267,7 @@ class _PendingItem extends HookWidget {
                       ),
                       SvgPicture.asset(
                         AppIcon.chevronRight,
-                        color: colors.text,
+                        colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
                         width: _arrowIconSize,
                         height: _arrowIconSize,
                       ),
@@ -317,7 +318,7 @@ class _PastEventsButton extends HookWidget {
             ),
           ),
         ),
-        onPressed: () => AutoRouter.of(context).push(const EventLogPageRoute()),
+        onPressed: () => AutoRouter.of(context).push(const EventLogRoute()),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.m),
           child: Row(
@@ -329,7 +330,7 @@ class _PastEventsButton extends HookWidget {
               ),
               SvgPicture.asset(
                 AppIcon.chevronRight,
-                color: colors.text,
+                colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
                 width: _arrowIconSize,
                 height: _arrowIconSize,
               ),

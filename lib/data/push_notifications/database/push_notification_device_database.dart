@@ -7,7 +7,7 @@ import 'package:logpass_me/data/push_notifications/database/entity/push_notifica
 @lazySingleton
 class PushNotificationDeviceDatabase {
   static const _key = 'logPassPushNotification';
-  static const _iosOptions = IOSOptions(accessibility: IOSAccessibility.unlocked_this_device);
+  static const _iosOptions = IOSOptions(accessibility: KeychainAccessibility.unlocked_this_device);
 
   final FlutterSecureStorage _storage;
 

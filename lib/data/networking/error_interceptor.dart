@@ -12,10 +12,10 @@ import 'package:logpass_me/domain/networking/error/logpass_api_error.dart';
 @Injectable()
 class ErrorInterceptor extends Interceptor {
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     final response = err.response;
 
-    if (err.type == DioErrorType.response && response != null) {
+    if (err.type == DioExceptionType.badResponse && response != null) {
       try {
         final rawData = response.data as String;
         final jsonData = jsonDecode(rawData) as Map<String, dynamic>;
@@ -53,9 +53,9 @@ class ErrorInterceptor extends Interceptor {
     handler.next(err);
   }
 
-  bool _isTimeout(DioErrorType type) {
-    return type == DioErrorType.receiveTimeout ||
-        type == DioErrorType.connectTimeout ||
-        type == DioErrorType.sendTimeout;
+  bool _isTimeout(DioExceptionType type) {
+    return type == DioExceptionType.receiveTimeout ||
+        type == DioExceptionType.connectionTimeout ||
+        type == DioExceptionType.sendTimeout;
   }
 }

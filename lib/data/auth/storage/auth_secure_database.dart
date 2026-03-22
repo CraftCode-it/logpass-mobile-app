@@ -7,7 +7,7 @@ import 'package:logpass_me/data/auth/storage/user_tokens_entity.dart';
 @Singleton()
 class AuthSecureDatabase {
   static const _key = 'logPassUserTokens';
-  static const _iosOptions = IOSOptions(accessibility: IOSAccessibility.unlocked_this_device);
+  static const _iosOptions = IOSOptions(accessibility: KeychainAccessibility.unlocked_this_device);
 
   final FlutterSecureStorage _storage;
 

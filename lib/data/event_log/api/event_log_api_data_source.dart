@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/event_log/api/dto/event_log_response_dto.dart';
 import 'package:logpass_me/data/networking/log_pass_dio.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'event_log_api_data_source.g.dart';
 

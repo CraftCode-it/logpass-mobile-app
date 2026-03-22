@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,7 +8,7 @@ import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/device_list/device_list_page_cubit.dart';
 import 'package:logpass_me/presentation/page/device_list/device_menu.dart';
 import 'package:logpass_me/presentation/page/device_list/device_row.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -22,6 +22,7 @@ import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 
+@RoutePage()
 class DeviceListPage extends HookWidget {
   const DeviceListPage({Key? key}) : super(key: key);
 
@@ -43,9 +44,9 @@ class DeviceListPage extends HookWidget {
         trailing: IconButton(
           icon: SvgPicture.asset(
             AppIcon.info,
-            color: colors.buttonFill,
+            colorFilter: ColorFilter.mode(colors.buttonFill, BlendMode.srcIn),
           ),
-          onPressed: () => AutoRouter.of(context).push(const TrustLevelPageRoute()),
+          onPressed: () => AutoRouter.of(context).push(const TrustLevelRoute()),
         ),
       ),
       body: SafeArea(
@@ -98,7 +99,7 @@ class DeviceListPage extends HookWidget {
       switch (result) {
         case DeviceMenuItem.changeName:
           await AutoRouter.of(context).push(
-            ChangeDeviceNamePageRoute(
+            ChangeDeviceNameRoute(
               currentName: device.name,
               onNameChanged: (newName) {
                 cubit.changeName(device, newName);
@@ -127,7 +128,7 @@ class DeviceListPage extends HookWidget {
     }
 
     final success = await AutoRouter.of(context).push(
-      ConfirmWithPinPageRoute(
+      ConfirmWithPinRoute(
         title: LocaleKeys.deviceList_removeDeviceTitle.tr(),
         button: LocaleKeys.common_remove.tr(),
       ),
@@ -193,7 +194,7 @@ class _BottomContent extends HookWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           child: CustomRectangularButton.filled(
             text: LocaleKeys.deviceList_addNewAction.tr(),
-            onPressed: () => AutoRouter.of(context).push(const AddNewDeviceCodePageRoute()),
+            onPressed: () => AutoRouter.of(context).push(const AddNewDeviceCodeRoute()),
           ),
         ),
         const SizedBox(height: AppDimens.l),
