@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -123,7 +123,9 @@ class StartPage extends HookWidget {
       successSignature: (state) {
         AutoRouter.of(context).replaceAll([const LoginSuccessRoute()]);
       },
-      error: (state) {},
+      error: (state) {
+        controller.showError(tr(LocaleKeys.error_somethingWentWrong));
+      },
       connectionError: (state) {
         controller.showError(getConnectionErrorString(state.error));
       },

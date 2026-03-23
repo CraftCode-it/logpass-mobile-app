@@ -26,6 +26,12 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
     if (err.response == null) return handler.next(err);
 
     if (err.response?.statusCode == HttpStatus.unauthorized) {
+      // Skip token refresh for unauthenticated requests (login flow, no JWT sent).
+      // Without this check, the interceptor calls logout on a 401 from /login-attempts/.
+      final hasAuthHeader =
+          err.requestOptions.headers[HttpHeaders.authorizationHeader] != null;
+      if (!hasAuthHeader) return handler.next(err);
+
       try {
         final userToken = await _getUserTokensUseCase();
         final requestAuthHeader = err.requestOptions.headers[HttpHeaders.authorizationHeader];
