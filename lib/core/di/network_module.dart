@@ -83,13 +83,17 @@ abstract class NetworkModule {
 
   @Named(walletDio)
   @LazySingleton()
-  Dio walletDioInstance(WalletApiKeyInterceptor apiKeyInterceptor) {
+  Dio walletDioInstance(
+    WalletApiKeyInterceptor apiKeyInterceptor,
+    AuthTokenInterceptor authTokenInterceptor,
+  ) {
     final dio = Dio(BaseOptions(
       baseUrl: AppEnv.apiUrl,
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 30),
       headers: {'Content-Type': 'application/json'},
     ));
+    dio.interceptors.add(authTokenInterceptor);
     dio.interceptors.add(apiKeyInterceptor);
     return dio;
   }

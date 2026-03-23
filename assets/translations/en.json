@@ -34,6 +34,7 @@
   "bottomBarNavigation": {
     "home": "Home",
     "services": "Services",
+    "wallet": "Wallet",
     "data": "Your data",
     "settings": "Settings"
   },
@@ -410,5 +411,24 @@
   "confirm": {
     "title": "Confirm",
     "header": "Do you want to confirm following operation?"
+  },
+  "wallet": {
+    "title": "Wallet",
+    "subtitle": "Your verifiable credentials",
+    "credentialsLabel": "Credentials",
+    "verifyAge": "Verify Age (18+)",
+    "verifyAgeInProgress": "Verifying...",
+    "statusOnline": "Online",
+    "statusOffline": "Offline",
+    "credentialValid": "Valid",
+    "credentialExpired": "Expired / Invalid",
+    "credentialAnchored": "Anchored on-chain",
+    "emptyTitle": "No credentials yet",
+    "emptySubtitle": "Tap \"Verify Age\" to get your first\nverifiable credential",
+    "errorGeneral": "Verification failed. Please try again.",
+    "proofTitle": "ZK Proof",
+    "proofSubtitle": "Your verifiable proof",
+    "requestTitle": "Verification Request",
+    "scanTitle": "Scan QR"
   }
 }

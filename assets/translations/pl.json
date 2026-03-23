@@ -34,6 +34,7 @@
   "bottomBarNavigation": {
     "home": "Strona główna",
     "services": "Serwisy",
+    "wallet": "Portfel",
     "data": "Twoje dane",
     "settings": "Opcje"
   },
@@ -412,5 +413,24 @@
   "confirm": {
     "title": "Potwierdź",
     "header": "Czy chcesz potwierdzić tę operacje?"
+  },
+  "wallet": {
+    "title": "Portfel",
+    "subtitle": "Twoje poświadczenia cyfrowe",
+    "credentialsLabel": "Poświadczenia",
+    "verifyAge": "Zweryfikuj wiek (18+)",
+    "verifyAgeInProgress": "Weryfikacja...",
+    "statusOnline": "Online",
+    "statusOffline": "Offline",
+    "credentialValid": "Ważne",
+    "credentialExpired": "Wygasłe / Nieważne",
+    "credentialAnchored": "Zakotwiczone w łańcuchu",
+    "emptyTitle": "Brak poświadczeń",
+    "emptySubtitle": "Kliknij \"Zweryfikuj wiek\" aby uzyskać\npierwsze poświadczenie cyfrowe",
+    "errorGeneral": "Błąd weryfikacji. Spróbuj ponownie.",
+    "proofTitle": "Dowód ZK",
+    "proofSubtitle": "Twój weryfikowalny dowód",
+    "requestTitle": "Żądanie weryfikacji",
+    "scanTitle": "Skanuj QR"
   }
 }

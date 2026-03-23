@@ -1,7 +1,9 @@
-﻿import 'package:auto_route/auto_route.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/wallet/credential.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_cubit.dart';
 import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
@@ -34,7 +36,7 @@ class WalletHomePage extends HookWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Wallet', style: typography.h3),
+                Text(LocaleKeys.wallet_title.tr(), style: typography.h3),
                 _ServiceIndicator(
                   online: state is WalletHomeLoaded && state.serviceOnline,
                   colors: colors,
@@ -43,7 +45,7 @@ class WalletHomePage extends HookWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Your verifiable credentials',
+              LocaleKeys.wallet_subtitle.tr(),
               style: typography.body1.copyWith(color: colors.secondaryText),
             ),
             const SizedBox(height: 24),
@@ -54,7 +56,7 @@ class WalletHomePage extends HookWidget {
               onPressed: () => cubit.requestVerification(),
             ),
             const SizedBox(height: 24),
-            Text('Credentials', style: typography.h8),
+            Text(LocaleKeys.wallet_credentialsLabel.tr(), style: typography.h8),
             const SizedBox(height: 12),
             Expanded(child: _buildBody(state, colors, typography, context)),
           ],
@@ -82,7 +84,11 @@ class WalletHomePage extends HookWidget {
           children: [
             Icon(Icons.error_outline, size: 48, color: AppColors.error100),
             const SizedBox(height: 12),
-            Text(state.message, style: typography.body1.copyWith(color: colors.secondaryText), textAlign: TextAlign.center),
+            Text(
+              LocaleKeys.wallet_errorGeneral.tr(),
+              style: typography.body1.copyWith(color: colors.secondaryText),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       );
@@ -133,7 +139,7 @@ class _ServiceIndicator extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          online ? 'Online' : 'Offline',
+          online ? LocaleKeys.wallet_statusOnline.tr() : LocaleKeys.wallet_statusOffline.tr(),
           style: TextStyle(fontSize: 12, color: colors.secondaryText),
         ),
       ],
@@ -181,7 +187,7 @@ class _VerifyAgeButton extends StatelessWidget {
                 children: [
                   Icon(Icons.verified_user, size: 20, color: colors.buttonFilledText),
                   const SizedBox(width: 8),
-                  Text('Verify Age (18+)', style: typography.h8.copyWith(color: colors.buttonFilledText)),
+                  Text(LocaleKeys.wallet_verifyAge.tr(), style: typography.h8.copyWith(color: colors.buttonFilledText)),
                 ],
               ),
       ),
@@ -204,12 +210,12 @@ class _EmptyState extends StatelessWidget {
           Icon(Icons.account_balance_wallet_outlined, size: 64, color: colors.lightText),
           const SizedBox(height: 16),
           Text(
-            'No credentials yet',
+            LocaleKeys.wallet_emptyTitle.tr(),
             style: typography.h7.copyWith(color: colors.secondaryText),
           ),
           const SizedBox(height: 8),
           Text(
-            'Tap "Verify Age" to get your first\nverifiable credential',
+            LocaleKeys.wallet_emptySubtitle.tr(),
             style: typography.body1.copyWith(color: colors.lightText),
             textAlign: TextAlign.center,
           ),
@@ -269,7 +275,9 @@ class _CredentialCard extends StatelessWidget {
                   Text(credential.displayType, style: typography.h8),
                   const SizedBox(height: 4),
                   Text(
-                    credential.isValid ? 'Valid' : 'Expired / Invalid',
+                    credential.isValid
+                        ? LocaleKeys.wallet_credentialValid.tr()
+                        : LocaleKeys.wallet_credentialExpired.tr(),
                     style: typography.info2.copyWith(
                       color: credential.isValid ? AppColors.success100 : AppColors.error100,
                     ),
@@ -279,7 +287,7 @@ class _CredentialCard extends StatelessWidget {
             ),
             if (credential.isAnchored)
               Tooltip(
-                message: 'Anchored on-chain',
+                message: LocaleKeys.wallet_credentialAnchored.tr(),
                 child: Icon(Icons.link, size: 20, color: AppColors.success100),
               ),
             const SizedBox(width: 4),
