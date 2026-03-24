@@ -82,4 +82,31 @@ class IdentityCubit extends Cubit<IdentityState> {
     await _repository.deleteProfile(profileId);
     await load();
   }
+
+  Future<void> copyFieldToProfile(
+    String sourceProfileId,
+    String targetProfileId,
+    String fieldKey,
+  ) async {
+    final st = state;
+    if (st is! IdentityLoaded) return;
+    final source = st.profiles.firstWhere((p) => p.id == sourceProfileId);
+    final target = st.profiles.firstWhere((p) => p.id == targetProfileId);
+    final field = source.fields.where((f) => f.key == fieldKey).firstOrNull;
+    if (field == null) return;
+
+    final existingIdx = target.fields.indexWhere((f) => f.key == fieldKey);
+    final List<IdentityField> updatedFields;
+    if (existingIdx >= 0) {
+      updatedFields = List.of(target.fields);
+      updatedFields[existingIdx] = updatedFields[existingIdx].copyWith(value: field.value);
+    } else {
+      updatedFields = [
+        ...target.fields,
+        IdentityField(key: field.key, label: field.label, value: field.value),
+      ];
+    }
+    await _repository.saveProfile(target.copyWith(fields: updatedFields));
+    await load();
+  }
 }

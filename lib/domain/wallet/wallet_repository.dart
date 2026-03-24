@@ -13,4 +13,8 @@ abstract class WalletRepository {
   Future<Credential?> getCredential(String id);
 
   Future<bool> checkServiceHealth();
+
+  Future<bool> verifyIdentityMobywatel(String testAccount);
+
+  Future<String> registerPairingCode();
 }

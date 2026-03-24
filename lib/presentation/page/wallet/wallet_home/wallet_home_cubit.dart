@@ -14,7 +14,14 @@ class WalletHomeLoading extends WalletHomeState implements BuildState {}
 class WalletHomeLoaded extends WalletHomeState implements BuildState {
   final List<Credential> credentials;
   final bool serviceOnline;
-  WalletHomeLoaded({required this.credentials, required this.serviceOnline});
+  final bool dobVerified;
+  final String? pairingCode;
+  WalletHomeLoaded({
+    required this.credentials,
+    required this.serviceOnline,
+    this.dobVerified = false,
+    this.pairingCode,
+  });
 }
 
 class WalletHomeError extends WalletHomeState implements BuildState {
@@ -29,6 +36,9 @@ class WalletHomeCubit extends Cubit<WalletHomeState> {
   final WalletRepository _repository;
   final KeyProvider _keyProvider;
 
+  bool _dobVerified = false;
+  String? _pairingCode;
+
   WalletHomeCubit(this._repository, this._keyProvider) : super(WalletHomeInitial());
 
   Future<void> loadCredentials() async {
@@ -36,9 +46,47 @@ class WalletHomeCubit extends Cubit<WalletHomeState> {
     try {
       final credentials = await _repository.getStoredCredentials();
       final online = await _repository.checkServiceHealth();
-      emit(WalletHomeLoaded(credentials: credentials, serviceOnline: online));
+      emit(WalletHomeLoaded(
+        credentials: credentials,
+        serviceOnline: online,
+        dobVerified: _dobVerified,
+        pairingCode: _pairingCode,
+      ));
     } catch (e) {
       emit(WalletHomeError(e.toString()));
+    }
+  }
+
+  Future<String?> verifyMobywatel(String testAccount) async {
+    try {
+      final verified = await _repository.verifyIdentityMobywatel(testAccount);
+      if (verified) {
+        _dobVerified = true;
+        await loadCredentials();
+        return null;
+      }
+      return 'Weryfikacja nie powiodła się';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> refreshPairingCode() async {
+    try {
+      final code = await _repository.registerPairingCode();
+      _pairingCode = code;
+      final currentState = state;
+      if (currentState is WalletHomeLoaded) {
+        emit(WalletHomeLoaded(
+          credentials: currentState.credentials,
+          serviceOnline: currentState.serviceOnline,
+          dobVerified: _dobVerified,
+          pairingCode: _pairingCode,
+        ));
+      }
+      return null;
+    } catch (e) {
+      return e.toString();
     }
   }
 

@@ -65,7 +65,45 @@ class WalletHomePage extends HookWidget {
               isLoading: state is WalletHomeVerifying || state is WalletHomeLoading,
               onPressed: () => cubit.requestVerification(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
+            Builder(builder: (ctx) {
+              final loaded = state is WalletHomeLoaded ? state as WalletHomeLoaded : null;
+              if (loaded != null && loaded.dobVerified) {
+                return _MobywatelVerifiedBadge(colors: colors, typography: typography);
+              }
+              return _MobywatelButton(
+                colors: colors,
+                typography: typography,
+                onPressed: () => _showMobywatelDialog(context, cubit),
+              );
+            }),
+            const SizedBox(height: 12),
+            Builder(builder: (ctx) {
+              final loaded = state is WalletHomeLoaded ? state as WalletHomeLoaded : null;
+              if (loaded != null && loaded.pairingCode != null) {
+                return _PairingCodeCard(
+                  code: loaded.pairingCode!,
+                  colors: colors,
+                  typography: typography,
+                  onRefresh: () => cubit.refreshPairingCode(),
+                );
+              }
+              return OutlinedButton.icon(
+                icon: Icon(Icons.qr_code, color: colors.text),
+                label: Text('Wygeneruj kod parowania',
+                    style: typography.body1.copyWith(color: colors.text)),
+                onPressed: loaded != null
+                    ? () => cubit.refreshPairingCode()
+                    : null,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: colors.dividerMedium),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  minimumSize: const Size(double.infinity, 48),
+                ),
+              );
+            }),
+            const SizedBox(height: 12),
             Text(LocaleKeys.wallet_credentialsLabel.tr(), style: typography.h8),
             const SizedBox(height: 12),
             Expanded(child: _buildBody(state, colors, typography, context)),
@@ -228,6 +266,149 @@ class _EmptyState extends StatelessWidget {
             LocaleKeys.wallet_emptySubtitle.tr(),
             style: typography.body1.copyWith(color: colors.lightText),
             textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void _showMobywatelDialog(BuildContext context, WalletHomeCubit cubit) {
+  const profiles = [
+    ('jan_kowalski', 'Jan Kowalski (35 lat)'),
+    ('anna_nowak', 'Anna Nowak (28 lat)'),
+    ('tomek_mlody', 'Tomek Młody (17 lat)'),
+    ('kasia_probierz', 'Kasia Próbierz (21 lat)'),
+    ('krystyna_seniorka', 'Krystyna Seniorka (65 lat)'),
+  ];
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => SimpleDialog(
+      title: const Text('Autentykuj przez mObywatel'),
+      children: profiles.map((p) {
+        return SimpleDialogOption(
+          onPressed: () {
+            Navigator.of(ctx).pop();
+            cubit.verifyMobywatel(p.$1);
+          },
+          child: Text(p.$2),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+class _MobywatelButton extends StatelessWidget {
+  final AppThemeColors colors;
+  final AppTypography typography;
+  final VoidCallback onPressed;
+
+  const _MobywatelButton({
+    required this.colors,
+    required this.typography,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: OutlinedButton.icon(
+        icon: const Icon(Icons.account_circle_outlined),
+        label: Text('Zweryfikuj przez mObywatel',
+            style: typography.body1),
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: colors.dividerMedium),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    );
+  }
+}
+
+class _MobywatelVerifiedBadge extends StatelessWidget {
+  final AppThemeColors colors;
+  final AppTypography typography;
+
+  const _MobywatelVerifiedBadge({
+    required this.colors,
+    required this.typography,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.success100.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.success100.withOpacity(0.4)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.verified, color: AppColors.success100, size: 20),
+          const SizedBox(width: 10),
+          Text('Tożsamość zweryfikowana (mObywatel)',
+              style: typography.body1.copyWith(color: AppColors.success100)),
+        ],
+      ),
+    );
+  }
+}
+
+class _PairingCodeCard extends StatelessWidget {
+  final String code;
+  final AppThemeColors colors;
+  final AppTypography typography;
+  final VoidCallback onRefresh;
+
+  const _PairingCodeCard({
+    required this.code,
+    required this.colors,
+    required this.typography,
+    required this.onRefresh,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.secondaryBackground,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.dividerMedium),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.key, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Kod parowania (wpisz w demo)',
+                    style: typography.info2
+                        .copyWith(color: colors.secondaryText)),
+                const SizedBox(height: 2),
+                Text(
+                  code,
+                  style: typography.h5.copyWith(
+                    fontFamily: 'monospace',
+                    letterSpacing: 4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Odśwież kod',
+            onPressed: onRefresh,
           ),
         ],
       ),

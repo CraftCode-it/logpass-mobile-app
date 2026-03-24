@@ -101,6 +101,18 @@ class WalletRepositoryImpl implements WalletRepository {
     }
   }
 
+  @override
+  Future<bool> verifyIdentityMobywatel(String testAccount) async {
+    final resp = await _api.verifyIdentityMobywatel(testAccount: testAccount);
+    return resp['dob_verified'] == true;
+  }
+
+  @override
+  Future<String> registerPairingCode() async {
+    final resp = await _api.registerPairingCode();
+    return resp['code'] as String;
+  }
+
   Future<void> _saveCredential(Credential credential) async {
     final box = await _getBox();
     await box.put(credential.type, credential.toMap());

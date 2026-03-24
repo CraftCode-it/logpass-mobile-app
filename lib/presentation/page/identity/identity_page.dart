@@ -134,6 +134,15 @@ class _IdentityBody extends HookWidget {
                         ? null
                         : (newValue) => cubit.updateField(
                             activeProfile.id, field.key, newValue),
+                    onCopy: profiles.length > 1
+                        ? () => _showCopyFieldDialog(
+                              context,
+                              cubit,
+                              activeProfile,
+                              profiles,
+                              field.key,
+                            )
+                        : null,
                   )),
               const SizedBox(height: AppDimens.m),
               TextButton.icon(
@@ -170,6 +179,31 @@ class _IdentityBody extends HookWidget {
             child: const Text('Usuń', style: TextStyle(color: Colors.red)),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showCopyFieldDialog(
+    BuildContext context,
+    IdentityCubit cubit,
+    IdentityProfile sourceProfile,
+    List<IdentityProfile> allProfiles,
+    String fieldKey,
+  ) {
+    final targets = allProfiles.where((p) => p.id != sourceProfile.id).toList();
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('Kopiuj pole do profilu'),
+        children: targets.map((target) {
+          return SimpleDialogOption(
+            onPressed: () {
+              cubit.copyFieldToProfile(sourceProfile.id, target.id, fieldKey);
+              Navigator.of(ctx).pop();
+            },
+            child: Text(target.displayName),
+          );
+        }).toList(),
       ),
     );
   }
@@ -250,8 +284,15 @@ class _ProfileSwitcher extends StatelessWidget {
                   ? () => onDelete(profile.id)
                   : null,
               child: ChoiceChip(
-                label: Text(profile.displayName),
+                label: Text(
+                  profile.displayName,
+                  style: isActive
+                      ? const TextStyle(color: Colors.white)
+                      : null,
+                ),
                 selected: isActive,
+                selectedColor: AppColors.primary90,
+                checkmarkColor: Colors.white,
                 onSelected: (_) => onSelect(profile.id),
               ),
             ),
@@ -265,12 +306,46 @@ class _ProfileSwitcher extends StatelessWidget {
 class _FieldTile extends HookWidget {
   final IdentityField field;
   final void Function(String newValue)? onEdit;
+  final void Function()? onCopy;
 
-  const _FieldTile({required this.field, this.onEdit});
+  const _FieldTile({required this.field, this.onEdit, this.onCopy});
 
   @override
   Widget build(BuildContext context) {
     final typography = useAppTypography();
+
+    Widget? trailingWidget;
+    if (field.isLocked) {
+      trailingWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (onCopy != null)
+            IconButton(
+              icon: const Icon(Icons.copy_outlined, size: 18),
+              onPressed: onCopy,
+              tooltip: 'Kopiuj do profilu',
+            ),
+          const Icon(Icons.lock_outline, size: 16, color: Colors.grey),
+        ],
+      );
+    } else if (onEdit != null || onCopy != null) {
+      trailingWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (onCopy != null)
+            IconButton(
+              icon: const Icon(Icons.copy_outlined, size: 18),
+              onPressed: onCopy,
+              tooltip: 'Kopiuj do profilu',
+            ),
+          if (onEdit != null)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined, size: 18),
+              onPressed: () => _showEditDialog(context),
+            ),
+        ],
+      );
+    }
 
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -280,14 +355,7 @@ class _FieldTile extends HookWidget {
         field.value.isEmpty ? '—' : field.value,
         style: typography.body1,
       ),
-      trailing: field.isLocked
-          ? const Icon(Icons.lock_outline, size: 16, color: Colors.grey)
-          : onEdit != null
-              ? IconButton(
-                  icon: const Icon(Icons.edit_outlined, size: 18),
-                  onPressed: () => _showEditDialog(context),
-                )
-              : null,
+      trailing: trailingWidget,
     );
   }
 

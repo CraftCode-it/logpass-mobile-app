@@ -63,4 +63,19 @@ class WalletApiDataSource {
     final response = await _dio.get('verifier/request/$requestId');
     return response.data as Map<String, dynamic>;
   }
+
+  Future<Map<String, dynamic>> verifyIdentityMobywatel({
+    required String testAccount,
+  }) async {
+    final response = await _dio.post(
+      'users/self/verifications/',
+      data: {'provider': 'mobywatel_mock', 'test_account': testAccount},
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> registerPairingCode() async {
+    final response = await _dio.post('auth/pairing/register');
+    return response.data as Map<String, dynamic>;
+  }
 }
