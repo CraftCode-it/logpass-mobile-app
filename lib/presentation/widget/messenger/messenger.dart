@@ -1,4 +1,4 @@
-﻿import 'package:auto_route/auto_route.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -87,7 +87,21 @@ class Messenger extends HookWidget {
               ),
               confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
               updateAccount: () {},
-              refreshUserCode: () {  },
+              refreshUserCode: () {},
+              logpassVerify: () {
+                final requestId = state.action.actionId;
+                if (requestId != null) {
+                  final params = state.action.queryParameters;
+                  AutoRouter.of(context).push(
+                    VerificationRequestRoute(
+                      requestId: requestId,
+                      verifierName: params?['verifier'],
+                      requestType: params?['request_type'],
+                      minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                    ),
+                  );
+                }
+              },
             );
           },
         ),

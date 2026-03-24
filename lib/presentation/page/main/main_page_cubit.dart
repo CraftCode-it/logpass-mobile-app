@@ -15,6 +15,7 @@ import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/mark_notification_as_received_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/register_push_notification_device_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/close_web_socket_use_case.dart';
 import 'package:logpass_me/domain/web_socket/use_case/setup_web_socket_channel_use_case.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
@@ -36,6 +37,7 @@ class MainPageCubit extends Cubit<MainPageState> {
   final RegisterPushNotificationDeviceUseCase _registerPushNotificationDeviceUseCase;
   final LoadOneTimeCodeUseCase _loadOneTimeCodeUseCase;
   final MarkNotificationAsReceivedUseCase _markNotificationAsReceivedUseCase;
+  final SubscribeToIncomingActionsUseCase _subscribeToIncomingActionsUseCase;
 
   StreamSubscription<IncomingAction>? _incomingActionsFromLinkSubscription;
   StreamSubscription<IncomingAction>? _incomingActionsFromBackgroundSubscription;
@@ -53,6 +55,7 @@ class MainPageCubit extends Cubit<MainPageState> {
     this._subscribeToRefreshCodeActionsUseCase,
     this._loadOneTimeCodeUseCase,
     this._markNotificationAsReceivedUseCase,
+    this._subscribeToIncomingActionsUseCase,
   ) : super(const MainPageState.idle());
 
   Future<void> init() async {
@@ -76,6 +79,10 @@ class MainPageCubit extends Cubit<MainPageState> {
       emit(MainPageState.openAction(event));
     });
     _incomingActionsFromBackgroundSubscription = _subscribeToIncomingActionsFromBackgroundUseCase().listen((event) {
+      emit(MainPageState.openAction(event));
+    });
+    // Subscribe to WS-based push actions (logpass_verify)
+    _incomingActionsSubscription = _subscribeToIncomingActionsUseCase().listen((event) {
       emit(MainPageState.openAction(event));
     });
   }

@@ -8,8 +8,8 @@ import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page.dart';
+import 'package:logpass_me/presentation/page/identity/identity_page.dart';
 import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
-import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
 import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -54,7 +54,7 @@ class MainPage extends HookWidget {
                   HomePage(),
                   ServiceListPage(),
                   WalletHomePage(),
-                  YourDataPage(),
+                  IdentityPage(),
                   SettingsPage(),
                 ],
               ),
@@ -145,6 +145,20 @@ class MainPage extends HookWidget {
           confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
           updateAccount: () {},
           refreshUserCode: () {},
+          logpassVerify: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                VerificationRequestRoute(
+                  requestId: requestId,
+                  verifierName: params?['verifier'],
+                  requestType: params?['request_type'],
+                  minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                ),
+              );
+            }
+          },
         );
       },
       orElse: () {},

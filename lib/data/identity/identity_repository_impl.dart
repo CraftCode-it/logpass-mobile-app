@@ -1,0 +1,163 @@
+import 'dart:convert';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:injectable/injectable.dart';
+import 'package:logpass_me/domain/identity/identity_field.dart';
+import 'package:logpass_me/domain/identity/identity_profile.dart';
+import 'package:logpass_me/domain/identity/identity_profile_type.dart';
+import 'package:logpass_me/domain/identity/identity_repository.dart';
+import 'package:uuid/uuid.dart';
+
+@Singleton(as: IdentityRepository)
+class IdentityRepositoryImpl implements IdentityRepository {
+  static const _profilesKey = 'logpass_identity_profiles';
+  static const _activeProfileKey = 'logpass_identity_active_profile';
+  static const _iosOptions = IOSOptions(accessibility: KeychainAccessibility.unlocked_this_device);
+
+  final FlutterSecureStorage _storage;
+
+  IdentityRepositoryImpl(this._storage);
+
+  @override
+  Future<List<IdentityProfile>> getProfiles() async {
+    final json = await _storage.read(key: _profilesKey, iOptions: _iosOptions);
+    if (json == null) {
+      final defaults = _createDefaultProfiles();
+      await _saveProfiles(defaults);
+      return defaults;
+    }
+    try {
+      final list = jsonDecode(json) as List;
+      final profiles = list.map((e) => IdentityProfile.fromJson(e as Map<String, dynamic>)).toList();
+      // Ensure default profiles always exist
+      return _mergeWithDefaults(profiles);
+    } catch (_) {
+      final defaults = _createDefaultProfiles();
+      await _saveProfiles(defaults);
+      return defaults;
+    }
+  }
+
+  @override
+  Future<String> getActiveProfileId() async {
+    final id = await _storage.read(key: _activeProfileKey, iOptions: _iosOptions);
+    return id ?? 'private';
+  }
+
+  @override
+  Future<void> setActiveProfileId(String profileId) async {
+    await _storage.write(key: _activeProfileKey, value: profileId, iOptions: _iosOptions);
+  }
+
+  @override
+  Future<void> saveProfile(IdentityProfile profile) async {
+    final profiles = await getProfiles();
+    final idx = profiles.indexWhere((p) => p.id == profile.id);
+    if (idx >= 0) {
+      profiles[idx] = profile;
+    } else {
+      profiles.add(profile);
+    }
+    await _saveProfiles(profiles);
+  }
+
+  @override
+  Future<void> deleteProfile(String profileId) async {
+    const predefined = {'private', 'work', 'fake'};
+    if (predefined.contains(profileId)) return;
+    final profiles = await getProfiles();
+    profiles.removeWhere((p) => p.id == profileId);
+    await _saveProfiles(profiles);
+    // If active profile was deleted, switch to private
+    final activeId = await getActiveProfileId();
+    if (activeId == profileId) {
+      await setActiveProfileId('private');
+    }
+  }
+
+  @override
+  Future<void> applyVerifiedDob(String dateOfBirth) async {
+    final profiles = await getProfiles();
+    final updated = profiles.map((profile) {
+      if (profile.type == IdentityProfileType.private) {
+        // Lock DOB in private profile
+        final updatedFields = profile.fields.map((f) {
+          if (f.key == IdentityFieldKey.dateOfBirth) {
+            return f.copyWith(value: dateOfBirth, isLocked: true);
+          }
+          return f;
+        }).toList();
+        return profile.copyWith(fields: updatedFields);
+      } else if (profile.type == IdentityProfileType.fake) {
+        // Lock DOB in fake profile (age is locked but set from verification)
+        final updatedFields = profile.fields.map((f) {
+          if (f.key == IdentityFieldKey.dateOfBirth) {
+            return f.copyWith(value: dateOfBirth, isLocked: true);
+          }
+          return f;
+        }).toList();
+        return profile.copyWith(fields: updatedFields);
+      }
+      return profile;
+    }).toList();
+    await _saveProfiles(updated);
+  }
+
+  Future<void> _saveProfiles(List<IdentityProfile> profiles) async {
+    final json = jsonEncode(profiles.map((p) => p.toJson()).toList());
+    await _storage.write(key: _profilesKey, value: json, iOptions: _iosOptions);
+  }
+
+  List<IdentityProfile> _createDefaultProfiles() => [
+        IdentityProfile.defaultPrivate(),
+        IdentityProfile.defaultWork(),
+        IdentityProfile.defaultFake(),
+      ];
+
+  /// Ensure the 3 predefined profiles are always present.
+  List<IdentityProfile> _mergeWithDefaults(List<IdentityProfile> profiles) {
+    final ids = profiles.map((p) => p.id).toSet();
+    if (!ids.contains('private')) profiles.insert(0, IdentityProfile.defaultPrivate());
+    if (!ids.contains('work')) {
+      final privateIdx = profiles.indexWhere((p) => p.id == 'private');
+      profiles.insert(privateIdx + 1, IdentityProfile.defaultWork());
+    }
+    if (!ids.contains('fake')) {
+      final workIdx = profiles.indexWhere((p) => p.id == 'work');
+      profiles.insert(workIdx + 1, IdentityProfile.defaultFake());
+    }
+    return profiles;
+  }
+}
+
+/// Creates a new custom profile with a user-provided name.
+IdentityProfile createCustomProfile(String displayName) {
+  const _uuid = Uuid();
+  return IdentityProfile(
+    id: _uuid.v4(),
+    displayName: displayName,
+    type: IdentityProfileType.custom,
+    fields: [
+      IdentityField(
+        key: IdentityFieldKey.firstName,
+        label: IdentityFieldKey.label(IdentityFieldKey.firstName),
+        value: '',
+      ),
+      IdentityField(
+        key: IdentityFieldKey.lastName,
+        label: IdentityFieldKey.label(IdentityFieldKey.lastName),
+        value: '',
+      ),
+      IdentityField(
+        key: IdentityFieldKey.email,
+        label: IdentityFieldKey.label(IdentityFieldKey.email),
+        value: '',
+      ),
+      IdentityField(
+        key: IdentityFieldKey.phone,
+        label: IdentityFieldKey.label(IdentityFieldKey.phone),
+        value: '',
+      ),
+    ],
+  );
+}

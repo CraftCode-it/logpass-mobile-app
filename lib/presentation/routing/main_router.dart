@@ -65,6 +65,7 @@ import 'package:logpass_me/presentation/page/wallet/credential_detail/credential
 import 'package:logpass_me/presentation/page/wallet/proof_presentation/proof_presentation_page.dart';
 import 'package:logpass_me/presentation/page/wallet/qr_scan/qr_scan_page.dart';
 import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_page.dart';
+import 'package:logpass_me/presentation/page/identity/identity_page.dart';
 import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
 import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
 
@@ -127,5 +128,6 @@ class MainRouter extends _$MainRouter {
     AutoRoute(page: ProofPresentationRoute.page),
     AutoRoute(page: QrScanRoute.page),
     AutoRoute(page: VerificationRequestRoute.page),
+    AutoRoute(page: IdentityRoute.page),
   ];
 }

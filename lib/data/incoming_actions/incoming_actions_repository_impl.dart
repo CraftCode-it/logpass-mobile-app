@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
+import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_push_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/web_socket_action_dto_to_incoming_action_mapper.dart';
@@ -62,6 +63,23 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
 
     _webSocketStreamSubscription = _webSocketManager.listenForChannel().listen((event) {
       final jsonMap = json.decode(event as String) as Map<String, dynamic>;
+      // Handle raw logpass_verify push messages from auth-service
+      if (jsonMap['type'] == 'logpass_verify') {
+        final requestId = jsonMap['request_id'] as String?;
+        final action = IncomingAction.create(
+          ActionType.logpassVerify(),
+          requestId,
+          null,
+          {
+            'request_id': requestId ?? '',
+            'verifier': (jsonMap['verifier'] as String?) ?? '',
+            'request_type': (jsonMap['request_type'] as String?) ?? 'age_18',
+            'min_age': (jsonMap['min_age'] ?? 18).toString(),
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
       final incomingAction = _mapIncomingActionDto(jsonMap);
       _dispatchAction(incomingAction);
     });

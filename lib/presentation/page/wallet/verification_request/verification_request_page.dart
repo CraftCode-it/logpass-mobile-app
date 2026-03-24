@@ -180,7 +180,9 @@ class VerificationRequestPage extends HookWidget {
         await api.fulfillRequest(
           requestId: requestId!,
           zkProof: proof['zk_proof'] as String? ?? '',
-          zkPublicInputs: proof['zk_public_inputs'] as String? ?? '',
+          zkPublicInputs: (proof['zk_public_inputs'] is List)
+              ? (proof['zk_public_inputs'] as List).map((e) => e.toString()).toList()
+              : <String>[],
         );
       }
 

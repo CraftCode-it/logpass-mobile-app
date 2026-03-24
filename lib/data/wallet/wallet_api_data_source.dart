@@ -47,7 +47,7 @@ class WalletApiDataSource {
   Future<Map<String, dynamic>> fulfillRequest({
     required String requestId,
     required String zkProof,
-    required String zkPublicInputs,
+    required List<String> zkPublicInputs,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',

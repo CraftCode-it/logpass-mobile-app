@@ -1,4 +1,4 @@
-﻿import 'package:auto_route/auto_route.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -220,6 +220,20 @@ class _PendingItem extends HookWidget {
           confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
           updateAccount: () {},
           refreshUserCode: () {},
+          logpassVerify: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                VerificationRequestRoute(
+                  requestId: requestId,
+                  verifierName: params?['verifier'],
+                  requestType: params?['request_type'],
+                  minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                ),
+              );
+            }
+          },
         );
       },
       child: Container(

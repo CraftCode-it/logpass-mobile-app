@@ -11,6 +11,9 @@ class ActionType with _$ActionType {
   factory ActionType.confirm() = _ActionTypeConfirm;
 
   factory ActionType.updateAccount() = _ActionTypeUpdateAccount;
+
+  /// Triggered by a WebSocket push or QR scan from a verifier requesting age/identity proof
+  factory ActionType.logpassVerify() = _ActionTypeLogpassVerify;
 }
 
 // TODO: refactor keys after backend's implementation
@@ -25,6 +28,8 @@ ActionType mapActionType(String key) {
       return ActionType.confirm();
     case 'updateaccount':
       return ActionType.updateAccount();
+    case 'logpass_verify':
+      return ActionType.logpassVerify();
     default:
       throw Exception('Unsupported action type');
   }
