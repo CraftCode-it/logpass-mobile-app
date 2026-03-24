@@ -103,6 +103,6 @@ class WalletRepositoryImpl implements WalletRepository {
 
   Future<void> _saveCredential(Credential credential) async {
     final box = await _getBox();
-    await box.put(credential.id, credential.toMap());
+    await box.put(credential.type, credential.toMap());
   }
 }

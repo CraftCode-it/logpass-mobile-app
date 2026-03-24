@@ -52,6 +52,15 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
 
+    // DEV_MODE: backend returns OTP in toSign field — auto-fill if 6 digits
+    if (verification.toSign != null && verification.toSign!.isNotEmpty) {
+      final raw = verification.toSign!.replaceAll(RegExp(r'\D'), '');
+      if (raw.length == otpCodeLength) {
+        _code = raw;
+        emit(OTPCodePageState.otpAutofill(raw));
+      }
+    }
+
     _listenSmsCode();
   }
 

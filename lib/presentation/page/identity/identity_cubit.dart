@@ -1,39 +1,42 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/identity/identity_repository_impl.dart';
 import 'package:logpass_me/domain/identity/identity_field.dart';
 import 'package:logpass_me/domain/identity/identity_profile.dart';
 import 'package:logpass_me/domain/identity/identity_repository.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
-part 'identity_cubit.freezed.dart';
+abstract class IdentityState implements BuildState {}
 
-@freezed
-class IdentityState with _$IdentityState {
-  const factory IdentityState.loading() = _Loading;
-  const factory IdentityState.loaded({
-    required List<IdentityProfile> profiles,
-    required String activeProfileId,
-  }) = _Loaded;
-  const factory IdentityState.error(String message) = _Error;
+class IdentityLoading extends IdentityState {}
+
+class IdentityLoaded extends IdentityState {
+  final List<IdentityProfile> profiles;
+  final String activeProfileId;
+  IdentityLoaded({required this.profiles, required this.activeProfileId});
+}
+
+class IdentityError extends IdentityState {
+  final String message;
+  IdentityError(this.message);
 }
 
 @injectable
 class IdentityCubit extends Cubit<IdentityState> {
   final IdentityRepository _repository;
 
-  IdentityCubit(this._repository) : super(const IdentityState.loading());
+  IdentityCubit(this._repository) : super(IdentityLoading());
 
   Future<void> load() async {
-    emit(const IdentityState.loading());
+    emit(IdentityLoading());
     try {
       final profiles = await _repository.getProfiles();
       final activeId = await _repository.getActiveProfileId();
-      emit(IdentityState.loaded(profiles: profiles, activeProfileId: activeId));
+      emit(IdentityLoaded(profiles: profiles, activeProfileId: activeId));
     } catch (e) {
-      emit(IdentityState.error(e.toString()));
+      emit(IdentityError(e.toString()));
     }
   }
 
@@ -44,8 +47,9 @@ class IdentityCubit extends Cubit<IdentityState> {
 
   Future<void> updateField(String profileId, String fieldKey, String value) async {
     final state = this.state;
-    if (state is! _Loaded) return;
-    final profile = state.profiles.firstWhere((p) => p.id == profileId);
+    if (state is! IdentityLoaded) return;
+    final loaded = state as IdentityLoaded;
+    final profile = loaded.profiles.firstWhere((p) => p.id == profileId);
     final updatedFields = profile.fields.map((f) {
       if (f.key == fieldKey && !f.isLocked) {
         return f.copyWith(value: value);
@@ -58,8 +62,9 @@ class IdentityCubit extends Cubit<IdentityState> {
 
   Future<void> addCustomField(String profileId, String key, String label, String value) async {
     final state = this.state;
-    if (state is! _Loaded) return;
-    final profile = state.profiles.firstWhere((p) => p.id == profileId);
+    if (state is! IdentityLoaded) return;
+    final loaded = state as IdentityLoaded;
+    final profile = loaded.profiles.firstWhere((p) => p.id == profileId);
     final newField = IdentityField(key: key, label: label, value: value);
     final updatedFields = [...profile.fields, newField];
     await _repository.saveProfile(profile.copyWith(fields: updatedFields));

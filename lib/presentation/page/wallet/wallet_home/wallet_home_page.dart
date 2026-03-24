@@ -37,9 +37,19 @@ class WalletHomePage extends HookWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(LocaleKeys.wallet_title.tr(), style: typography.h3),
-                _ServiceIndicator(
-                  online: state is WalletHomeLoaded && state.serviceOnline,
-                  colors: colors,
+                Row(
+                  children: [
+                    _ServiceIndicator(
+                      online: state is WalletHomeLoaded && state.serviceOnline,
+                      colors: colors,
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(Icons.qr_code_scanner, color: colors.text),
+                      tooltip: 'Skanuj QR',
+                      onPressed: () => AutoRouter.of(context).push(const QrScanRoute()),
+                    ),
+                  ],
                 ),
               ],
             ),

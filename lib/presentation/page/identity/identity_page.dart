@@ -40,16 +40,22 @@ class IdentityPage extends HookWidget {
           ),
         ],
       ),
-      body: state.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (msg) => Center(child: Text('Błąd: $msg')),
-        loaded: (profiles, activeProfileId) => _IdentityBody(
-          profiles: profiles,
-          activeProfileId: activeProfileId,
-          cubit: cubit,
-        ),
-      ),
+      body: _buildBody(state, cubit),
     );
+  }
+
+  Widget _buildBody(IdentityState state, IdentityCubit cubit) {
+    if (state is IdentityLoaded) {
+      return _IdentityBody(
+        profiles: state.profiles,
+        activeProfileId: state.activeProfileId,
+        cubit: cubit,
+      );
+    }
+    if (state is IdentityError) {
+      return Center(child: Text('Błąd: ${state.message}'));
+    }
+    return const Center(child: CircularProgressIndicator());
   }
 
   void _showAddCustomProfileDialog(BuildContext context, IdentityCubit cubit) {
