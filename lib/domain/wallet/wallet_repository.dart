@@ -4,6 +4,7 @@ abstract class WalletRepository {
   Future<Credential> requestAgeVerification({
     required String userPubkey,
     int minAge = 18,
+    bool forced = false,
   });
 
   Future<Map<String, dynamic>> generateProof(String verificationId);
@@ -16,5 +17,6 @@ abstract class WalletRepository {
 
   Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount);
 
-  Future<String> registerPairingCode();
+  /// Returns /users/self/ data including identity_verified, dob, first_name, etc.
+  Future<Map<String, dynamic>> getUserSelf();
 }

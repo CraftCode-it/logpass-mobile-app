@@ -4,7 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/core/crypto/key_provider.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/data/wallet/wallet_api_data_source.dart';
+import 'package:logpass_me/domain/guardian/guardian_repository.dart';
 import 'package:logpass_me/domain/wallet/wallet_repository.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_authorization_dialog.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
@@ -40,7 +42,7 @@ class VerificationRequestPage extends HookWidget {
           icon: Icon(Icons.close, color: colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Verification Request', style: typography.h6.copyWith(color: colors.text)),
+        title: Text('Żądanie weryfikacji', style: typography.h6.copyWith(color: colors.text)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -55,7 +57,7 @@ class VerificationRequestPage extends HookWidget {
             : Column(
                 children: [
                   const SizedBox(height: 32),
-                  Container(
+                      Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -68,12 +70,12 @@ class VerificationRequestPage extends HookWidget {
                         Icon(Icons.shield, size: 48, color: colors.text),
                         const SizedBox(height: 16),
                         Text(
-                          verifierName ?? 'Unknown Verifier',
+                          verifierName ?? 'Nieznany weryfikator',
                           style: typography.h4,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'is requesting verification',
+                          'żąda weryfikacji',
                           style: typography.body1.copyWith(color: colors.secondaryText),
                         ),
                       ],
@@ -82,24 +84,32 @@ class VerificationRequestPage extends HookWidget {
                   const SizedBox(height: 32),
                   _RequestDetail(
                     icon: Icons.verified_user,
-                    title: 'Verification Type',
-                    value: requestType ?? 'Age Verification',
+                    title: 'Typ weryfikacji',
+                    value: requestType == 'identity'
+                        ? 'Tożsamość'
+                        : requestType == 'age_18'
+                            ? 'Wiek 18+'
+                            : requestType ?? 'Weryfikacja wieku',
                     colors: colors,
                     typography: typography,
                   ),
-                  const SizedBox(height: 16),
-                  _RequestDetail(
-                    icon: Icons.cake,
-                    title: 'Minimum Age',
-                    value: '${minAge ?? 18}+',
-                    colors: colors,
-                    typography: typography,
-                  ),
+                  if (requestType != 'identity') ...[
+                    const SizedBox(height: 16),
+                    _RequestDetail(
+                      icon: Icons.cake,
+                      title: 'Minimalny wiek',
+                      value: '${minAge ?? 18}+',
+                      colors: colors,
+                      typography: typography,
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   _RequestDetail(
                     icon: Icons.privacy_tip,
-                    title: 'Data Shared',
-                    value: 'Zero-Knowledge Proof only\nNo personal data revealed',
+                    title: 'Udostępniane dane',
+                    value: requestType == 'identity'
+                        ? 'Tylko potwierdzenie tożsamości\nBez ujawniania danych osobowych'
+                        : 'Tylko dowód ZK\nBez ujawniania danych osobowych',
                     colors: colors,
                     typography: typography,
                   ),
@@ -115,7 +125,7 @@ class VerificationRequestPage extends HookWidget {
                               side: BorderSide(color: colors.buttonOutlined),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
-                            child: Text('Decline', style: typography.h8.copyWith(color: colors.buttonOutlinedText)),
+                            child: Text('Odmów', style: typography.h8.copyWith(color: colors.buttonOutlinedText)),
                           ),
                         ),
                       ),
@@ -126,11 +136,22 @@ class VerificationRequestPage extends HookWidget {
                           child: ElevatedButton(
                             onPressed: isProcessing.value
                                 ? null
-                                : () => _approve(
-                                      isProcessing: isProcessing,
-                                      resultMessage: resultMessage,
-                                      isSuccess: isSuccess,
-                                    ),
+                                : () {
+                                    if (requestType == 'identity') {
+                                      _approveIdentity(
+                                        isProcessing: isProcessing,
+                                        resultMessage: resultMessage,
+                                        isSuccess: isSuccess,
+                                      );
+                                    } else {
+                                      _approve(
+                                        context: context,
+                                        isProcessing: isProcessing,
+                                        resultMessage: resultMessage,
+                                        isSuccess: isSuccess,
+                                      );
+                                    }
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.success100,
                               foregroundColor: Colors.white,
@@ -143,7 +164,7 @@ class VerificationRequestPage extends HookWidget {
                                     height: 24,
                                     child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                   )
-                                : Text('Approve', style: typography.h8.copyWith(color: Colors.white)),
+                                : Text('Zatwierdź', style: typography.h8.copyWith(color: Colors.white)),
                           ),
                         ),
                       ),
@@ -157,6 +178,7 @@ class VerificationRequestPage extends HookWidget {
   }
 
   Future<void> _approve({
+    required BuildContext context,
     required ValueNotifier<bool> isProcessing,
     required ValueNotifier<String?> resultMessage,
     required ValueNotifier<bool> isSuccess,
@@ -174,6 +196,46 @@ class VerificationRequestPage extends HookWidget {
         minAge: minAge ?? 18,
       );
 
+      // F5: Block forced credentials — user is a minor, require guardian authorization
+      if (credential.forced) {
+        isProcessing.value = false;
+
+        // F8: Show guardian authorization dialog
+        final approved = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => GuardianAuthorizationDialog(
+            serviceName: verifierName ?? 'Weryfikator',
+            action: 'age_verification_${minAge ?? 18}',
+            verifierName: verifierName,
+          ),
+        );
+
+        if (approved == true) {
+          // Guardian approved — proceed with proof
+          isProcessing.value = true;
+          final proof = await repo.generateProof(credential.id);
+          if (requestId != null) {
+            await api.fulfillRequest(
+              requestId: requestId!,
+              zkProof: proof['zk_proof'] as String? ?? '',
+              zkPublicInputs: (proof['zk_public_inputs'] is List)
+                  ? (proof['zk_public_inputs'] as List).map((e) => e.toString()).toList()
+                  : <String>[],
+            );
+          }
+          isSuccess.value = true;
+          resultMessage.value =
+              'Weryfikacja zatwierdzona przez opiekuna!\nDowód ZK przesłany do ${verifierName ?? 'weryfikatora'}.';
+        } else {
+          isSuccess.value = false;
+          resultMessage.value =
+              'Poświadczenie odrzucone — wiek poniżej ${minAge ?? 18} lat.\n'
+              'Opiekun odmówił lub czas oczekiwania upłynął.';
+        }
+        return;
+      }
+
       final proof = await repo.generateProof(credential.id);
 
       if (requestId != null) {
@@ -187,10 +249,32 @@ class VerificationRequestPage extends HookWidget {
       }
 
       isSuccess.value = true;
-      resultMessage.value = 'Verification approved!\nZK proof shared with ${verifierName ?? 'verifier'}.';
+      resultMessage.value = 'Weryfikacja zatwierdzona!\nDowód ZK przesłany do ${verifierName ?? 'weryfikatora'}.';
     } catch (e) {
       isSuccess.value = false;
-      resultMessage.value = 'Verification failed:\n$e';
+      resultMessage.value = 'Weryfikacja nieudana:\n$e';
+    } finally {
+      isProcessing.value = false;
+    }
+  }
+
+  Future<void> _approveIdentity({
+    required ValueNotifier<bool> isProcessing,
+    required ValueNotifier<String?> resultMessage,
+    required ValueNotifier<bool> isSuccess,
+  }) async {
+    isProcessing.value = true;
+    try {
+      final api = getIt<WalletApiDataSource>();
+      if (requestId != null) {
+        await api.fulfillIdentityRequest(requestId: requestId!);
+      }
+      isSuccess.value = true;
+      resultMessage.value =
+          'Tożsamość udostępniona serwisowi ${verifierName ?? "weryfikator"}.';
+    } catch (e) {
+      isSuccess.value = false;
+      resultMessage.value = 'Weryfikacja tożsamości nieudana:\n$e';
     } finally {
       isProcessing.value = false;
     }
@@ -225,7 +309,7 @@ class _ResultView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            success ? 'Success' : 'Failed',
+            success ? 'Sukces' : 'Błąd',
             style: typography.h3.copyWith(
               color: success ? AppColors.success100 : AppColors.error100,
             ),
@@ -247,7 +331,7 @@ class _ResultView extends StatelessWidget {
                 foregroundColor: colors.buttonFilledText,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text('Done', style: typography.h8.copyWith(color: colors.buttonFilledText)),
+              child: Text('Gotowe', style: typography.h8.copyWith(color: colors.buttonFilledText)),
             ),
           ),
         ],

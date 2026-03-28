@@ -39,6 +39,7 @@ class WalletRepositoryImpl implements WalletRepository {
   Future<Credential> requestAgeVerification({
     required String userPubkey,
     int minAge = 18,
+    bool forced = false,
   }) async {
     final resp = await _api.verifyAge(
       userPubkey: userPubkey,
@@ -59,6 +60,7 @@ class WalletRepositoryImpl implements WalletRepository {
       onChainTxId: status['on_chain_tx_id'] as String?,
       issuedAt: DateTime.now(),
       status: status['status'] as String? ?? 'unknown',
+      forced: forced,
     );
 
     await _saveCredential(credential);
@@ -102,18 +104,25 @@ class WalletRepositoryImpl implements WalletRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount) async {
-    final resp = await _api.verifyIdentityMobywatel(testAccount: testAccount);
-    return {
-      'dob_verified': resp['dob_verified'] == true,
-      'dob': resp['dob'] as String? ?? '',
-    };
+  Future<Map<String, dynamic>> getUserSelf() async {
+    final resp = await _api.getUserSelf();
+    final data = resp['data'] as Map<String, dynamic>? ?? resp;
+    return data;
   }
 
   @override
-  Future<String> registerPairingCode() async {
-    final resp = await _api.registerPairingCode();
-    return resp['code'] as String;
+  Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount) async {
+    final resp = await _api.verifyIdentityMobywatel(testAccount: testAccount);
+    final data = resp['data'] as Map<String, dynamic>? ?? resp;
+    return {
+      'dob_verified': data['dob_verified'] == true,
+      'dob': data['dob'] as String? ?? '',
+      'first_name': data['first_name'] as String? ?? '',
+      'last_name': data['last_name'] as String? ?? '',
+      'pesel_masked': data['pesel_masked'] as String? ?? '',
+      'address': data['address'] as Map<String, dynamic>?,
+      'identity_verified': data['dob_verified'] == true,
+    };
   }
 
   Future<void> _saveCredential(Credential credential) async {

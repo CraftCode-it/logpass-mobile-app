@@ -7,6 +7,8 @@ class Credential {
   final String? onChainTxId;
   final DateTime issuedAt;
   final String status;
+  /// True when credential was forced for a user whose DOB indicates age < 18.
+  final bool forced;
 
   const Credential({
     required this.id,
@@ -17,6 +19,7 @@ class Credential {
     this.onChainTxId,
     required this.issuedAt,
     required this.status,
+    this.forced = false,
   });
 
   bool get isValid =>
@@ -29,7 +32,7 @@ class Credential {
 
   String get displayType {
     if (type.startsWith('age_')) {
-      return 'Age ${type.substring(4)}+';
+      return 'Wiek ${type.substring(4)}+';
     }
     return type;
   }
@@ -43,6 +46,7 @@ class Credential {
         'on_chain_tx_id': onChainTxId,
         'issued_at': issuedAt.toIso8601String(),
         'status': status,
+        'forced': forced,
       };
 
   factory Credential.fromMap(Map<String, dynamic> map) => Credential(
@@ -56,5 +60,6 @@ class Credential {
         onChainTxId: map['on_chain_tx_id'] as String?,
         issuedAt: DateTime.parse(map['issued_at'] as String),
         status: map['status'] as String,
+        forced: map['forced'] as bool? ?? false,
       );
 }
