@@ -52,7 +52,7 @@ android {
     defaultConfig {
         applicationId "me.logpass.mobile"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

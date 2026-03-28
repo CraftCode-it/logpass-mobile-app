@@ -315,9 +315,9 @@ class _MobywatelButton extends StatelessWidget {
       width: double.infinity,
       height: 48,
       child: OutlinedButton.icon(
-        icon: const Icon(Icons.account_circle_outlined),
+        icon: Icon(Icons.account_circle_outlined, color: colors.text),
         label: Text('Zweryfikuj przez mObywatel',
-            style: typography.body1),
+            style: typography.body1.copyWith(color: colors.text)),
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: colors.dividerMedium),
@@ -385,7 +385,7 @@ class _PairingCodeCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.key, size: 20),
+          Icon(Icons.key, size: 20, color: colors.text),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -406,7 +406,7 @@ class _PairingCodeCard extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: Icon(Icons.refresh, color: colors.secondaryText),
             tooltip: 'Odśwież kod',
             onPressed: onRefresh,
           ),

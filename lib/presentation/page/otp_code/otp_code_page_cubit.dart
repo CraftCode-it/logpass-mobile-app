@@ -101,15 +101,16 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
       if (raw.length == otpCodeLength) {
         _code = raw;
         emit(OTPCodePageState.otpAutofill(raw));
+        // Don't emit idle here — let the UI handle autofill first (via Future.delayed in page)
+        return;
       }
     } on GeneralConnectionError catch (e) {
       emit(OTPCodePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Resending OTP code failed', ex: e, stacktrace: s);
       emit(OTPCodePageState.connectionError(GeneralConnectionError.somethingWentWrong()));
-    } finally {
-      _emitIdleState();
     }
+    _emitIdleState();
   }
 
   void _handleLoginVerificationError(LoginVerificationError error) {

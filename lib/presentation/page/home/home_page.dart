@@ -82,15 +82,18 @@ class _HomePageContent extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final overlayStyle =
+        isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
+      value: overlayStyle,
       child: Scaffold(
         backgroundColor: colors.background,
         appBar: isSmallSize
             ? null
             : CustomAppBar.smallLogo(
-                systemUiOverlayStyle: SystemUiOverlayStyle.light,
+                systemUiOverlayStyle: overlayStyle,
                 logoColor: colors.logoSpecial,
               ).copyWith(
                 predefinedBackground: colors.codeContainerBackground,

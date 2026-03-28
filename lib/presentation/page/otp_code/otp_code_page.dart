@@ -52,7 +52,8 @@ class OTPCodePage extends HookWidget {
         state,
         context,
         messengerController,
-        otpReceivedCode
+        otpReceivedCode,
+        otpCodeController,
       ),
     );
 
@@ -150,6 +151,7 @@ class OTPCodePage extends HookWidget {
     BuildContext context,
     MessengerController controller,
     ValueNotifier<String> otpReceivedCode,
+    TextEditingController otpCodeController,
   ) {
     state.maybeMap(
       connectionError: (state) => controller.showError(
