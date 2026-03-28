@@ -81,7 +81,7 @@ class Messenger extends HookWidget {
           onDismiss: cubit.dismissCurrent,
           action: LocaleKeys.main_openActionLabel.tr(),
           onAction: () {
-            state.action.actionType.when(
+            state.action.actionType.maybeWhen(
               authorize: () => AutoRouter.of(context).push(
                 AuthorizeRoute(incomingAction: state.action),
               ),
@@ -102,6 +102,7 @@ class Messenger extends HookWidget {
                   );
                 }
               },
+              orElse: () {},
             );
           },
         ),

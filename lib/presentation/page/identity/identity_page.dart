@@ -10,6 +10,14 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
+const _kMobywatelTestAccounts = [
+  ('jan_kowalski', 'Jan Kowalski (1990, dorosły)'),
+  ('anna_nowak', 'Anna Nowak (1997, dorosła)'),
+  ('tomek_mlody', 'Tomek Młody (2008, nieletni)'),
+  ('kasia_probierz', 'Kasia Probierz (2004, 21 lat)'),
+  ('krystyna_seniorka', 'Krystyna Seniorka (1961)'),
+];
+
 @RoutePage()
 class IdentityPage extends HookWidget {
   const IdentityPage({Key? key}) : super(key: key);
@@ -45,10 +53,23 @@ class IdentityPage extends HookWidget {
   }
 
   Widget _buildBody(IdentityState state, IdentityCubit cubit) {
+    if (state is IdentityVerifying) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Weryfikowanie przez mObywatel...'),
+          ],
+        ),
+      );
+    }
     if (state is IdentityLoaded) {
       return _IdentityBody(
         profiles: state.profiles,
         activeProfileId: state.activeProfileId,
+        identityVerified: state.identityVerified,
         cubit: cubit,
       );
     }
@@ -93,11 +114,13 @@ class IdentityPage extends HookWidget {
 class _IdentityBody extends HookWidget {
   final List<IdentityProfile> profiles;
   final String activeProfileId;
+  final bool identityVerified;
   final IdentityCubit cubit;
 
   const _IdentityBody({
     required this.profiles,
     required this.activeProfileId,
+    required this.identityVerified,
     required this.cubit,
   });
 
@@ -110,8 +133,18 @@ class _IdentityBody extends HookWidget {
       orElse: () => profiles.first,
     );
 
+    final showMobywatel = activeProfile.type == IdentityProfileType.private ||
+        activeProfile.type == IdentityProfileType.work;
+
     return Column(
       children: [
+        // mObywatel section (only for Prywatny / Służbowy)
+        if (showMobywatel)
+          _MobywatelSection(
+            cubit: cubit,
+            verified: identityVerified,
+            context: context,
+          ),
         // Profile switcher
         _ProfileSwitcher(
           profiles: profiles,
@@ -303,6 +336,83 @@ class _ProfileSwitcher extends HookWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _MobywatelSection extends HookWidget {
+  final IdentityCubit cubit;
+  final bool verified;
+  final BuildContext context;
+
+  const _MobywatelSection({
+    required this.cubit,
+    required this.verified,
+    required this.context,
+  });
+
+  @override
+  Widget build(BuildContext ctx) {
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+
+    if (verified) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.s),
+        padding: const EdgeInsets.all(AppDimens.m),
+        decoration: BoxDecoration(
+          color: AppColors.success100.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.success100.withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.verified_user, color: AppColors.success100, size: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Zweryfikowano przez mObywatel',
+                style: typography.body2.copyWith(color: AppColors.success100),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.s),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          icon: const Icon(Icons.account_balance),
+          label: const Text('Zweryfikuj przez mObywatel'),
+          onPressed: () => _showMobywatelDialog(context, cubit),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showMobywatelDialog(BuildContext ctx, IdentityCubit cubit) {
+    showDialog<void>(
+      context: ctx,
+      builder: (dialogCtx) => SimpleDialog(
+        title: const Text('Wybierz profil testowy mObywatel'),
+        children: _kMobywatelTestAccounts.map((entry) {
+          final (accountKey, label) = entry;
+          return SimpleDialogOption(
+            onPressed: () {
+              Navigator.of(dialogCtx).pop();
+              cubit.verifyMobywatel(accountKey);
+            },
+            child: Text(label),
+          );
+        }).toList(),
       ),
     );
   }

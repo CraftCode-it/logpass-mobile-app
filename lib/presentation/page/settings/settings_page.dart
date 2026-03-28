@@ -1,7 +1,10 @@
-﻿import 'package:auto_route/auto_route.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/core/di/di_config.dart';
+import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
@@ -9,6 +12,7 @@ import 'package:logpass_me/presentation/page/settings/settings_page_cubit.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page_state.dart';
 import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
+import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
@@ -20,8 +24,10 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/navigation_row.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 const _logoutBorderSideWidth = 0.5;
+
 
 @RoutePage()
 class SettingsPage extends HookWidget {
@@ -97,6 +103,8 @@ class SettingsPage extends HookWidget {
                       ),
                       Separator.light(),
                       const SizedBox(height: AppDimens.xxl),
+                      const _LogPassIdSection(),
+                      const SizedBox(height: AppDimens.xxl),
                     ],
                   ),
                 ),
@@ -123,6 +131,94 @@ class SettingsPage extends HookWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _LogPassIdSection extends HookWidget {
+  const _LogPassIdSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+    final typography = useAppTypography();
+    final userId = useState<String?>(null);
+
+    useEffect(() {
+      Future<void> load() async {
+        try {
+          final tokens = await getIt<GetUserTokensUseCase>()();
+          userId.value = tokens.sub;
+        } catch (_) {}
+      }
+      load();
+      return null;
+    }, const []);
+
+    final id = userId.value;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Mój LogPass ID',
+          style: typography.h8.copyWith(color: colors.text),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Udostępnij ten kod opiekunowi, aby mógł Cię dodać jako podopiecznego.',
+          style: typography.info2.copyWith(color: colors.secondaryText),
+        ),
+        const SizedBox(height: 16),
+        if (id == null)
+          Center(
+            child: CircularProgressIndicator(color: AppColors.primary100),
+          )
+        else ...[
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: QrImageView(
+                data: id,
+                version: QrVersions.auto,
+                size: 180,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Center(
+            child: SelectableText(
+              id,
+              style: typography.info2.copyWith(
+                color: colors.secondaryText,
+                fontFamily: 'monospace',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: OutlinedButton.icon(
+              icon: Icon(Icons.copy, size: 16, color: colors.text),
+              label: Text('Kopiuj ID', style: typography.body1.copyWith(color: colors.text)),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: id));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('ID skopiowane do schowka')),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colors.dividerMedium),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

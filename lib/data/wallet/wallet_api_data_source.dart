@@ -74,8 +74,106 @@ class WalletApiDataSource {
     return response.data as Map<String, dynamic>;
   }
 
-  Future<Map<String, dynamic>> registerPairingCode() async {
-    final response = await _dio.post('auth/pairing/register');
+  Future<Map<String, dynamic>> getUserSelf() async {
+    final response = await _dio.get('users/self/');
     return response.data as Map<String, dynamic>;
   }
+
+  Future<Map<String, dynamic>> fulfillIdentityRequest({
+    required String requestId,
+  }) async {
+    final response = await _dio.post(
+      'verifier/fulfill/$requestId',
+      data: {
+        'zk_proof': '',
+        'zk_public_inputs': <String>[],
+      },
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<List<Map<String, dynamic>>> getUserServices() async {
+    final response = await _dio.get('users/self/services');
+    final list = response.data as List? ?? [];
+    return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getUserActivity({String? service, int offset = 0, int limit = 20}) async {
+    final response = await _dio.get(
+      'users/self/activity',
+      queryParameters: {
+        if (service != null) 'service': service,
+        'offset': offset,
+        'limit': limit,
+      },
+    );
+    final list = response.data as List? ?? [];
+    return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+  }
+
+  Future<void> postUserActivity({
+    required String serviceName,
+    required String actionType,
+    Map<String, dynamic>? details,
+  }) async {
+    await _dio.post(
+      'users/self/activity',
+      data: {
+        'service_name': serviceName,
+        'action_type': actionType,
+        if (details != null) 'details': details,
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>> requestGuardian({required String guardianUserId}) async {
+    final response = await _dio.post(
+      'auth/guardians/request',
+      data: {'guardian_user_id': guardianUserId},
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<void> confirmGuardian(String guardianRequestId) async {
+    await _dio.post('auth/guardians/$guardianRequestId/confirm');
+  }
+
+  Future<void> rejectGuardian(String guardianRequestId) async {
+    await _dio.post('auth/guardians/$guardianRequestId/reject');
+  }
+
+  Future<Map<String, dynamic>> getUserGuardians() async {
+    final response = await _dio.get('users/self/guardians');
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> requestAuthorization({
+    required String guardianId,
+    required String serviceName,
+    required String action,
+  }) async {
+    final response = await _dio.post(
+      'auth/authorization/request',
+      data: {
+        'guardian_id': guardianId,
+        'service_name': serviceName,
+        'action': action,
+      },
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<void> approveAuthorization(String authRequestId) async {
+    await _dio.post('auth/authorization/$authRequestId/approve');
+  }
+
+  Future<void> rejectAuthorization(String authRequestId) async {
+    await _dio.post('auth/authorization/$authRequestId/reject');
+  }
+
+  Future<Map<String, dynamic>> pollAuthorization(String authRequestId) async {
+    final response = await _dio.get('auth/authorization/$authRequestId');
+    return response.data as Map<String, dynamic>;
+  }
+
 }

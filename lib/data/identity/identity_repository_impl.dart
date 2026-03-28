@@ -92,6 +92,74 @@ class IdentityRepositoryImpl implements IdentityRepository {
     await _saveProfiles(updated);
   }
 
+  @override
+  Future<void> applyVerifiedIdentity(Map<String, dynamic> data) async {
+    final profiles = await getProfiles();
+    final dob = data['dob'] as String? ?? '';
+    final firstName = data['first_name'] as String? ?? '';
+    final lastName = data['last_name'] as String? ?? '';
+    final pesel = data['pesel_masked'] as String? ?? '';
+    final address = data['address'] as Map<String, dynamic>?;
+
+    final updated = profiles.map((profile) {
+      if (profile.type == IdentityProfileType.custom) return profile;
+
+      final updatedFields = profile.fields.map((f) {
+        switch (f.key) {
+          case IdentityFieldKey.dateOfBirth:
+            return f.copyWith(value: dob, isLocked: true);
+          case IdentityFieldKey.peselMasked:
+            return f.copyWith(value: pesel, isLocked: true);
+          case IdentityFieldKey.firstName:
+            if (profile.type == IdentityProfileType.private ||
+                profile.type == IdentityProfileType.work) {
+              return f.copyWith(value: firstName, isLocked: true);
+            }
+            return f;
+          case IdentityFieldKey.lastName:
+            if (profile.type == IdentityProfileType.private ||
+                profile.type == IdentityProfileType.work) {
+              return f.copyWith(value: lastName, isLocked: true);
+            }
+            return f;
+          case IdentityFieldKey.addressCity:
+            if (profile.type != IdentityProfileType.proxy) {
+              return f.copyWith(value: address?['city'] as String? ?? '', isLocked: true);
+            }
+            return f;
+          case IdentityFieldKey.addressStreet:
+            if (profile.type != IdentityProfileType.proxy) {
+              return f.copyWith(value: address?['street'] as String? ?? '', isLocked: true);
+            }
+            return f;
+          case IdentityFieldKey.addressPostalCode:
+            if (profile.type != IdentityProfileType.proxy) {
+              return f.copyWith(value: address?['postal_code'] as String? ?? '', isLocked: true);
+            }
+            return f;
+          default:
+            return f;
+        }
+      }).toList();
+      return profile.copyWith(fields: updatedFields);
+    }).toList();
+
+    await _saveProfiles(updated);
+  }
+
+  List<IdentityField> _getDefaultFieldsForType(IdentityProfileType type) {
+    switch (type) {
+      case IdentityProfileType.private:
+        return IdentityProfile.defaultPrivate().fields;
+      case IdentityProfileType.work:
+        return IdentityProfile.defaultWork().fields;
+      case IdentityProfileType.proxy:
+        return IdentityProfile.defaultProxy().fields;
+      case IdentityProfileType.custom:
+        return [];
+    }
+  }
+
   Future<void> _saveProfiles(List<IdentityProfile> profiles) async {
     final json = jsonEncode(profiles.map((p) => p.toJson()).toList());
     await _storage.write(key: _profilesKey, value: json, iOptions: _iosOptions);
@@ -104,13 +172,38 @@ class IdentityRepositoryImpl implements IdentityRepository {
       ];
 
   /// Ensure the 3 predefined profiles are always present.
-  /// Also migrates legacy 'fake' profile to 'proxy'.
+  /// Migrates legacy 'fake' profile to 'proxy', and old 'address' field to 3 separate fields.
   List<IdentityProfile> _mergeWithDefaults(List<IdentityProfile> profiles) {
-    // Migrate legacy 'fake' profile: remove it so 'proxy' default gets inserted
+    // Migrate legacy 'fake' profile
     final fakeIdx = profiles.indexWhere((p) => p.id == 'fake');
     if (fakeIdx >= 0) {
       profiles.removeAt(fakeIdx);
     }
+
+    // Migrate old single 'address' field → addressCity, addressStreet, addressPostalCode
+    profiles = profiles.map((profile) {
+      final hasOldAddress = profile.fields.any((f) => f.key == 'address');
+      final hasNewAddress = profile.fields.any((f) => f.key == IdentityFieldKey.addressCity);
+      if (hasOldAddress && !hasNewAddress) {
+        final filtered = profile.fields.where((f) => f.key != 'address').toList();
+        final defaults = _getDefaultFieldsForType(profile.type);
+        final newFields = defaults.where((f) => [
+          IdentityFieldKey.addressCity,
+          IdentityFieldKey.addressStreet,
+          IdentityFieldKey.addressPostalCode,
+          IdentityFieldKey.peselMasked,
+        ].contains(f.key));
+        return profile.copyWith(fields: [...filtered, ...newFields]);
+      }
+      // Add peselMasked if missing (new field in this version)
+      final hasPesel = profile.fields.any((f) => f.key == IdentityFieldKey.peselMasked);
+      if (!hasPesel && (profile.type == IdentityProfileType.private || profile.type == IdentityProfileType.work)) {
+        final defaults = _getDefaultFieldsForType(profile.type);
+        final peselDefault = defaults.where((f) => f.key == IdentityFieldKey.peselMasked).toList();
+        return profile.copyWith(fields: [...profile.fields, ...peselDefault]);
+      }
+      return profile;
+    }).toList();
 
     final ids = profiles.map((p) => p.id).toSet();
     if (!ids.contains('private')) profiles.insert(0, IdentityProfile.defaultPrivate());

@@ -215,8 +215,7 @@ class _PendingItem extends HookWidget {
 
     return InkWell(
       onTap: () {
-        //TODO change 'when' to 'maybeWhen' when all kind notification will be implemented
-        action.actionType.when(
+        action.actionType.maybeWhen(
           authorize: () => AutoRouter.of(context).push(
             AuthorizeRoute(incomingAction: action),
           ),
@@ -237,6 +236,7 @@ class _PendingItem extends HookWidget {
               );
             }
           },
+          orElse: () {},
         );
       },
       child: Container(

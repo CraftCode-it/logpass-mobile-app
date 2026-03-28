@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_approval_page.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
@@ -159,6 +160,39 @@ class MainPage extends HookWidget {
               );
             }
           },
+          guardianPairing: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                GuardianApprovalRoute(
+                  requestId: requestId,
+                  approvalType: GuardianApprovalType.pairing,
+                  minorName: params?['minor_name'] ?? 'Nieznany',
+                  minorPhone: params?['minor_phone'],
+                ),
+              );
+            }
+          },
+          guardianAuthRequest: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                GuardianApprovalRoute(
+                  requestId: requestId,
+                  approvalType: GuardianApprovalType.authRequest,
+                  minorName: params?['minor_name'] ?? 'Nieznany',
+                  minorPhone: params?['minor_phone'],
+                  serviceName: params?['service_name'],
+                  action: params?['action'],
+                  expiresInSeconds:
+                      int.tryParse(params?['expires_in_seconds'] ?? '300') ?? 300,
+                ),
+              );
+            }
+          },
+          guardianAuthResult: () {},
         );
       },
       orElse: () {},

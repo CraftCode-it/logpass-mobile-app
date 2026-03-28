@@ -5,7 +5,13 @@ class IdentityFieldKey {
   static const dateOfBirth = 'dateOfBirth';
   static const email = 'email';
   static const phone = 'phone';
+  // ignore: deprecated_member_use_from_same_package
+  @Deprecated('Use addressCity, addressStreet, addressPostalCode instead')
   static const address = 'address';
+  static const addressCity = 'addressCity';
+  static const addressStreet = 'addressStreet';
+  static const addressPostalCode = 'addressPostalCode';
+  static const peselMasked = 'peselMasked';
   static const invoiceData = 'invoiceData';
 
   /// Returns a human-readable Polish label for built-in fields.
@@ -21,8 +27,16 @@ class IdentityFieldKey {
         return 'Email';
       case phone:
         return 'Telefon';
-      case address:
+      case 'address':
         return 'Adres';
+      case addressCity:
+        return 'Miasto';
+      case addressStreet:
+        return 'Ulica';
+      case addressPostalCode:
+        return 'Kod pocztowy';
+      case peselMasked:
+        return 'PESEL (zamaskowany)';
       case invoiceData:
         return 'Dane do faktury';
       default:

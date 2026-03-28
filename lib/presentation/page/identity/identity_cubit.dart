@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/core/crypto/key_provider.dart';
 import 'package:logpass_me/data/identity/identity_repository_impl.dart';
 import 'package:logpass_me/domain/identity/identity_field.dart';
 import 'package:logpass_me/domain/identity/identity_profile.dart';
 import 'package:logpass_me/domain/identity/identity_repository.dart';
+import 'package:logpass_me/domain/wallet/wallet_repository.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 abstract class IdentityState implements BuildState {}
@@ -15,8 +17,15 @@ class IdentityLoading extends IdentityState {}
 class IdentityLoaded extends IdentityState {
   final List<IdentityProfile> profiles;
   final String activeProfileId;
-  IdentityLoaded({required this.profiles, required this.activeProfileId});
+  final bool identityVerified;
+  IdentityLoaded({
+    required this.profiles,
+    required this.activeProfileId,
+    this.identityVerified = false,
+  });
 }
+
+class IdentityVerifying extends IdentityState {}
 
 class IdentityError extends IdentityState {
   final String message;
@@ -26,18 +35,67 @@ class IdentityError extends IdentityState {
 @injectable
 class IdentityCubit extends Cubit<IdentityState> {
   final IdentityRepository _repository;
+  final WalletRepository _walletRepository;
+  final KeyProvider _keyProvider;
 
-  IdentityCubit(this._repository) : super(IdentityLoading());
+  IdentityCubit(this._repository, this._walletRepository, this._keyProvider)
+      : super(IdentityLoading());
 
   Future<void> load() async {
     emit(IdentityLoading());
     try {
       final profiles = await _repository.getProfiles();
       final activeId = await _repository.getActiveProfileId();
-      emit(IdentityLoaded(profiles: profiles, activeProfileId: activeId));
+      bool identityVerified = false;
+      try {
+        final selfData = await _walletRepository.getUserSelf();
+        identityVerified = selfData['identity_verified'] == true;
+      } catch (_) {}
+      emit(IdentityLoaded(
+        profiles: profiles,
+        activeProfileId: activeId,
+        identityVerified: identityVerified,
+      ));
     } catch (e) {
       emit(IdentityError(e.toString()));
     }
+  }
+
+  Future<void> verifyMobywatel(String testAccount) async {
+    emit(IdentityVerifying());
+    try {
+      final data = await _walletRepository.verifyIdentityMobywatel(testAccount);
+      await _repository.applyVerifiedIdentity(data);
+
+      // F4: Auto-credential 18+ if DOB indicates adult
+      final dobStr = data['dob'] as String? ?? '';
+      if (dobStr.isNotEmpty) {
+        try {
+          final dob = DateTime.parse(dobStr);
+          final age = _calculateAge(dob);
+          if (age >= 18) {
+            final pubkey = await _keyProvider.getUserPubkeyHex();
+            await _walletRepository.requestAgeVerification(
+              userPubkey: pubkey,
+              minAge: 18,
+            );
+          }
+        } catch (_) {}
+      }
+
+      await load();
+    } catch (e) {
+      emit(IdentityError(e.toString()));
+    }
+  }
+
+  int _calculateAge(DateTime dob) {
+    final now = DateTime.now();
+    int age = now.year - dob.year;
+    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+      age--;
+    }
+    return age;
   }
 
   Future<void> setActiveProfile(String profileId) async {

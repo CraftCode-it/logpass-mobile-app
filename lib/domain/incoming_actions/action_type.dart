@@ -14,6 +14,15 @@ class ActionType with _$ActionType {
 
   /// Triggered by a WebSocket push or QR scan from a verifier requesting age/identity proof
   factory ActionType.logpassVerify() = _ActionTypeLogpassVerify;
+
+  /// Guardian pairing request from minor (WS push to guardian)
+  factory ActionType.guardianPairing() = _ActionTypeGuardianPairing;
+
+  /// Authorization request from minor to guardian for a service action
+  factory ActionType.guardianAuthRequest() = _ActionTypeGuardianAuthRequest;
+
+  /// Result of authorization request (approved/rejected/expired) — pushed to minor
+  factory ActionType.guardianAuthResult() = _ActionTypeGuardianAuthResult;
 }
 
 // TODO: refactor keys after backend's implementation
@@ -30,6 +39,12 @@ ActionType mapActionType(String key) {
       return ActionType.updateAccount();
     case 'logpass_verify':
       return ActionType.logpassVerify();
+    case 'guardian_pairing':
+      return ActionType.guardianPairing();
+    case 'guardian_auth_request':
+      return ActionType.guardianAuthRequest();
+    case 'guardian_auth_result':
+      return ActionType.guardianAuthResult();
     default:
       throw Exception('Unsupported action type');
   }

@@ -18,4 +18,7 @@ abstract class IdentityRepository {
 
   /// Applies DOB value (from mObywatel verification) to all profiles that have a dateOfBirth field.
   Future<void> applyVerifiedDob(String dateOfBirth);
+
+  /// Applies full mObywatel identity data (dob, firstName, lastName, peselMasked, address) to profiles.
+  Future<void> applyVerifiedIdentity(Map<String, dynamic> data);
 }

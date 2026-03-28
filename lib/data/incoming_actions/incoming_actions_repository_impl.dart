@@ -80,6 +80,53 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
         _dispatchAction(action);
         return;
       }
+      // Guardian pairing request pushed to guardian
+      if (jsonMap['type'] == 'guardian_pairing') {
+        final action = IncomingAction.create(
+          ActionType.guardianPairing(),
+          jsonMap['guardian_request_id'] as String?,
+          null,
+          {
+            'guardian_request_id': jsonMap['guardian_request_id'] as String? ?? '',
+            'minor_name': jsonMap['minor_name'] as String? ?? '',
+            'minor_phone': jsonMap['minor_phone'] as String? ?? '',
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
+      // Guardian auth request pushed to guardian
+      if (jsonMap['type'] == 'guardian_auth_request') {
+        final action = IncomingAction.create(
+          ActionType.guardianAuthRequest(),
+          jsonMap['auth_request_id'] as String?,
+          null,
+          {
+            'auth_request_id': jsonMap['auth_request_id'] as String? ?? '',
+            'minor_name': jsonMap['minor_name'] as String? ?? '',
+            'minor_phone': jsonMap['minor_phone'] as String? ?? '',
+            'service_name': jsonMap['service_name'] as String? ?? '',
+            'action': jsonMap['action'] as String? ?? '',
+            'expires_in_seconds': (jsonMap['expires_in_seconds'] ?? 300).toString(),
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
+      // Auth result pushed to minor
+      if (jsonMap['type'] == 'guardian_auth_result') {
+        final action = IncomingAction.create(
+          ActionType.guardianAuthResult(),
+          jsonMap['auth_request_id'] as String?,
+          null,
+          {
+            'auth_request_id': jsonMap['auth_request_id'] as String? ?? '',
+            'status': jsonMap['status'] as String? ?? 'expired',
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
       final incomingAction = _mapIncomingActionDto(jsonMap);
       _dispatchAction(incomingAction);
     });
