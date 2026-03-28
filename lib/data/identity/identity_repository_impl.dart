@@ -63,7 +63,7 @@ class IdentityRepositoryImpl implements IdentityRepository {
 
   @override
   Future<void> deleteProfile(String profileId) async {
-    const predefined = {'private', 'work', 'fake'};
+    const predefined = {'private', 'work', 'proxy'};
     if (predefined.contains(profileId)) return;
     final profiles = await getProfiles();
     profiles.removeWhere((p) => p.id == profileId);
@@ -79,26 +79,15 @@ class IdentityRepositoryImpl implements IdentityRepository {
   Future<void> applyVerifiedDob(String dateOfBirth) async {
     final profiles = await getProfiles();
     final updated = profiles.map((profile) {
-      if (profile.type == IdentityProfileType.private) {
-        // Lock DOB in private profile
-        final updatedFields = profile.fields.map((f) {
-          if (f.key == IdentityFieldKey.dateOfBirth) {
-            return f.copyWith(value: dateOfBirth, isLocked: true);
-          }
-          return f;
-        }).toList();
-        return profile.copyWith(fields: updatedFields);
-      } else if (profile.type == IdentityProfileType.fake) {
-        // Lock DOB in fake profile (age is locked but set from verification)
-        final updatedFields = profile.fields.map((f) {
-          if (f.key == IdentityFieldKey.dateOfBirth) {
-            return f.copyWith(value: dateOfBirth, isLocked: true);
-          }
-          return f;
-        }).toList();
-        return profile.copyWith(fields: updatedFields);
-      }
-      return profile;
+      final hasDob = profile.fields.any((f) => f.key == IdentityFieldKey.dateOfBirth);
+      if (!hasDob) return profile;
+      final updatedFields = profile.fields.map((f) {
+        if (f.key == IdentityFieldKey.dateOfBirth) {
+          return f.copyWith(value: dateOfBirth, isLocked: true);
+        }
+        return f;
+      }).toList();
+      return profile.copyWith(fields: updatedFields);
     }).toList();
     await _saveProfiles(updated);
   }
@@ -111,20 +100,27 @@ class IdentityRepositoryImpl implements IdentityRepository {
   List<IdentityProfile> _createDefaultProfiles() => [
         IdentityProfile.defaultPrivate(),
         IdentityProfile.defaultWork(),
-        IdentityProfile.defaultFake(),
+        IdentityProfile.defaultProxy(),
       ];
 
   /// Ensure the 3 predefined profiles are always present.
+  /// Also migrates legacy 'fake' profile to 'proxy'.
   List<IdentityProfile> _mergeWithDefaults(List<IdentityProfile> profiles) {
+    // Migrate legacy 'fake' profile: remove it so 'proxy' default gets inserted
+    final fakeIdx = profiles.indexWhere((p) => p.id == 'fake');
+    if (fakeIdx >= 0) {
+      profiles.removeAt(fakeIdx);
+    }
+
     final ids = profiles.map((p) => p.id).toSet();
     if (!ids.contains('private')) profiles.insert(0, IdentityProfile.defaultPrivate());
     if (!ids.contains('work')) {
       final privateIdx = profiles.indexWhere((p) => p.id == 'private');
       profiles.insert(privateIdx + 1, IdentityProfile.defaultWork());
     }
-    if (!ids.contains('fake')) {
+    if (!ids.contains('proxy')) {
       final workIdx = profiles.indexWhere((p) => p.id == 'work');
-      profiles.insert(workIdx + 1, IdentityProfile.defaultFake());
+      profiles.insert(workIdx + 1, IdentityProfile.defaultProxy());
     }
     return profiles;
   }

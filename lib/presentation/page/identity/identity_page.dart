@@ -159,7 +159,7 @@ class _IdentityBody extends HookWidget {
   }
 
   void _confirmDelete(BuildContext context, String profileId, IdentityCubit cubit) {
-    const predefined = {'private', 'work', 'fake'};
+    const predefined = {'private', 'work', 'proxy'};
     if (predefined.contains(profileId)) return;
     showDialog<void>(
       context: context,
@@ -176,7 +176,7 @@ class _IdentityBody extends HookWidget {
               cubit.deleteProfile(profileId);
               Navigator.of(ctx).pop();
             },
-            child: const Text('Usuń', style: TextStyle(color: Colors.red)),
+            child: const Text('Usuń', style: TextStyle(color: AppColors.error100)),
           ),
         ],
       ),
@@ -253,7 +253,7 @@ class _IdentityBody extends HookWidget {
   }
 }
 
-class _ProfileSwitcher extends StatelessWidget {
+class _ProfileSwitcher extends HookWidget {
   final List<IdentityProfile> profiles;
   final String activeProfileId;
   final void Function(String) onSelect;
@@ -268,6 +268,9 @@ class _ProfileSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       height: 56,
       child: ListView.builder(
@@ -287,12 +290,14 @@ class _ProfileSwitcher extends StatelessWidget {
                 label: Text(
                   profile.displayName,
                   style: isActive
-                      ? const TextStyle(color: Colors.white)
-                      : null,
+                      ? TextStyle(color: colors.textSpecial)
+                      : TextStyle(color: colors.text),
                 ),
                 selected: isActive,
-                selectedColor: AppColors.primary90,
-                checkmarkColor: Colors.white,
+                selectedColor: colors.buttonFill,
+                checkmarkColor: colors.textSpecial,
+                backgroundColor: colors.background,
+                side: BorderSide(color: colors.dividerMedium),
                 onSelected: (_) => onSelect(profile.id),
               ),
             ),
@@ -312,6 +317,7 @@ class _FieldTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = useAppThemeColors();
     final typography = useAppTypography();
 
     Widget? trailingWidget;
@@ -321,11 +327,11 @@ class _FieldTile extends HookWidget {
         children: [
           if (onCopy != null)
             IconButton(
-              icon: const Icon(Icons.copy_outlined, size: 18),
+              icon: Icon(Icons.copy_outlined, size: 18, color: colors.secondaryText),
               onPressed: onCopy,
               tooltip: 'Kopiuj do profilu',
             ),
-          const Icon(Icons.lock_outline, size: 16, color: Colors.grey),
+          Icon(Icons.lock_outline, size: 16, color: colors.lightText),
         ],
       );
     } else if (onEdit != null || onCopy != null) {
@@ -334,13 +340,13 @@ class _FieldTile extends HookWidget {
         children: [
           if (onCopy != null)
             IconButton(
-              icon: const Icon(Icons.copy_outlined, size: 18),
+              icon: Icon(Icons.copy_outlined, size: 18, color: colors.secondaryText),
               onPressed: onCopy,
               tooltip: 'Kopiuj do profilu',
             ),
           if (onEdit != null)
             IconButton(
-              icon: const Icon(Icons.edit_outlined, size: 18),
+              icon: Icon(Icons.edit_outlined, size: 18, color: colors.secondaryText),
               onPressed: () => _showEditDialog(context),
             ),
         ],
@@ -350,10 +356,10 @@ class _FieldTile extends HookWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(field.label,
-          style: typography.info2.copyWith(color: Colors.grey)),
+          style: typography.info2.copyWith(color: colors.labelText)),
       subtitle: Text(
         field.value.isEmpty ? '—' : field.value,
-        style: typography.body1,
+        style: typography.body1.copyWith(color: colors.text),
       ),
       trailing: trailingWidget,
     );

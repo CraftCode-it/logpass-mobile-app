@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -155,7 +155,20 @@ class OTPCodePage extends HookWidget {
       connectionError: (state) => controller.showError(
         getConnectionErrorString(state.error),
       ),
-      otpAutofill: (state) => otpReceivedCode.value = state.code,
+      otpAutofill: (state) {
+        otpReceivedCode.value = state.code;
+        final raw = state.code;
+        if (raw.length == 6) {
+          final formatted = '${raw.substring(0, 3)}-${raw.substring(3)}';
+          otpCodeController.text = formatted;
+          otpCodeController.selection = TextSelection.fromPosition(
+            TextPosition(offset: formatted.length),
+          );
+          Future.delayed(const Duration(milliseconds: 300), () {
+            cubit.verify();
+          });
+        }
+      },
       success: (state) {
         AutoRouter.of(context).pushAndPopUntil(
           const LoginSuccessRoute(),

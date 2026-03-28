@@ -1,12 +1,12 @@
 enum IdentityProfileType {
-  /// Prywatny: real data; name/surname/DOB locked from verification
+  /// Prywatny: real data; DOB locked from verification
   private,
 
-  /// Służbowy: real name/surname locked; other fields editable
+  /// Służbowy: real name/surname locked; DOB locked from verification
   work,
 
-  /// Fake: only age locked from verification; all other fields editable
-  fake,
+  /// Proxy: DOB locked from verification; all other fields editable
+  proxy,
 
   /// Custom: user-named profile; all fields editable
   custom,
@@ -19,8 +19,8 @@ extension IdentityProfileTypeExtension on IdentityProfileType {
         return 'Prywatny';
       case IdentityProfileType.work:
         return 'Służbowy';
-      case IdentityProfileType.fake:
-        return 'Fake';
+      case IdentityProfileType.proxy:
+        return 'Proxy';
       case IdentityProfileType.custom:
         return 'Niestandardowy';
     }

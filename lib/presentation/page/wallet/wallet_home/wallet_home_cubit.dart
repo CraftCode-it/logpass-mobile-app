@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/crypto/key_provider.dart';
+import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/domain/wallet/credential.dart';
 import 'package:logpass_me/domain/wallet/wallet_repository.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
@@ -35,11 +36,12 @@ class WalletHomeVerifying extends WalletHomeState implements BuildState {}
 class WalletHomeCubit extends Cubit<WalletHomeState> {
   final WalletRepository _repository;
   final KeyProvider _keyProvider;
+  final IdentityRepository _identityRepository;
 
   bool _dobVerified = false;
   String? _pairingCode;
 
-  WalletHomeCubit(this._repository, this._keyProvider) : super(WalletHomeInitial());
+  WalletHomeCubit(this._repository, this._keyProvider, this._identityRepository) : super(WalletHomeInitial());
 
   Future<void> loadCredentials() async {
     emit(WalletHomeLoading());
@@ -59,9 +61,13 @@ class WalletHomeCubit extends Cubit<WalletHomeState> {
 
   Future<String?> verifyMobywatel(String testAccount) async {
     try {
-      final verified = await _repository.verifyIdentityMobywatel(testAccount);
-      if (verified) {
+      final result = await _repository.verifyIdentityMobywatel(testAccount);
+      if (result['dob_verified'] == true) {
         _dobVerified = true;
+        final dob = result['dob'] as String? ?? '';
+        if (dob.isNotEmpty) {
+          await _identityRepository.applyVerifiedDob(dob);
+        }
         await loadCredentials();
         return null;
       }

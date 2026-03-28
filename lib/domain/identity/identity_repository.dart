@@ -13,9 +13,9 @@ abstract class IdentityRepository {
   /// Saves (creates or updates) a profile.
   Future<void> saveProfile(IdentityProfile profile);
 
-  /// Deletes a profile by ID. Predefined profiles (private/work/fake) cannot be deleted.
+  /// Deletes a profile by ID. Predefined profiles (private/work/proxy) cannot be deleted.
   Future<void> deleteProfile(String profileId);
 
-  /// Applies age/DOB lock to the private and fake profiles after age verification.
+  /// Applies DOB value (from mObywatel verification) to all profiles that have a dateOfBirth field.
   Future<void> applyVerifiedDob(String dateOfBirth);
 }

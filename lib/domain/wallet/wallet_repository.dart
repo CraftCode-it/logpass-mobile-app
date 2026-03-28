@@ -14,7 +14,7 @@ abstract class WalletRepository {
 
   Future<bool> checkServiceHealth();
 
-  Future<bool> verifyIdentityMobywatel(String testAccount);
+  Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount);
 
   Future<String> registerPairingCode();
 }

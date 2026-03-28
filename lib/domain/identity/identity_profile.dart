@@ -74,7 +74,7 @@ class IdentityProfile {
             key: IdentityFieldKey.dateOfBirth,
             label: IdentityFieldKey.label(IdentityFieldKey.dateOfBirth),
             value: '',
-            isLocked: false,
+            isLocked: true,
           ),
           IdentityField(
             key: IdentityFieldKey.email,
@@ -122,6 +122,12 @@ class IdentityProfile {
             isLocked: false,
           ),
           IdentityField(
+            key: IdentityFieldKey.dateOfBirth,
+            label: IdentityFieldKey.label(IdentityFieldKey.dateOfBirth),
+            value: '',
+            isLocked: true,
+          ),
+          IdentityField(
             key: IdentityFieldKey.email,
             label: IdentityFieldKey.label(IdentityFieldKey.email),
             value: '',
@@ -148,11 +154,11 @@ class IdentityProfile {
         ],
       );
 
-  /// Creates the default "Fake" profile.
-  static IdentityProfile defaultFake() => IdentityProfile(
-        id: 'fake',
-        displayName: 'Fake',
-        type: IdentityProfileType.fake,
+  /// Creates the default "Proxy" profile.
+  static IdentityProfile defaultProxy() => IdentityProfile(
+        id: 'proxy',
+        displayName: 'Proxy',
+        type: IdentityProfileType.proxy,
         fields: [
           IdentityField(
             key: IdentityFieldKey.firstName,
@@ -170,7 +176,7 @@ class IdentityProfile {
             key: IdentityFieldKey.dateOfBirth,
             label: IdentityFieldKey.label(IdentityFieldKey.dateOfBirth),
             value: '',
-            isLocked: false,
+            isLocked: true,
           ),
           IdentityField(
             key: IdentityFieldKey.email,

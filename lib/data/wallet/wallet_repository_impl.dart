@@ -102,9 +102,12 @@ class WalletRepositoryImpl implements WalletRepository {
   }
 
   @override
-  Future<bool> verifyIdentityMobywatel(String testAccount) async {
+  Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount) async {
     final resp = await _api.verifyIdentityMobywatel(testAccount: testAccount);
-    return resp['dob_verified'] == true;
+    return {
+      'dob_verified': resp['dob_verified'] == true,
+      'dob': resp['dob'] as String? ?? '',
+    };
   }
 
   @override

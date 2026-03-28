@@ -95,6 +95,13 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
       _signUpVerification = await _retrySignUpSmsCodeUseCase(_signUpVerification.id);
       _resendTimestamp = clock.now().add(resendDelayDuration);
       emit(OTPCodePageState.resendSuccess());
+
+      // DEV_MODE: re-check toSign from new verification response
+      final raw = _signUpVerification.toSign?.replaceAll(RegExp(r'\D'), '') ?? '';
+      if (raw.length == otpCodeLength) {
+        _code = raw;
+        emit(OTPCodePageState.otpAutofill(raw));
+      }
     } on GeneralConnectionError catch (e) {
       emit(OTPCodePageState.connectionError(e));
     } catch (e, s) {
