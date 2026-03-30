@@ -125,6 +125,35 @@ class WalletRepositoryImpl implements WalletRepository {
     };
   }
 
+  @override
+  Future<Map<String, dynamic>> fulfillRequest({
+    required String requestId,
+    required String zkProof,
+    required List<String> zkPublicInputs,
+    String? userId,
+  }) async {
+    return _api.fulfillRequest(
+      requestId: requestId,
+      zkProof: zkProof,
+      zkPublicInputs: zkPublicInputs,
+      userId: userId,
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> fulfillIdentityRequest({
+    required String requestId,
+    String? userId,
+  }) async {
+    return _api.fulfillIdentityRequest(requestId: requestId, userId: userId);
+  }
+
+  @override
+  Future<String> registerPairingCode() async {
+    final resp = await _api.registerPairingCode();
+    return resp['code'] as String? ?? resp['pairing_code'] as String? ?? '';
+  }
+
   Future<void> _saveCredential(Credential credential) async {
     final box = await _getBox();
     await box.put(credential.type, credential.toMap());

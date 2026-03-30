@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/crypto/key_provider.dart';
 import 'package:logpass_me/data/identity/identity_repository_impl.dart';
@@ -65,22 +66,34 @@ class IdentityCubit extends Cubit<IdentityState> {
     emit(IdentityVerifying());
     try {
       final data = await _walletRepository.verifyIdentityMobywatel(testAccount);
-      await _repository.applyVerifiedIdentity(data);
+      debugPrint('[mObywatel] Raw API response: $data');
+      debugPrint('[mObywatel] first_name=${data['first_name']}, last_name=${data['last_name']}, '
+          'dob=${data['dob']}, pesel=${data['pesel']}, nationality=${data['nationality']}');
 
-      // F4: Auto-credential 18+ if DOB indicates adult
+      await _repository.applyVerifiedIdentity(data);
+      debugPrint('[mObywatel] applyVerifiedIdentity done');
+
+      // Auto-credential 18+ if DOB indicates adult
       final dobStr = data['dob'] as String? ?? '';
+      debugPrint('[mObywatel] dob string: "$dobStr"');
       if (dobStr.isNotEmpty) {
         try {
           final dob = DateTime.parse(dobStr);
           final age = _calculateAge(dob);
+          debugPrint('[mObywatel] calculated age: $age');
           if (age >= 18) {
             final pubkey = await _keyProvider.getUserPubkeyHex();
+            debugPrint('[mObywatel] Requesting age credential, pubkey=$pubkey');
             await _walletRepository.requestAgeVerification(
               userPubkey: pubkey,
               minAge: 18,
             );
+            debugPrint('[mObywatel] Age credential created successfully');
           }
-        } catch (_) {}
+        } catch (e, st) {
+          debugPrint('[mObywatel] Auto-credential 18+ FAILED: $e');
+          debugPrint('[mObywatel] Stack: $st');
+        }
       }
 
       await load();

@@ -1,8 +1,13 @@
-﻿import 'package:auto_route/auto_route.dart';
+import 'dart:async';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/data/wallet/verifier_request.dart';
+import 'package:logpass_me/domain/wallet/wallet_repository.dart';
 import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -77,6 +82,23 @@ class QrScanPage extends HookWidget {
                   width: double.infinity,
                   height: 48,
                   child: OutlinedButton.icon(
+                    onPressed: () => _showPairingCode(context),
+                    icon: const Icon(Icons.tag, color: Colors.white),
+                    label: Text(
+                      'Pokaż kod parowania',
+                      style: typography.body2.copyWith(color: Colors.white),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.white24),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
                     onPressed: () => _showManualEntry(context, colors, typography, hasNavigated),
                     icon: const Icon(Icons.keyboard, color: Colors.white),
                     label: Text(
@@ -94,6 +116,22 @@ class QrScanPage extends HookWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showPairingCode(BuildContext context) async {
+    final repo = getIt<WalletRepository>();
+    String? code;
+    String? error;
+    try {
+      code = await repo.registerPairingCode();
+    } catch (e) {
+      error = e.toString();
+    }
+    if (!context.mounted) return;
+    showDialog<void>(
+      context: context,
+      builder: (_) => _QrPairingCodeDialog(code: code, error: error),
     );
   }
 
@@ -174,6 +212,103 @@ class QrScanPage extends HookWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _QrPairingCodeDialog extends StatefulWidget {
+  final String? code;
+  final String? error;
+
+  const _QrPairingCodeDialog({this.code, this.error});
+
+  @override
+  State<_QrPairingCodeDialog> createState() => _QrPairingCodeDialogState();
+}
+
+class _QrPairingCodeDialogState extends State<_QrPairingCodeDialog> {
+  late int _secondsLeft;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _secondsLeft = 5 * 60;
+    if (widget.code != null) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (!mounted) return;
+        setState(() {
+          if (_secondsLeft > 0) {
+            _secondsLeft--;
+          } else {
+            _timer?.cancel();
+          }
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get _formattedTime {
+    final m = _secondsLeft ~/ 60;
+    final s = _secondsLeft % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Kod parowania'),
+      content: widget.error != null
+          ? Text('Błąd: ${widget.error}')
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.code ?? '',
+                  style: const TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 8,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  _secondsLeft > 0 ? 'Ważny przez: $_formattedTime' : 'Wygasł',
+                  style: TextStyle(
+                    color: _secondsLeft > 0 ? Colors.green : Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Wpisz ten kod w polu "Kod z aplikacji" na stronie weryfikacji.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+      actions: [
+        if (widget.code != null)
+          TextButton.icon(
+            icon: const Icon(Icons.copy, size: 16),
+            label: const Text('Kopiuj'),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: widget.code!));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Kod skopiowany')),
+              );
+            },
+          ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Zamknij'),
+        ),
+      ],
     );
   }
 }

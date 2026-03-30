@@ -19,4 +19,19 @@ abstract class WalletRepository {
 
   /// Returns /users/self/ data including identity_verified, dob, first_name, etc.
   Future<Map<String, dynamic>> getUserSelf();
+
+  Future<Map<String, dynamic>> fulfillRequest({
+    required String requestId,
+    required String zkProof,
+    required List<String> zkPublicInputs,
+    String? userId,
+  });
+
+  Future<Map<String, dynamic>> fulfillIdentityRequest({
+    required String requestId,
+    String? userId,
+  });
+
+  /// Generates a 6-character pairing code via POST auth/pairing/register.
+  Future<String> registerPairingCode();
 }

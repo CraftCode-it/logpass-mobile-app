@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/core/crypto/key_provider.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/data/wallet/wallet_api_data_source.dart';
+import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/guardian/guardian_repository.dart';
 import 'package:logpass_me/domain/wallet/wallet_repository.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_authorization_dialog.dart';
@@ -114,6 +118,25 @@ class VerificationRequestPage extends HookWidget {
                     typography: typography,
                   ),
                   const Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: OutlinedButton.icon(
+                      onPressed: isProcessing.value
+                          ? null
+                          : () => _showPairingCodeDialog(context),
+                      icon: Icon(Icons.tag, color: colors.secondaryText),
+                      label: Text(
+                        'Pokaż kod parowania',
+                        style: typography.h8.copyWith(color: colors.secondaryText),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: colors.dividerMedium),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
@@ -177,6 +200,22 @@ class VerificationRequestPage extends HookWidget {
     );
   }
 
+  Future<void> _showPairingCodeDialog(BuildContext context) async {
+    final repo = getIt<WalletRepository>();
+    String? code;
+    String? error;
+    try {
+      code = await repo.registerPairingCode();
+    } catch (e) {
+      error = e.toString();
+    }
+    if (!context.mounted) return;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => _PairingCodeDialog(code: code, error: error),
+    );
+  }
+
   Future<void> _approve({
     required BuildContext context,
     required ValueNotifier<bool> isProcessing,
@@ -188,8 +227,14 @@ class VerificationRequestPage extends HookWidget {
       final keyProvider = getIt<KeyProvider>();
       final repo = getIt<WalletRepository>();
       final api = getIt<WalletApiDataSource>();
+      final getUserTokens = getIt<GetUserTokensUseCase>();
 
       final pubkey = await keyProvider.getUserPubkeyHex();
+      String? userId;
+      try {
+        final tokens = await getUserTokens();
+        userId = tokens.sub;
+      } catch (_) {}
 
       final credential = await repo.requestAgeVerification(
         userPubkey: pubkey,
@@ -222,6 +267,7 @@ class VerificationRequestPage extends HookWidget {
               zkPublicInputs: (proof['zk_public_inputs'] is List)
                   ? (proof['zk_public_inputs'] as List).map((e) => e.toString()).toList()
                   : <String>[],
+              userId: userId,
             );
           }
           isSuccess.value = true;
@@ -245,6 +291,7 @@ class VerificationRequestPage extends HookWidget {
           zkPublicInputs: (proof['zk_public_inputs'] is List)
               ? (proof['zk_public_inputs'] as List).map((e) => e.toString()).toList()
               : <String>[],
+          userId: userId,
         );
       }
 
@@ -266,8 +313,14 @@ class VerificationRequestPage extends HookWidget {
     isProcessing.value = true;
     try {
       final api = getIt<WalletApiDataSource>();
+      final getUserTokens = getIt<GetUserTokensUseCase>();
+      String? userId;
+      try {
+        final tokens = await getUserTokens();
+        userId = tokens.sub;
+      } catch (_) {}
       if (requestId != null) {
-        await api.fulfillIdentityRequest(requestId: requestId!);
+        await api.fulfillIdentityRequest(requestId: requestId!, userId: userId);
       }
       isSuccess.value = true;
       resultMessage.value =
@@ -336,6 +389,103 @@ class _ResultView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PairingCodeDialog extends StatefulWidget {
+  final String? code;
+  final String? error;
+
+  const _PairingCodeDialog({this.code, this.error});
+
+  @override
+  State<_PairingCodeDialog> createState() => _PairingCodeDialogState();
+}
+
+class _PairingCodeDialogState extends State<_PairingCodeDialog> {
+  late int _secondsLeft;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _secondsLeft = 5 * 60;
+    if (widget.code != null) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (!mounted) return;
+        setState(() {
+          if (_secondsLeft > 0) {
+            _secondsLeft--;
+          } else {
+            _timer?.cancel();
+          }
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get _formattedTime {
+    final m = _secondsLeft ~/ 60;
+    final s = _secondsLeft % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Kod parowania'),
+      content: widget.error != null
+          ? Text('Błąd: ${widget.error}')
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.code ?? '',
+                  style: const TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 8,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  _secondsLeft > 0 ? 'Ważny przez: $_formattedTime' : 'Wygasł',
+                  style: TextStyle(
+                    color: _secondsLeft > 0 ? Colors.green : Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Wpisz ten kod w polu "Kod z aplikacji" na stronie weryfikacji.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+      actions: [
+        if (widget.code != null)
+          TextButton.icon(
+            icon: const Icon(Icons.copy, size: 16),
+            label: const Text('Kopiuj'),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: widget.code!));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Kod skopiowany')),
+              );
+            },
+          ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Zamknij'),
+        ),
+      ],
     );
   }
 }

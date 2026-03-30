@@ -48,12 +48,14 @@ class WalletApiDataSource {
     required String requestId,
     required String zkProof,
     required List<String> zkPublicInputs,
+    String? userId,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
       data: {
         'zk_proof': zkProof,
         'zk_public_inputs': zkPublicInputs,
+        if (userId != null) 'user_id': userId,
       },
     );
     return response.data as Map<String, dynamic>;
@@ -81,14 +83,21 @@ class WalletApiDataSource {
 
   Future<Map<String, dynamic>> fulfillIdentityRequest({
     required String requestId,
+    String? userId,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
       data: {
         'zk_proof': '',
         'zk_public_inputs': <String>[],
+        if (userId != null) 'user_id': userId,
       },
     );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> registerPairingCode() async {
+    final response = await _dio.post('auth/pairing/register');
     return response.data as Map<String, dynamic>;
   }
 
