@@ -68,7 +68,7 @@ class IdentityCubit extends Cubit<IdentityState> {
       final data = await _walletRepository.verifyIdentityMobywatel(testAccount);
       debugPrint('[mObywatel] Raw API response: $data');
       debugPrint('[mObywatel] first_name=${data['first_name']}, last_name=${data['last_name']}, '
-          'dob=${data['dob']}, pesel=${data['pesel']}, nationality=${data['nationality']}');
+          'dob=${data['dob']}, pesel_masked=${data['pesel_masked']}');
 
       await _repository.applyVerifiedIdentity(data);
       debugPrint('[mObywatel] applyVerifiedIdentity done');

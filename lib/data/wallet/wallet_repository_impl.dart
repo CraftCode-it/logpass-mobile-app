@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
@@ -113,16 +114,28 @@ class WalletRepositoryImpl implements WalletRepository {
   @override
   Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount) async {
     final resp = await _api.verifyIdentityMobywatel(testAccount: testAccount);
+    debugPrint('[mObywatel] resp.runtimeType: ${resp.runtimeType}');
+    debugPrint('[mObywatel] resp keys: ${resp.keys.toList()}');
     final data = resp['data'] as Map<String, dynamic>? ?? resp;
-    return {
+    debugPrint('[mObywatel] data keys: ${data.keys.toList()}');
+    debugPrint('[mObywatel] address runtimeType: ${data["address"]?.runtimeType}');
+    final addressRaw = data['address'];
+    final address = (addressRaw is Map)
+        ? Map<String, dynamic>.from(addressRaw)
+        : null;
+    final result = {
       'dob_verified': data['dob_verified'] == true,
       'dob': data['dob'] as String? ?? '',
       'first_name': data['first_name'] as String? ?? '',
       'last_name': data['last_name'] as String? ?? '',
       'pesel_masked': data['pesel_masked'] as String? ?? '',
-      'address': data['address'] as Map<String, dynamic>?,
+      'address': address,
       'identity_verified': data['dob_verified'] == true,
     };
+    debugPrint('[mObywatel] mapped: first_name=${result["first_name"]}, '
+        'last_name=${result["last_name"]}, dob=${result["dob"]}, '
+        'pesel_masked=${result["pesel_masked"]}, address=$address');
+    return result;
   }
 
   @override

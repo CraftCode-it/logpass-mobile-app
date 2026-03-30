@@ -15,6 +15,7 @@ import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/hooks/app_life_cycyle_observer_hook.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/logout/guard_widget.dart';
 
@@ -41,6 +42,15 @@ class MainPage extends HookWidget {
       cubit.init();
       return;
     }, [cubit]);
+
+    useAppLifecycleStateListener((current, previous, ctx) {
+      if (current == AppLifecycleState.resumed &&
+          previous == AppLifecycleState.paused) {
+        if (index.value == 2) {
+          WalletHomePage.reloadNotifier.value++;
+        }
+      }
+    }, context: context);
 
     return Scaffold(
       key: key,
@@ -126,7 +136,12 @@ class MainPage extends HookWidget {
           ),
         ],
         currentIndex: index.value,
-        onTap: (newIndex) => index.value = newIndex,
+        onTap: (newIndex) {
+          index.value = newIndex;
+          if (newIndex == 2) {
+            WalletHomePage.reloadNotifier.value++;
+          }
+        },
       ),
     );
   }

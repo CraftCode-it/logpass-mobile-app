@@ -13,6 +13,8 @@ import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 @RoutePage()
 class WalletHomePage extends HookWidget {
+  static final reloadNotifier = ValueNotifier<int>(0);
+
   const WalletHomePage({Key? key}) : super(key: key);
 
   @override
@@ -21,11 +23,12 @@ class WalletHomePage extends HookWidget {
     final state = useCubitBuilder(cubit);
     final colors = useAppThemeColors();
     final typography = useAppTypography();
+    final reloadKey = useValueListenable(WalletHomePage.reloadNotifier);
 
     useEffect(() {
       cubit.loadCredentials();
       return;
-    }, [cubit]);
+    }, [cubit, reloadKey]);
 
     final isMinor = state is WalletHomeLoaded && state.isMinor;
     final hasAge18Credential = state is WalletHomeLoaded &&

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -58,7 +59,8 @@ class VerificationRequestPage extends HookWidget {
                 typography: typography,
                 onDone: () => Navigator.of(context).pop(true),
               )
-            : Column(
+            : SingleChildScrollView(
+                child: Column(
                 children: [
                   const SizedBox(height: 32),
                       Container(
@@ -193,8 +195,9 @@ class VerificationRequestPage extends HookWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 16),
                 ],
+              ),
               ),
       ),
     );
@@ -299,7 +302,11 @@ class VerificationRequestPage extends HookWidget {
       resultMessage.value = 'Weryfikacja zatwierdzona!\nDowód ZK przesłany do ${verifierName ?? 'weryfikatora'}.';
     } catch (e) {
       isSuccess.value = false;
-      resultMessage.value = 'Weryfikacja nieudana:\n$e';
+      if (e is DioException && e.response?.statusCode == 409) {
+        resultMessage.value = 'Żądanie wygasło.\nZeskanuj ponownie kod QR.';
+      } else {
+        resultMessage.value = 'Weryfikacja nieudana:\n$e';
+      }
     } finally {
       isProcessing.value = false;
     }
@@ -327,7 +334,11 @@ class VerificationRequestPage extends HookWidget {
           'Tożsamość udostępniona serwisowi ${verifierName ?? "weryfikator"}.';
     } catch (e) {
       isSuccess.value = false;
-      resultMessage.value = 'Weryfikacja tożsamości nieudana:\n$e';
+      if (e is DioException && e.response?.statusCode == 409) {
+        resultMessage.value = 'Żądanie wygasło.\nZeskanuj ponownie kod QR.';
+      } else {
+        resultMessage.value = 'Weryfikacja tożsamości nieudana:\n$e';
+      }
     } finally {
       isProcessing.value = false;
     }
