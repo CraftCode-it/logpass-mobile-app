@@ -33,6 +33,19 @@ class IdentityPage extends HookWidget {
       return null;
     }, [cubit]);
 
+    useCubitListener<IdentityCubit, IdentityState>(cubit, (cubit, state, ctx) {
+      if (state is IdentityVerified) {
+        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          content: Text(
+            'Zapisano: ${state.firstName} ${state.lastName}, '
+            'DOB: ${state.dob}, PESEL: ${state.pesel}',
+          ),
+          duration: const Duration(seconds: 5),
+        ));
+        cubit.load();
+      }
+    });
+
     final state = useCubitBuilder<IdentityCubit, IdentityState>(cubit);
 
     return Scaffold(
@@ -53,7 +66,7 @@ class IdentityPage extends HookWidget {
   }
 
   Widget _buildBody(IdentityState state, IdentityCubit cubit) {
-    if (state is IdentityVerifying) {
+    if (state is IdentityVerifying || state is IdentityVerified) {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -323,12 +336,12 @@ class _ProfileSwitcher extends HookWidget {
                 label: Text(
                   profile.displayName,
                   style: isActive
-                      ? TextStyle(color: colors.textSpecial)
+                      ? TextStyle(color: colors.buttonFilledText)
                       : TextStyle(color: colors.text),
                 ),
                 selected: isActive,
                 selectedColor: colors.buttonFill,
-                checkmarkColor: colors.textSpecial,
+                checkmarkColor: colors.buttonFilledText,
                 backgroundColor: colors.background,
                 side: BorderSide(color: colors.dividerMedium),
                 onSelected: (_) => onSelect(profile.id),

@@ -28,6 +28,19 @@ class IdentityLoaded extends IdentityState {
 
 class IdentityVerifying extends IdentityState {}
 
+class IdentityVerified extends IdentityState {
+  final String firstName;
+  final String lastName;
+  final String pesel;
+  final String dob;
+  IdentityVerified({
+    required this.firstName,
+    required this.lastName,
+    required this.pesel,
+    required this.dob,
+  });
+}
+
 class IdentityError extends IdentityState {
   final String message;
   IdentityError(this.message);
@@ -72,6 +85,21 @@ class IdentityCubit extends Cubit<IdentityState> {
 
       await _repository.applyVerifiedIdentity(data);
       debugPrint('[mObywatel] applyVerifiedIdentity done');
+
+      // Verify what was actually saved in storage
+      final savedProfiles = await _repository.getProfiles();
+      for (final p in savedProfiles) {
+        final fields = p.fields
+            .map((f) => '${f.key}=${f.value.isEmpty ? "(empty)" : f.value}')
+            .join(', ');
+        debugPrint('[mObywatel][SAVED] ${p.type.name}: $fields');
+      }
+
+      final fn = data['first_name'] as String? ?? '';
+      final ln = data['last_name'] as String? ?? '';
+      final ps = data['pesel_masked'] as String? ?? '';
+      final db = data['dob'] as String? ?? '';
+      emit(IdentityVerified(firstName: fn, lastName: ln, pesel: ps, dob: db));
 
       // Auto-credential 18+ if DOB indicates adult
       final dobStr = data['dob'] as String? ?? '';
