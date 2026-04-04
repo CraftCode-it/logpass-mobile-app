@@ -2,6 +2,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/activity/service_activity.dart';
 import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
@@ -182,6 +183,10 @@ class _ContentList extends StatelessWidget {
                   child: Loader(),
                 ),
               ),
+            const SliverPadding(padding: EdgeInsets.only(top: AppDimens.xxl)),
+            SliverToBoxAdapter(
+              child: _ActivityServicesSection(cubit: cubit),
+            ),
           ],
         ),
       ),
@@ -237,6 +242,99 @@ class _ServicesHeader extends HookWidget {
       textAlign: TextAlign.center,
       style: typography.h8,
     );
+  }
+}
+
+class _ActivityServicesSection extends HookWidget {
+  final ServiceListPageCubit cubit;
+
+  const _ActivityServicesSection({required this.cubit, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+    final services = useState<List<ServiceSummary>>([]);
+    final isLoading = useState(true);
+
+    useEffect(() {
+      cubit.loadActivityServices().then((result) {
+        services.value = result;
+        isLoading.value = false;
+      }).catchError((_) {
+        isLoading.value = false;
+      });
+      return null;
+    }, [cubit]);
+
+    if (isLoading.value) {
+      return const Padding(
+        padding: EdgeInsets.all(AppDimens.m),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (services.value.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Text('Ostatnie aktywności', style: typography.h8, textAlign: TextAlign.center),
+        ),
+        const SizedBox(height: AppDimens.m),
+        ...services.value.map((s) => _ActivityServiceRow(summary: s, colors: colors, typography: typography)),
+        const SizedBox(height: AppDimens.xxl),
+      ],
+    );
+  }
+}
+
+class _ActivityServiceRow extends HookWidget {
+  final ServiceSummary summary;
+  final AppThemeColors colors;
+  final AppTypography typography;
+
+  const _ActivityServiceRow({
+    required this.summary,
+    required this.colors,
+    required this.typography,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
+          child: Row(
+            children: [
+              Icon(Icons.verified_outlined, color: colors.secondaryText),
+              const SizedBox(width: AppDimens.m),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(summary.serviceName, style: typography.body3),
+                    Text(
+                      '${summary.actionCount} aktywności · ${_formatDate(summary.lastActivity)}',
+                      style: typography.info2.copyWith(color: colors.lightText),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Separator.light(),
+      ],
+    );
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.day}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
   }
 }
 

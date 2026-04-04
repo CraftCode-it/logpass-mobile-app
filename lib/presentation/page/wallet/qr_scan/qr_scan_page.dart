@@ -36,8 +36,9 @@ class QrScanPage extends HookWidget {
               final barcode = capture.barcodes.firstOrNull;
               if (barcode?.rawValue == null) return;
 
+              final rawValue = barcode!.rawValue!;
               try {
-                final request = VerifierRequest.fromQrPayload(barcode!.rawValue!);
+                final request = VerifierRequest.fromQrPayload(rawValue);
                 hasNavigated.value = true;
                 AutoRouter.of(context).push(VerificationRequestRoute(
                   requestId: request.requestId,
@@ -47,6 +48,23 @@ class QrScanPage extends HookWidget {
                 ));
               } catch (e) {
                 if (kDebugMode) debugPrint('QR parse error: $e');
+                final uuidRegex = RegExp(
+                  r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+                );
+                if (uuidRegex.hasMatch(rawValue)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Zeskanowano LogPass ID. Aby dodać opiekuna, użyj funkcji Opiekunowie.',
+                      ),
+                      duration: Duration(seconds: 4),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Nierozpoznany kod QR')),
+                  );
+                }
               }
             },
           ),

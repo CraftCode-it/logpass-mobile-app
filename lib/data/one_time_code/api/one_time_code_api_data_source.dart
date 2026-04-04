@@ -13,6 +13,6 @@ abstract class OneTimeCodeApiDataSource {
   @factoryMethod
   factory OneTimeCodeApiDataSource(LogPassDio dio) = _OneTimeCodeApiDataSource;
 
-  @POST('/users/self/code/')
+  @POST('/auth/pairing/register')
   Future<OneTimeCodeDTO> getOneTimeCode(@Body() OneTimeCodeParameterDTO parameterDto);
 }

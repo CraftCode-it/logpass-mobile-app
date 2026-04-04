@@ -8,7 +8,7 @@ abstract class GuardianRepository {
   Future<List<Guardian>> getMyMinors();
 
   /// Sends pairing request to guardian (by their LogPass UUID from QR scan).
-  Future<void> requestGuardian(String guardianUserId);
+  Future<void> requestGuardian(String guardianUserId, {String? relationshipType});
 
   /// Guardian confirms pairing request.
   Future<void> confirmGuardian(String guardianRequestId);

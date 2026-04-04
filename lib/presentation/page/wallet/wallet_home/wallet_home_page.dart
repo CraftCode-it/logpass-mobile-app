@@ -81,7 +81,7 @@ class WalletHomePage extends HookWidget {
                 isLoading: state is WalletHomeVerifying || state is WalletHomeLoading,
                 onForcedVerify: () => _showForcedVerifyDialog(context, cubit),
                 onGuardians: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const GuardianPage()),
+                  MaterialPageRoute(builder: (_) => const GuardianPage(isMinor: true)),
                 ),
               ),
             ],

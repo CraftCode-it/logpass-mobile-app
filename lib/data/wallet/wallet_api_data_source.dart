@@ -103,7 +103,8 @@ class WalletApiDataSource {
 
   Future<List<Map<String, dynamic>>> getUserServices() async {
     final response = await _dio.get('users/self/services');
-    final list = response.data as List? ?? [];
+    final body = response.data as Map<String, dynamic>? ?? {};
+    final list = body['data'] as List? ?? [];
     return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
   }
 
@@ -116,7 +117,8 @@ class WalletApiDataSource {
         'limit': limit,
       },
     );
-    final list = response.data as List? ?? [];
+    final body = response.data as Map<String, dynamic>? ?? {};
+    final list = body['data'] as List? ?? [];
     return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
   }
 
@@ -135,10 +137,13 @@ class WalletApiDataSource {
     );
   }
 
-  Future<Map<String, dynamic>> requestGuardian({required String guardianUserId}) async {
+  Future<Map<String, dynamic>> requestGuardian({required String guardianUserId, String? relationshipType}) async {
     final response = await _dio.post(
       'auth/guardians/request',
-      data: {'guardian_user_id': guardianUserId},
+      data: {
+        'guardian_user_id': guardianUserId,
+        if (relationshipType != null) 'relationship_type': relationshipType,
+      },
     );
     return response.data as Map<String, dynamic>;
   }

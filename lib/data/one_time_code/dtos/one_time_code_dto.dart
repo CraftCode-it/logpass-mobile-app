@@ -2,32 +2,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'one_time_code_dto.g.dart';
 
+/// DTO for PairingCode response: POST /auth/pairing/register
+/// Backend returns flat: { "code": "ABC123", "expires_in": 30 }
 @JsonSerializable()
 class OneTimeCodeDTO {
-  final OneTimeCodeDataDTO data;
+  final String code;
+  @JsonKey(name: 'expires_in')
+  final int expiresIn;
 
-  OneTimeCodeDTO(this.data);
+  OneTimeCodeDTO(this.code, this.expiresIn);
 
   Map<String, dynamic> toJson() => _$OneTimeCodeDTOToJson(this);
 
   factory OneTimeCodeDTO.fromJson(Map<String, dynamic> json) => _$OneTimeCodeDTOFromJson(json);
-}
-
-@JsonSerializable()
-class OneTimeCodeDataDTO {
-  final String code;
-  final int expiresIn;
-  final DateTime generatedAt;
-  final DateTime validUntil;
-
-  OneTimeCodeDataDTO(
-    this.code,
-    this.expiresIn,
-    this.generatedAt,
-    this.validUntil,
-  );
-
-  Map<String, dynamic> toJson() => _$OneTimeCodeDataDTOToJson(this);
-
-  factory OneTimeCodeDataDTO.fromJson(Map<String, dynamic> json) => _$OneTimeCodeDataDTOFromJson(json);
 }

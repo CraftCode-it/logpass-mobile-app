@@ -38,10 +38,10 @@ class GuardianCubit extends Cubit<GuardianState> {
     }
   }
 
-  Future<void> addGuardian(String guardianUserId) async {
+  Future<void> addGuardian(String guardianUserId, {String? relationshipType}) async {
     emit(GuardianOperating());
     try {
-      await _repository.requestGuardian(guardianUserId);
+      await _repository.requestGuardian(guardianUserId, relationshipType: relationshipType);
       await load();
     } catch (e) {
       emit(GuardianError(e.toString()));

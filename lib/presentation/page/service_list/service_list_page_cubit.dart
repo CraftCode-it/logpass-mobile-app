@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/data/activity/activity_api_data_source.dart';
+import 'package:logpass_me/domain/activity/service_activity.dart';
 import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
 import 'package:logpass_me/domain/data_changed_notifier/use_case/listen_for_data_changed_use_case.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
@@ -15,6 +17,7 @@ import 'package:logpass_me/presentation/page/service_list/service_list_page_stat
 class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   final GetPageOfServicesUseCase _getPageOfServicesUseCase;
   final ListenForDataChangedUseCase _listenForDataChangedUseCase;
+  final ActivityApiDataSource _activityDataSource;
 
   StreamSubscription? _dataChangedSubscription;
 
@@ -27,6 +30,7 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   ServiceListPageCubit(
     this._getPageOfServicesUseCase,
     this._listenForDataChangedUseCase,
+    this._activityDataSource,
   ) : super(ServiceListPageState.loading());
 
   @override
@@ -121,5 +125,14 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
 
   void _didLoadAllItems(ServicesBundle bundle) {
     _loadedAll = bundle.totalCount <= _itemsCount;
+  }
+
+  Future<List<ServiceSummary>> loadActivityServices() async {
+    try {
+      return await _activityDataSource.getServices();
+    } catch (e, s) {
+      Fimber.e('loadActivityServices failed', ex: e, stacktrace: s);
+      return [];
+    }
   }
 }

@@ -24,8 +24,8 @@ class GuardianRepositoryImpl implements GuardianRepository {
   }
 
   @override
-  Future<void> requestGuardian(String guardianUserId) async {
-    await _api.requestGuardian(guardianUserId: guardianUserId);
+  Future<void> requestGuardian(String guardianUserId, {String? relationshipType}) async {
+    await _api.requestGuardian(guardianUserId: guardianUserId, relationshipType: relationshipType);
   }
 
   @override

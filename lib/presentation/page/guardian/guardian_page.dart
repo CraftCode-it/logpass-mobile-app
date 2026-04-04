@@ -11,7 +11,9 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 @RoutePage()
 class GuardianPage extends HookWidget {
-  const GuardianPage({Key? key}) : super(key: key);
+  final bool isMinor;
+
+  const GuardianPage({Key? key, this.isMinor = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +33,12 @@ class GuardianPage extends HookWidget {
         backgroundColor: colors.background,
         title: Text('Opiekunowie', style: typography.h2),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.qr_code_scanner),
-            tooltip: 'Dodaj opiekuna (skanuj QR)',
-            onPressed: () => _openGuardianQrScanner(context, cubit),
-          ),
+          if (isMinor)
+            IconButton(
+              icon: const Icon(Icons.qr_code_scanner),
+              tooltip: 'Dodaj opiekuna (skanuj QR)',
+              onPressed: () => _openGuardianQrScanner(context, cubit),
+            ),
         ],
       ),
       body: _buildBody(state, cubit, colors, typography),
@@ -77,18 +80,19 @@ class GuardianPage extends HookWidget {
             const SizedBox(height: 16),
             Center(
               child: Text(
-                'Brak opiekunów',
+                isMinor ? 'Brak opiekunów' : 'Brak podopiecznych',
                 style: typography.h7.copyWith(color: colors.secondaryText),
               ),
             ),
             const SizedBox(height: 8),
-            Center(
-              child: Text(
-                'Skanuj QR kod opiekuna, aby go dodać',
-                style: typography.body1.copyWith(color: colors.lightText),
-                textAlign: TextAlign.center,
+            if (isMinor)
+              Center(
+                child: Text(
+                  'Skanuj QR kod opiekuna, aby go dodać',
+                  style: typography.body1.copyWith(color: colors.lightText),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
           ] else ...[
             if (state.myGuardians.isNotEmpty) ...[
               Text('Moi opiekunowie', style: typography.h6),
@@ -115,13 +119,44 @@ class GuardianPage extends HookWidget {
     return const SizedBox.shrink();
   }
 
-  void _openGuardianQrScanner(BuildContext context, GuardianCubit cubit) {
+  void _openGuardianQrScanner(BuildContext context, GuardianCubit cubit) async {
+    final relationshipType = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Wybierz rodzaj relacji'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.family_restroom),
+              title: const Text('Rodzic'),
+              onTap: () => Navigator.of(ctx).pop('parent'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.supervised_user_circle),
+              title: const Text('Opiekun prawny'),
+              onTap: () => Navigator.of(ctx).pop('legal_guardian'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Anuluj'),
+          ),
+        ],
+      ),
+    );
+
+    if (relationshipType == null) return;
+
+    if (!context.mounted) return;
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => _GuardianQrScanPage(
           onScanned: (uuid) {
             Navigator.of(context).pop();
-            cubit.addGuardian(uuid);
+            cubit.addGuardian(uuid, relationshipType: relationshipType);
           },
         ),
       ),
@@ -180,7 +215,17 @@ class _GuardianCard extends StatelessWidget {
               Icon(Icons.person_outline, color: colors.secondaryText),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(guardian.displayName, style: typography.h8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(guardian.displayName, style: typography.h8),
+                    if (guardian.relationshipType != null)
+                      Text(
+                        guardian.relationshipLabel,
+                        style: typography.info2.copyWith(color: colors.lightText),
+                      ),
+                  ],
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -248,7 +293,6 @@ class _GuardianQrScanPageState extends State<_GuardianQrScanPage> {
           final barcode = capture.barcodes.first;
           final raw = barcode.rawValue;
           if (raw == null) return;
-          // Expect UUID format (36 chars)
           final uuidRegex = RegExp(
             r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
           );

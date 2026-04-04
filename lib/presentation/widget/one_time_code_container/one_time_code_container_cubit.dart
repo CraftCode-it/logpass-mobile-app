@@ -29,6 +29,8 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   late StreamSubscription<OneTimeCode?> _oneTimeCodeSubscription;
   late OneTimeCode _oneTimeCode;
   bool _hasInternetConnection = true;
+  int _retryCount = 0;
+  static const int _maxRetries = 3;
 
   OneTimeCodeContainerCubit(
     this._loadOneTimeCodeUseCase,
@@ -76,13 +78,25 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
       emit(const OneTimeCodeContainerState.loadInProgress());
 
       await _loadOneTimeCodeUseCase.call();
+      _retryCount = 0;
     } on GeneralConnectionError catch (e) {
       emit(OneTimeCodeContainerState.connectionError(e));
       emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection));
+      _scheduleRetry();
     } catch (e, s) {
       Fimber.e('Error with OneTimeCode refresh', ex: e, stacktrace: s);
 
       emit(const OneTimeCodeContainerState.error());
+      _scheduleRetry();
+    }
+  }
+
+  void _scheduleRetry() {
+    if (_retryCount < _maxRetries) {
+      _retryCount++;
+      Future.delayed(const Duration(seconds: 5), () {
+        if (!isClosed) refreshOneTimeCode();
+      });
     }
   }
 

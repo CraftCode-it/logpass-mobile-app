@@ -5,6 +5,7 @@ class Guardian {
   final String? lastName;
   final String status;
   final DateTime createdAt;
+  final String? relationshipType;
 
   const Guardian({
     required this.id,
@@ -13,6 +14,7 @@ class Guardian {
     this.lastName,
     required this.status,
     required this.createdAt,
+    this.relationshipType,
   });
 
   String get displayName {
@@ -20,6 +22,17 @@ class Guardian {
     final last = lastName ?? '';
     final full = '$first $last'.trim();
     return full.isEmpty ? 'Nieznany użytkownik' : full;
+  }
+
+  String get relationshipLabel {
+    switch (relationshipType) {
+      case 'parent':
+        return 'Rodzic';
+      case 'legal_guardian':
+        return 'Opiekun prawny';
+      default:
+        return 'Opiekun';
+    }
   }
 
   bool get isActive => status == 'active';
@@ -34,5 +47,6 @@ class Guardian {
         createdAt: json['created_at'] != null
             ? DateTime.parse(json['created_at'] as String)
             : DateTime.now(),
+        relationshipType: json['relationship_type'] as String?,
       );
 }
