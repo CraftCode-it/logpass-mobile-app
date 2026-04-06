@@ -111,7 +111,7 @@ class WalletHomePage extends HookWidget {
             child: const Text('Anuluj'),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.warning),
             onPressed: () => Navigator.of(ctx).pop(true),
             child: const Text('Wymuś poświadczenie'),
           ),
@@ -274,20 +274,20 @@ class _MinorWarningSection extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: AppColors.warning.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.4)),
+        border: Border.all(color: AppColors.warning.withOpacity(0.4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.child_care, color: Colors.orange, size: 20),
+              const Icon(Icons.child_care, color: AppColors.warning, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Konto osoby niepełnoletniej',
-                style: typography.h8.copyWith(color: Colors.orange.shade700),
+                    style: typography.h8.copyWith(color: AppColors.warning),
               ),
             ],
           ),
@@ -306,13 +306,13 @@ class _MinorWarningSection extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: isLoading ? null : onForcedVerify,
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.orange),
+                      side: const BorderSide(color: AppColors.warning),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: const Icon(Icons.warning_amber, size: 18, color: Colors.orange),
+                    icon: const Icon(Icons.warning_amber, size: 18, color: AppColors.warning),
                     label: Text(
                       'Wymuś wiek 18+',
-                      style: typography.body2.copyWith(color: Colors.orange),
+                      style: typography.body2.copyWith(color: AppColors.warning),
                     ),
                   ),
                 ),

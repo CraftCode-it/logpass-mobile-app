@@ -96,9 +96,10 @@ class IdentityRepositoryImpl implements IdentityRepository {
   @override
   Future<void> applyVerifiedIdentity(Map<String, dynamic> data) async {
     final profiles = await getProfiles();
-    debugPrint('[applyVerifiedIdentity] input data: $data');
-    debugPrint('[applyVerifiedIdentity] profiles count: ${profiles.length}, '
-        'types: ${profiles.map((p) => p.type.key).toList()}');
+    if (kDebugMode) {
+      debugPrint('[applyVerifiedIdentity] profiles count: ${profiles.length}, '
+          'types: ${profiles.map((p) => p.type.key).toList()}');
+    }
     final dob = data['dob'] as String? ?? '';
     final firstName = data['first_name'] as String? ?? '';
     final lastName = data['last_name'] as String? ?? '';
@@ -149,11 +150,10 @@ class IdentityRepositoryImpl implements IdentityRepository {
     }).toList();
 
     await _saveProfiles(updated);
-    for (final p in updated) {
-      final fields = p.fields
-          .map((f) => '${f.key}=${f.value.isEmpty ? "(empty)" : f.value}')
-          .join(', ');
-      debugPrint('[applyVerifiedIdentity] ${p.type.key}: $fields');
+    if (kDebugMode) {
+      for (final p in updated) {
+        debugPrint('[applyVerifiedIdentity] ${p.type.key}: ${p.fields.map((f) => f.key).toList()}');
+      }
     }
   }
 

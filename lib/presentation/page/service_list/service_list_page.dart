@@ -39,14 +39,16 @@ class ServiceListPage extends HookWidget {
     );
 
     useEffect(() {
-      scrollController.addListener(() {
+      void onScroll() {
         final position = scrollController.position;
-
         if (position.maxScrollExtent - position.pixels < screenHeight) {
           cubit.loadNextPage();
         }
-      });
-    }, [scrollController]);
+      }
+
+      scrollController.addListener(onScroll);
+      return () => scrollController.removeListener(onScroll);
+    }, [scrollController, cubit]);
 
     useEffect(() {
       cubit.initialize();

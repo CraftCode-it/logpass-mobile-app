@@ -30,6 +30,24 @@ class Credential {
 
   bool get isAnchored => onChainTxId != null && onChainTxId!.isNotEmpty;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Credential &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          type == other.type &&
+          result == other.result &&
+          validUntil == other.validUntil &&
+          commitmentHash == other.commitmentHash &&
+          onChainTxId == other.onChainTxId &&
+          issuedAt == other.issuedAt &&
+          status == other.status &&
+          forced == other.forced;
+
+  @override
+  int get hashCode => Object.hash(id, type, result, validUntil, commitmentHash, onChainTxId, issuedAt, status, forced);
+
   String get displayType {
     if (type.startsWith('age_')) {
       return 'Wiek ${type.substring(4)}+';

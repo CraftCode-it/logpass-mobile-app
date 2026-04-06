@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logpass_me/core/app_env.dart';
 import 'package:logpass_me/core/bloc/simple_bloc_observer.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/data/user_data/entity/address_entity.dart';
@@ -33,7 +34,7 @@ Future<void> runMain(String env) async {
   await initHive();
   await EasyLocalization.ensureInitialized();
 
-  await _initFirebase();
+  await _initFirebase(env);
   await setupCrashlytics();
   await setupCertificate();
 
@@ -62,22 +63,25 @@ Future<void> runMain(String env) async {
     );
   }, (error, stack) {
     debugPrint('Uncaught error: $error\n$stack');
+    if (!kDebugMode) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    }
   });
 }
 
-/// Initializes Firebase. In production builds the google-services plugin injects
-/// values.xml so initializeApp() works without explicit options. In dev builds
-/// (no google-services plugin, stub google-services.json) we fall back to
-/// programmatic FirebaseOptions so that Firebase SDK is available for DI.
-Future<void> _initFirebase() async {
+/// Initializes Firebase based on build environment.
+/// Dev: uses stub options (no real google-services.json required).
+/// Prod: uses google-services.json via default initialization.
+Future<void> _initFirebase(String env) async {
   try {
-    await Firebase.initializeApp();
-    debugPrint('Firebase initialized from resources.');
-  } catch (e) {
-    debugPrint('Firebase init from resources failed (expected in dev): $e');
+    Firebase.app();
+    debugPrint('Firebase already initialized.');
+    return;
+  } catch (_) {}
+
+  if (env == AppEnv.devName) {
     try {
-      // API key must start with 'AIza' to pass Firebase Installations preConditionChecks.
-      // This is a stub key for dev builds without a real google-services.json.
+      // API key must start with 'AIza' to pass Firebase Installations checks (blacklist #7).
       await Firebase.initializeApp(
         options: const FirebaseOptions(
           apiKey: 'AIzaSy000000000000000000000000000000000',
@@ -86,9 +90,16 @@ Future<void> _initFirebase() async {
           projectId: 'logpass-stub',
         ),
       );
-      debugPrint('Firebase initialized with stub options.');
-    } catch (e2) {
-      debugPrint('Firebase stub init also failed (proceeding without Firebase): $e2');
+      debugPrint('Firebase initialized with stub options (dev).');
+    } catch (e) {
+      debugPrint('Firebase stub init failed: $e');
+    }
+  } else {
+    try {
+      await Firebase.initializeApp();
+      debugPrint('Firebase initialized (prod).');
+    } catch (e) {
+      debugPrint('Firebase prod init failed: $e');
     }
   }
 }

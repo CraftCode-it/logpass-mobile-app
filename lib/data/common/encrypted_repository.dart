@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:logpass_me/data/common/serializable_dto.dart';
 import 'package:logpass_me/data/user_data/cipher/user_data_cipher.dart';
 
@@ -8,13 +6,8 @@ class EncryptedRepository<T extends SerializableDto> {
 
   EncryptedRepository(this._cipher);
 
-  String encrypt(T data) {
-    final serializedData = data.toJson();
+  Future<String> encrypt(T data) => _cipher.encrypt(data);
 
-    return json.encode(serializedData);
-  }
-
-  Map<String, dynamic> decrypt(String data) {
-    return jsonDecode(data) as Map<String, dynamic>;
-  }
+  Future<Map<String, dynamic>> decrypt(String data) =>
+      _cipher.decrypt(data, (map) => map);
 }

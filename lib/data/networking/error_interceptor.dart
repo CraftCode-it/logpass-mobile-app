@@ -17,8 +17,15 @@ class ErrorInterceptor extends Interceptor {
 
     if (err.type == DioExceptionType.badResponse && response != null) {
       try {
-        final rawData = response.data as String;
-        final jsonData = jsonDecode(rawData) as Map<String, dynamic>;
+        final dynamic rawData = response.data;
+        final Map<String, dynamic> jsonData;
+        if (rawData is String) {
+          jsonData = jsonDecode(rawData) as Map<String, dynamic>;
+        } else if (rawData is Map<String, dynamic>) {
+          jsonData = rawData;
+        } else {
+          return handler.next(err);
+        }
         final logpassApiError = LogpassApiError.fromJson(jsonData);
 
         return handler.next(

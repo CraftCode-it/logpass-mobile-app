@@ -179,7 +179,7 @@ class _LogPassIdSection extends HookWidget {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.secondary,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: QrImageView(

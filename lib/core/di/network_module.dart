@@ -5,6 +5,7 @@ import 'package:logpass_me/core/app_env.dart';
 import 'package:logpass_me/data/networking/auth_token_interceptor.dart';
 import 'package:logpass_me/data/networking/content_type_interceptor.dart';
 import 'package:logpass_me/data/networking/error_interceptor.dart';
+import 'package:logpass_me/data/networking/interceptor_with_dio.dart';
 import 'package:logpass_me/data/networking/language_interceptor.dart';
 import 'package:logpass_me/data/networking/refresh_token_interceptor.dart';
 import 'package:logpass_me/data/wallet/wallet_api_key_interceptor.dart';
@@ -86,6 +87,9 @@ abstract class NetworkModule {
   Dio walletDioInstance(
     WalletApiKeyInterceptor apiKeyInterceptor,
     AuthTokenInterceptor authTokenInterceptor,
+    RefreshTokenInterceptor refreshTokenInterceptor,
+    ErrorInterceptor errorInterceptor,
+    LanguageInterceptor languageInterceptor,
   ) {
     final dio = Dio(BaseOptions(
       baseUrl: AppEnv.apiUrl,
@@ -93,8 +97,19 @@ abstract class NetworkModule {
       receiveTimeout: const Duration(seconds: 30),
       headers: {'Content-Type': 'application/json'},
     ));
-    dio.interceptors.add(authTokenInterceptor);
-    dio.interceptors.add(apiKeyInterceptor);
+    dio.interceptors.addAll([
+      languageInterceptor,
+      authTokenInterceptor,
+      apiKeyInterceptor,
+      refreshTokenInterceptor,
+      errorInterceptor,
+    ]);
+    // Ustawic referencje dio na interceptorach InterceptorWithDio (np. RefreshTokenInterceptor)
+    for (final interceptor in dio.interceptors) {
+      if (interceptor is InterceptorWithDio) {
+        interceptor.set(dio);
+      }
+    }
     return dio;
   }
 }

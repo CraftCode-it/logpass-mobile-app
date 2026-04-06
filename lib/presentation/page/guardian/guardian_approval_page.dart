@@ -192,7 +192,7 @@ class GuardianApprovalPage extends HookWidget {
                             onPressed: isProcessing.value ? null : () => _approve(context, isProcessing, resultMessage, isSuccess),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.success100,
-                              foregroundColor: Colors.white,
+                              foregroundColor: AppColors.secondary,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
                             ),
@@ -200,9 +200,9 @@ class GuardianApprovalPage extends HookWidget {
                                 ? const SizedBox(
                                     width: 24,
                                     height: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.secondary),
                                   )
-                                : Text('Zatwierdź', style: typography.h8.copyWith(color: Colors.white)),
+                                : Text('Zatwierdź', style: typography.h8.copyWith(color: AppColors.secondary)),
                           ),
                         ),
                       ),

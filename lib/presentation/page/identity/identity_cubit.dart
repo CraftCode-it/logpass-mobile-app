@@ -63,7 +63,23 @@ class IdentityCubit extends Cubit<IdentityState> {
       bool identityVerified = false;
       try {
         final selfData = await _walletRepository.getUserSelf();
-        identityVerified = selfData['identity_verified'] == true;
+        final backendVerified = selfData['identity_verified'] == true;
+        if (backendVerified) {
+          // Only show "Zweryfikowano" if the active profile has actual data locally
+          final activeProfile = profiles.firstWhere(
+            (p) => p.id == activeId,
+            orElse: () => profiles.isNotEmpty ? profiles.first : throw StateError('no profiles'),
+          );
+          final firstName = activeProfile.fields
+              .where((f) => f.key == IdentityFieldKey.firstName)
+              .map((f) => f.value)
+              .firstOrNull ?? '';
+          final dob = activeProfile.fields
+              .where((f) => f.key == IdentityFieldKey.dateOfBirth)
+              .map((f) => f.value)
+              .firstOrNull ?? '';
+          identityVerified = firstName.isNotEmpty || dob.isNotEmpty;
+        }
       } catch (_) {}
       emit(IdentityLoaded(
         profiles: profiles,
@@ -79,21 +95,11 @@ class IdentityCubit extends Cubit<IdentityState> {
     emit(IdentityVerifying());
     try {
       final data = await _walletRepository.verifyIdentityMobywatel(testAccount);
-      debugPrint('[mObywatel] Raw API response: $data');
-      debugPrint('[mObywatel] first_name=${data['first_name']}, last_name=${data['last_name']}, '
-          'dob=${data['dob']}, pesel_masked=${data['pesel_masked']}');
+      if (kDebugMode) {
+        debugPrint('[mObywatel] keys received: ${data.keys.toList()}');
+      }
 
       await _repository.applyVerifiedIdentity(data);
-      debugPrint('[mObywatel] applyVerifiedIdentity done');
-
-      // Verify what was actually saved in storage
-      final savedProfiles = await _repository.getProfiles();
-      for (final p in savedProfiles) {
-        final fields = p.fields
-            .map((f) => '${f.key}=${f.value.isEmpty ? "(empty)" : f.value}')
-            .join(', ');
-        debugPrint('[mObywatel][SAVED] ${p.type.name}: $fields');
-      }
 
       final fn = data['first_name'] as String? ?? '';
       final ln = data['last_name'] as String? ?? '';
@@ -103,24 +109,21 @@ class IdentityCubit extends Cubit<IdentityState> {
 
       // Auto-credential 18+ if DOB indicates adult
       final dobStr = data['dob'] as String? ?? '';
-      debugPrint('[mObywatel] dob string: "$dobStr"');
       if (dobStr.isNotEmpty) {
         try {
           final dob = DateTime.parse(dobStr);
           final age = _calculateAge(dob);
-          debugPrint('[mObywatel] calculated age: $age');
           if (age >= 18) {
             final pubkey = await _keyProvider.getUserPubkeyHex();
-            debugPrint('[mObywatel] Requesting age credential, pubkey=$pubkey');
             await _walletRepository.requestAgeVerification(
               userPubkey: pubkey,
               minAge: 18,
             );
-            debugPrint('[mObywatel] Age credential created successfully');
           }
         } catch (e, st) {
-          debugPrint('[mObywatel] Auto-credential 18+ FAILED: $e');
-          debugPrint('[mObywatel] Stack: $st');
+          if (kDebugMode) {
+            debugPrint('[mObywatel] Auto-credential 18+ FAILED: $e\n$st');
+          }
         }
       }
 

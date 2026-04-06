@@ -35,13 +35,14 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
       try {
         final userToken = await _getUserTokensUseCase();
         final requestAuthHeader = err.requestOptions.headers[HttpHeaders.authorizationHeader];
-        final currentAuthHeader = userToken.accessToken.toString();
+        final currentAuthHeader = userToken.accessToken.toAuthorizationHeader();
 
         if (requestAuthHeader != currentAuthHeader) {
           await _retryRequest(err.requestOptions, handler, currentAuthHeader);
         } else {
           await _refreshAccessTokenAndRetryRequest(err, handler);
         }
+        return;
       } on AuthExceptionUserNotSignedIn catch (e) {
         Fimber.e('Making requests when user is not signed in.', ex: e);
         await _logoutService.logout();
@@ -67,7 +68,7 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
       }
 
       final newTokens = await _getUserTokensUseCase();
-      final newAuthHeader = newTokens.accessToken.toString();
+      final newAuthHeader = newTokens.accessToken.toAuthorizationHeader();
 
       await _retryRequest(err.requestOptions, handler, newAuthHeader);
     } catch (e, s) {
@@ -84,6 +85,15 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
       onReceiveProgress: requestOptions.onReceiveProgress,
       onSendProgress: requestOptions.onSendProgress,
       queryParameters: requestOptions.queryParameters,
+      options: Options(
+        method: requestOptions.method,
+        headers: {
+          ...requestOptions.headers,
+          HttpHeaders.authorizationHeader: authHeader,
+        },
+        contentType: requestOptions.contentType,
+        responseType: requestOptions.responseType,
+      ),
     );
 
     handler.resolve(response);

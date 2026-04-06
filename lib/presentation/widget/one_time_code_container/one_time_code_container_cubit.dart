@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:clock/clock.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -26,8 +25,9 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   final ListenInternetConnectionUseCase _listenInternetConnectionUseCase;
   final DisposeInternetConnectionUseCase _disposeInternetConnectionUseCase;
 
-  late StreamSubscription<OneTimeCode?> _oneTimeCodeSubscription;
-  late OneTimeCode _oneTimeCode;
+  StreamSubscription<OneTimeCode?>? _oneTimeCodeSubscription;
+  StreamSubscription<bool>? _internetSubscription;
+  OneTimeCode? _oneTimeCode;
   bool _hasInternetConnection = true;
   int _retryCount = 0;
   static const int _maxRetries = 3;
@@ -70,7 +70,9 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   }
 
   Future copyOneTimeCodeToClipboard() async {
-    await Clipboard.setData(ClipboardData(text: _oneTimeCode.code));
+    final code = _oneTimeCode;
+    if (code == null) return;
+    await Clipboard.setData(ClipboardData(text: code.code));
   }
 
   Future refreshOneTimeCode() async {
@@ -101,25 +103,28 @@ class OneTimeCodeContainerCubit extends Cubit<OneTimeCodeContainerState> {
   }
 
   void _emitIdleState() {
-    emit(OneTimeCodeContainerState.idle(_oneTimeCode));
+    final code = _oneTimeCode;
+    if (code == null) return;
+    emit(OneTimeCodeContainerState.idle(code));
   }
 
   @override
   Future<void> close() async {
     await _disposeInternetConnectionUseCase();
-    await _oneTimeCodeSubscription.cancel();
+    await _oneTimeCodeSubscription?.cancel();
+    await _internetSubscription?.cancel();
     return super.close();
   }
 
   void _listenInternetConnection() {
-    _listenInternetConnectionUseCase().listen((hasConnection) {
+    _internetSubscription = _listenInternetConnectionUseCase().listen((hasConnection) {
       _hasInternetConnection = hasConnection;
 
       state.maybeWhen(
-        error: () => OneTimeCodeContainerState.internetConnection(_hasInternetConnection),
+        error: () => emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection)),
         internetConnection: (_) =>
             emit(OneTimeCodeContainerState.internetConnection(_hasInternetConnection)),
-        orElse: () {}
+        orElse: () {},
       );
     });
   }

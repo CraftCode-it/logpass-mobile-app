@@ -8,10 +8,21 @@ class WalletApiDataSource {
 
   WalletApiDataSource(@Named(walletDio) this._dio);
 
+  /// Unwraps {"data": {...}} envelope from backend responses.
+  Map<String, dynamic> _unwrap(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      return data.containsKey('data') && data['data'] is Map
+          ? data['data'] as Map<String, dynamic>
+          : data;
+    }
+    return {};
+  }
+
   Future<Map<String, dynamic>> verifyAge({
     required String userPubkey,
     String source = 'mock',
     int minAge = 18,
+    String? userId,
   }) async {
     final response = await _dio.post(
       'verify/age',
@@ -19,29 +30,30 @@ class WalletApiDataSource {
         'user_pubkey': userPubkey,
         'source': source,
         'min_age': minAge,
+        if (userId != null) 'user_id': userId,
       },
     );
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> getVerificationStatus(String verificationId) async {
     final response = await _dio.get('verify/$verificationId/status');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> getProof(String verificationId) async {
     final response = await _dio.get('verify/$verificationId/proof');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> getIssuerPubkey() async {
     final response = await _dio.get('issuer/pubkey');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> getHealth() async {
     final response = await _dio.get('health');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> fulfillRequest({
@@ -49,6 +61,7 @@ class WalletApiDataSource {
     required String zkProof,
     required List<String> zkPublicInputs,
     String? userId,
+    String? profileId,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
@@ -56,14 +69,15 @@ class WalletApiDataSource {
         'zk_proof': zkProof,
         'zk_public_inputs': zkPublicInputs,
         if (userId != null) 'user_id': userId,
+        if (profileId != null) 'profile_id': profileId,
       },
     );
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> getVerifierRequestStatus(String requestId) async {
     final response = await _dio.get('verifier/request/$requestId');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> verifyIdentityMobywatel({
@@ -73,17 +87,18 @@ class WalletApiDataSource {
       'users/self/verifications/',
       data: {'provider': 'mobywatel_mock', 'test_account': testAccount},
     );
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> getUserSelf() async {
     final response = await _dio.get('users/self/');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> fulfillIdentityRequest({
     required String requestId,
     String? userId,
+    String? profileId,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
@@ -91,30 +106,42 @@ class WalletApiDataSource {
         'zk_proof': '',
         'zk_public_inputs': <String>[],
         if (userId != null) 'user_id': userId,
+        if (profileId != null) 'profile_id': profileId,
       },
     );
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> registerPairingCode() async {
     final response = await _dio.post('auth/pairing/register');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
-  Future<List<Map<String, dynamic>>> getUserServices() async {
-    final response = await _dio.get('users/self/services');
+  Future<List<Map<String, dynamic>>> getUserServices({String? profileId}) async {
+    final response = await _dio.get(
+      'users/self/services',
+      queryParameters: {
+        if (profileId != null) 'profile_id': profileId,
+      },
+    );
     final body = response.data as Map<String, dynamic>? ?? {};
     final list = body['data'] as List? ?? [];
     return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
   }
 
-  Future<List<Map<String, dynamic>>> getUserActivity({String? service, int offset = 0, int limit = 20}) async {
+  Future<List<Map<String, dynamic>>> getUserActivity({
+    String? service,
+    int offset = 0,
+    int limit = 20,
+    String? profileId,
+  }) async {
     final response = await _dio.get(
       'users/self/activity',
       queryParameters: {
         if (service != null) 'service': service,
         'offset': offset,
         'limit': limit,
+        if (profileId != null) 'profile_id': profileId,
       },
     );
     final body = response.data as Map<String, dynamic>? ?? {};
@@ -126,6 +153,7 @@ class WalletApiDataSource {
     required String serviceName,
     required String actionType,
     Map<String, dynamic>? details,
+    String? profileId,
   }) async {
     await _dio.post(
       'users/self/activity',
@@ -133,6 +161,7 @@ class WalletApiDataSource {
         'service_name': serviceName,
         'action_type': actionType,
         if (details != null) 'details': details,
+        if (profileId != null) 'profile_id': profileId,
       },
     );
   }
@@ -145,7 +174,7 @@ class WalletApiDataSource {
         if (relationshipType != null) 'relationship_type': relationshipType,
       },
     );
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<void> confirmGuardian(String guardianRequestId) async {
@@ -158,7 +187,7 @@ class WalletApiDataSource {
 
   Future<Map<String, dynamic>> getUserGuardians() async {
     final response = await _dio.get('users/self/guardians');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<Map<String, dynamic>> requestAuthorization({
@@ -174,7 +203,7 @@ class WalletApiDataSource {
         'action': action,
       },
     );
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
   Future<void> approveAuthorization(String authRequestId) async {
@@ -187,7 +216,7 @@ class WalletApiDataSource {
 
   Future<Map<String, dynamic>> pollAuthorization(String authRequestId) async {
     final response = await _dio.get('auth/authorization/$authRequestId');
-    return response.data as Map<String, dynamic>;
+    return _unwrap(response.data);
   }
 
 }

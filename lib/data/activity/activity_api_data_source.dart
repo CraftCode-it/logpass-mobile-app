@@ -8,13 +8,23 @@ class ActivityApiDataSource {
 
   ActivityApiDataSource(this._api);
 
-  Future<List<ServiceSummary>> getServices() async {
-    final list = await _api.getUserServices();
+  Future<List<ServiceSummary>> getServices({String? profileId}) async {
+    final list = await _api.getUserServices(profileId: profileId);
     return list.map(ServiceSummary.fromJson).toList();
   }
 
-  Future<List<ServiceActivity>> getActivity({String? service, int offset = 0, int limit = 20}) async {
-    final list = await _api.getUserActivity(service: service, offset: offset, limit: limit);
+  Future<List<ServiceActivity>> getActivity({
+    String? service,
+    int offset = 0,
+    int limit = 20,
+    String? profileId,
+  }) async {
+    final list = await _api.getUserActivity(
+      service: service,
+      offset: offset,
+      limit: limit,
+      profileId: profileId,
+    );
     return list.map(ServiceActivity.fromJson).toList();
   }
 
@@ -22,11 +32,13 @@ class ActivityApiDataSource {
     required String serviceName,
     required String actionType,
     Map<String, dynamic>? details,
+    String? profileId,
   }) async {
     await _api.postUserActivity(
       serviceName: serviceName,
       actionType: actionType,
       details: details,
+      profileId: profileId,
     );
   }
 }

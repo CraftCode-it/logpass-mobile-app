@@ -25,11 +25,13 @@ abstract class WalletRepository {
     required String zkProof,
     required List<String> zkPublicInputs,
     String? userId,
+    String? profileId,
   });
 
   Future<Map<String, dynamic>> fulfillIdentityRequest({
     required String requestId,
     String? userId,
+    String? profileId,
   });
 
   /// Generates a 6-character pairing code via POST auth/pairing/register.

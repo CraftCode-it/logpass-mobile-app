@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
@@ -42,9 +41,17 @@ class WalletRepositoryImpl implements WalletRepository {
     int minAge = 18,
     bool forced = false,
   }) async {
+    // Pobranie user_id z backendu — przekazane do verify_age aby uzyl realnego DOB
+    String? userId;
+    try {
+      final self = await getUserSelf();
+      userId = self['id'] as String?;
+    } catch (_) {}
+
     final resp = await _api.verifyAge(
       userPubkey: userPubkey,
       minAge: minAge,
+      userId: userId,
     );
 
     final verificationId = resp['verification_id'] as String;
@@ -106,19 +113,12 @@ class WalletRepositoryImpl implements WalletRepository {
 
   @override
   Future<Map<String, dynamic>> getUserSelf() async {
-    final resp = await _api.getUserSelf();
-    final data = resp['data'] as Map<String, dynamic>? ?? resp;
-    return data;
+    return _api.getUserSelf();
   }
 
   @override
   Future<Map<String, dynamic>> verifyIdentityMobywatel(String testAccount) async {
-    final resp = await _api.verifyIdentityMobywatel(testAccount: testAccount);
-    debugPrint('[mObywatel] resp.runtimeType: ${resp.runtimeType}');
-    debugPrint('[mObywatel] resp keys: ${resp.keys.toList()}');
-    final data = resp['data'] as Map<String, dynamic>? ?? resp;
-    debugPrint('[mObywatel] data keys: ${data.keys.toList()}');
-    debugPrint('[mObywatel] address runtimeType: ${data["address"]?.runtimeType}');
+    final data = await _api.verifyIdentityMobywatel(testAccount: testAccount);
     final addressRaw = data['address'];
     final address = (addressRaw is Map)
         ? Map<String, dynamic>.from(addressRaw)
@@ -132,9 +132,6 @@ class WalletRepositoryImpl implements WalletRepository {
       'address': address,
       'identity_verified': data['dob_verified'] == true,
     };
-    debugPrint('[mObywatel] mapped: first_name=${result["first_name"]}, '
-        'last_name=${result["last_name"]}, dob=${result["dob"]}, '
-        'pesel_masked=${result["pesel_masked"]}, address=$address');
     return result;
   }
 
@@ -144,12 +141,14 @@ class WalletRepositoryImpl implements WalletRepository {
     required String zkProof,
     required List<String> zkPublicInputs,
     String? userId,
+    String? profileId,
   }) async {
     return _api.fulfillRequest(
       requestId: requestId,
       zkProof: zkProof,
       zkPublicInputs: zkPublicInputs,
       userId: userId,
+      profileId: profileId,
     );
   }
 
@@ -157,8 +156,13 @@ class WalletRepositoryImpl implements WalletRepository {
   Future<Map<String, dynamic>> fulfillIdentityRequest({
     required String requestId,
     String? userId,
+    String? profileId,
   }) async {
-    return _api.fulfillIdentityRequest(requestId: requestId, userId: userId);
+    return _api.fulfillIdentityRequest(
+      requestId: requestId,
+      userId: userId,
+      profileId: profileId,
+    );
   }
 
   @override

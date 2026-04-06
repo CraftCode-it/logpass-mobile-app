@@ -240,9 +240,9 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
                   ? const SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.secondary),
                     )
-                  : const Text('Wyślij prośbę', style: TextStyle(color: Colors.white)),
+                  : const Text('Wyślij prośbę', style: TextStyle(color: AppColors.secondary)),
             ),
           ],
         ),
@@ -279,7 +279,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
               child: CircularProgressIndicator(
                 value: progress,
                 strokeWidth: 6,
-                backgroundColor: Colors.grey.shade200,
+                backgroundColor: AppColors.primary10,
                 color: _secondsRemaining > 60 ? _primaryColor : AppColors.error100,
               ),
             ),

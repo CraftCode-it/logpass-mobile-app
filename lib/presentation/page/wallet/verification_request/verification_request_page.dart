@@ -1,16 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logpass_me/core/crypto/key_provider.dart';
-import 'package:logpass_me/core/di/di_config.dart';
-import 'package:logpass_me/data/wallet/wallet_api_data_source.dart';
-import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
-import 'package:logpass_me/domain/guardian/guardian_repository.dart';
-import 'package:logpass_me/domain/wallet/wallet_repository.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_authorization_dialog.dart';
+import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 
 @RoutePage()
 class VerificationRequestPage extends HookWidget {
@@ -31,9 +28,18 @@ class VerificationRequestPage extends HookWidget {
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
-    final isProcessing = useState(false);
-    final resultMessage = useState<String?>(null);
-    final isSuccess = useState(false);
+    final cubit = useCubit<VerificationRequestCubit>();
+    final state = useCubitBuilder(cubit);
+
+    useEffect(() {
+      cubit.initialize();
+      return null;
+    }, [cubit]);
+
+    useCubitListener<VerificationRequestCubit, VerificationRequestState>(
+      cubit,
+      (_, st, ctx) => _onStateChange(ctx, cubit, st),
+    );
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -44,266 +50,273 @@ class VerificationRequestPage extends HookWidget {
           icon: Icon(Icons.close, color: colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Żądanie weryfikacji', style: typography.h6.copyWith(color: colors.text)),
+        title: Text(LocaleKeys.verificationRequest_title.tr(), style: typography.h6.copyWith(color: colors.text)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: resultMessage.value != null
-            ? _ResultView(
-                message: resultMessage.value!,
-                success: isSuccess.value,
-                colors: colors,
-                typography: typography,
-                onDone: () => Navigator.of(context).pop(true),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                children: [
-                  const SizedBox(height: 32),
-                      Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: colors.secondaryBackground,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.dividerMedium),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(Icons.shield, size: 48, color: colors.text),
-                        const SizedBox(height: 16),
-                        Text(
-                          verifierName ?? 'Nieznany weryfikator',
-                          style: typography.h4,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'żąda weryfikacji',
-                          style: typography.body1.copyWith(color: colors.secondaryText),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  _RequestDetail(
-                    icon: Icons.verified_user,
-                    title: 'Typ weryfikacji',
-                    value: requestType == 'identity'
-                        ? 'Tożsamość'
-                        : requestType == 'age_18'
-                            ? 'Wiek 18+'
-                            : requestType ?? 'Weryfikacja wieku',
-                    colors: colors,
-                    typography: typography,
-                  ),
-                  if (requestType != 'identity') ...[
-                    const SizedBox(height: 16),
-                    _RequestDetail(
-                      icon: Icons.cake,
-                      title: 'Minimalny wiek',
-                      value: '${minAge ?? 18}+',
-                      colors: colors,
-                      typography: typography,
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  _RequestDetail(
-                    icon: Icons.privacy_tip,
-                    title: 'Udostępniane dane',
-                    value: requestType == 'identity'
-                        ? 'Tylko potwierdzenie tożsamości\nBez ujawniania danych osobowych'
-                        : 'Tylko dowód ZK\nBez ujawniania danych osobowych',
-                    colors: colors,
-                    typography: typography,
-                  ),
-                  const SizedBox(height: 32),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 56,
-                          child: OutlinedButton(
-                            onPressed: isProcessing.value ? null : () => Navigator.of(context).pop(),
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: colors.buttonOutlined),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text('Odmów', style: typography.h8.copyWith(color: colors.buttonOutlinedText)),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: SizedBox(
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: isProcessing.value
-                                ? null
-                                : () {
-                                    if (requestType == 'identity') {
-                                      _approveIdentity(
-                                        isProcessing: isProcessing,
-                                        resultMessage: resultMessage,
-                                        isSuccess: isSuccess,
-                                      );
-                                    } else {
-                                      _approve(
-                                        context: context,
-                                        isProcessing: isProcessing,
-                                        resultMessage: resultMessage,
-                                        isSuccess: isSuccess,
-                                      );
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.success100,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 0,
-                            ),
-                            child: isProcessing.value
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                  )
-                                : Text('Zatwierdź', style: typography.h8.copyWith(color: Colors.white)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ),
-              ),
+        child: _buildBody(context, cubit, state, colors, typography),
       ),
     );
   }
 
-  Future<void> _approve({
-    required BuildContext context,
-    required ValueNotifier<bool> isProcessing,
-    required ValueNotifier<String?> resultMessage,
-    required ValueNotifier<bool> isSuccess,
-  }) async {
-    isProcessing.value = true;
-    try {
-      final keyProvider = getIt<KeyProvider>();
-      final repo = getIt<WalletRepository>();
-      final api = getIt<WalletApiDataSource>();
-      final getUserTokens = getIt<GetUserTokensUseCase>();
-
-      final pubkey = await keyProvider.getUserPubkeyHex();
-      String? userId;
-      try {
-        final tokens = await getUserTokens();
-        userId = tokens.sub;
-      } catch (_) {}
-
-      final credential = await repo.requestAgeVerification(
-        userPubkey: pubkey,
-        minAge: minAge ?? 18,
+  Widget _buildBody(
+    BuildContext context,
+    VerificationRequestCubit cubit,
+    VerificationRequestState state,
+    AppThemeColors colors,
+    AppTypography typography,
+  ) {
+    if (state is VerificationRequestSuccess) {
+      return _ResultView(
+        message: state.message,
+        success: true,
+        colors: colors,
+        typography: typography,
+        onDone: () => Navigator.of(context).pop(true),
       );
-
-      // F5: Block forced credentials — user is a minor, require guardian authorization
-      if (credential.forced) {
-        isProcessing.value = false;
-
-        // F8: Show guardian authorization dialog
-        final approved = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => GuardianAuthorizationDialog(
-            serviceName: verifierName ?? 'Weryfikator',
-            action: 'age_verification_${minAge ?? 18}',
-            verifierName: verifierName,
-          ),
-        );
-
-        if (approved == true) {
-          // Guardian approved — proceed with proof
-          isProcessing.value = true;
-          final proof = await repo.generateProof(credential.id);
-          if (requestId != null) {
-            await api.fulfillRequest(
-              requestId: requestId!,
-              zkProof: proof['zk_proof'] as String? ?? '',
-              zkPublicInputs: (proof['zk_public_inputs'] is List)
-                  ? (proof['zk_public_inputs'] as List).map((e) => e.toString()).toList()
-                  : <String>[],
-              userId: userId,
-            );
-          }
-          isSuccess.value = true;
-          resultMessage.value =
-              'Weryfikacja zatwierdzona przez opiekuna!\nDowód ZK przesłany do ${verifierName ?? 'weryfikatora'}.';
-        } else {
-          isSuccess.value = false;
-          resultMessage.value =
-              'Poświadczenie odrzucone — wiek poniżej ${minAge ?? 18} lat.\n'
-              'Opiekun odmówił lub czas oczekiwania upłynął.';
-        }
-        return;
-      }
-
-      final proof = await repo.generateProof(credential.id);
-
-      if (requestId != null) {
-        await api.fulfillRequest(
-          requestId: requestId!,
-          zkProof: proof['zk_proof'] as String? ?? '',
-          zkPublicInputs: (proof['zk_public_inputs'] is List)
-              ? (proof['zk_public_inputs'] as List).map((e) => e.toString()).toList()
-              : <String>[],
-          userId: userId,
-        );
-      }
-
-      isSuccess.value = true;
-      resultMessage.value = 'Weryfikacja zatwierdzona!\nDowód ZK przesłany do ${verifierName ?? 'weryfikatora'}.';
-    } catch (e) {
-      isSuccess.value = false;
-      if (e is DioException && e.response?.statusCode == 409) {
-        resultMessage.value = 'Żądanie wygasło.\nZeskanuj ponownie kod QR.';
-      } else {
-        resultMessage.value = 'Weryfikacja nieudana:\n$e';
-      }
-    } finally {
-      isProcessing.value = false;
     }
+
+    if (state is VerificationRequestFailure &&
+        state.message != '__guardian_required__') {
+      return _ResultView(
+        message: state.message,
+        success: false,
+        colors: colors,
+        typography: typography,
+        onDone: () => Navigator.of(context).pop(),
+      );
+    }
+
+    final isProcessing = state is VerificationRequestProcessing;
+    final profiles = state is VerificationRequestIdle ? state.profiles : <dynamic>[];
+    final selectedId =
+        state is VerificationRequestIdle ? state.selectedProfileId : null;
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 32),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: colors.secondaryBackground,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colors.dividerMedium),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.shield, size: 48, color: colors.text),
+                const SizedBox(height: 16),
+                Text(verifierName ?? LocaleKeys.verificationRequest_unknownVerifier.tr(), style: typography.h4),
+                const SizedBox(height: 8),
+                Text(
+                  LocaleKeys.verificationRequest_requestsVerification.tr(),
+                  style: typography.body1.copyWith(color: colors.secondaryText),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          _RequestDetail(
+            icon: Icons.verified_user,
+            title: LocaleKeys.verificationRequest_verificationType.tr(),
+            value: requestType == 'identity'
+                ? LocaleKeys.verificationRequest_typeIdentity.tr()
+                : requestType == 'age_18'
+                    ? LocaleKeys.verificationRequest_typeAge18.tr()
+                    : requestType ?? LocaleKeys.verificationRequest_typeAgeGeneric.tr(),
+            colors: colors,
+            typography: typography,
+          ),
+          if (requestType != 'identity') ...[
+            const SizedBox(height: 16),
+            _RequestDetail(
+              icon: Icons.cake,
+              title: LocaleKeys.verificationRequest_minAge.tr(),
+              value: LocaleKeys.verificationRequest_minAgeValue.tr(namedArgs: {'age': '${minAge ?? 18}'}),
+              colors: colors,
+              typography: typography,
+            ),
+          ],
+          const SizedBox(height: 16),
+          _RequestDetail(
+            icon: Icons.privacy_tip,
+            title: LocaleKeys.verificationRequest_sharedData.tr(),
+            value: requestType == 'identity'
+                ? LocaleKeys.verificationRequest_sharedDataIdentity.tr()
+                : LocaleKeys.verificationRequest_sharedDataZk.tr(),
+            colors: colors,
+            typography: typography,
+          ),
+          const SizedBox(height: 24),
+          if (profiles.isNotEmpty)
+            _ProfilePicker(
+              profiles: profiles,
+              selectedId: selectedId,
+              onSelected: cubit.selectProfile,
+              colors: colors,
+              typography: typography,
+            ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 56,
+                  child: OutlinedButton(
+                    onPressed: isProcessing ? null : () => Navigator.of(context).pop(),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: colors.buttonOutlined),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(
+                      LocaleKeys.verificationRequest_deny.tr(),
+                      style: typography.h8.copyWith(color: colors.buttonOutlinedText),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: isProcessing
+                        ? null
+                        : () {
+                            if (requestType == 'identity') {
+                              cubit.approveIdentityVerification(
+                                requestId: requestId,
+                                verifierName: verifierName,
+                              );
+                            } else {
+                              cubit.approveAgeVerification(
+                                requestId: requestId,
+                                verifierName: verifierName,
+                                minAge: minAge,
+                              );
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.success100,
+                      foregroundColor: colors.buttonFilledText,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
+                    ),
+                    child: isProcessing
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: colors.buttonFilledText),
+                          )
+                        : Text(
+                            LocaleKeys.verificationRequest_approve.tr(),
+                            style: typography.h8.copyWith(color: colors.buttonFilledText),
+                          ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
   }
 
-  Future<void> _approveIdentity({
-    required ValueNotifier<bool> isProcessing,
-    required ValueNotifier<String?> resultMessage,
-    required ValueNotifier<bool> isSuccess,
-  }) async {
-    isProcessing.value = true;
-    try {
-      final api = getIt<WalletApiDataSource>();
-      final getUserTokens = getIt<GetUserTokensUseCase>();
-      String? userId;
-      try {
-        final tokens = await getUserTokens();
-        userId = tokens.sub;
-      } catch (_) {}
-      if (requestId != null) {
-        await api.fulfillIdentityRequest(requestId: requestId!, userId: userId);
-      }
-      isSuccess.value = true;
-      resultMessage.value =
-          'Tożsamość udostępniona serwisowi ${verifierName ?? "weryfikator"}.';
-    } catch (e) {
-      isSuccess.value = false;
-      if (e is DioException && e.response?.statusCode == 409) {
-        resultMessage.value = 'Żądanie wygasło.\nZeskanuj ponownie kod QR.';
+  Future<void> _onStateChange(
+    BuildContext context,
+    VerificationRequestCubit cubit,
+    VerificationRequestState state,
+  ) async {
+    if (state is VerificationRequestFailure &&
+        state.message == '__guardian_required__') {
+      final approved = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => GuardianAuthorizationDialog(
+          serviceName: verifierName ?? LocaleKeys.verificationRequest_guardianServiceName.tr(),
+          action: 'age_verification_${minAge ?? 18}',
+          verifierName: verifierName,
+        ),
+      );
+      if (approved == true) {
+        await cubit.approveAgeVerification(
+          requestId: requestId,
+          verifierName: verifierName,
+          minAge: minAge,
+          guardianApproved: true,
+        );
       } else {
-        resultMessage.value = 'Weryfikacja tożsamości nieudana:\n$e';
+        cubit.setGuardianDenied(minAge);
       }
-    } finally {
-      isProcessing.value = false;
     }
+  }
+}
+
+// ─── Profile picker ─────────────────────────────────────────────────────────────
+class _ProfilePicker extends StatelessWidget {
+  final List<dynamic> profiles;
+  final String? selectedId;
+  final void Function(String id) onSelected;
+  final dynamic colors;
+  final dynamic typography;
+
+  const _ProfilePicker({
+    required this.profiles,
+    required this.selectedId,
+    required this.onSelected,
+    required this.colors,
+    required this.typography,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocaleKeys.verificationRequest_profileLabel.tr(),
+          style: typography.caption?.copyWith(color: colors.secondaryText) ??
+              TextStyle(fontSize: 12, color: colors.secondaryText),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: profiles.map<Widget>((p) {
+            final isSelected = p.id == selectedId;
+            return GestureDetector(
+              onTap: () => onSelected(p.id as String),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected ? colors.buttonFilled : colors.secondaryBackground,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected ? colors.buttonFilled : colors.dividerMedium,
+                    width: 1.5,
+                  ),
+                ),
+                child: Text(
+                  p.displayName as String,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isSelected ? colors.buttonFilledText : colors.text,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
   }
 }
 
@@ -335,7 +348,7 @@ class _ResultView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            success ? 'Sukces' : 'Błąd',
+            success ? LocaleKeys.verificationRequest_success.tr() : LocaleKeys.verificationRequest_failure.tr(),
             style: typography.h3.copyWith(
               color: success ? AppColors.success100 : AppColors.error100,
             ),
@@ -357,7 +370,10 @@ class _ResultView extends StatelessWidget {
                 foregroundColor: colors.buttonFilledText,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text('Gotowe', style: typography.h8.copyWith(color: colors.buttonFilledText)),
+              child: Text(
+                LocaleKeys.verificationRequest_done.tr(),
+                style: typography.h8.copyWith(color: colors.buttonFilledText),
+              ),
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:logpass_me/domain/identity/identity_field.dart';
 import 'package:logpass_me/domain/identity/identity_profile_type.dart';
 
@@ -16,6 +17,19 @@ class IdentityProfile {
     required this.type,
     required this.fields,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IdentityProfile &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          displayName == other.displayName &&
+          type == other.type &&
+          listEquals(fields, other.fields);
+
+  @override
+  int get hashCode => Object.hash(id, displayName, type, Object.hashAll(fields));
 
   IdentityProfile copyWith({
     String? displayName,

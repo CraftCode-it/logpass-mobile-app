@@ -152,7 +152,11 @@ class MainPage extends HookWidget {
     BuildContext context,
   ) {
     state.maybeWhen(
-      error: (message) {},
+      error: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      },
       openAction: (action) {
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(

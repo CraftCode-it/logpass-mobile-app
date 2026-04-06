@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/guardian/guardian.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -31,12 +33,12 @@ class GuardianPage extends HookWidget {
       backgroundColor: colors.background,
       appBar: AppBar(
         backgroundColor: colors.background,
-        title: Text('Opiekunowie', style: typography.h2),
+        title: Text(LocaleKeys.guardian_title.tr(), style: typography.h2),
         actions: [
           if (isMinor)
             IconButton(
               icon: const Icon(Icons.qr_code_scanner),
-              tooltip: 'Dodaj opiekuna (skanuj QR)',
+              tooltip: LocaleKeys.guardian_addGuardianTooltip.tr(),
               onPressed: () => _openGuardianQrScanner(context, cubit),
             ),
         ],
@@ -61,11 +63,11 @@ class GuardianPage extends HookWidget {
           children: [
             Icon(Icons.error_outline, size: 48, color: AppColors.error100),
             const SizedBox(height: 12),
-            Text('Błąd: ${state.message}',
+            Text(LocaleKeys.guardian_error.tr(namedArgs: {'message': state.message}),
                 style: typography.body1.copyWith(color: colors.secondaryText),
                 textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: cubit.load, child: const Text('Spróbuj ponownie')),
+            ElevatedButton(onPressed: cubit.load, child: Text(LocaleKeys.guardian_retry.tr())),
           ],
         ),
       );
@@ -80,7 +82,7 @@ class GuardianPage extends HookWidget {
             const SizedBox(height: 16),
             Center(
               child: Text(
-                isMinor ? 'Brak opiekunów' : 'Brak podopiecznych',
+                isMinor ? LocaleKeys.guardian_noGuardians.tr() : LocaleKeys.guardian_noDependants.tr(),
                 style: typography.h7.copyWith(color: colors.secondaryText),
               ),
             ),
@@ -88,20 +90,20 @@ class GuardianPage extends HookWidget {
             if (isMinor)
               Center(
                 child: Text(
-                  'Skanuj QR kod opiekuna, aby go dodać',
+                  LocaleKeys.guardian_scanGuardianHint.tr(),
                   style: typography.body1.copyWith(color: colors.lightText),
                   textAlign: TextAlign.center,
                 ),
               ),
           ] else ...[
             if (state.myGuardians.isNotEmpty) ...[
-              Text('Moi opiekunowie', style: typography.h6),
+              Text(LocaleKeys.guardian_myGuardians.tr(), style: typography.h6),
               const SizedBox(height: 8),
               ...state.myGuardians.map((g) => _GuardianCard(guardian: g, colors: colors, typography: typography)),
               const SizedBox(height: 24),
             ],
             if (state.myMinors.isNotEmpty) ...[
-              Text('Moi podopieczni', style: typography.h6),
+              Text(LocaleKeys.guardian_myDependants.tr(), style: typography.h6),
               const SizedBox(height: 8),
               ...state.myMinors.map((g) => _GuardianCard(
                     guardian: g,
@@ -123,18 +125,18 @@ class GuardianPage extends HookWidget {
     final relationshipType = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Wybierz rodzaj relacji'),
+        title: Text(LocaleKeys.guardian_relationDialogTitle.tr()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.family_restroom),
-              title: const Text('Rodzic'),
+              title: Text(LocaleKeys.guardian_relationParent.tr()),
               onTap: () => Navigator.of(ctx).pop('parent'),
             ),
             ListTile(
               leading: const Icon(Icons.supervised_user_circle),
-              title: const Text('Opiekun prawny'),
+              title: Text(LocaleKeys.guardian_relationLegal.tr()),
               onTap: () => Navigator.of(ctx).pop('legal_guardian'),
             ),
           ],
@@ -142,7 +144,7 @@ class GuardianPage extends HookWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Anuluj'),
+            child: Text(LocaleKeys.guardian_cancel.tr()),
           ),
         ],
       ),
@@ -188,15 +190,15 @@ class _GuardianCard extends StatelessWidget {
     switch (guardian.status) {
       case 'active':
         statusColor = AppColors.success100;
-        statusLabel = 'Aktywny';
+        statusLabel = LocaleKeys.guardian_statusActive.tr();
         break;
       case 'pending':
-        statusColor = Colors.orange;
-        statusLabel = 'Oczekuje';
+        statusColor = AppColors.warning;
+        statusLabel = LocaleKeys.guardian_statusPending.tr();
         break;
       default:
         statusColor = AppColors.error100;
-        statusLabel = 'Odwołany';
+        statusLabel = LocaleKeys.guardian_statusRevoked.tr();
     }
 
     return Container(
@@ -251,7 +253,7 @@ class _GuardianCard extends StatelessWidget {
                       side: BorderSide(color: AppColors.error100),
                       foregroundColor: AppColors.error100,
                     ),
-                    child: const Text('Odrzuć'),
+                    child: Text(LocaleKeys.guardian_deny.tr()),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -259,7 +261,7 @@ class _GuardianCard extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: onConfirm,
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.success100),
-                    child: const Text('Zatwierdź'),
+                    child: Text(LocaleKeys.guardian_approve.tr()),
                   ),
                 ),
               ],
@@ -286,12 +288,12 @@ class _GuardianQrScanPageState extends State<_GuardianQrScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Skanuj QR opiekuna')),
+      appBar: AppBar(title: Text(LocaleKeys.guardian_scanTitle.tr())),
       body: MobileScanner(
         onDetect: (capture) {
           if (_scanned) return;
-          final barcode = capture.barcodes.first;
-          final raw = barcode.rawValue;
+          final barcode = capture.barcodes.firstOrNull;
+          final raw = barcode?.rawValue;
           if (raw == null) return;
           final uuidRegex = RegExp(
             r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
@@ -301,7 +303,7 @@ class _GuardianQrScanPageState extends State<_GuardianQrScanPage> {
             widget.onScanned(raw);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Nieprawidłowy QR kod — oczekiwano LogPass ID')),
+              SnackBar(content: Text(LocaleKeys.guardian_invalidQrCode.tr())),
             );
           }
         },

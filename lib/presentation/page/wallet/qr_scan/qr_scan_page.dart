@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/data/wallet/verifier_request.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -16,6 +18,8 @@ class QrScanPage extends HookWidget {
   Widget build(BuildContext context) {
     final typography = useAppTypography();
     final hasNavigated = useState(false);
+    final controller = useMemoized(MobileScannerController.new);
+    useEffect(() => controller.dispose, [controller]);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -23,14 +27,15 @@ class QrScanPage extends HookWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.secondary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Skanuj kod QR', style: typography.h6.copyWith(color: Colors.white)),
+        title: Text(LocaleKeys.qrScan_title.tr(), style: typography.h6.copyWith(color: AppColors.secondary)),
       ),
       body: Stack(
         children: [
           MobileScanner(
+            controller: controller,
             onDetect: (capture) {
               if (hasNavigated.value) return;
               final barcode = capture.barcodes.firstOrNull;
@@ -40,6 +45,7 @@ class QrScanPage extends HookWidget {
               try {
                 final request = VerifierRequest.fromQrPayload(rawValue);
                 hasNavigated.value = true;
+                controller.stop();
                 AutoRouter.of(context).push(VerificationRequestRoute(
                   requestId: request.requestId,
                   verifierName: request.verifier,
@@ -53,16 +59,14 @@ class QrScanPage extends HookWidget {
                 );
                 if (uuidRegex.hasMatch(rawValue)) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Zeskanowano LogPass ID. Aby dodać opiekuna, użyj funkcji Opiekunowie.',
-                      ),
-                      duration: Duration(seconds: 4),
+                    SnackBar(
+                      content: Text(LocaleKeys.qrScan_logpassIdScanned.tr()),
+                      duration: const Duration(seconds: 4),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Nierozpoznany kod QR')),
+                    SnackBar(content: Text(LocaleKeys.qrScan_unknownQr.tr())),
                   );
                 }
               }
@@ -83,8 +87,8 @@ class QrScanPage extends HookWidget {
             left: 24,
             right: 24,
             child: Text(
-              'Skieruj kamerę na kod QR weryfikatora',
-              style: typography.body1.copyWith(color: Colors.white),
+              LocaleKeys.qrScan_hint.tr(),
+              style: typography.body1.copyWith(color: AppColors.secondary),
               textAlign: TextAlign.center,
             ),
           ),

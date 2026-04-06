@@ -176,34 +176,34 @@ class _StatusBanner extends StatelessWidget {
           Icon(
             isValid ? Icons.verified : Icons.gpp_bad,
             size: 48,
-            color: Colors.white,
+            color: AppColors.secondary,
           ),
           const SizedBox(height: 12),
           Text(
             credential.displayType,
-            style: typography.h3.copyWith(color: Colors.white),
+            style: typography.h3.copyWith(color: AppColors.secondary),
           ),
           const SizedBox(height: 4),
           Text(
             isValid ? 'Verified & Valid' : 'Invalid / Expired',
-            style: typography.body1.copyWith(color: Colors.white.withOpacity(0.9)),
+            style: typography.body1.copyWith(color: AppColors.secondary.withOpacity(0.9)),
           ),
           if (credential.isAnchored) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: AppColors.secondary.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.link, size: 14, color: Colors.white),
+                  const Icon(Icons.link, size: 14, color: AppColors.secondary),
                   const SizedBox(width: 4),
                   Text(
                     'On-Chain Anchored',
-                    style: typography.info2.copyWith(color: Colors.white),
+                    style: typography.info2.copyWith(color: AppColors.secondary),
                   ),
                 ],
               ),

@@ -12,18 +12,20 @@ class MessengerCubit extends Cubit<MessengerState> {
   final SubscribeToIncomingActionsUseCase _subscribeToIncomingActionsUseCase;
 
   Timer? _timer;
+  StreamSubscription? _actionSubscription;
 
   MessengerCubit(this._subscribeToIncomingActionsUseCase) : super(MessengerState.idle());
 
   @override
   Future<void> close() async {
     _timer?.cancel();
+    await _actionSubscription?.cancel();
     return super.close();
   }
 
   void initialize(bool handleActions) {
     if (handleActions) {
-      _subscribeToIncomingActionsUseCase().listen((event) {
+      _actionSubscription = _subscribeToIncomingActionsUseCase().listen((event) {
         emit(MessengerState.action(event));
         _setupTimer();
       });

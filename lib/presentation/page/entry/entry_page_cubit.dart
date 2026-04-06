@@ -25,15 +25,20 @@ class EntryPageCubit extends Cubit<EntryPageState> {
   ) : super(EntryPageState.idle());
 
   Future<void> initialize() async {
-    await _setupInitialActionUseCase();
+    try {
+      await _setupInitialActionUseCase();
 
-    final isFirstRunApp = await _isFirstRunAppUseCase();
+      final isFirstRunApp = await _isFirstRunAppUseCase();
 
-    if(isFirstRunApp) {
-      await _logoutUseCase();
+      if (isFirstRunApp) {
+        await _logoutUseCase();
+        await _onboarding();
+      } else {
+        await _loadCredential();
+      }
+    } catch (e) {
+      // Corrupt storage or unexpected error -- fall back to onboarding
       await _onboarding();
-    } else {
-      await _loadCredential();
     }
   }
 

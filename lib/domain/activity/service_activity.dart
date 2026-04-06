@@ -26,6 +26,20 @@ class ServiceActivity {
             : DateTime.now(),
       );
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ServiceActivity &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          serviceName == other.serviceName &&
+          serviceUrl == other.serviceUrl &&
+          actionType == other.actionType &&
+          createdAt == other.createdAt;
+
+  @override
+  int get hashCode => Object.hash(id, serviceName, serviceUrl, actionType, createdAt);
+
   String get actionLabel {
     switch (actionType) {
       case 'login':
@@ -45,6 +59,17 @@ class ServiceActivity {
 }
 
 class ServiceSummary {
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ServiceSummary &&
+          runtimeType == other.runtimeType &&
+          serviceName == other.serviceName &&
+          lastActivity == other.lastActivity &&
+          actionCount == other.actionCount;
+
+  @override
+  int get hashCode => Object.hash(serviceName, lastActivity, actionCount);
   final String serviceName;
   final DateTime lastActivity;
   final int actionCount;

@@ -38,6 +38,22 @@ class Guardian {
   bool get isActive => status == 'active';
   bool get isPending => status == 'pending';
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Guardian &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          userId == other.userId &&
+          firstName == other.firstName &&
+          lastName == other.lastName &&
+          status == other.status &&
+          createdAt == other.createdAt &&
+          relationshipType == other.relationshipType;
+
+  @override
+  int get hashCode => Object.hash(id, userId, firstName, lastName, status, createdAt, relationshipType);
+
   factory Guardian.fromJson(Map<String, dynamic> json) => Guardian(
         id: json['id'] as String,
         userId: json['user_id'] as String? ?? json['guardian_user_id'] as String? ?? '',

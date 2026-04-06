@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
@@ -10,10 +11,14 @@ class WalletApiKeyInterceptor extends Interceptor {
   WalletApiKeyInterceptor(this._storage);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final apiKey = await _storage.read(key: _apiKeyStorageKey);
-    if (apiKey != null) {
-      options.headers['X-API-Key'] = apiKey;
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    try {
+      final apiKey = await _storage.read(key: _apiKeyStorageKey);
+      if (apiKey != null) {
+        options.headers['X-API-Key'] = apiKey;
+      }
+    } catch (e) {
+      debugPrint('WalletApiKeyInterceptor: failed to read API key: $e');
     }
     handler.next(options);
   }

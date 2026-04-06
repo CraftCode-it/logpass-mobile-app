@@ -42,6 +42,7 @@ class MainPageCubit extends Cubit<MainPageState> {
   StreamSubscription<IncomingAction>? _incomingActionsFromLinkSubscription;
   StreamSubscription<IncomingAction>? _incomingActionsFromBackgroundSubscription;
   StreamSubscription<IncomingAction>? _incomingActionsSubscription;
+  StreamSubscription<IncomingAction>? _refreshCodeSubscription;
 
   MainPageCubit(
     this._setupWebSocketChannelUseCase,
@@ -127,13 +128,14 @@ class MainPageCubit extends Cubit<MainPageState> {
     await _incomingActionsFromLinkSubscription?.cancel();
     await _incomingActionsSubscription?.cancel();
     await _incomingActionsFromBackgroundSubscription?.cancel();
+    await _refreshCodeSubscription?.cancel();
     await _switchPreLoginActionHandlerUseCase(true);
     _closeWebSocketChannel();
     return super.close();
   }
 
   void _subscribeToRefreshCode() {
-    _subscribeToRefreshCodeActionsUseCase().listen((action) async {
+    _refreshCodeSubscription = _subscribeToRefreshCodeActionsUseCase().listen((action) async {
       await _markAsReceived(action);
       await _refreshUserCode();
     });

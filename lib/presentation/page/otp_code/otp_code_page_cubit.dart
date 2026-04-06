@@ -30,6 +30,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   late DateTime _resendTimestamp;
 
   String _code = '';
+  StreamSubscription<String>? _smsSubscription;
 
   OTPCodePageCubit(
     this._listenSmsCodeUseCase,
@@ -41,6 +42,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   @override
   Future<void> close() async {
+    await _smsSubscription?.cancel();
     await _disposeSmsCodeListenerUseCase();
     return super.close();
   }
@@ -130,7 +132,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   }
 
   void _listenSmsCode() {
-    _listenSmsCodeUseCase().listen((code) {
+    _smsSubscription = _listenSmsCodeUseCase().listen((code) {
       emit(OTPCodePageState.otpAutofill(code));
     });
   }

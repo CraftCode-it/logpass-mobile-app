@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/domain/identity/identity_field.dart';
 import 'package:logpass_me/domain/identity/identity_profile.dart';
 import 'package:logpass_me/domain/identity/identity_profile_type.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/identity/identity_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
@@ -52,12 +54,12 @@ class IdentityPage extends HookWidget {
       backgroundColor: colors.background,
       appBar: AppBar(
         backgroundColor: colors.background,
-        title: Text('Tożsamość', style: typography.h2),
+        title: Text(LocaleKeys.identity_title.tr(), style: typography.h2),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => _showAddCustomProfileDialog(context, cubit),
-            tooltip: 'Dodaj profil',
+            tooltip: LocaleKeys.identity_addProfileTooltip.tr(),
           ),
         ],
       ),
@@ -73,7 +75,7 @@ class IdentityPage extends HookWidget {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Weryfikowanie przez mObywatel...'),
+            Text(LocaleKeys.identity_verifyingMobywatel.tr()),
           ],
         ),
       );
@@ -87,7 +89,7 @@ class IdentityPage extends HookWidget {
       );
     }
     if (state is IdentityError) {
-      return Center(child: Text('Błąd: ${state.message}'));
+      return Center(child: Text(LocaleKeys.identity_error.tr(namedArgs: {'message': state.message})));
     }
     return const Center(child: CircularProgressIndicator());
   }
@@ -97,16 +99,16 @@ class IdentityPage extends HookWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Nowy profil'),
+        title: Text(LocaleKeys.identity_newProfileTitle.tr()),
         content: TextField(
           controller: nameController,
-          decoration: const InputDecoration(hintText: 'Nazwa profilu'),
+          decoration: InputDecoration(hintText: LocaleKeys.identity_profileNameHint.tr()),
           autofocus: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Anuluj'),
+            child: Text(LocaleKeys.identity_cancel.tr()),
           ),
           TextButton(
             onPressed: () {
@@ -116,7 +118,7 @@ class IdentityPage extends HookWidget {
                 Navigator.of(ctx).pop();
               }
             },
-            child: const Text('Utwórz'),
+            child: Text(LocaleKeys.identity_create.tr()),
           ),
         ],
       ),
@@ -156,7 +158,6 @@ class _IdentityBody extends HookWidget {
           _MobywatelSection(
             cubit: cubit,
             verified: identityVerified,
-            context: context,
           ),
         // Profile switcher
         _ProfileSwitcher(
@@ -193,7 +194,7 @@ class _IdentityBody extends HookWidget {
               const SizedBox(height: AppDimens.m),
               TextButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text('Dodaj pole'),
+                label: Text(LocaleKeys.identity_addField.tr()),
                 onPressed: () =>
                     _showAddFieldDialog(context, activeProfile.id, cubit),
               ),
@@ -210,19 +211,19 @@ class _IdentityBody extends HookWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Usuń profil'),
-        content: const Text('Czy na pewno chcesz usunąć ten profil?'),
+        title: Text(LocaleKeys.identity_deleteProfileTitle.tr()),
+        content: Text(LocaleKeys.identity_deleteProfileContent.tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Anuluj'),
+            child: Text(LocaleKeys.identity_cancel.tr()),
           ),
           TextButton(
             onPressed: () {
               cubit.deleteProfile(profileId);
               Navigator.of(ctx).pop();
             },
-            child: const Text('Usuń', style: TextStyle(color: AppColors.error100)),
+            child: Text(LocaleKeys.identity_delete.tr(), style: const TextStyle(color: AppColors.error100)),
           ),
         ],
       ),
@@ -357,16 +358,14 @@ class _ProfileSwitcher extends HookWidget {
 class _MobywatelSection extends HookWidget {
   final IdentityCubit cubit;
   final bool verified;
-  final BuildContext context;
 
   const _MobywatelSection({
     required this.cubit,
     required this.verified,
-    required this.context,
   });
 
   @override
-  Widget build(BuildContext ctx) {
+  Widget build(BuildContext context) {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
 
@@ -385,7 +384,7 @@ class _MobywatelSection extends HookWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Zweryfikowano przez mObywatel',
+                LocaleKeys.identity_mobywatelVerified.tr(),
                 style: typography.body2.copyWith(color: AppColors.success100),
               ),
             ),
@@ -400,7 +399,7 @@ class _MobywatelSection extends HookWidget {
         width: double.infinity,
         child: OutlinedButton.icon(
           icon: const Icon(Icons.account_balance),
-          label: const Text('Zweryfikuj przez mObywatel'),
+          label: Text(LocaleKeys.identity_mobywatelVerifyButton.tr()),
           onPressed: () => _showMobywatelDialog(context, cubit),
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -415,7 +414,7 @@ class _MobywatelSection extends HookWidget {
     showDialog<void>(
       context: ctx,
       builder: (dialogCtx) => SimpleDialog(
-        title: const Text('Wybierz profil testowy mObywatel'),
+        title: Text(LocaleKeys.identity_mobywatelDialogTitle.tr()),
         children: _kMobywatelTestAccounts.map((entry) {
           final (accountKey, label) = entry;
           return SimpleDialogOption(
@@ -493,7 +492,7 @@ class _FieldTile extends HookWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Edytuj: ${field.label}'),
+        title: Text(LocaleKeys.identity_editField.tr(namedArgs: {'label': field.label})),
         content: TextField(
           controller: controller,
           autofocus: true,
@@ -502,14 +501,14 @@ class _FieldTile extends HookWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Anuluj'),
+            child: Text(LocaleKeys.identity_cancel.tr()),
           ),
           TextButton(
             onPressed: () {
               onEdit?.call(controller.text.trim());
               Navigator.of(ctx).pop();
             },
-            child: const Text('Zapisz'),
+            child: Text(LocaleKeys.identity_fieldEditSave.tr()),
           ),
         ],
       ),

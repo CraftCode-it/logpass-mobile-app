@@ -26,10 +26,10 @@ class WebSocketManager {
     final userToken = await _getUserTokensUseCase();
 
     final host = device.webSocketUrl;
-    final queryParams = '?access_token=${userToken.accessToken.token}';
 
     _webSocketChannel = IOWebSocketChannel.connect(
-      Uri.parse('$host$queryParams'),
+      Uri.parse(host),
+      headers: {'Authorization': userToken.accessToken.toAuthorizationHeader()},
       pingInterval: const Duration(seconds: 1),
     );
 

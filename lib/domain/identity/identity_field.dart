@@ -60,6 +60,19 @@ class IdentityField {
     this.isLocked = false,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IdentityField &&
+          runtimeType == other.runtimeType &&
+          key == other.key &&
+          label == other.label &&
+          value == other.value &&
+          isLocked == other.isLocked;
+
+  @override
+  int get hashCode => Object.hash(key, label, value, isLocked);
+
   IdentityField copyWith({String? value, bool? isLocked}) {
     return IdentityField(
       key: key,
