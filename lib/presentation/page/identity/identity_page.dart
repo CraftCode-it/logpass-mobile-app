@@ -69,12 +69,12 @@ class IdentityPage extends HookWidget {
 
   Widget _buildBody(IdentityState state, IdentityCubit cubit) {
     if (state is IdentityVerifying || state is IdentityVerified) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
             Text(LocaleKeys.identity_verifyingMobywatel.tr()),
           ],
         ),

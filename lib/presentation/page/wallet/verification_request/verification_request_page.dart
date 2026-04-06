@@ -207,7 +207,7 @@ class VerificationRequestPage extends HookWidget {
                       elevation: 0,
                     ),
                     child: isProcessing
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 24,
                             height: 24,
                             child: CircularProgressIndicator(
