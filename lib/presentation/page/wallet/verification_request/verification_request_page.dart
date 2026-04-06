@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/identity/identity_profile.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_authorization_dialog.dart';
 import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_cubit.dart';
@@ -260,11 +261,11 @@ class VerificationRequestPage extends HookWidget {
 
 // ─── Profile picker ─────────────────────────────────────────────────────────────
 class _ProfilePicker extends StatelessWidget {
-  final List<dynamic> profiles;
+  final List<IdentityProfile> profiles;
   final String? selectedId;
   final void Function(String id) onSelected;
-  final dynamic colors;
-  final dynamic typography;
+  final AppThemeColors colors;
+  final AppTypography typography;
 
   const _ProfilePicker({
     required this.profiles,
@@ -281,8 +282,7 @@ class _ProfilePicker extends StatelessWidget {
       children: [
         Text(
           LocaleKeys.verificationRequest_profileLabel.tr(),
-          style: typography.caption?.copyWith(color: colors.secondaryText) ??
-              TextStyle(fontSize: 12, color: colors.secondaryText),
+          style: typography.info2.copyWith(color: colors.secondaryText),
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -291,20 +291,20 @@ class _ProfilePicker extends StatelessWidget {
           children: profiles.map<Widget>((p) {
             final isSelected = p.id == selectedId;
             return GestureDetector(
-              onTap: () => onSelected(p.id as String),
+              onTap: () => onSelected(p.id),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected ? colors.buttonFilled : colors.secondaryBackground,
+                  color: isSelected ? colors.buttonFill : colors.secondaryBackground,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isSelected ? colors.buttonFilled : colors.dividerMedium,
+                    color: isSelected ? colors.buttonFill : colors.dividerMedium,
                     width: 1.5,
                   ),
                 ),
                 child: Text(
-                  p.displayName as String,
+                  p.displayName,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,

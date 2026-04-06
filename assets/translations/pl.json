@@ -73,7 +73,12 @@
     "pastActions": "Zobacz poprzednie zadania",
     "actionTypeAuthorization": "Autoryzacja",
     "pendingItemTimeLeft": "Aktywne przez {}",
-    "codeCopied": "Kod został skopiowany"
+    "codeCopied": "Kod został skopiowany",
+    "recentActivityLabel": "Ostatnie weryfikacje",
+    "recentActivityEmpty": "Brak historii weryfikacji",
+    "recentActivityActionVerification": "Weryfikacja",
+    "recentActivityActionIdentity": "Tożsamość",
+    "recentActivityActionAge": "Weryfikacja wieku"
   },
   "authorize": {
     "title": "Autoryzuj działanie",
@@ -164,7 +169,9 @@
       "other": "{} sesji"
     },
     "noServices": "To konto nie ma żadnych powiązanych usług. ",
-    "noActiveSessions": "Brak aktywnych sesji"
+    "noActiveSessions": "Brak aktywnych sesji",
+    "activitySummary": "{count} weryfikacji · ostatnia: {date}",
+    "activitySectionHeader": "Historia weryfikacji"
   },
   "serviceDetails": {
     "title": "Szczegóły zabezpieczeń",

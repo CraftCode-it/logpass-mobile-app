@@ -73,7 +73,12 @@
     "pastActions": "See past events",
     "actionTypeAuthorization": "Authorization",
     "pendingItemTimeLeft": "Closes in {}",
-    "codeCopied": "Code copied to clipboard"
+    "codeCopied": "Code copied to clipboard",
+    "recentActivityLabel": "Recent verifications",
+    "recentActivityEmpty": "No verification history",
+    "recentActivityActionVerification": "Verification",
+    "recentActivityActionIdentity": "Identity",
+    "recentActivityActionAge": "Age verification"
   },
   "authorize": {
     "title": "Authorize operation",
@@ -162,7 +167,9 @@
       "other": "{} sessions"
     },
     "noServices": "You have no connected services.",
-    "noActiveSessions": "No active sessions"
+    "noActiveSessions": "No active sessions",
+    "activitySummary": "{count} verifications · last: {date}",
+    "activitySectionHeader": "Verification history"
   },
   "serviceDetails": {
     "title": "Service details",

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/core/di/di_config.dart';
+import 'package:logpass_me/data/activity/activity_api_data_source.dart';
+import 'package:logpass_me/domain/activity/service_activity.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
@@ -95,6 +98,11 @@ class _HomePageContent extends HookWidget {
             : CustomAppBar.smallLogo(
                 systemUiOverlayStyle: overlayStyle,
                 logoColor: colors.logoSpecial,
+                trailing: IconButton(
+                  icon: Icon(Icons.qr_code_scanner, color: colors.text),
+                  tooltip: LocaleKeys.qrScan_title.tr(),
+                  onPressed: () => AutoRouter.of(context).push(const QrScanRoute()),
+                ),
               ).copyWith(
                 predefinedBackground: colors.codeContainerBackground,
               ),
@@ -147,6 +155,8 @@ class _PendingActions extends HookWidget {
             orElse: () => const SizedBox.shrink(),
             loadInProgress: () => const Loader(),
           ),
+          const SizedBox(height: AppDimens.l),
+          const _RecentActivitySection(),
           const SizedBox(height: AppDimens.l),
           _PastEventsButton(),
           const SizedBox(height: AppDimens.xl),
@@ -356,5 +366,130 @@ class _PastEventsButton extends HookWidget {
         ),
       ),
     );
+  }
+}
+
+class _RecentActivitySection extends HookWidget {
+  const _RecentActivitySection();
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+    final activities = useState<List<ServiceActivity>>([]);
+    final isLoading = useState(true);
+
+    useEffect(() {
+      final dataSource = getIt<ActivityApiDataSource>();
+      dataSource.getActivity(limit: 5).then((result) {
+        activities.value = result;
+        isLoading.value = false;
+      }).catchError((_) {
+        isLoading.value = false;
+      });
+      return null;
+    }, const []);
+
+    if (isLoading.value) return const SizedBox.shrink();
+    if (activities.value.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocaleKeys.home_recentActivityLabel.tr(),
+          style: typography.h8,
+        ),
+        const SizedBox(height: AppDimens.s),
+        ...activities.value.map(
+          (a) => _RecentActivityRow(activity: a, colors: colors, typography: typography),
+        ),
+        const SizedBox(height: AppDimens.s),
+      ],
+    );
+  }
+}
+
+class _RecentActivityRow extends StatelessWidget {
+  final ServiceActivity activity;
+  final AppThemeColors colors;
+  final AppTypography typography;
+
+  const _RecentActivityRow({
+    required this.activity,
+    required this.colors,
+    required this.typography,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.s),
+      child: Row(
+        children: [
+          Container(
+            width: AppDimens.l,
+            height: AppDimens.l,
+            decoration: BoxDecoration(
+              color: colors.buttonFill.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              _iconForAction(activity.actionType),
+              size: 16,
+              color: colors.buttonFill,
+            ),
+          ),
+          const SizedBox(width: AppDimens.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(activity.serviceName, style: typography.body3),
+                Text(
+                  '${_labelForAction(activity.actionType)} · ${_formatDate(activity.createdAt)}',
+                  style: typography.info2.copyWith(color: colors.secondaryText),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _iconForAction(String actionType) {
+    switch (actionType) {
+      case 'identity':
+        return Icons.person_outlined;
+      case 'age_18':
+      case 'verification':
+        return Icons.verified_user_outlined;
+      case 'login':
+        return Icons.login_outlined;
+      default:
+        return Icons.shield_outlined;
+    }
+  }
+
+  String _labelForAction(String actionType) {
+    switch (actionType) {
+      case 'identity':
+        return LocaleKeys.home_recentActivityActionIdentity.tr();
+      case 'age_18':
+      case 'verification':
+        return LocaleKeys.home_recentActivityActionAge.tr();
+      default:
+        return LocaleKeys.home_recentActivityActionVerification.tr();
+    }
+  }
+
+  String _formatDate(DateTime dt) {
+    final now = DateTime.now();
+    final diff = now.difference(dt);
+    if (diff.inDays == 0) {
+      return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    }
+    return '${dt.day}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
   }
 }

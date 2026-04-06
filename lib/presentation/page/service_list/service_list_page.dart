@@ -283,17 +283,22 @@ class _ActivityServicesSection extends HookWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-          child: Text('Ostatnie aktywności', style: typography.h8, textAlign: TextAlign.center),
+          child: Text(
+            LocaleKeys.serviceList_activitySectionHeader.tr(),
+            style: typography.h8,
+          ),
         ),
         const SizedBox(height: AppDimens.m),
-        ...services.value.map((s) => _ActivityServiceRow(summary: s, colors: colors, typography: typography)),
+        ...services.value.map(
+          (s) => _ActivityServiceRow(summary: s, colors: colors, typography: typography),
+        ),
         const SizedBox(height: AppDimens.xxl),
       ],
     );
   }
 }
 
-class _ActivityServiceRow extends HookWidget {
+class _ActivityServiceRow extends StatelessWidget {
   final ServiceSummary summary;
   final AppThemeColors colors;
   final AppTypography typography;
@@ -307,31 +312,68 @@ class _ActivityServiceRow extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l, vertical: AppDimens.m),
-          child: Row(
-            children: [
-              Icon(Icons.verified_outlined, color: colors.secondaryText),
-              const SizedBox(width: AppDimens.m),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(summary.serviceName, style: typography.body3),
-                    Text(
-                      '${summary.actionCount} aktywności · ${_formatDate(summary.lastActivity)}',
-                      style: typography.info2.copyWith(color: colors.lightText),
-                    ),
-                  ],
-                ),
+    final initials = summary.serviceName.isNotEmpty
+        ? summary.serviceName[0].toUpperCase()
+        : '?';
+
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppDimens.l,
+        vertical: AppDimens.xs,
+      ),
+      padding: const EdgeInsets.all(AppDimens.m),
+      decoration: BoxDecoration(
+        border: Border.all(color: colors.dividerMedium),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: colors.buttonFill,
+            child: Text(
+              initials,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: colors.buttonFilledText,
               ),
-            ],
+            ),
           ),
-        ),
-        Separator.light(),
-      ],
+          const SizedBox(width: AppDimens.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(summary.serviceName, style: typography.body3),
+                const SizedBox(height: 2),
+                Text(
+                  LocaleKeys.serviceList_activitySummary.tr(
+                    namedArgs: {
+                      'count': summary.actionCount.toString(),
+                      'date': _formatDate(summary.lastActivity),
+                    },
+                  ),
+                  style: typography.info2.copyWith(color: colors.secondaryText),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: colors.buttonFill.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Weryfikacja',
+                    style: typography.input.copyWith(color: colors.buttonFill),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.chevron_right, color: colors.secondaryText),
+        ],
+      ),
     );
   }
 
