@@ -392,10 +392,13 @@ class _RecentActivitySection extends HookWidget {
     final isLoading = useState(true);
     final reloadKey = useValueListenable(HomePage.reloadActivityNotifier);
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final activityLimit = screenHeight < 700 ? 1 : (screenHeight < 800 ? 2 : 3);
+
     useEffect(() {
       isLoading.value = true;
       final dataSource = getIt<ActivityApiDataSource>();
-      dataSource.getActivity(limit: 5).then((result) {
+      dataSource.getActivity(limit: activityLimit).then((result) {
         activities.value = result;
         isLoading.value = false;
       }).catchError((_) {

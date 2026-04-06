@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
+import 'package:logpass_me/domain/identity/identity_field.dart';
+import 'package:logpass_me/domain/identity/identity_profile_type.dart';
+import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
@@ -143,17 +146,50 @@ class _LogPassIdSection extends HookWidget {
     final colors = useAppThemeColors();
     final typography = useAppTypography();
     final userId = useState<String?>(null);
+    final isMinor = useState<bool?>(null);
 
     useEffect(() {
       Future<void> load() async {
         try {
           final tokens = await getIt<GetUserTokensUseCase>()();
           userId.value = tokens.sub;
-        } catch (_) {}
+
+          final repo = getIt<IdentityRepository>();
+          final profiles = await repo.getProfiles();
+          final privateProfile = profiles
+              .where((p) => p.type == IdentityProfileType.private)
+              .firstOrNull;
+          if (privateProfile == null) {
+            isMinor.value = false;
+            return;
+          }
+          final dobField = privateProfile.fields
+              .where((f) => f.key == IdentityFieldKey.dateOfBirth && f.value.isNotEmpty)
+              .firstOrNull;
+          if (dobField == null) {
+            isMinor.value = false;
+            return;
+          }
+          final dob = DateTime.tryParse(dobField.value);
+          if (dob == null) {
+            isMinor.value = false;
+            return;
+          }
+          final now = DateTime.now();
+          int age = now.year - dob.year;
+          if (now.month < dob.month ||
+              (now.month == dob.month && now.day < dob.day)) age--;
+          isMinor.value = age < 18;
+        } catch (_) {
+          isMinor.value = false;
+        }
       }
       load();
       return null;
     }, const []);
+
+    if (isMinor.value == null) return const SizedBox.shrink();
+    if (isMinor.value == false) return const SizedBox.shrink();
 
     final id = userId.value;
 
@@ -161,12 +197,12 @@ class _LogPassIdSection extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Mój LogPass ID',
+          LocaleKeys.settingsLogPassId_title.tr(),
           style: typography.h8.copyWith(color: colors.text),
         ),
         const SizedBox(height: 4),
         Text(
-          'Udostępnij ten kod opiekunowi, aby mógł Cię dodać jako podopiecznego.',
+          LocaleKeys.settingsLogPassId_description.tr(),
           style: typography.info2.copyWith(color: colors.secondaryText),
         ),
         const SizedBox(height: 16),
@@ -204,11 +240,16 @@ class _LogPassIdSection extends HookWidget {
           Center(
             child: OutlinedButton.icon(
               icon: Icon(Icons.copy, size: 16, color: colors.text),
-              label: Text('Kopiuj ID', style: typography.body1.copyWith(color: colors.text)),
+              label: Text(
+                LocaleKeys.settingsLogPassId_copyButton.tr(),
+                style: typography.body1.copyWith(color: colors.text),
+              ),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: id));
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('ID skopiowane do schowka')),
+                  SnackBar(
+                    content: Text(LocaleKeys.settingsLogPassId_copiedMessage.tr()),
+                  ),
                 );
               },
               style: OutlinedButton.styleFrom(

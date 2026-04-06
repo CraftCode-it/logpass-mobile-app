@@ -63,6 +63,8 @@ class QrScanPage extends HookWidget {
                   r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
                 );
                 if (uuidRegex.hasMatch(rawValue)) {
+                  hasNavigated.value = true;
+                  controller.stop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(LocaleKeys.qrScan_logpassIdScanned.tr()),
@@ -70,6 +72,8 @@ class QrScanPage extends HookWidget {
                     ),
                   );
                 } else {
+                  hasNavigated.value = true;
+                  controller.stop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(LocaleKeys.qrScan_unknownQr.tr())),
                   );

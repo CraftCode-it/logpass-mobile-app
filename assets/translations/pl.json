@@ -496,7 +496,16 @@
     "scanTitle": "Skanuj QR opiekuna",
     "invalidQrCode": "Nieprawidłowy QR kod — oczekiwano LogPass ID",
     "error": "Błąd: {message}",
-    "retry": "Spróbuj ponownie"
+    "retry": "Spróbuj ponownie",
+    "showQrTitle": "Twój kod dla podopiecznego",
+    "showQrDescription": "Poproś podopiecznego, aby zeskanował ten kod w zakładce Opiekunowie na swoim urządzeniu.",
+    "addDependantSection": "Dodaj podopiecznego"
+  },
+  "settingsLogPassId": {
+    "title": "Mój LogPass ID",
+    "description": "Udostępnij ten kod opiekunowi, aby mógł Cię dodać jako podopiecznego.",
+    "copyButton": "Kopiuj ID",
+    "copiedMessage": "ID skopiowane do schowka"
   },
   "verificationRequest": {
     "title": "Żądanie weryfikacji",

@@ -492,7 +492,16 @@
     "scanTitle": "Scan guardian QR",
     "invalidQrCode": "Invalid QR code — expected LogPass ID",
     "error": "Error: {message}",
-    "retry": "Try again"
+    "retry": "Try again",
+    "showQrTitle": "Your code for your dependent",
+    "showQrDescription": "Ask your dependent to scan this code in the Guardians tab on their device.",
+    "addDependantSection": "Add dependant"
+  },
+  "settingsLogPassId": {
+    "title": "My LogPass ID",
+    "description": "Share this code with your guardian so they can add you as a dependent.",
+    "copyButton": "Copy ID",
+    "copiedMessage": "ID copied to clipboard"
   },
   "verificationRequest": {
     "title": "Verification Request",

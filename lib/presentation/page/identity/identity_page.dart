@@ -237,7 +237,15 @@ class _IdentityBody extends HookWidget {
     List<IdentityProfile> allProfiles,
     String fieldKey,
   ) {
-    final targets = allProfiles.where((p) => p.id != sourceProfile.id).toList();
+    final isProxySource = sourceProfile.type == IdentityProfileType.proxy;
+    final targets = allProfiles.where((p) {
+      if (p.id == sourceProfile.id) return false;
+      if (isProxySource &&
+          (p.type == IdentityProfileType.private ||
+           p.type == IdentityProfileType.work)) return false;
+      return true;
+    }).toList();
+    if (targets.isEmpty) return;
     showDialog<void>(
       context: context,
       builder: (ctx) => SimpleDialog(

@@ -217,6 +217,10 @@ class IdentityCubit extends Cubit<IdentityState> {
     final target = st.profiles.firstWhere((p) => p.id == targetProfileId);
     final field = source.fields.where((f) => f.key == fieldKey).firstOrNull;
     if (field == null) return;
+    if (field.value.trim().isEmpty) return;
+
+    final targetField = target.fields.where((f) => f.key == fieldKey).firstOrNull;
+    if (targetField != null && targetField.isLocked) return;
 
     final existingIdx = target.fields.indexWhere((f) => f.key == fieldKey);
     final List<IdentityField> updatedFields;

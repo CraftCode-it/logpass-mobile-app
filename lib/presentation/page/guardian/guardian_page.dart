@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/core/di/di_config.dart';
+import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/guardian/guardian.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_cubit.dart';
@@ -10,6 +12,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 @RoutePage()
 class GuardianPage extends HookWidget {
@@ -23,11 +26,25 @@ class GuardianPage extends HookWidget {
     final state = useCubitBuilder<GuardianCubit, GuardianState>(cubit);
     final colors = useAppThemeColors();
     final typography = useAppTypography();
+    final guardianUserId = useState<String?>(null);
 
     useEffect(() {
       cubit.load();
       return null;
     }, [cubit]);
+
+    useEffect(() {
+      if (!isMinor) {
+        Future<void> loadId() async {
+          try {
+            final tokens = await getIt<GetUserTokensUseCase>()();
+            guardianUserId.value = tokens.sub;
+          } catch (_) {}
+        }
+        loadId();
+      }
+      return null;
+    }, const []);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -43,7 +60,7 @@ class GuardianPage extends HookWidget {
             ),
         ],
       ),
-      body: _buildBody(state, cubit, colors, typography),
+      body: _buildBody(state, cubit, colors, typography, guardianUserId.value),
     );
   }
 
@@ -52,6 +69,7 @@ class GuardianPage extends HookWidget {
     GuardianCubit cubit,
     AppThemeColors colors,
     AppTypography typography,
+    String? guardianUserId,
   ) {
     if (state is GuardianLoading || state is GuardianOperating) {
       return const Center(child: CircularProgressIndicator());
@@ -76,8 +94,36 @@ class GuardianPage extends HookWidget {
       return ListView(
         padding: const EdgeInsets.all(AppDimens.l),
         children: [
+          if (!isMinor) ...[
+            Text(LocaleKeys.guardian_showQrTitle.tr(), style: typography.h6),
+            const SizedBox(height: 8),
+            Text(
+              LocaleKeys.guardian_showQrDescription.tr(),
+              style: typography.body1.copyWith(color: colors.secondaryText),
+            ),
+            const SizedBox(height: 16),
+            if (guardianUserId != null)
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colors.background,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: colors.dividerMedium),
+                  ),
+                  child: QrImageView(
+                    data: guardianUserId,
+                    version: QrVersions.auto,
+                    size: 160,
+                  ),
+                ),
+              )
+            else
+              const Center(child: CircularProgressIndicator()),
+            const SizedBox(height: 32),
+          ],
           if (state.myGuardians.isEmpty && state.myMinors.isEmpty) ...[
-            const SizedBox(height: 48),
+            const SizedBox(height: 16),
             Icon(Icons.supervisor_account_outlined, size: 64, color: colors.lightText),
             const SizedBox(height: 16),
             Center(
