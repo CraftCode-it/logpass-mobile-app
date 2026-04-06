@@ -169,7 +169,8 @@
     "noServices": "You have no connected services.",
     "noActiveSessions": "No active sessions",
     "activitySummary": "{count} verifications · last: {date}",
-    "activitySectionHeader": "Verification history"
+    "activitySectionHeader": "Verification history",
+    "verificationBadge": "Verification"
   },
   "serviceDetails": {
     "title": "Service details",

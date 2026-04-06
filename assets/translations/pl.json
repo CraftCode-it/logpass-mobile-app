@@ -171,7 +171,8 @@
     "noServices": "To konto nie ma żadnych powiązanych usług. ",
     "noActiveSessions": "Brak aktywnych sesji",
     "activitySummary": "{count} weryfikacji · ostatnia: {date}",
-    "activitySectionHeader": "Historia weryfikacji"
+    "activitySectionHeader": "Historia weryfikacji",
+    "verificationBadge": "Weryfikacja"
   },
   "serviceDetails": {
     "title": "Szczegóły zabezpieczeń",

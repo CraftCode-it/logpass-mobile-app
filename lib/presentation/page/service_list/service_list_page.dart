@@ -364,7 +364,7 @@ class _ActivityServiceRow extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Weryfikacja',
+                    LocaleKeys.serviceList_verificationBadge.tr(),
                     style: typography.input.copyWith(color: colors.buttonFill),
                   ),
                 ),

@@ -151,6 +151,7 @@ abstract class  LocaleKeys {
   static const serviceList_noActiveSessions = 'serviceList.noActiveSessions';
   static const serviceList_activitySummary = 'serviceList.activitySummary';
   static const serviceList_activitySectionHeader = 'serviceList.activitySectionHeader';
+  static const serviceList_verificationBadge = 'serviceList.verificationBadge';
   static const serviceList = 'serviceList';
   static const serviceDetails_title = 'serviceDetails.title';
   static const serviceDetails_sessionsTab = 'serviceDetails.sessionsTab';
