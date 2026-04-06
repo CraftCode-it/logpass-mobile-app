@@ -89,7 +89,7 @@ class VerificationRequestPage extends HookWidget {
     }
 
     final isProcessing = state is VerificationRequestProcessing;
-    final profiles = state is VerificationRequestIdle ? state.profiles : <dynamic>[];
+    final List<IdentityProfile> profiles = state is VerificationRequestIdle ? state.profiles : const [];
     final selectedId =
         state is VerificationRequestIdle ? state.selectedProfileId : null;
 
