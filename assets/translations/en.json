@@ -168,9 +168,22 @@
     },
     "noServices": "You have no connected services.",
     "noActiveSessions": "No active sessions",
-    "activitySummary": "{count} verifications · last: {date}",
+    "activitySummary": {
+      "one": "{count} verification · last: {date}",
+      "other": "{count} verifications · last: {date}"
+    },
     "activitySectionHeader": "Verification history",
     "verificationBadge": "Verification"
+  },
+  "serviceActivityDetail": {
+    "sharedDataHeader": "Shared data",
+    "historyHeader": "Verification history",
+    "fieldFirstName": "First and last name",
+    "fieldLastName": "Last name",
+    "fieldDob": "Date of birth",
+    "fieldPesel": "PESEL (masked)",
+    "fieldAddress": "Address",
+    "fieldAge18": "Age verification 18+"
   },
   "serviceDetails": {
     "title": "Service details",

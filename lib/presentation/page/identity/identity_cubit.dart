@@ -65,7 +65,6 @@ class IdentityCubit extends Cubit<IdentityState> {
         final selfData = await _walletRepository.getUserSelf();
         final backendVerified = selfData['identity_verified'] == true;
         if (backendVerified) {
-          // Only show "Zweryfikowano" if the active profile has actual data locally
           final activeProfile = profiles.firstWhere(
             (p) => p.id == activeId,
             orElse: () => profiles.isNotEmpty ? profiles.first : throw StateError('no profiles'),
@@ -78,6 +77,28 @@ class IdentityCubit extends Cubit<IdentityState> {
               .where((f) => f.key == IdentityFieldKey.dateOfBirth)
               .map((f) => f.value)
               .firstOrNull ?? '';
+
+          // Hydrate local profile from backend when locally empty
+          if (firstName.isEmpty && dob.isEmpty) {
+            final backendFirstName = selfData['first_name'] as String? ?? '';
+            final backendLastName = selfData['last_name'] as String? ?? '';
+            final backendDob = selfData['dob'] as String? ?? '';
+            if (backendFirstName.isNotEmpty || backendDob.isNotEmpty) {
+              await _repository.applyVerifiedIdentity({
+                'first_name': backendFirstName,
+                'last_name': backendLastName,
+                'dob': backendDob,
+                'pesel_masked': '',
+                'address': {
+                  'city': selfData['address_city'] as String? ?? '',
+                  'street': selfData['address_street'] as String? ?? '',
+                  'postal_code': selfData['address_postal_code'] as String? ?? '',
+                },
+              });
+              return load();
+            }
+          }
+
           identityVerified = firstName.isNotEmpty || dob.isNotEmpty;
         }
       } catch (_) {}

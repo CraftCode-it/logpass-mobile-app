@@ -170,9 +170,24 @@
     },
     "noServices": "To konto nie ma żadnych powiązanych usług. ",
     "noActiveSessions": "Brak aktywnych sesji",
-    "activitySummary": "{count} weryfikacji · ostatnia: {date}",
+    "activitySummary": {
+      "one": "{count} weryfikacja · ostatnia: {date}",
+      "few": "{count} weryfikacje · ostatnia: {date}",
+      "many": "{count} weryfikacji · ostatnia: {date}",
+      "other": "{count} weryfikacji · ostatnia: {date}"
+    },
     "activitySectionHeader": "Historia weryfikacji",
     "verificationBadge": "Weryfikacja"
+  },
+  "serviceActivityDetail": {
+    "sharedDataHeader": "Przekazane dane",
+    "historyHeader": "Historia weryfikacji",
+    "fieldFirstName": "Imię i nazwisko",
+    "fieldLastName": "Nazwisko",
+    "fieldDob": "Data urodzenia",
+    "fieldPesel": "PESEL (zamaskowany)",
+    "fieldAddress": "Adres",
+    "fieldAge18": "Weryfikacja wieku 18+"
   },
   "serviceDetails": {
     "title": "Szczegóły zabezpieczeń",

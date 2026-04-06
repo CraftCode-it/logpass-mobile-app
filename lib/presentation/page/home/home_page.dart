@@ -118,9 +118,17 @@ class _HomePageContent extends HookWidget {
                 messengerController :messengerController
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                  child: _PendingActions(cubit, state, isSmallSize),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                        child: _PendingActions(cubit, state, isSmallSize),
+                      ),
+                    ),
+                    _PastEventsButton(),
+                  ],
                 ),
               ),
             ],
@@ -160,8 +168,6 @@ class _PendingActions extends HookWidget {
           const SizedBox(height: AppDimens.l),
           const _RecentActivitySection(),
           const SizedBox(height: AppDimens.l),
-          _PastEventsButton(),
-          const SizedBox(height: AppDimens.xl),
         ],
       ),
     );
