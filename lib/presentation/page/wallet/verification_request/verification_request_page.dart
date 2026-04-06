@@ -151,7 +151,12 @@ class VerificationRequestPage extends HookWidget {
             typography: typography,
           ),
           const SizedBox(height: 24),
-          if (profiles.isNotEmpty)
+          if (state is VerificationRequestIdle && profiles.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: LinearProgressIndicator(),
+            )
+          else if (profiles.isNotEmpty)
             _ProfilePicker(
               profiles: profiles,
               selectedId: selectedId,

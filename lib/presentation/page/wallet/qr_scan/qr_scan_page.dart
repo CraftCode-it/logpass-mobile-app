@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/data/wallet/verifier_request.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -51,7 +52,11 @@ class QrScanPage extends HookWidget {
                   verifierName: request.verifier,
                   requestType: request.requestType,
                   minAge: request.minAge,
-                ));
+                )).then((result) {
+                  if (result == true) {
+                    HomePage.reloadActivityNotifier.value++;
+                  }
+                });
               } catch (e) {
                 if (kDebugMode) debugPrint('QR parse error: $e');
                 final uuidRegex = RegExp(

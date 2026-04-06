@@ -32,6 +32,8 @@ const _smallerSizePhoneThreshold = 672.0;
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  static final reloadActivityNotifier = ValueNotifier<int>(0);
+
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit<HomeCubit>();
@@ -99,7 +101,7 @@ class _HomePageContent extends HookWidget {
                 systemUiOverlayStyle: overlayStyle,
                 logoColor: colors.logoSpecial,
                 trailing: IconButton(
-                  icon: Icon(Icons.qr_code_scanner, color: colors.text),
+                  icon: Icon(Icons.qr_code_scanner, color: colors.logoSpecial),
                   tooltip: LocaleKeys.qrScan_title.tr(),
                   onPressed: () => AutoRouter.of(context).push(const QrScanRoute()),
                 ),
@@ -243,7 +245,11 @@ class _PendingItem extends HookWidget {
                   requestType: params?['request_type'],
                   minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
                 ),
-              );
+              ).then((result) {
+                if (result == true) {
+                  HomePage.reloadActivityNotifier.value++;
+                }
+              });
             }
           },
           orElse: () {},
@@ -378,8 +384,10 @@ class _RecentActivitySection extends HookWidget {
     final colors = useAppThemeColors();
     final activities = useState<List<ServiceActivity>>([]);
     final isLoading = useState(true);
+    final reloadKey = useValueListenable(HomePage.reloadActivityNotifier);
 
     useEffect(() {
+      isLoading.value = true;
       final dataSource = getIt<ActivityApiDataSource>();
       dataSource.getActivity(limit: 5).then((result) {
         activities.value = result;
@@ -388,7 +396,7 @@ class _RecentActivitySection extends HookWidget {
         isLoading.value = false;
       });
       return null;
-    }, const []);
+    }, [reloadKey]);
 
     if (isLoading.value) return const SizedBox.shrink();
     if (activities.value.isEmpty) return const SizedBox.shrink();

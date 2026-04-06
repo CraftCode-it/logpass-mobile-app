@@ -130,12 +130,19 @@ class _ContentEmpty extends HookWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Center(
-            child: Text(
-              LocaleKeys.serviceList_noServices,
-              textAlign: TextAlign.center,
-              style: typography.body1.copyWith(color: colors.secondaryText),
-            ).tr(),
+          child: Column(
+            children: [
+              const SizedBox(height: AppDimens.xxl),
+              Center(
+                child: Text(
+                  LocaleKeys.serviceList_noServices,
+                  textAlign: TextAlign.center,
+                  style: typography.body1.copyWith(color: colors.secondaryText),
+                ).tr(),
+              ),
+              const SizedBox(height: AppDimens.xxl),
+              _ActivityServicesSection(cubit: cubit),
+            ],
           ),
         ),
       ),
