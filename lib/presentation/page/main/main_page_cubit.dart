@@ -60,7 +60,11 @@ class MainPageCubit extends Cubit<MainPageState> {
   ) : super(const MainPageState.idle());
 
   Future<void> init() async {
-    await _registerPushNotificationDeviceUseCase();
+    try {
+      await _registerPushNotificationDeviceUseCase();
+    } catch (e, s) {
+      Fimber.e('Push device registration failed (WS will use fallback URL)', ex: e, stacktrace: s);
+    }
 
     _subscribeToRefreshCode();
     await _initNotificationsServices();
