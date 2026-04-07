@@ -95,7 +95,7 @@ class VerificationRequestPage extends HookWidget {
     final selectedId =
         state is VerificationRequestIdle ? state.selectedProfileId : null;
     final isMinor = state is VerificationRequestIdle ? state.isMinor : false;
-    final isAgeRequest = requestType == 'age_18' || requestType == null;
+    final isAgeRequest = requestType == 'age_18' || requestType == 'identity_and_age' || requestType == null;
 
     return SingleChildScrollView(
       child: Column(
@@ -130,7 +130,9 @@ class VerificationRequestPage extends HookWidget {
                 ? LocaleKeys.verificationRequest_typeIdentity.tr()
                 : requestType == 'age_18'
                     ? LocaleKeys.verificationRequest_typeAge18.tr()
-                    : requestType ?? LocaleKeys.verificationRequest_typeAgeGeneric.tr(),
+                    : requestType == 'identity_and_age'
+                        ? 'Tożsamość i wiek 18+'
+                        : requestType ?? LocaleKeys.verificationRequest_typeAgeGeneric.tr(),
             colors: colors,
             typography: typography,
           ),
