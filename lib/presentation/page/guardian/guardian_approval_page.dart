@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/guardian/guardian_repository.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
@@ -14,8 +16,15 @@ enum GuardianApprovalType { pairing, authRequest }
 class GuardianApprovalPage extends HookWidget {
   final String requestId;
   final GuardianApprovalType approvalType;
-  final String minorName;
+
+  /// For pairing: guardian details (minor receives this push and confirms)
+  final String guardianName;
+  final String? guardianPhone;
+
+  /// For authRequest: minor details (guardian sees who is requesting)
+  final String? minorName;
   final String? minorPhone;
+
   final String? serviceName;
   final String? action;
   final int expiresInSeconds;
@@ -24,7 +33,9 @@ class GuardianApprovalPage extends HookWidget {
     Key? key,
     required this.requestId,
     required this.approvalType,
-    required this.minorName,
+    this.guardianName = '',
+    this.guardianPhone,
+    this.minorName,
     this.minorPhone,
     this.serviceName,
     this.action,
@@ -47,7 +58,7 @@ class GuardianApprovalPage extends HookWidget {
         } else {
           t.cancel();
           if (resultMessage.value == null) {
-            resultMessage.value = 'Żądanie wygasło.';
+            resultMessage.value = LocaleKeys.guardianApproval_requestExpired.tr();
             isSuccess.value = false;
           }
         }
@@ -70,8 +81,8 @@ class GuardianApprovalPage extends HookWidget {
         ),
         title: Text(
           approvalType == GuardianApprovalType.pairing
-              ? 'Prośba o opiekę'
-              : 'Żądanie autoryzacji',
+              ? LocaleKeys.guardianApproval_pairingTitle.tr()
+              : LocaleKeys.guardianApproval_authTitle.tr(),
           style: typography.h6.copyWith(color: colors.text),
         ),
       ),
@@ -88,7 +99,6 @@ class GuardianApprovalPage extends HookWidget {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Timer
                   Center(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -123,7 +133,6 @@ class GuardianApprovalPage extends HookWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // Info card
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
@@ -135,26 +144,52 @@ class GuardianApprovalPage extends HookWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Icon(Icons.person, color: colors.secondaryText),
-                            const SizedBox(width: 8),
-                            Text('Podopieczny', style: typography.info2.copyWith(color: colors.labelText)),
+                        if (approvalType == GuardianApprovalType.pairing) ...[
+                          Row(
+                            children: [
+                              Icon(Icons.shield_outlined, color: colors.secondaryText),
+                              const SizedBox(width: 8),
+                              Text(
+                                LocaleKeys.guardianApproval_guardianLabel.tr(),
+                                style: typography.info2.copyWith(color: colors.labelText),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            guardianName.isNotEmpty ? guardianName : '—',
+                            style: typography.h6,
+                          ),
+                          if (guardianPhone != null && guardianPhone!.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Text(guardianPhone!, style: typography.body2.copyWith(color: colors.secondaryText)),
                           ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(minorName, style: typography.h6),
-                        if (minorPhone != null) ...[
-                          const SizedBox(height: 2),
-                          Text(minorPhone!, style: typography.body2.copyWith(color: colors.secondaryText)),
-                        ],
-                        if (approvalType == GuardianApprovalType.authRequest) ...[
+                        ] else ...[
+                          Row(
+                            children: [
+                              Icon(Icons.person, color: colors.secondaryText),
+                              const SizedBox(width: 8),
+                              Text(
+                                LocaleKeys.guardianApproval_minorLabel.tr(),
+                                style: typography.info2.copyWith(color: colors.labelText),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(minorName ?? '—', style: typography.h6),
+                          if (minorPhone != null) ...[
+                            const SizedBox(height: 2),
+                            Text(minorPhone!, style: typography.body2.copyWith(color: colors.secondaryText)),
+                          ],
                           const Divider(height: 24),
                           Row(
                             children: [
                               Icon(Icons.business, color: colors.secondaryText),
                               const SizedBox(width: 8),
-                              Text('Serwis', style: typography.info2.copyWith(color: colors.labelText)),
+                              Text(
+                                LocaleKeys.guardianApproval_serviceLabel.tr(),
+                                style: typography.info2.copyWith(color: colors.labelText),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 4),
@@ -174,13 +209,18 @@ class GuardianApprovalPage extends HookWidget {
                         child: SizedBox(
                           height: 56,
                           child: OutlinedButton(
-                            onPressed: isProcessing.value ? null : () => _reject(context, isProcessing, resultMessage, isSuccess),
+                            onPressed: isProcessing.value
+                                ? null
+                                : () => _reject(context, isProcessing, resultMessage, isSuccess),
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(color: AppColors.error100),
                               foregroundColor: AppColors.error100,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
-                            child: Text('Odrzuć', style: typography.h8.copyWith(color: AppColors.error100)),
+                            child: Text(
+                              LocaleKeys.guardianApproval_reject.tr(),
+                              style: typography.h8.copyWith(color: AppColors.error100),
+                            ),
                           ),
                         ),
                       ),
@@ -189,7 +229,9 @@ class GuardianApprovalPage extends HookWidget {
                         child: SizedBox(
                           height: 56,
                           child: ElevatedButton(
-                            onPressed: isProcessing.value ? null : () => _approve(context, isProcessing, resultMessage, isSuccess),
+                            onPressed: isProcessing.value
+                                ? null
+                                : () => _approve(context, isProcessing, resultMessage, isSuccess),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.success100,
                               foregroundColor: AppColors.secondary,
@@ -202,7 +244,10 @@ class GuardianApprovalPage extends HookWidget {
                                     height: 24,
                                     child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.secondary),
                                   )
-                                : Text('Zatwierdź', style: typography.h8.copyWith(color: AppColors.secondary)),
+                                : Text(
+                                    LocaleKeys.guardianApproval_approve.tr(),
+                                    style: typography.h8.copyWith(color: AppColors.secondary),
+                                  ),
                           ),
                         ),
                       ),
@@ -226,15 +271,18 @@ class GuardianApprovalPage extends HookWidget {
       final repo = getIt<GuardianRepository>();
       if (approvalType == GuardianApprovalType.pairing) {
         await repo.confirmGuardian(requestId);
-        resultMessage.value = 'Parowanie zaakceptowane. $minorName jest teraz Twoim podopiecznym.';
+        resultMessage.value = LocaleKeys.guardianApproval_pairingAccepted
+            .tr(namedArgs: {'guardianName': guardianName});
       } else {
         await repo.approveAuthorization(requestId);
-        resultMessage.value = 'Autoryzacja zatwierdzona dla ${serviceName ?? "serwisu"}.';
+        resultMessage.value = LocaleKeys.guardianApproval_authApproved
+            .tr(namedArgs: {'serviceName': serviceName ?? ''});
       }
       isSuccess.value = true;
     } catch (e) {
       isSuccess.value = false;
-      resultMessage.value = 'Błąd: $e';
+      resultMessage.value = LocaleKeys.guardianApproval_errorPrefix
+          .tr(namedArgs: {'message': e.toString()});
     } finally {
       isProcessing.value = false;
     }
@@ -251,15 +299,16 @@ class GuardianApprovalPage extends HookWidget {
       final repo = getIt<GuardianRepository>();
       if (approvalType == GuardianApprovalType.pairing) {
         await repo.rejectGuardian(requestId);
-        resultMessage.value = 'Parowanie odrzucone.';
+        resultMessage.value = LocaleKeys.guardianApproval_pairingRejected.tr();
       } else {
         await repo.rejectAuthorization(requestId);
-        resultMessage.value = 'Autoryzacja odrzucona.';
+        resultMessage.value = LocaleKeys.guardianApproval_authRejected.tr();
       }
       isSuccess.value = true;
     } catch (e) {
       isSuccess.value = false;
-      resultMessage.value = 'Błąd: $e';
+      resultMessage.value = LocaleKeys.guardianApproval_errorPrefix
+          .tr(namedArgs: {'message': e.toString()});
     } finally {
       isProcessing.value = false;
     }
@@ -294,7 +343,9 @@ class _ResultView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            success ? 'Gotowe' : 'Błąd',
+            success
+                ? LocaleKeys.guardianApproval_resultSuccess.tr()
+                : LocaleKeys.guardianApproval_resultError.tr(),
             style: typography.h3.copyWith(
               color: success ? AppColors.success100 : AppColors.error100,
             ),
@@ -316,7 +367,10 @@ class _ResultView extends StatelessWidget {
                 foregroundColor: colors.buttonFilledText,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text('Zamknij', style: typography.h8.copyWith(color: colors.buttonFilledText)),
+              child: Text(
+                LocaleKeys.guardianApproval_done.tr(),
+                style: typography.h8.copyWith(color: colors.buttonFilledText),
+              ),
             ),
           ),
         ],

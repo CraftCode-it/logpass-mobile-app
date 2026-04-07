@@ -15,7 +15,8 @@
     "save": "Save",
     "remove": "Remove",
     "copied": "Copied",
-    "done": "Done"
+    "done": "Done",
+    "cancel": "Cancel"
   },
   "error": {
     "couldNotLoadData": "Could not load data",
@@ -239,7 +240,8 @@
     "language": "Language",
     "terms": "Terms&Condition",
     "help": "Help",
-    "logout": "Log out"
+    "logout": "Log out",
+    "guardians": "Guardians"
   },
   "securitySettings": {
     "title": "Security",
@@ -495,7 +497,29 @@
     "retry": "Try again",
     "showQrTitle": "Your code for your dependent",
     "showQrDescription": "Ask your dependent to scan this code in the Guardians tab on their device.",
-    "addDependantSection": "Add dependant"
+    "addDependantSection": "Add dependant",
+    "requestSent": "Guardian request sent. The dependent must confirm.",
+    "selectRelationship": "Select your relationship with the dependent",
+    "confirmRequest": "Send request",
+    "scanMinorHint": "Scan the dependent's QR code to send a guardianship request"
+  },
+  "guardianApproval": {
+    "pairingTitle": "Guardianship request",
+    "authTitle": "Authorization request",
+    "guardianLabel": "Guardian",
+    "minorLabel": "Dependent",
+    "serviceLabel": "Service",
+    "requestExpired": "Request expired.",
+    "pairingAccepted": "Pairing accepted. {guardianName} is now your guardian.",
+    "pairingRejected": "Pairing rejected.",
+    "authApproved": "Authorization approved for {serviceName}.",
+    "authRejected": "Authorization rejected.",
+    "errorPrefix": "Error: {message}",
+    "reject": "Reject",
+    "approve": "Approve",
+    "done": "Close",
+    "resultSuccess": "Done",
+    "resultError": "Error"
   },
   "settingsLogPassId": {
     "title": "My LogPass ID",

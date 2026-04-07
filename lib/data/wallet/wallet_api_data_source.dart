@@ -166,11 +166,11 @@ class WalletApiDataSource {
     );
   }
 
-  Future<Map<String, dynamic>> requestGuardian({required String guardianUserId, String? relationshipType}) async {
+  Future<Map<String, dynamic>> requestGuardian({required String minorUserId, String? relationshipType}) async {
     final response = await _dio.post(
       'auth/guardians/request',
       data: {
-        'guardian_user_id': guardianUserId,
+        'minor_user_id': minorUserId,
         if (relationshipType != null) 'relationship_type': relationshipType,
       },
     );

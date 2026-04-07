@@ -3,22 +3,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/core/di/di_config.dart';
-import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/guardian/guardian.dart';
+import 'package:logpass_me/domain/identity/identity_field.dart';
+import 'package:logpass_me/domain/identity/identity_profile_type.dart';
+import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_cubit.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 @RoutePage()
 class GuardianPage extends HookWidget {
-  final bool isMinor;
-
-  const GuardianPage({Key? key, this.isMinor = false}) : super(key: key);
+  const GuardianPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class GuardianPage extends HookWidget {
     final state = useCubitBuilder<GuardianCubit, GuardianState>(cubit);
     final colors = useAppThemeColors();
     final typography = useAppTypography();
-    final guardianUserId = useState<String?>(null);
+    final isMinor = useState<bool>(false);
 
     useEffect(() {
       cubit.load();
@@ -34,15 +32,28 @@ class GuardianPage extends HookWidget {
     }, [cubit]);
 
     useEffect(() {
-      if (!isMinor) {
-        Future<void> loadId() async {
-          try {
-            final tokens = await getIt<GetUserTokensUseCase>()();
-            guardianUserId.value = tokens.sub;
-          } catch (_) {}
-        }
-        loadId();
+      Future<void> detectMinor() async {
+        try {
+          final repo = getIt<IdentityRepository>();
+          final profiles = await repo.getProfiles();
+          final privateProfile = profiles
+              .where((p) => p.type == IdentityProfileType.private)
+              .firstOrNull;
+          if (privateProfile == null) return;
+          final dobField = privateProfile.fields
+              .where((f) => f.key == IdentityFieldKey.dateOfBirth && f.value.isNotEmpty)
+              .firstOrNull;
+          if (dobField == null) return;
+          final dob = DateTime.tryParse(dobField.value);
+          if (dob == null) return;
+          final now = DateTime.now();
+          int age = now.year - dob.year;
+          if (now.month < dob.month ||
+              (now.month == dob.month && now.day < dob.day)) age--;
+          isMinor.value = age < 18;
+        } catch (_) {}
       }
+      detectMinor();
       return null;
     }, const []);
 
@@ -51,16 +62,8 @@ class GuardianPage extends HookWidget {
       appBar: AppBar(
         backgroundColor: colors.background,
         title: Text(LocaleKeys.guardian_title.tr(), style: typography.h2),
-        actions: [
-          if (isMinor)
-            IconButton(
-              icon: const Icon(Icons.qr_code_scanner),
-              tooltip: LocaleKeys.guardian_addGuardianTooltip.tr(),
-              onPressed: () => _openGuardianQrScanner(context, cubit),
-            ),
-        ],
       ),
-      body: _buildBody(state, cubit, colors, typography, guardianUserId.value),
+      body: _buildBody(state, cubit, colors, typography, isMinor.value),
     );
   }
 
@@ -69,7 +72,7 @@ class GuardianPage extends HookWidget {
     GuardianCubit cubit,
     AppThemeColors colors,
     AppTypography typography,
-    String? guardianUserId,
+    bool isMinor,
   ) {
     if (state is GuardianLoading || state is GuardianOperating) {
       return const Center(child: CircularProgressIndicator());
@@ -81,134 +84,80 @@ class GuardianPage extends HookWidget {
           children: [
             Icon(Icons.error_outline, size: 48, color: AppColors.error100),
             const SizedBox(height: 12),
-            Text(LocaleKeys.guardian_error.tr(namedArgs: {'message': state.message}),
-                style: typography.body1.copyWith(color: colors.secondaryText),
-                textAlign: TextAlign.center),
+            Text(
+              LocaleKeys.guardian_error.tr(namedArgs: {'message': state.message}),
+              style: typography.body1.copyWith(color: colors.secondaryText),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: cubit.load, child: Text(LocaleKeys.guardian_retry.tr())),
+            ElevatedButton(
+              onPressed: cubit.load,
+              child: Text(LocaleKeys.guardian_retry.tr()),
+            ),
           ],
         ),
       );
     }
     if (state is GuardianLoaded) {
-      return ListView(
-        padding: const EdgeInsets.all(AppDimens.l),
-        children: [
-          if (!isMinor) ...[
-            Text(LocaleKeys.guardian_showQrTitle.tr(), style: typography.h6),
-            const SizedBox(height: 8),
-            Text(
-              LocaleKeys.guardian_showQrDescription.tr(),
-              style: typography.body1.copyWith(color: colors.secondaryText),
-            ),
-            const SizedBox(height: 16),
-            if (guardianUserId != null)
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: colors.background,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: colors.dividerMedium),
-                  ),
-                  child: QrImageView(
-                    data: guardianUserId,
-                    version: QrVersions.auto,
-                    size: 160,
-                  ),
+      final guardians = state.myGuardians;
+      final minors = state.myMinors;
+
+      if (guardians.isEmpty && minors.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimens.l),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.supervisor_account_outlined, size: 64, color: colors.lightText),
+                const SizedBox(height: 16),
+                Text(
+                  isMinor
+                      ? LocaleKeys.guardian_noGuardians.tr()
+                      : LocaleKeys.guardian_noDependants.tr(),
+                  style: typography.h7.copyWith(color: colors.secondaryText),
+                  textAlign: TextAlign.center,
                 ),
-              )
-            else
-              const Center(child: CircularProgressIndicator()),
-            const SizedBox(height: 32),
-          ],
-          if (state.myGuardians.isEmpty && state.myMinors.isEmpty) ...[
-            const SizedBox(height: 16),
-            Icon(Icons.supervisor_account_outlined, size: 64, color: colors.lightText),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                isMinor ? LocaleKeys.guardian_noGuardians.tr() : LocaleKeys.guardian_noDependants.tr(),
-                style: typography.h7.copyWith(color: colors.secondaryText),
-              ),
-            ),
-            const SizedBox(height: 8),
-            if (isMinor)
-              Center(
-                child: Text(
-                  LocaleKeys.guardian_scanGuardianHint.tr(),
+                const SizedBox(height: 8),
+                Text(
+                  isMinor
+                      ? LocaleKeys.guardian_scanGuardianHint.tr()
+                      : LocaleKeys.guardian_scanMinorHint.tr(),
                   style: typography.body1.copyWith(color: colors.lightText),
                   textAlign: TextAlign.center,
                 ),
-              ),
-          ] else ...[
-            if (state.myGuardians.isNotEmpty) ...[
-              Text(LocaleKeys.guardian_myGuardians.tr(), style: typography.h6),
-              const SizedBox(height: 8),
-              ...state.myGuardians.map((g) => _GuardianCard(guardian: g, colors: colors, typography: typography)),
-              const SizedBox(height: 24),
-            ],
-            if (state.myMinors.isNotEmpty) ...[
-              Text(LocaleKeys.guardian_myDependants.tr(), style: typography.h6),
-              const SizedBox(height: 8),
-              ...state.myMinors.map((g) => _GuardianCard(
-                    guardian: g,
-                    colors: colors,
-                    typography: typography,
-                    isMinorCard: true,
-                    onConfirm: () => cubit.confirmGuardian(g.id),
-                    onReject: () => cubit.rejectGuardian(g.id),
-                  )),
-            ],
+              ],
+            ),
+          ),
+        );
+      }
+
+      return ListView(
+        padding: const EdgeInsets.all(AppDimens.l),
+        children: [
+          if (guardians.isNotEmpty) ...[
+            Text(LocaleKeys.guardian_myGuardians.tr(), style: typography.h6),
+            const SizedBox(height: 8),
+            ...guardians.map((g) => _GuardianCard(
+                  guardian: g,
+                  colors: colors,
+                  typography: typography,
+                )),
+            const SizedBox(height: 24),
+          ],
+          if (minors.isNotEmpty) ...[
+            Text(LocaleKeys.guardian_myDependants.tr(), style: typography.h6),
+            const SizedBox(height: 8),
+            ...minors.map((g) => _GuardianCard(
+                  guardian: g,
+                  colors: colors,
+                  typography: typography,
+                )),
           ],
         ],
       );
     }
     return const SizedBox.shrink();
-  }
-
-  void _openGuardianQrScanner(BuildContext context, GuardianCubit cubit) async {
-    final relationshipType = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(LocaleKeys.guardian_relationDialogTitle.tr()),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.family_restroom),
-              title: Text(LocaleKeys.guardian_relationParent.tr()),
-              onTap: () => Navigator.of(ctx).pop('parent'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.supervised_user_circle),
-              title: Text(LocaleKeys.guardian_relationLegal.tr()),
-              onTap: () => Navigator.of(ctx).pop('legal_guardian'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(LocaleKeys.guardian_cancel.tr()),
-          ),
-        ],
-      ),
-    );
-
-    if (relationshipType == null) return;
-
-    if (!context.mounted) return;
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => _GuardianQrScanPage(
-          onScanned: (uuid) {
-            Navigator.of(context).pop();
-            cubit.addGuardian(uuid, relationshipType: relationshipType);
-          },
-        ),
-      ),
-    );
   }
 }
 
@@ -216,17 +165,11 @@ class _GuardianCard extends StatelessWidget {
   final Guardian guardian;
   final AppThemeColors colors;
   final AppTypography typography;
-  final bool isMinorCard;
-  final VoidCallback? onConfirm;
-  final VoidCallback? onReject;
 
   const _GuardianCard({
     required this.guardian,
     required this.colors,
     required this.typography,
-    this.isMinorCard = false,
-    this.onConfirm,
-    this.onReject,
   });
 
   @override
@@ -255,104 +198,35 @@ class _GuardianCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colors.dividerMedium),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(Icons.person_outline, color: colors.secondaryText),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(guardian.displayName, style: typography.h8),
-                    if (guardian.relationshipType != null)
-                      Text(
-                        guardian.relationshipLabel,
-                        style: typography.info2.copyWith(color: colors.lightText),
-                      ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  statusLabel,
-                  style: typography.info2.copyWith(color: statusColor),
-                ),
-              ),
-            ],
-          ),
-          if (isMinorCard && guardian.isPending && (onConfirm != null || onReject != null)) ...[
-            const SizedBox(height: 8),
-            Row(
+          Icon(Icons.person_outline, color: colors.secondaryText),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onReject,
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColors.error100),
-                      foregroundColor: AppColors.error100,
-                    ),
-                    child: Text(LocaleKeys.guardian_deny.tr()),
+                Text(guardian.displayName, style: typography.h8),
+                if (guardian.relationshipType != null)
+                  Text(
+                    guardian.relationshipLabel,
+                    style: typography.info2.copyWith(color: colors.lightText),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onConfirm,
-                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.success100),
-                    child: Text(LocaleKeys.guardian_approve.tr()),
-                  ),
-                ),
               ],
             ),
-          ],
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: statusColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              statusLabel,
+              style: typography.info2.copyWith(color: statusColor),
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _GuardianQrScanPage extends StatefulWidget {
-  final void Function(String uuid) onScanned;
-
-  const _GuardianQrScanPage({required this.onScanned});
-
-  @override
-  State<_GuardianQrScanPage> createState() => _GuardianQrScanPageState();
-}
-
-class _GuardianQrScanPageState extends State<_GuardianQrScanPage> {
-  bool _scanned = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(LocaleKeys.guardian_scanTitle.tr())),
-      body: MobileScanner(
-        onDetect: (capture) {
-          if (_scanned) return;
-          final barcode = capture.barcodes.firstOrNull;
-          final raw = barcode?.rawValue;
-          if (raw == null) return;
-          final uuidRegex = RegExp(
-            r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
-          );
-          if (uuidRegex.hasMatch(raw)) {
-            setState(() => _scanned = true);
-            widget.onScanned(raw);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(LocaleKeys.guardian_invalidQrCode.tr())),
-            );
-          }
-        },
       ),
     );
   }

@@ -80,7 +80,7 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
         _dispatchAction(action);
         return;
       }
-      // Guardian pairing request pushed to guardian
+      // Guardian pairing request pushed to MINOR — contains guardian data for minor to approve
       if (jsonMap['type'] == 'guardian_pairing') {
         final action = IncomingAction.create(
           ActionType.guardianPairing(),
@@ -88,8 +88,8 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
           null,
           {
             'guardian_request_id': jsonMap['guardian_request_id'] as String? ?? '',
-            'minor_name': jsonMap['minor_name'] as String? ?? '',
-            'minor_phone': jsonMap['minor_phone'] as String? ?? '',
+            'guardian_name': jsonMap['guardian_name'] as String? ?? '',
+            'guardian_phone': jsonMap['guardian_phone'] as String? ?? '',
           },
         );
         _dispatchAction(action);

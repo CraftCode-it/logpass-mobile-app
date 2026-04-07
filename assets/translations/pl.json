@@ -15,7 +15,8 @@
     "save": "Zapisz",
     "remove": "Usuń",
     "copied": "Skopiowano",
-    "done": "Zrobione"
+    "done": "Zrobione",
+    "cancel": "Anuluj"
   },
   "error": {
     "couldNotLoadData": "Nie udało się wczytać danych",
@@ -243,7 +244,8 @@
     "language": "Język",
     "terms": "Warunki użytkowania",
     "help": "Pomoc",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "guardians": "Opiekunowie"
   },
   "securitySettings": {
     "title": "Bezpieczeństwo",
@@ -499,7 +501,29 @@
     "retry": "Spróbuj ponownie",
     "showQrTitle": "Twój kod dla podopiecznego",
     "showQrDescription": "Poproś podopiecznego, aby zeskanował ten kod w zakładce Opiekunowie na swoim urządzeniu.",
-    "addDependantSection": "Dodaj podopiecznego"
+    "addDependantSection": "Dodaj podopiecznego",
+    "requestSent": "Wysłano prośbę o zostanie opiekunem. Podopieczny musi zatwierdzić.",
+    "selectRelationship": "Wybierz relację z podopiecznym",
+    "confirmRequest": "Wyślij prośbę",
+    "scanMinorHint": "Zeskanuj kod QR podopiecznego, aby wysłać prośbę o opiekę"
+  },
+  "guardianApproval": {
+    "pairingTitle": "Prośba o opiekę",
+    "authTitle": "Żądanie autoryzacji",
+    "guardianLabel": "Opiekun",
+    "minorLabel": "Podopieczny",
+    "serviceLabel": "Serwis",
+    "requestExpired": "Żądanie wygasło.",
+    "pairingAccepted": "Parowanie zaakceptowane. {guardianName} jest teraz Twoim opiekunem.",
+    "pairingRejected": "Parowanie odrzucone.",
+    "authApproved": "Autoryzacja zatwierdzona dla {serviceName}.",
+    "authRejected": "Autoryzacja odrzucona.",
+    "errorPrefix": "Błąd: {message}",
+    "reject": "Odrzuć",
+    "approve": "Zatwierdź",
+    "done": "Zamknij",
+    "resultSuccess": "Gotowe",
+    "resultError": "Błąd"
   },
   "settingsLogPassId": {
     "title": "Mój LogPass ID",

@@ -176,7 +176,11 @@ class MainPage extends HookWidget {
                   requestType: params?['request_type'],
                   minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
                 ),
-              );
+              ).then((result) {
+                if (result == true) {
+                  HomePage.reloadActivityNotifier.value++;
+                }
+              });
             }
           },
           guardianPairing: () {
@@ -187,8 +191,8 @@ class MainPage extends HookWidget {
                 GuardianApprovalRoute(
                   requestId: requestId,
                   approvalType: GuardianApprovalType.pairing,
-                  minorName: params?['minor_name'] ?? 'Nieznany',
-                  minorPhone: params?['minor_phone'],
+                  guardianName: params?['guardian_name'] ?? '',
+                  guardianPhone: params?['guardian_phone'],
                 ),
               );
             }

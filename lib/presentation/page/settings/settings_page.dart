@@ -87,6 +87,11 @@ class SettingsPage extends HookWidget {
                         () => AutoRouter.of(context).push(const SecuritySettingsRoute()),
                       ),
                       Separator.light(),
+                      NavigationRow.titled(
+                        LocaleKeys.settings_guardians.tr(),
+                        () => AutoRouter.of(context).push(const GuardianRoute()),
+                      ),
+                      Separator.light(),
                       const SizedBox(height: AppDimens.xc),
                       const DarkModeSwitchRow(),
                       Separator.light(),

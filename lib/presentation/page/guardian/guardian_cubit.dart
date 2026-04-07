@@ -38,10 +38,11 @@ class GuardianCubit extends Cubit<GuardianState> {
     }
   }
 
-  Future<void> addGuardian(String guardianUserId, {String? relationshipType}) async {
+  /// Called by guardian after scanning minor's QR code.
+  Future<void> addMinor(String minorUserId, {String? relationshipType}) async {
     emit(GuardianOperating());
     try {
-      await _repository.requestGuardian(guardianUserId, relationshipType: relationshipType);
+      await _repository.requestGuardian(minorUserId, relationshipType: relationshipType);
       await load();
     } catch (e) {
       emit(GuardianError(e.toString()));
