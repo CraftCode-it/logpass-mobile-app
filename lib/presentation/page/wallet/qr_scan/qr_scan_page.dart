@@ -117,8 +117,9 @@ class QrScanPage extends HookWidget {
         minorUserId: minorUserId,
         onConfirm: (relationship) {
           Navigator.of(dialogContext).pop();
-          context.read<GuardianCubit>().addMinor(minorUserId, relationshipType: relationship).then((_) {
-            final state = context.read<GuardianCubit>().state;
+          final cubit = BlocProvider.of<GuardianCubit>(context);
+          cubit.addMinor(minorUserId, relationshipType: relationship).then((_) {
+            final state = cubit.state;
             if (state is GuardianError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
