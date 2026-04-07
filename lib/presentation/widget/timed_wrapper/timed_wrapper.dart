@@ -22,6 +22,7 @@ class TimedWrapper extends HookWidget {
 
     useEffect(() {
       cubit.initialize(timestamp);
+      return null;
     }, [cubit, timestamp]);
 
     return state.when(

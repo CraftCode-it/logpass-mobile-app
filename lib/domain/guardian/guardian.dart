@@ -35,6 +35,9 @@ class Guardian {
     }
   }
 
+  /// Label shown on guardian's side when listing their wards (dependants).
+  String get dependantLabel => 'Podopieczny';
+
   bool get isActive => status == 'active';
   bool get isPending => status == 'pending';
 

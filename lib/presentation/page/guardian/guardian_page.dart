@@ -9,6 +9,7 @@ import 'package:logpass_me/domain/identity/identity_profile_type.dart';
 import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/guardian/guardian_cubit.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -63,11 +64,12 @@ class GuardianPage extends HookWidget {
         backgroundColor: colors.background,
         title: Text(LocaleKeys.guardian_title.tr(), style: typography.h2),
       ),
-      body: _buildBody(state, cubit, colors, typography, isMinor.value),
+      body: _buildBody(context, state, cubit, colors, typography, isMinor.value),
     );
   }
 
   Widget _buildBody(
+    BuildContext context,
     GuardianState state,
     GuardianCubit cubit,
     AppThemeColors colors,
@@ -126,6 +128,23 @@ class GuardianPage extends HookWidget {
                   style: typography.body1.copyWith(color: colors.lightText),
                   textAlign: TextAlign.center,
                 ),
+                if (isMinor) ...[
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () => AutoRouter.of(context).push(const GuardianShowQrRoute()),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary100,
+                      foregroundColor: AppColors.secondary,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
+                    ),
+                    icon: const Icon(Icons.qr_code, size: 20),
+                    label: Text(
+                      LocaleKeys.guardian_showQrTitle.tr(),
+                      style: typography.h8.copyWith(color: AppColors.secondary),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -135,6 +154,26 @@ class GuardianPage extends HookWidget {
       return ListView(
         padding: const EdgeInsets.all(AppDimens.l),
         children: [
+          if (isMinor) ...[
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => AutoRouter.of(context).push(const GuardianShowQrRoute()),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary100,
+                  foregroundColor: AppColors.secondary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                ),
+                icon: const Icon(Icons.qr_code, size: 20),
+                label: Text(
+                  LocaleKeys.guardian_showQrTitle.tr(),
+                  style: typography.h8.copyWith(color: AppColors.secondary),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
           if (guardians.isNotEmpty) ...[
             Text(LocaleKeys.guardian_myGuardians.tr(), style: typography.h6),
             const SizedBox(height: 8),
@@ -142,6 +181,9 @@ class GuardianPage extends HookWidget {
                   guardian: g,
                   colors: colors,
                   typography: typography,
+                  canApprove: g.isPending,
+                  cubit: cubit,
+                  showDependantLabel: false,
                 )),
             const SizedBox(height: 24),
           ],
@@ -152,6 +194,9 @@ class GuardianPage extends HookWidget {
                   guardian: g,
                   colors: colors,
                   typography: typography,
+                  canApprove: false,
+                  cubit: cubit,
+                  showDependantLabel: true,
                 )),
           ],
         ],
@@ -165,11 +210,17 @@ class _GuardianCard extends StatelessWidget {
   final Guardian guardian;
   final AppThemeColors colors;
   final AppTypography typography;
+  final bool canApprove;
+  final GuardianCubit cubit;
+  final bool showDependantLabel;
 
   const _GuardianCard({
     required this.guardian,
     required this.colors,
     required this.typography,
+    required this.canApprove,
+    required this.cubit,
+    this.showDependantLabel = false,
   });
 
   @override
@@ -196,36 +247,86 @@ class _GuardianCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.secondaryBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.dividerMedium),
+        border: Border.all(
+          color: canApprove ? AppColors.warning.withOpacity(0.5) : colors.dividerMedium,
+          width: canApprove ? 1.5 : 1.0,
+        ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.person_outline, color: colors.secondaryText),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            children: [
+              Icon(Icons.person_outline, color: colors.secondaryText),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(guardian.displayName, style: typography.h8),
+                    Text(
+                      showDependantLabel
+                          ? guardian.dependantLabel
+                          : guardian.relationshipLabel,
+                      style: typography.info2.copyWith(color: colors.lightText),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  statusLabel,
+                  style: typography.info2.copyWith(color: statusColor),
+                ),
+              ),
+            ],
+          ),
+          if (canApprove) ...[
+            const SizedBox(height: 12),
+            Row(
               children: [
-                Text(guardian.displayName, style: typography.h8),
-                if (guardian.relationshipType != null)
-                  Text(
-                    guardian.relationshipLabel,
-                    style: typography.info2.copyWith(color: colors.lightText),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => cubit.rejectGuardian(guardian.id),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.error100),
+                      foregroundColor: AppColors.error100,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    child: Text(
+                      LocaleKeys.guardianApproval_reject.tr(),
+                      style: typography.body2.copyWith(color: AppColors.error100),
+                    ),
                   ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => cubit.confirmGuardian(guardian.id),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.success100,
+                      foregroundColor: AppColors.secondary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    child: Text(
+                      LocaleKeys.guardian_approve.tr(),
+                      style: typography.body2.copyWith(color: AppColors.secondary),
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              statusLabel,
-              style: typography.info2.copyWith(color: statusColor),
-            ),
-          ),
+          ],
         ],
       ),
     );

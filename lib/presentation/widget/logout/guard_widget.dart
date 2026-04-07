@@ -31,6 +31,7 @@ class GuardWidget extends HookWidget {
 
     useEffect(() {
       cubit.init();
+      return null;
     }, [cubit]);
 
     return child;

@@ -102,6 +102,7 @@ class _MessageView extends HookWidget {
     useEffect(
       () {
         animationController.forward();
+        return null;
       },
       [animationController],
     );

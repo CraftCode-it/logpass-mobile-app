@@ -304,7 +304,7 @@ class _IconTextButton extends HookWidget {
           children: [
             SvgPicture.asset(
               icon,
-              color: color,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
             const SizedBox(width: AppDimens.xs),
             Text(

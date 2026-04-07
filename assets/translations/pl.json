@@ -489,6 +489,7 @@
     "relationDialogTitle": "Wybierz rodzaj relacji",
     "relationParent": "Rodzic",
     "relationLegal": "Opiekun prawny",
+    "relationRelative": "Krewny",
     "cancel": "Anuluj",
     "deny": "Odrzuć",
     "approve": "Zatwierdź",
@@ -499,8 +500,8 @@
     "invalidQrCode": "Nieprawidłowy QR kod — oczekiwano LogPass ID",
     "error": "Błąd: {message}",
     "retry": "Spróbuj ponownie",
-    "showQrTitle": "Twój kod dla podopiecznego",
-    "showQrDescription": "Poproś podopiecznego, aby zeskanował ten kod w zakładce Opiekunowie na swoim urządzeniu.",
+    "showQrTitle": "Twój kod dla opiekuna",
+    "showQrDescription": "Poproś opiekuna, aby zeskanował ten kod w zakładce Opiekunowie na swoim urządzeniu.",
     "addDependantSection": "Dodaj podopiecznego",
     "requestSent": "Wysłano prośbę o zostanie opiekunem. Podopieczny musi zatwierdzić.",
     "selectRelationship": "Wybierz relację z podopiecznym",
@@ -525,6 +526,18 @@
     "resultSuccess": "Gotowe",
     "resultError": "Błąd"
   },
+  "guardianAuth": {
+    "title": "Autoryzacja opiekuna",
+    "body": "Serwis \"{serviceName}\" wymaga weryfikacji wieku 18+. Wybierz opiekuna, który może to autoryzować.",
+    "activeGuardian": "Aktywny opiekun",
+    "noGuardians": "Brak aktywnych opiekunów. Dodaj opiekuna w zakładce Opiekunowie.",
+    "cancel": "Anuluj",
+    "send": "Wyślij prośbę",
+    "waitingTitle": "Oczekiwanie na odpowiedź",
+    "waitingBody": "Prośba została wysłana do opiekuna {guardianName}.\nOczekuję na autoryzację...",
+    "errorLoad": "Nie udało się załadować listy opiekunów: {error}",
+    "errorSend": "Błąd wysyłania prośby: {error}"
+  },
   "settingsLogPassId": {
     "title": "Mój LogPass ID",
     "description": "Udostępnij ten kod opiekunowi, aby mógł Cię dodać jako podopiecznego.",
@@ -547,9 +560,12 @@
     "profileLabel": "Profil tożsamości",
     "deny": "Odmów",
     "approve": "Zatwierdź",
+    "askGuardian": "Zapytaj opiekuna",
     "success": "Sukces",
     "failure": "Błąd",
     "done": "Gotowe",
+    "autoClose": "Automatyczne zamknięcie za 3s...",
+    "underageReject": "Zbyt młody/a",
     "guardianServiceName": "Weryfikator"
   },
   "qrScan": {

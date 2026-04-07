@@ -43,7 +43,7 @@ class NavigationRow extends HookWidget {
             if (icon != null) ...[
               SvgPicture.asset(
                 icon,
-                color: colors.buttonFill,
+                colorFilter: ColorFilter.mode(colors.buttonFill, BlendMode.srcIn),
               ),
               const SizedBox(width: AppDimens.l),
             ],
@@ -55,7 +55,7 @@ class NavigationRow extends HookWidget {
             ),
             SvgPicture.asset(
               AppIcon.chevronRight,
-              color: colors.buttonFill,
+              colorFilter: ColorFilter.mode(colors.buttonFill, BlendMode.srcIn),
             ),
           ],
         ),

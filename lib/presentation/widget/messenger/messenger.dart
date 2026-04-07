@@ -33,6 +33,7 @@ class Messenger extends HookWidget {
     useEffect(
       () {
         cubit.initialize(withActionHandler);
+        return null;
       },
       [cubit],
     );
@@ -98,6 +99,7 @@ class Messenger extends HookWidget {
                       verifierName: params?['verifier'],
                       requestType: params?['request_type'],
                       minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                      allowGuardian: params?['allow_guardian'] == 'true',
                     ),
                   );
                 }

@@ -485,6 +485,7 @@
     "relationDialogTitle": "Select relationship type",
     "relationParent": "Parent",
     "relationLegal": "Legal guardian",
+    "relationRelative": "Relative",
     "cancel": "Cancel",
     "deny": "Deny",
     "approve": "Approve",
@@ -495,8 +496,8 @@
     "invalidQrCode": "Invalid QR code — expected LogPass ID",
     "error": "Error: {message}",
     "retry": "Try again",
-    "showQrTitle": "Your code for your dependent",
-    "showQrDescription": "Ask your dependent to scan this code in the Guardians tab on their device.",
+    "showQrTitle": "Your code for your guardian",
+    "showQrDescription": "Ask your guardian to scan this code in the Guardians tab on their device.",
     "addDependantSection": "Add dependant",
     "requestSent": "Guardian request sent. The dependent must confirm.",
     "selectRelationship": "Select your relationship with the dependent",
@@ -521,6 +522,18 @@
     "resultSuccess": "Done",
     "resultError": "Error"
   },
+  "guardianAuth": {
+    "title": "Guardian Authorization",
+    "body": "Service \"{serviceName}\" requires age 18+ verification. Select a guardian who can authorize this.",
+    "activeGuardian": "Active guardian",
+    "noGuardians": "No active guardians. Add a guardian in the Guardians tab.",
+    "cancel": "Cancel",
+    "send": "Send request",
+    "waitingTitle": "Waiting for response",
+    "waitingBody": "Request sent to guardian {guardianName}.\nWaiting for authorization...",
+    "errorLoad": "Failed to load guardian list: {error}",
+    "errorSend": "Error sending request: {error}"
+  },
   "settingsLogPassId": {
     "title": "My LogPass ID",
     "description": "Share this code with your guardian so they can add you as a dependent.",
@@ -543,9 +556,12 @@
     "profileLabel": "Identity profile",
     "deny": "Deny",
     "approve": "Approve",
+    "askGuardian": "Ask guardian",
     "success": "Success",
     "failure": "Error",
     "done": "Done",
+    "autoClose": "Auto-closing in 3s...",
+    "underageReject": "Too young",
     "guardianServiceName": "Verifier"
   },
   "qrScan": {

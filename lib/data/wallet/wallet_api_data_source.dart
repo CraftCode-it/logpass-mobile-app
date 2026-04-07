@@ -62,6 +62,7 @@ class WalletApiDataSource {
     required List<String> zkPublicInputs,
     String? userId,
     String? profileId,
+    String? userPubkey,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
@@ -70,6 +71,7 @@ class WalletApiDataSource {
         'zk_public_inputs': zkPublicInputs,
         if (userId != null) 'user_id': userId,
         if (profileId != null) 'profile_id': profileId,
+        if (userPubkey != null) 'user_pubkey': userPubkey,
       },
     );
     return _unwrap(response.data);

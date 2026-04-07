@@ -16,6 +16,7 @@ class VerificationRequestPage extends HookWidget {
   final String? verifierName;
   final String? requestType;
   final int? minAge;
+  final bool allowGuardian;
 
   const VerificationRequestPage({
     Key? key,
@@ -23,6 +24,7 @@ class VerificationRequestPage extends HookWidget {
     this.verifierName,
     this.requestType,
     this.minAge,
+    this.allowGuardian = false,
   }) : super(key: key);
 
   @override
@@ -92,6 +94,8 @@ class VerificationRequestPage extends HookWidget {
     final List<IdentityProfile> profiles = state is VerificationRequestIdle ? state.profiles : const [];
     final selectedId =
         state is VerificationRequestIdle ? state.selectedProfileId : null;
+    final isMinor = state is VerificationRequestIdle ? state.isMinor : false;
+    final isAgeRequest = requestType == 'age_18' || requestType == null;
 
     return SingleChildScrollView(
       child: Column(
@@ -202,11 +206,14 @@ class VerificationRequestPage extends HookWidget {
                                 requestId: requestId,
                                 verifierName: verifierName,
                                 minAge: minAge,
+                                allowGuardian: allowGuardian,
                               );
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.success100,
+                      backgroundColor: isMinor && isAgeRequest
+                          ? (allowGuardian ? AppColors.warning : AppColors.error100)
+                          : AppColors.success100,
                       foregroundColor: colors.buttonFilledText,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
@@ -219,9 +226,22 @@ class VerificationRequestPage extends HookWidget {
                             child: CircularProgressIndicator(
                                 strokeWidth: 2, color: colors.buttonFilledText),
                           )
-                        : Text(
-                            LocaleKeys.verificationRequest_approve.tr(),
-                            style: typography.h8.copyWith(color: colors.buttonFilledText),
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (isMinor && isAgeRequest && allowGuardian) ...[
+                                const Icon(Icons.supervisor_account, size: 18),
+                                const SizedBox(width: 6),
+                              ],
+                              Text(
+                                isMinor && isAgeRequest
+                                    ? (allowGuardian
+                                        ? LocaleKeys.verificationRequest_askGuardian.tr()
+                                        : LocaleKeys.verificationRequest_underageReject.tr())
+                                    : LocaleKeys.verificationRequest_approve.tr(),
+                                style: typography.h8.copyWith(color: colors.buttonFilledText),
+                              ),
+                            ],
                           ),
                   ),
                 ),
@@ -239,6 +259,13 @@ class VerificationRequestPage extends HookWidget {
     VerificationRequestCubit cubit,
     VerificationRequestState state,
   ) async {
+    if (state is VerificationRequestSuccess) {
+      Future.delayed(const Duration(seconds: 3), () {
+        if (context.mounted) {
+          Navigator.of(context).pop(true);
+        }
+      });
+    }
     if (state is VerificationRequestFailure &&
         state.message == '__guardian_required__') {
       final approved = await showDialog<bool>(
@@ -256,6 +283,7 @@ class VerificationRequestPage extends HookWidget {
           verifierName: verifierName,
           minAge: minAge,
           guardianApproved: true,
+          allowGuardian: allowGuardian,
         );
       } else {
         cubit.setGuardianDenied(minAge);
@@ -381,6 +409,14 @@ class _ResultView extends StatelessWidget {
               ),
             ),
           ),
+          if (success) ...[
+            const SizedBox(height: 12),
+            Text(
+              LocaleKeys.verificationRequest_autoClose.tr(),
+              style: typography.info2.copyWith(color: colors.secondaryText),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );

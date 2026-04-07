@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:logpass_me/core/crypto/key_provider.dart';
 import 'package:logpass_me/data/wallet/wallet_api_data_source.dart';
 import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
+import 'package:logpass_me/domain/identity/identity_field.dart';
+import 'package:logpass_me/domain/identity/identity_profile_type.dart';
 import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/domain/wallet/wallet_repository.dart';
 import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_cubit_state.dart';
@@ -37,12 +39,36 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
           ? selectedId
           : (profiles.isNotEmpty ? profiles.first.id : null);
 
+      final isMinor = await _detectIsMinor(profiles);
+
       emit(VerificationRequestIdle(
         profiles: profiles,
         selectedProfileId: validId,
+        isMinor: isMinor,
       ));
     } catch (_) {
       emit(const VerificationRequestIdle());
+    }
+  }
+
+  Future<bool> _detectIsMinor(List profiles) async {
+    try {
+      final privateProfile = profiles
+          .where((p) => p.type == IdentityProfileType.private)
+          .firstOrNull;
+      if (privateProfile == null) return false;
+      final dobField = privateProfile.fields
+          .where((f) => f.key == IdentityFieldKey.dateOfBirth && f.value.isNotEmpty)
+          .firstOrNull;
+      if (dobField == null) return false;
+      final dob = DateTime.tryParse(dobField.value);
+      if (dob == null) return false;
+      final now = DateTime.now();
+      int age = now.year - dob.year;
+      if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) age--;
+      return age < 18;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -57,6 +83,7 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
     required String? verifierName,
     required int? minAge,
     bool guardianApproved = false,
+    bool allowGuardian = false,
   }) async {
     final profileId = state is VerificationRequestIdle
         ? (state as VerificationRequestIdle).selectedProfileId
@@ -77,7 +104,14 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
       );
 
       if (credential.forced && !guardianApproved) {
-        emit(const VerificationRequestFailure(message: '__guardian_required__'));
+        if (allowGuardian) {
+          emit(const VerificationRequestFailure(message: '__guardian_required__'));
+        } else {
+          emit(VerificationRequestFailure(
+            message: 'Odmowa — wiek poniżej ${minAge ?? 18} lat.\n'
+                'Ten serwis nie akceptuje zgody opiekuna.',
+          ));
+        }
         return;
       }
 
@@ -92,6 +126,7 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
               : <String>[],
           userId: userId,
           profileId: profileId,
+          userPubkey: pubkey,
         );
       }
 
@@ -135,6 +170,17 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
       emit(VerificationRequestFailure(
           message: _errorMessage(e, 'Weryfikacja tożsamości nieudana')));
     }
+  }
+
+  void triggerGuardianRequired(int? minAge) {
+    emit(const VerificationRequestFailure(message: '__guardian_required__'));
+  }
+
+  void rejectUnderage(int? minAge) {
+    emit(VerificationRequestFailure(
+      message: 'Odmowa — wiek poniżej ${minAge ?? 18} lat.\n'
+               'Ten serwis nie akceptuje zgody opiekuna.',
+    ));
   }
 
   void setGuardianDenied(int? minAge) {

@@ -68,6 +68,7 @@ import 'package:logpass_me/presentation/page/wallet/verification_request/verific
 import 'package:logpass_me/presentation/page/guardian/guardian_approval_page.dart'
     show GuardianApprovalPage, GuardianApprovalType;
 import 'package:logpass_me/presentation/page/guardian/guardian_page.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_show_qr_page.dart';
 import 'package:logpass_me/presentation/page/identity/identity_page.dart';
 import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
 import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
@@ -134,5 +135,6 @@ class MainRouter extends _$MainRouter {
     AutoRoute(page: IdentityRoute.page),
     AutoRoute(page: GuardianRoute.page),
     AutoRoute(page: GuardianApprovalRoute.page),
+    AutoRoute(page: GuardianShowQrRoute.page),
   ];
 }

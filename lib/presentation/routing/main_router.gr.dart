@@ -460,6 +460,7 @@ abstract class _$MainRouter extends RootStackRouter {
           verifierName: args.verifierName,
           requestType: args.requestType,
           minAge: args.minAge,
+          allowGuardian: args.allowGuardian,
         ),
       );
     },
@@ -1947,6 +1948,7 @@ class VerificationRequestRoute
     String? verifierName,
     String? requestType,
     int? minAge,
+    bool allowGuardian = false,
     List<PageRouteInfo>? children,
   }) : super(
           VerificationRequestRoute.name,
@@ -1956,6 +1958,7 @@ class VerificationRequestRoute
             verifierName: verifierName,
             requestType: requestType,
             minAge: minAge,
+            allowGuardian: allowGuardian,
           ),
           initialChildren: children,
         );
@@ -1973,6 +1976,7 @@ class VerificationRequestRouteArgs {
     this.verifierName,
     this.requestType,
     this.minAge,
+    this.allowGuardian = false,
   });
 
   final Key? key;
@@ -1985,9 +1989,11 @@ class VerificationRequestRouteArgs {
 
   final int? minAge;
 
+  final bool allowGuardian;
+
   @override
   String toString() {
-    return 'VerificationRequestRouteArgs{key: $key, requestId: $requestId, verifierName: $verifierName, requestType: $requestType, minAge: $minAge}';
+    return 'VerificationRequestRouteArgs{key: $key, requestId: $requestId, verifierName: $verifierName, requestType: $requestType, minAge: $minAge, allowGuardian: $allowGuardian}';
   }
 }
 

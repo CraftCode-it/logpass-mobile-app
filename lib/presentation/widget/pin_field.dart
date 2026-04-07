@@ -85,7 +85,7 @@ class PinField extends HookWidget {
                 isObscured.value ? AppIcon.passwordEyeHide : AppIcon.passwordEyeShow,
                 width: AppDimens.l,
                 height: AppDimens.l,
-                color: colors.text,
+                colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
               ),
             ),
           ),

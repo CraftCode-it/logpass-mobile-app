@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
 import 'package:logpass_me/domain/incoming_actions/action_type.dart';
@@ -50,7 +52,9 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
   }
 
   void _dispatchAction(IncomingAction action) {
-    if (_incomingActionsValidator.canInvoke(action)) {
+    final canInvoke = _incomingActionsValidator.canInvoke(action);
+    debugPrint('[WS] _dispatchAction canInvoke=$canInvoke type=${action.actionType} id=${action.actionId}');
+    if (canInvoke) {
       action.actionType.maybeMap(
         refreshUserCode: (_) => _incomingRefreshCodeActionsBroadcast.add(action),
         orElse: () => _incomingUsersActionsBroadcast.add(action)
@@ -63,9 +67,11 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
 
     _webSocketStreamSubscription = _webSocketManager.listenForChannel().listen((event) {
       final jsonMap = json.decode(event as String) as Map<String, dynamic>;
+      debugPrint('[WS] received type=${jsonMap["type"]} keys=${jsonMap.keys.toList()}');
       // Handle raw logpass_verify push messages from auth-service
       if (jsonMap['type'] == 'logpass_verify') {
         final requestId = jsonMap['request_id'] as String?;
+        debugPrint('[WS] logpass_verify requestId=$requestId verifier=${jsonMap["verifier"]}');
         final action = IncomingAction.create(
           ActionType.logpassVerify(),
           requestId,
@@ -75,6 +81,7 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
             'verifier': (jsonMap['verifier'] as String?) ?? '',
             'request_type': (jsonMap['request_type'] as String?) ?? 'age_18',
             'min_age': (jsonMap['min_age'] ?? 18).toString(),
+            'allow_guardian': (jsonMap['allow_guardian'] as bool? ?? false).toString(),
           },
         );
         _dispatchAction(action);

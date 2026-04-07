@@ -62,7 +62,12 @@ class WalletHomePage extends HookWidget {
                 colors: colors,
                 typography: typography,
                 isLoading: state is WalletHomeVerifying || state is WalletHomeLoading,
-                onPressed: () => cubit.requestVerification(),
+                onPressed: () => AutoRouter.of(context).push(
+                  VerificationRequestRoute(
+                    requestType: 'age_18',
+                    minAge: 18,
+                  ),
+                ).then((_) => cubit.loadCredentials()),
               )
             else ...[
               _MinorWarningSection(
@@ -301,7 +306,7 @@ class _MinorWarningSection extends StatelessWidget {
                     ),
                     icon: const Icon(Icons.warning_amber, size: 18, color: AppColors.warning),
                     label: Text(
-                      'Wymuś wiek 18+',
+                      LocaleKeys.wallet_verifyAge.tr(),
                       style: typography.body2.copyWith(color: AppColors.warning),
                     ),
                   ),

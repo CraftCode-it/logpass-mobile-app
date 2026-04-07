@@ -61,10 +61,13 @@ class QrScanPage extends HookWidget {
                   verifierName: request.verifier,
                   requestType: request.requestType,
                   minAge: request.minAge,
+                  allowGuardian: request.allowGuardian,
                 )).then((result) {
                   if (result == true) {
                     HomePage.reloadActivityNotifier.value++;
                   }
+                  hasNavigated.value = false;
+                  controller.start();
                 });
               } catch (e) {
                 if (kDebugMode) debugPrint('QR parse error: $e');
@@ -72,13 +75,17 @@ class QrScanPage extends HookWidget {
                 if (uuidMatch) {
                   hasNavigated.value = true;
                   controller.stop();
-                  _showGuardianRelationshipDialog(context, rawValue, cubit);
+                  _showGuardianRelationshipDialog(context, rawValue, cubit, hasNavigated, controller);
                 } else {
                   hasNavigated.value = true;
                   controller.stop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(LocaleKeys.qrScan_unknownQr.tr())),
                   );
+                  Future.delayed(const Duration(seconds: 2), () {
+                    hasNavigated.value = false;
+                    controller.start();
+                  });
                 }
               }
             },
@@ -112,6 +119,8 @@ class QrScanPage extends HookWidget {
     BuildContext context,
     String minorUserId,
     GuardianCubit cubit,
+    ValueNotifier<bool> hasNavigated,
+    MobileScannerController controller,
   ) {
     showDialog<void>(
       context: context,
@@ -136,7 +145,8 @@ class QrScanPage extends HookWidget {
         },
         onCancel: () {
           Navigator.of(dialogContext).pop();
-          Navigator.of(context).pop();
+          hasNavigated.value = false;
+          controller.start();
         },
       ),
     );
@@ -161,10 +171,10 @@ class _RelationshipDialog extends StatefulWidget {
 class _RelationshipDialogState extends State<_RelationshipDialog> {
   String _selected = 'parent';
 
-  static const _relationships = [
-    ('parent', 'Rodzic'),
-    ('legal_guardian', 'Opiekun prawny'),
-    ('relative', 'Krewny'),
+  List<(String, String)> get _relationships => [
+    ('parent', LocaleKeys.guardian_relationParent.tr()),
+    ('legal_guardian', LocaleKeys.guardian_relationLegal.tr()),
+    ('relative', LocaleKeys.guardian_relationRelative.tr()),
   ];
 
   @override

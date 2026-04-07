@@ -57,10 +57,12 @@ class WalletRepositoryImpl implements WalletRepository {
     final verificationId = resp['verification_id'] as String;
     final status = await _api.getVerificationStatus(verificationId);
 
+    final serverResult = status['result'] as bool?;
+    final isUnderAge = serverResult == false;
     final credential = Credential(
       id: verificationId,
       type: 'age_$minAge',
-      result: status['result'] as bool?,
+      result: serverResult,
       validUntil: status['valid_until'] != null
           ? DateTime.parse(status['valid_until'] as String)
           : null,
@@ -68,7 +70,7 @@ class WalletRepositoryImpl implements WalletRepository {
       onChainTxId: status['on_chain_tx_id'] as String?,
       issuedAt: DateTime.now(),
       status: status['status'] as String? ?? 'unknown',
-      forced: forced,
+      forced: forced || isUnderAge,
     );
 
     await _saveCredential(credential);

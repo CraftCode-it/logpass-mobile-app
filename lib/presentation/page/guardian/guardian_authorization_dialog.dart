@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/guardian/guardian.dart';
 import 'package:logpass_me/domain/guardian/guardian_repository.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 
 /// Dialog shown to a minor user when they need guardian authorization
@@ -66,7 +68,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Nie udało się załadować listy opiekunów: $e';
+        _errorMessage = LocaleKeys.guardianAuth_errorLoad.tr(namedArgs: {'error': e.toString()});
         _isLoading = false;
       });
     }
@@ -80,7 +82,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
     });
     try {
       final authId = await _guardianRepo.requestAuthorization(
-        guardianId: _selectedGuardian!.id,
+        guardianId: _selectedGuardian!.userId,
         serviceName: widget.serviceName,
         action: widget.action,
       );
@@ -95,7 +97,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
     } catch (e) {
       setState(() {
         _isSending = false;
-        _errorMessage = 'Błąd wysyłania prośby: $e';
+        _errorMessage = LocaleKeys.guardianAuth_errorSend.tr(namedArgs: {'error': e.toString()});
       });
     }
   }
@@ -174,7 +176,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Autoryzacja opiekuna',
+                LocaleKeys.guardianAuth_title.tr(),
                 style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
@@ -182,8 +184,9 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
         ),
         const SizedBox(height: 12),
         Text(
-          'Serwis "${widget.verifierName ?? widget.serviceName}" wymaga weryfikacji wieku 18+. '
-          'Wybierz opiekuna, który może to autoryzować.',
+          LocaleKeys.guardianAuth_body.tr(
+            namedArgs: {'serviceName': widget.verifierName ?? widget.serviceName},
+          ),
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 16),
@@ -197,7 +200,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              'Brak aktywnych opiekunów. Dodaj opiekuna w zakładce Tożsamość.',
+              LocaleKeys.guardianAuth_noGuardians.tr(),
               style: theme.textTheme.bodySmall?.copyWith(color: AppColors.error100),
             ),
           )
@@ -207,7 +210,10 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
                 groupValue: _selectedGuardian,
                 onChanged: (v) => setState(() => _selectedGuardian = v),
                 title: Text(g.displayName, style: theme.textTheme.bodyMedium),
-                subtitle: Text('Aktywny opiekun', style: theme.textTheme.bodySmall),
+                subtitle: Text(
+                  LocaleKeys.guardianAuth_activeGuardian.tr(),
+                  style: theme.textTheme.bodySmall,
+                ),
                 contentPadding: EdgeInsets.zero,
                 dense: true,
               )),
@@ -224,7 +230,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
           children: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Anuluj'),
+              child: Text(LocaleKeys.guardianAuth_cancel.tr()),
             ),
             const SizedBox(width: 8),
             ElevatedButton(
@@ -242,7 +248,10 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.secondary),
                     )
-                  : const Text('Wyślij prośbę', style: TextStyle(color: AppColors.secondary)),
+                  : Text(
+                      LocaleKeys.guardianAuth_send.tr(),
+                      style: const TextStyle(color: AppColors.secondary),
+                    ),
             ),
           ],
         ),
@@ -259,13 +268,14 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
         const Icon(Icons.hourglass_top, size: 48, color: _primaryColor),
         const SizedBox(height: 16),
         Text(
-          'Oczekiwanie na odpowiedź',
+          LocaleKeys.guardianAuth_waitingTitle.tr(),
           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Text(
-          'Prośba została wysłana do opiekuna ${_selectedGuardian?.displayName ?? ''}.\n'
-          'Oczekuję na autoryzację...',
+          LocaleKeys.guardianAuth_waitingBody.tr(
+            namedArgs: {'guardianName': _selectedGuardian?.displayName ?? ''},
+          ),
           style: theme.textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),
@@ -296,7 +306,7 @@ class _GuardianAuthorizationDialogState extends State<GuardianAuthorizationDialo
             _countdownTimer?.cancel();
             Navigator.of(context).pop(false);
           },
-          child: const Text('Anuluj'),
+          child: Text(LocaleKeys.guardianAuth_cancel.tr()),
         ),
       ],
     );
