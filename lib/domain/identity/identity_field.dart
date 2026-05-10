@@ -13,6 +13,19 @@ class IdentityFieldKey {
   static const addressPostalCode = 'addressPostalCode';
   static const peselMasked = 'peselMasked';
   static const invoiceData = 'invoiceData';
+  static const adultContentOptIn = 'adultContentOptIn';
+  static const alcoholCategory = 'alcoholCategory';
+  static const alcoholBrand = 'alcoholBrand';
+  static const cigaretteBrand = 'cigaretteBrand';
+  static const tobaccoCategory = 'tobaccoCategory';
+
+  static const adultPreferenceKeys = {
+    adultContentOptIn,
+    alcoholCategory,
+    alcoholBrand,
+    cigaretteBrand,
+    tobaccoCategory,
+  };
 
   /// Returns a human-readable Polish label for built-in fields.
   static String label(String key) {
@@ -39,6 +52,16 @@ class IdentityFieldKey {
         return 'PESEL (zamaskowany)';
       case invoiceData:
         return 'Dane do faktury';
+      case adultContentOptIn:
+        return 'Zgoda na treści 18+';
+      case alcoholCategory:
+        return 'Kategoria alkoholu';
+      case alcoholBrand:
+        return 'Marka alkoholu';
+      case cigaretteBrand:
+        return 'Marka papierosów';
+      case tobaccoCategory:
+        return 'Kategoria tytoniu';
       default:
         return key;
     }

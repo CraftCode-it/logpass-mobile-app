@@ -63,6 +63,7 @@ class WalletApiDataSource {
     String? userId,
     String? profileId,
     String? userPubkey,
+    Map<String, dynamic>? attributes,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
@@ -72,6 +73,7 @@ class WalletApiDataSource {
         if (userId != null) 'user_id': userId,
         if (profileId != null) 'profile_id': profileId,
         if (userPubkey != null) 'user_pubkey': userPubkey,
+        if (attributes != null) 'attributes': attributes,
       },
     );
     return _unwrap(response.data);
@@ -101,6 +103,7 @@ class WalletApiDataSource {
     required String requestId,
     String? userId,
     String? profileId,
+    Map<String, dynamic>? attributes,
   }) async {
     final response = await _dio.post(
       'verifier/fulfill/$requestId',
@@ -109,6 +112,7 @@ class WalletApiDataSource {
         'zk_public_inputs': <String>[],
         if (userId != null) 'user_id': userId,
         if (profileId != null) 'profile_id': profileId,
+        if (attributes != null) 'attributes': attributes,
       },
     );
     return _unwrap(response.data);

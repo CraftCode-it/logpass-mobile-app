@@ -117,4 +117,21 @@ class IdentityProfile {
           IdentityField(key: IdentityFieldKey.phone, label: IdentityFieldKey.label(IdentityFieldKey.phone), value: '', isLocked: false),
         ],
       );
+
+  /// Creates the default adult preferences profile.
+  static IdentityProfile defaultAdult() => IdentityProfile(
+        id: 'adult',
+        displayName: 'Preferencje 18+',
+        type: IdentityProfileType.adult,
+        fields: [
+          IdentityField(key: IdentityFieldKey.firstName, label: IdentityFieldKey.label(IdentityFieldKey.firstName), value: '', isLocked: false),
+          IdentityField(key: IdentityFieldKey.lastName, label: IdentityFieldKey.label(IdentityFieldKey.lastName), value: '', isLocked: false),
+          IdentityField(key: IdentityFieldKey.dateOfBirth, label: IdentityFieldKey.label(IdentityFieldKey.dateOfBirth), value: '', isLocked: true),
+          IdentityField(key: IdentityFieldKey.adultContentOptIn, label: IdentityFieldKey.label(IdentityFieldKey.adultContentOptIn), value: 'zgoda', isLocked: false),
+          IdentityField(key: IdentityFieldKey.alcoholCategory, label: IdentityFieldKey.label(IdentityFieldKey.alcoholCategory), value: '', isLocked: false),
+          IdentityField(key: IdentityFieldKey.alcoholBrand, label: IdentityFieldKey.label(IdentityFieldKey.alcoholBrand), value: '', isLocked: false),
+          IdentityField(key: IdentityFieldKey.cigaretteBrand, label: IdentityFieldKey.label(IdentityFieldKey.cigaretteBrand), value: '', isLocked: false),
+          IdentityField(key: IdentityFieldKey.tobaccoCategory, label: IdentityFieldKey.label(IdentityFieldKey.tobaccoCategory), value: '', isLocked: false),
+        ],
+      );
 }

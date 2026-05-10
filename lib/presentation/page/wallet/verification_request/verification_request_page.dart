@@ -95,7 +95,25 @@ class VerificationRequestPage extends HookWidget {
     final selectedId =
         state is VerificationRequestIdle ? state.selectedProfileId : null;
     final isMinor = state is VerificationRequestIdle ? state.isMinor : false;
-    final isAgeRequest = requestType == 'age_18' || requestType == 'identity_and_age' || requestType == null;
+    final asksForAttributes = requestType == 'age_18_attributes';
+    final isAgeRequest = requestType == 'age_18' ||
+        requestType == 'identity_and_age' ||
+        asksForAttributes ||
+        requestType == null;
+    final requestTypeLabel = requestType == 'identity'
+        ? LocaleKeys.verificationRequest_typeIdentity.tr()
+        : requestType == 'age_18'
+            ? LocaleKeys.verificationRequest_typeAge18.tr()
+            : asksForAttributes
+                ? 'Wiek 18+ i preferencje z portfela'
+                : requestType == 'identity_and_age'
+                    ? 'Tożsamość i wiek 18+'
+                    : requestType ?? LocaleKeys.verificationRequest_typeAgeGeneric.tr();
+    final sharedDataLabel = requestType == 'identity'
+        ? LocaleKeys.verificationRequest_sharedDataIdentity.tr()
+        : asksForAttributes
+            ? 'Dowód ZK wieku oraz wybrane pola preferencji 18+ z aktywnego profilu.'
+            : LocaleKeys.verificationRequest_sharedDataZk.tr();
 
     return SingleChildScrollView(
       child: Column(
@@ -126,13 +144,7 @@ class VerificationRequestPage extends HookWidget {
           _RequestDetail(
             icon: Icons.verified_user,
             title: LocaleKeys.verificationRequest_verificationType.tr(),
-            value: requestType == 'identity'
-                ? LocaleKeys.verificationRequest_typeIdentity.tr()
-                : requestType == 'age_18'
-                    ? LocaleKeys.verificationRequest_typeAge18.tr()
-                    : requestType == 'identity_and_age'
-                        ? 'Tożsamość i wiek 18+'
-                        : requestType ?? LocaleKeys.verificationRequest_typeAgeGeneric.tr(),
+            value: requestTypeLabel,
             colors: colors,
             typography: typography,
           ),
@@ -150,12 +162,28 @@ class VerificationRequestPage extends HookWidget {
           _RequestDetail(
             icon: Icons.privacy_tip,
             title: LocaleKeys.verificationRequest_sharedData.tr(),
-            value: requestType == 'identity'
-                ? LocaleKeys.verificationRequest_sharedDataIdentity.tr()
-                : LocaleKeys.verificationRequest_sharedDataZk.tr(),
+            value: sharedDataLabel,
             colors: colors,
             typography: typography,
           ),
+          if (asksForAttributes) ...[
+            const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.warning.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.warning.withOpacity(0.35)),
+              ),
+              child: Text(
+                'Zgoda obejmuje tylko pola: imię, data urodzenia oraz preferencje 18+ '
+                '(alkohol, marka alkoholu, tytoń/papierosy). Dane zostaną zapisane '
+                'w requestcie weryfikatora jako attributes.',
+                style: typography.body2.copyWith(color: colors.text),
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
           if (state is VerificationRequestIdle && profiles.isEmpty)
             const Padding(
@@ -209,6 +237,7 @@ class VerificationRequestPage extends HookWidget {
                                 verifierName: verifierName,
                                 minAge: minAge,
                                 allowGuardian: allowGuardian,
+                                includeAttributes: asksForAttributes,
                               );
                             }
                           },
@@ -286,6 +315,7 @@ class VerificationRequestPage extends HookWidget {
           minAge: minAge,
           guardianApproved: true,
           allowGuardian: allowGuardian,
+          includeAttributes: requestType == 'age_18_attributes',
         );
       } else {
         cubit.setGuardianDenied(minAge);

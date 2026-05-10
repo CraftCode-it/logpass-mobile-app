@@ -5,6 +5,7 @@ import 'package:logpass_me/core/crypto/key_provider.dart';
 import 'package:logpass_me/data/wallet/wallet_api_data_source.dart';
 import 'package:logpass_me/domain/auth/use_case/get_user_tokens_use_case.dart';
 import 'package:logpass_me/domain/identity/identity_field.dart';
+import 'package:logpass_me/domain/identity/identity_profile.dart';
 import 'package:logpass_me/domain/identity/identity_profile_type.dart';
 import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/domain/wallet/wallet_repository.dart';
@@ -84,10 +85,12 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
     required int? minAge,
     bool guardianApproved = false,
     bool allowGuardian = false,
+    bool includeAttributes = false,
   }) async {
     final profileId = state is VerificationRequestIdle
         ? (state as VerificationRequestIdle).selectedProfileId
         : null;
+    final attributes = includeAttributes ? _collectSharedAttributes(profileId) : null;
     emit(const VerificationRequestProcessing());
 
     try {
@@ -127,6 +130,7 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
           userId: userId,
           profileId: profileId,
           userPubkey: pubkey,
+          attributes: attributes,
         );
       }
 
@@ -137,6 +141,39 @@ class VerificationRequestCubit extends Cubit<VerificationRequestState> {
     } catch (e) {
       emit(VerificationRequestFailure(message: _errorMessage(e, 'Weryfikacja nieudana')));
     }
+  }
+
+  Map<String, dynamic> _collectSharedAttributes(String? selectedProfileId) {
+    final current = state;
+    if (current is! VerificationRequestIdle) return {};
+
+    final selectedProfile = current.profiles
+        .where((p) => p.id == selectedProfileId)
+        .firstOrNull;
+    final adultProfile = current.profiles
+        .where((p) => p.type == IdentityProfileType.adult)
+        .firstOrNull;
+
+    final result = <String, dynamic>{};
+    void copyFields(IdentityProfile? profile, {bool overwrite = true}) {
+      if (profile == null) return;
+      for (final field in profile.fields) {
+        final value = field.value.trim();
+        if (value.isEmpty) continue;
+        if (IdentityFieldKey.adultPreferenceKeys.contains(field.key) ||
+            field.key == IdentityFieldKey.firstName ||
+            field.key == IdentityFieldKey.lastName ||
+            field.key == IdentityFieldKey.dateOfBirth) {
+          if (overwrite || !result.containsKey(field.key)) {
+            result[field.key] = value;
+          }
+        }
+      }
+    }
+
+    copyFields(adultProfile, overwrite: true);
+    copyFields(selectedProfile, overwrite: true);
+    return result;
   }
 
   Future<void> approveIdentityVerification({

@@ -64,7 +64,7 @@ class IdentityRepositoryImpl implements IdentityRepository {
 
   @override
   Future<void> deleteProfile(String profileId) async {
-    const predefined = {'private', 'work', 'proxy'};
+    const predefined = {'private', 'work', 'proxy', 'adult'};
     if (predefined.contains(profileId)) return;
     final profiles = await getProfiles();
     profiles.removeWhere((p) => p.id == profileId);
@@ -105,6 +105,9 @@ class IdentityRepositoryImpl implements IdentityRepository {
     final lastName = data['last_name'] as String? ?? '';
     final pesel = data['pesel_masked'] as String? ?? '';
     final address = data['address'] as Map<String, dynamic>?;
+    final adultPreferences = data['adult_preferences'] is Map
+        ? Map<String, dynamic>.from(data['adult_preferences'] as Map)
+        : <String, dynamic>{};
 
     final updated = profiles.map((profile) {
       if (profile.type == IdentityProfileType.custom) return profile;
@@ -117,14 +120,16 @@ class IdentityRepositoryImpl implements IdentityRepository {
             return f.copyWith(value: pesel, isLocked: true);
           case IdentityFieldKey.firstName:
             if (profile.type == IdentityProfileType.private ||
-                profile.type == IdentityProfileType.work) {
-              return f.copyWith(value: firstName, isLocked: true);
+                profile.type == IdentityProfileType.work ||
+                profile.type == IdentityProfileType.adult) {
+              return f.copyWith(value: firstName, isLocked: false);
             }
             return f;
           case IdentityFieldKey.lastName:
             if (profile.type == IdentityProfileType.private ||
-                profile.type == IdentityProfileType.work) {
-              return f.copyWith(value: lastName, isLocked: true);
+                profile.type == IdentityProfileType.work ||
+                profile.type == IdentityProfileType.adult) {
+              return f.copyWith(value: lastName, isLocked: false);
             }
             return f;
           case IdentityFieldKey.addressCity:
@@ -142,6 +147,18 @@ class IdentityRepositoryImpl implements IdentityRepository {
               return f.copyWith(value: address?['postal_code'] as String? ?? '', isLocked: true);
             }
             return f;
+          case IdentityFieldKey.adultContentOptIn:
+          case IdentityFieldKey.alcoholCategory:
+          case IdentityFieldKey.alcoholBrand:
+          case IdentityFieldKey.cigaretteBrand:
+          case IdentityFieldKey.tobaccoCategory:
+            if (adultPreferences.containsKey(f.key)) {
+              return f.copyWith(
+                value: adultPreferences[f.key]?.toString() ?? f.value,
+                isLocked: false,
+              );
+            }
+            return f.copyWith(isLocked: false);
           default:
             return f;
         }
@@ -165,6 +182,8 @@ class IdentityRepositoryImpl implements IdentityRepository {
         return IdentityProfile.defaultWork().fields;
       case IdentityProfileType.proxy:
         return IdentityProfile.defaultProxy().fields;
+      case IdentityProfileType.adult:
+        return IdentityProfile.defaultAdult().fields;
       case IdentityProfileType.custom:
         return [];
     }
@@ -179,9 +198,10 @@ class IdentityRepositoryImpl implements IdentityRepository {
         IdentityProfile.defaultPrivate(),
         IdentityProfile.defaultWork(),
         IdentityProfile.defaultProxy(),
+        IdentityProfile.defaultAdult(),
       ];
 
-  /// Ensure the 3 predefined profiles are always present.
+  /// Ensure the predefined profiles are always present.
   /// Migrates legacy 'fake' profile to 'proxy', and old 'address' field to 3 separate fields.
   List<IdentityProfile> _mergeWithDefaults(List<IdentityProfile> profiles) {
     // Migrate legacy 'fake' profile
@@ -224,6 +244,10 @@ class IdentityRepositoryImpl implements IdentityRepository {
     if (!ids.contains('proxy')) {
       final workIdx = profiles.indexWhere((p) => p.id == 'work');
       profiles.insert(workIdx + 1, IdentityProfile.defaultProxy());
+    }
+    if (!ids.contains('adult')) {
+      final proxyIdx = profiles.indexWhere((p) => p.id == 'proxy');
+      profiles.insert(proxyIdx + 1, IdentityProfile.defaultAdult());
     }
     return profiles;
   }

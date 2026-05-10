@@ -41,6 +41,14 @@ class WalletRepositoryImpl implements WalletRepository {
     int minAge = 18,
     bool forced = false,
   }) async {
+    final existing = await getCredential('age_$minAge');
+    final now = DateTime.now();
+    final isExistingValid = existing != null &&
+        existing.result == true &&
+        !existing.forced &&
+        (existing.validUntil == null || existing.validUntil!.isAfter(now));
+    if (isExistingValid) return existing;
+
     // Pobranie user_id z backendu — przekazane do verify_age aby uzyl realnego DOB
     String? userId;
     try {
@@ -133,8 +141,54 @@ class WalletRepositoryImpl implements WalletRepository {
       'pesel_masked': data['pesel_masked'] as String? ?? '',
       'address': address,
       'identity_verified': data['dob_verified'] == true,
+      'adult_preferences': _adultPreferencesFor(testAccount),
     };
     return result;
+  }
+
+  Map<String, dynamic> _adultPreferencesFor(String testAccount) {
+    switch (testAccount) {
+      case 'jan_kowalski':
+        return {
+          'adultContentOptIn': 'zgoda',
+          'alcoholCategory': 'whisky',
+          'alcoholBrand': "Jack Daniel's",
+          'tobaccoCategory': 'papierosy',
+          'cigaretteBrand': 'Marlboro',
+        };
+      case 'anna_nowak':
+        return {
+          'adultContentOptIn': 'zgoda',
+          'alcoholCategory': 'wino',
+          'alcoholBrand': 'Carlo Rossi',
+          'tobaccoCategory': 'bez preferencji',
+          'cigaretteBrand': 'bez preferencji',
+        };
+      case 'kasia_probierz':
+        return {
+          'adultContentOptIn': 'zgoda',
+          'alcoholCategory': 'piwo',
+          'alcoholBrand': 'Tyskie',
+          'tobaccoCategory': 'podgrzewacze',
+          'cigaretteBrand': 'IQOS',
+        };
+      case 'krystyna_seniorka':
+        return {
+          'adultContentOptIn': 'zgoda',
+          'alcoholCategory': 'wino',
+          'alcoholBrand': "Jacob's Creek",
+          'tobaccoCategory': 'bez preferencji',
+          'cigaretteBrand': 'bez preferencji',
+        };
+      default:
+        return {
+          'adultContentOptIn': 'odmowa',
+          'alcoholCategory': '',
+          'alcoholBrand': '',
+          'tobaccoCategory': '',
+          'cigaretteBrand': '',
+        };
+    }
   }
 
   @override
@@ -144,6 +198,7 @@ class WalletRepositoryImpl implements WalletRepository {
     required List<String> zkPublicInputs,
     String? userId,
     String? profileId,
+    Map<String, dynamic>? attributes,
   }) async {
     return _api.fulfillRequest(
       requestId: requestId,
@@ -151,6 +206,7 @@ class WalletRepositoryImpl implements WalletRepository {
       zkPublicInputs: zkPublicInputs,
       userId: userId,
       profileId: profileId,
+      attributes: attributes,
     );
   }
 

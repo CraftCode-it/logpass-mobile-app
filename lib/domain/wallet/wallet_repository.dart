@@ -26,6 +26,7 @@ abstract class WalletRepository {
     required List<String> zkPublicInputs,
     String? userId,
     String? profileId,
+    Map<String, dynamic>? attributes,
   });
 
   Future<Map<String, dynamic>> fulfillIdentityRequest({

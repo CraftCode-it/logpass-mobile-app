@@ -252,10 +252,9 @@ class _PendingItem extends HookWidget {
                   minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
                   allowGuardian: params?['allow_guardian'] == 'true',
                 ),
-              ).then((result) {
-                if (result == true) {
-                  HomePage.reloadActivityNotifier.value++;
-                }
+              ).then((_) {
+                onRemove(action);
+                HomePage.reloadActivityNotifier.value++;
               });
             }
           },
@@ -300,7 +299,11 @@ class _PendingItem extends HookWidget {
                         child: Text(
                           action.actionType.maybeWhen(
                             authorize: () => LocaleKeys.home_actionTypeAuthorization.tr(),
-                            orElse: () => 'Unknown',
+                            logpassVerify: () =>
+                                action.queryParameters?['verifier']?.isNotEmpty == true
+                                    ? action.queryParameters!['verifier']!
+                                    : LocaleKeys.verificationRequest_title.tr(),
+                            orElse: () => LocaleKeys.home_actionTypeAuthorization.tr(),
                           ),
                           style: typography.body3,
                         ),

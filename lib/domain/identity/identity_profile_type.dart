@@ -8,6 +8,9 @@ enum IdentityProfileType {
   /// Proxy: DOB locked from verification; all other fields editable
   proxy,
 
+  /// Adult: optional wallet preferences shared only with explicit consent
+  adult,
+
   /// Custom: user-named profile; all fields editable
   custom,
 }
@@ -21,6 +24,8 @@ extension IdentityProfileTypeExtension on IdentityProfileType {
         return 'Służbowy';
       case IdentityProfileType.proxy:
         return 'Proxy';
+      case IdentityProfileType.adult:
+        return 'Preferencje 18+';
       case IdentityProfileType.custom:
         return 'Niestandardowy';
     }
