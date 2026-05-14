@@ -51,6 +51,8 @@
     </array>
     <key>NSFaceIDUsageDescription</key>
     <string>Why is my app authenticating using face id?</string>
+    <key>NSCameraUsageDescription</key>
+    <string>LogPass uses the camera to scan QR codes for verification requests.</string>
     <key>CFBundleURLTypes</key>
     <array>
     <dict>
