@@ -19,16 +19,16 @@ workflows:
         script: |
           dart run easy_localization:generate --source-dir ./assets/translations -f keys -o local_keys.g.dart
           dart run build_runner build --delete-conflicting-outputs
-      - name: Patch libphonenumber iOS plugin
+      - name: Patch iOS plugin compatibility
         script: |
           python3 - <<'PY'
           from pathlib import Path
 
-          candidates = list(Path.home().glob(".pub-cache/hosted/pub.dev/libphonenumber-*/ios/Classes/LibphonenumberPlugin.m"))
-          if not candidates:
+          libphonenumber_files = list(Path.home().glob(".pub-cache/hosted/pub.dev/libphonenumber-*/ios/Classes/LibphonenumberPlugin.m"))
+          if not libphonenumber_files:
               raise SystemExit("LibphonenumberPlugin.m not found in pub cache")
 
-          plugin_file = candidates[0]
+          plugin_file = libphonenumber_files[0]
           source = plugin_file.read_text()
           patched = source.replace("[[NBPhoneNumberUtil alloc] sharedInstance]", "[NBPhoneNumberUtil sharedInstance]")
           patched = patched.replace("[[NBPhoneNumberUtil alloc] init]", "[NBPhoneNumberUtil sharedInstance]")
@@ -38,6 +38,17 @@ workflows:
           else:
               plugin_file.write_text(patched)
               print(f"Patched {plugin_file}")
+
+          firebase_headers = []
+          firebase_headers.extend(Path.home().glob(".pub-cache/hosted/pub.dev/firebase_crashlytics-*/ios/Classes/*.h"))
+          firebase_headers.extend(Path.home().glob(".pub-cache/hosted/pub.dev/firebase_messaging-*/ios/Classes/*.h"))
+
+          for header in firebase_headers:
+              source = header.read_text()
+              patched = source.replace("#import <Firebase/Firebase.h>", "@import Firebase;")
+              if patched != source:
+                  header.write_text(patched)
+                  print(f"Patched Firebase import in {header}")
           PY
       - name: Initialize keychain
         script: keychain initialize
