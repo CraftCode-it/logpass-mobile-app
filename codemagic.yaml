@@ -39,16 +39,18 @@ workflows:
               plugin_file.write_text(patched)
               print(f"Patched {plugin_file}")
 
-          firebase_headers = []
-          firebase_headers.extend(Path.home().glob(".pub-cache/hosted/pub.dev/firebase_crashlytics-*/ios/Classes/*.h"))
-          firebase_headers.extend(Path.home().glob(".pub-cache/hosted/pub.dev/firebase_messaging-*/ios/Classes/*.h"))
+          firebase_patches = [
+              (".pub-cache/hosted/pub.dev/firebase_crashlytics-*/ios/Classes/*.[hm]", "@import FirebaseCrashlytics;"),
+              (".pub-cache/hosted/pub.dev/firebase_messaging-*/ios/Classes/*.[hm]", "@import FirebaseMessaging;"),
+          ]
 
-          for header in firebase_headers:
-              source = header.read_text()
-              patched = source.replace("#import <Firebase/Firebase.h>", "@import Firebase;")
-              if patched != source:
-                  header.write_text(patched)
-                  print(f"Patched Firebase import in {header}")
+          for pattern, module_import in firebase_patches:
+              for source_file in Path.home().glob(pattern):
+                  source = source_file.read_text()
+                  patched = source.replace("#import <Firebase/Firebase.h>", module_import)
+                  if patched != source:
+                      source_file.write_text(patched)
+                      print(f"Patched Firebase import in {source_file}")
           PY
       - name: Initialize keychain
         script: keychain initialize
