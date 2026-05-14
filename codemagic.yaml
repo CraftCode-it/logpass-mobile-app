@@ -15,6 +15,26 @@ workflows:
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
+      - name: Patch libphonenumber iOS plugin
+        script: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          candidates = list(Path.home().glob(".pub-cache/hosted/pub.dev/libphonenumber-*/ios/Classes/LibphonenumberPlugin.m"))
+          if not candidates:
+              raise SystemExit("LibphonenumberPlugin.m not found in pub cache")
+
+          plugin_file = candidates[0]
+          source = plugin_file.read_text()
+          patched = source.replace("[[NBPhoneNumberUtil alloc] sharedInstance]", "[NBPhoneNumberUtil sharedInstance]")
+          patched = patched.replace("[[NBPhoneNumberUtil alloc] init]", "[NBPhoneNumberUtil sharedInstance]")
+
+          if patched == source:
+              print(f"No libphonenumber patch needed for {plugin_file}")
+          else:
+              plugin_file.write_text(patched)
+              print(f"Patched {plugin_file}")
+          PY
       - name: Initialize keychain
         script: keychain initialize
       - name: Add certificates to keychain
