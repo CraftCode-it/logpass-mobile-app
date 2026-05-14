@@ -15,7 +15,8 @@
     "save": "Zapisz",
     "remove": "Usuń",
     "copied": "Skopiowano",
-    "done": "Zrobione"
+    "done": "Zrobione",
+    "cancel": "Anuluj"
   },
   "error": {
     "couldNotLoadData": "Nie udało się wczytać danych",
@@ -34,7 +35,8 @@
   "bottomBarNavigation": {
     "home": "Strona główna",
     "services": "Serwisy",
-    "data": "Twoje dane",
+    "wallet": "Portfel",
+    "data": "Tożsamość",
     "settings": "Opcje"
   },
   "countryCodePicker": {
@@ -72,7 +74,12 @@
     "pastActions": "Zobacz poprzednie zadania",
     "actionTypeAuthorization": "Autoryzacja",
     "pendingItemTimeLeft": "Aktywne przez {}",
-    "codeCopied": "Kod został skopiowany"
+    "codeCopied": "Kod został skopiowany",
+    "recentActivityLabel": "Ostatnie weryfikacje",
+    "recentActivityEmpty": "Brak historii weryfikacji",
+    "recentActivityActionVerification": "Weryfikacja",
+    "recentActivityActionIdentity": "Tożsamość",
+    "recentActivityActionAge": "Weryfikacja wieku"
   },
   "authorize": {
     "title": "Autoryzuj działanie",
@@ -163,7 +170,25 @@
       "other": "{} sesji"
     },
     "noServices": "To konto nie ma żadnych powiązanych usług. ",
-    "noActiveSessions": "Brak aktywnych sesji"
+    "noActiveSessions": "Brak aktywnych sesji",
+    "activitySummary": {
+      "one": "{count} weryfikacja · ostatnia: {date}",
+      "few": "{count} weryfikacje · ostatnia: {date}",
+      "many": "{count} weryfikacji · ostatnia: {date}",
+      "other": "{count} weryfikacji · ostatnia: {date}"
+    },
+    "activitySectionHeader": "Historia weryfikacji",
+    "verificationBadge": "Weryfikacja"
+  },
+  "serviceActivityDetail": {
+    "sharedDataHeader": "Przekazane dane",
+    "historyHeader": "Historia weryfikacji",
+    "fieldFirstName": "Imię i nazwisko",
+    "fieldLastName": "Nazwisko",
+    "fieldDob": "Data urodzenia",
+    "fieldPesel": "PESEL (zamaskowany)",
+    "fieldAddress": "Adres",
+    "fieldAge18": "Weryfikacja wieku 18+"
   },
   "serviceDetails": {
     "title": "Szczegóły zabezpieczeń",
@@ -219,7 +244,8 @@
     "language": "Język",
     "terms": "Warunki użytkowania",
     "help": "Pomoc",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "guardians": "Opiekunowie"
   },
   "securitySettings": {
     "title": "Bezpieczeństwo",
@@ -412,5 +438,157 @@
   "confirm": {
     "title": "Potwierdź",
     "header": "Czy chcesz potwierdzić tę operacje?"
+  },
+  "wallet": {
+    "title": "Portfel",
+    "subtitle": "Twoje poświadczenia cyfrowe",
+    "credentialsLabel": "Poświadczenia",
+    "verifyAge": "Zweryfikuj wiek (18+)",
+    "verifyAgeInProgress": "Weryfikacja...",
+    "statusOnline": "Online",
+    "statusOffline": "Offline",
+    "credentialValid": "Ważne",
+    "credentialExpired": "Wygasłe / Nieważne",
+    "credentialAnchored": "Zakotwiczone w łańcuchu",
+    "emptyTitle": "Brak poświadczeń",
+    "emptySubtitle": "Kliknij \"Zweryfikuj wiek\" aby uzyskać\npierwsze poświadczenie cyfrowe",
+    "errorGeneral": "Błąd weryfikacji. Spróbuj ponownie.",
+    "proofTitle": "Dowód ZK",
+    "proofSubtitle": "Twój weryfikowalny dowód",
+    "requestTitle": "Żądanie weryfikacji",
+    "scanTitle": "Skanuj QR"
+  },
+  "identity": {
+    "title": "Tożsamość",
+    "verifyingMobywatel": "Weryfikowanie przez mObywatel...",
+    "addProfileTooltip": "Dodaj profil",
+    "newProfileTitle": "Nowy profil",
+    "profileNameHint": "Nazwa profilu",
+    "cancel": "Anuluj",
+    "create": "Utwórz",
+    "addField": "Dodaj pole",
+    "deleteProfileTitle": "Usuń profil",
+    "deleteProfileContent": "Czy na pewno chcesz usunąć ten profil?",
+    "delete": "Usuń",
+    "mobywatelVerified": "Zweryfikowano przez mObywatel",
+    "mobywatelVerifyButton": "Zweryfikuj przez mObywatel",
+    "mobywatelDialogTitle": "Wybierz profil testowy mObywatel",
+    "identityProfileLabel": "Profil tożsamości",
+    "editField": "Edytuj: {label}",
+    "fieldEditSave": "Zapisz",
+    "addFieldTitle": "Dodaj pole",
+    "editFieldTitle": "Edytuj pole: {label}",
+    "fieldKindTitle": "Rodzaj pola",
+    "fieldKindData": "Dane",
+    "fieldKindPreferences": "Preferencje",
+    "valueKindTitle": "Typ wartości",
+    "valueKindPredefined": "Predefiniowane",
+    "valueKindCustom": "Własne",
+    "fieldLabel": "Pole",
+    "valueLabel": "Wartość",
+    "customFieldNameLabel": "Nazwa pola",
+    "customValueLabel": "Własna wartość",
+    "searchValueLabel": "Szukaj wartości",
+    "alcoholCategoryFirst": "Najpierw wybierz kategorię alkoholu",
+    "tobaccoCategoryFirst": "Najpierw wybierz kategorię tytoniu",
+    "noFieldsToAdd": "Brak dostępnych pól predefiniowanych do dodania",
+    "addFieldAction": "Dodaj pole",
+    "error": "Błąd: {message}"
+  },
+  "guardian": {
+    "title": "Opiekunowie",
+    "addGuardianTooltip": "Dodaj opiekuna (skanuj QR)",
+    "noGuardians": "Brak opiekunów",
+    "noDependants": "Brak podopiecznych",
+    "scanGuardianHint": "Skanuj QR kod opiekuna, aby go dodać",
+    "myGuardians": "Moi opiekunowie",
+    "myDependants": "Moi podopieczni",
+    "relationDialogTitle": "Wybierz rodzaj relacji",
+    "relationParent": "Rodzic",
+    "relationLegal": "Opiekun prawny",
+    "relationRelative": "Krewny",
+    "cancel": "Anuluj",
+    "deny": "Odrzuć",
+    "approve": "Zatwierdź",
+    "statusActive": "Aktywny",
+    "statusPending": "Oczekuje",
+    "statusRevoked": "Odwołany",
+    "scanTitle": "Skanuj QR opiekuna",
+    "invalidQrCode": "Nieprawidłowy QR kod — oczekiwano LogPass ID",
+    "error": "Błąd: {message}",
+    "retry": "Spróbuj ponownie",
+    "showQrTitle": "Twój kod dla opiekuna",
+    "showQrDescription": "Poproś opiekuna, aby zeskanował ten kod w zakładce Opiekunowie na swoim urządzeniu.",
+    "addDependantSection": "Dodaj podopiecznego",
+    "requestSent": "Wysłano prośbę o zostanie opiekunem. Podopieczny musi zatwierdzić.",
+    "selectRelationship": "Wybierz relację z podopiecznym",
+    "confirmRequest": "Wyślij prośbę",
+    "scanMinorHint": "Zeskanuj kod QR podopiecznego, aby wysłać prośbę o opiekę"
+  },
+  "guardianApproval": {
+    "pairingTitle": "Prośba o opiekę",
+    "authTitle": "Żądanie autoryzacji",
+    "guardianLabel": "Opiekun",
+    "minorLabel": "Podopieczny",
+    "serviceLabel": "Serwis",
+    "requestExpired": "Żądanie wygasło.",
+    "pairingAccepted": "Parowanie zaakceptowane. {guardianName} jest teraz Twoim opiekunem.",
+    "pairingRejected": "Parowanie odrzucone.",
+    "authApproved": "Autoryzacja zatwierdzona dla {serviceName}.",
+    "authRejected": "Autoryzacja odrzucona.",
+    "errorPrefix": "Błąd: {message}",
+    "reject": "Odrzuć",
+    "approve": "Zatwierdź",
+    "done": "Zamknij",
+    "resultSuccess": "Gotowe",
+    "resultError": "Błąd"
+  },
+  "guardianAuth": {
+    "title": "Autoryzacja opiekuna",
+    "body": "Serwis \"{serviceName}\" wymaga weryfikacji wieku 18+. Wybierz opiekuna, który może to autoryzować.",
+    "activeGuardian": "Aktywny opiekun",
+    "noGuardians": "Brak aktywnych opiekunów. Dodaj opiekuna w zakładce Opiekunowie.",
+    "cancel": "Anuluj",
+    "send": "Wyślij prośbę",
+    "waitingTitle": "Oczekiwanie na odpowiedź",
+    "waitingBody": "Prośba została wysłana do opiekuna {guardianName}.\nOczekuję na autoryzację...",
+    "errorLoad": "Nie udało się załadować listy opiekunów: {error}",
+    "errorSend": "Błąd wysyłania prośby: {error}"
+  },
+  "settingsLogPassId": {
+    "title": "Mój LogPass ID",
+    "description": "Udostępnij ten kod opiekunowi, aby mógł Cię dodać jako podopiecznego.",
+    "copyButton": "Kopiuj ID",
+    "copiedMessage": "ID skopiowane do schowka"
+  },
+  "verificationRequest": {
+    "title": "Żądanie weryfikacji",
+    "unknownVerifier": "Nieznany weryfikator",
+    "requestsVerification": "żąda weryfikacji",
+    "verificationType": "Typ weryfikacji",
+    "typeIdentity": "Tożsamość",
+    "typeAge18": "Wiek 18+",
+    "typeAgeGeneric": "Weryfikacja wieku",
+    "minAge": "Minimalny wiek",
+    "minAgeValue": "{age}+",
+    "sharedData": "Udostępniane dane",
+    "sharedDataIdentity": "Tylko potwierdzenie tożsamości\nBez ujawniania danych osobowych",
+    "sharedDataZk": "Tylko dowód ZK\nBez ujawniania danych osobowych",
+    "profileLabel": "Profil tożsamości",
+    "deny": "Odmów",
+    "approve": "Zatwierdź",
+    "askGuardian": "Zapytaj opiekuna",
+    "success": "Sukces",
+    "failure": "Błąd",
+    "done": "Gotowe",
+    "autoClose": "Automatyczne zamknięcie za 3s...",
+    "underageReject": "Zbyt młody/a",
+    "guardianServiceName": "Weryfikator"
+  },
+  "qrScan": {
+    "title": "Skanuj kod QR",
+    "hint": "Skieruj kamerę na kod QR weryfikatora",
+    "unknownQr": "Nierozpoznany kod QR",
+    "logpassIdScanned": "Zeskanowano LogPass ID. Aby dodać opiekuna, użyj funkcji Opiekunowie."
   }
 }

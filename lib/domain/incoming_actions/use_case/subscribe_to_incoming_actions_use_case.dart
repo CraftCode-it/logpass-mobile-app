@@ -4,11 +4,9 @@ import 'package:logpass_me/domain/incoming_actions/incoming_with_splitted_action
 
 @injectable
 class SubscribeToIncomingActionsUseCase {
-  final IncomingWithSplittedActionsRepository _incomingActionsRepository;
+  final IncomingWithSplittedActionsRepository _repository;
 
-  SubscribeToIncomingActionsUseCase(
-    this._incomingActionsRepository,
-  );
+  SubscribeToIncomingActionsUseCase(this._repository);
 
-  Stream<IncomingAction> call() => _incomingActionsRepository.listenForIncomingActions();
+  Stream<IncomingAction> call() => _repository.listenForIncomingActions();
 }

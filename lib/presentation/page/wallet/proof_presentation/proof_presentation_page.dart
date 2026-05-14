@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/wallet/credential.dart';
+import 'package:logpass_me/domain/wallet/wallet_repository.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 @RoutePage()
 class ProofPresentationPage extends HookWidget {
@@ -23,6 +26,19 @@ class ProofPresentationPage extends HookWidget {
     final typography = useAppTypography();
     final isGenerating = useState(proofData == null);
     final proof = useState<Map<String, dynamic>?>(proofData);
+
+    useEffect(() {
+      if (proofData == null) {
+        final repo = getIt<WalletRepository>();
+        repo.generateProof(credential.id).then((data) {
+          proof.value = data;
+          isGenerating.value = false;
+        }).catchError((_) {
+          isGenerating.value = false;
+        });
+      }
+      return;
+    }, [credential.id]);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -187,7 +203,37 @@ class _ProofReadyState extends StatelessWidget {
             height: 56,
             child: ElevatedButton.icon(
               onPressed: () {
-                // Will generate QR code with proof data
+                final qrPayload = jsonEncode({
+                  'type': 'logpass_proof',
+                  'credential_id': credential.id,
+                  'credential_type': credential.type,
+                  'zk_proof': proof['zk_proof'],
+                  'zk_public_inputs': proof['zk_public_inputs'],
+                  'circuit_type': proof['circuit_type'],
+                });
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text('Scan to Verify'),
+                    content: SizedBox(
+                      width: 280,
+                      height: 280,
+                      child: Center(
+                        child: QrImageView(
+                          data: qrPayload,
+                          version: QrVersions.auto,
+                          size: 250,
+                        ),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
               },
               icon: Icon(Icons.qr_code),
               label: Text('Show QR Code', style: typography.h8.copyWith(color: colors.buttonFilledText)),

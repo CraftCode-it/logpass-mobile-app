@@ -1,12 +1,14 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/domain/activity/service_activity.dart';
+import 'package:logpass_me/presentation/page/service_list/service_activity_detail_page.dart';
 import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -38,14 +40,16 @@ class ServiceListPage extends HookWidget {
     );
 
     useEffect(() {
-      scrollController.addListener(() {
+      void onScroll() {
         final position = scrollController.position;
-
         if (position.maxScrollExtent - position.pixels < screenHeight) {
           cubit.loadNextPage();
         }
-      });
-    }, [scrollController]);
+      }
+
+      scrollController.addListener(onScroll);
+      return () => scrollController.removeListener(onScroll);
+    }, [scrollController, cubit]);
 
     useEffect(() {
       cubit.initialize();
@@ -127,12 +131,19 @@ class _ContentEmpty extends HookWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Center(
-            child: Text(
-              LocaleKeys.serviceList_noServices,
-              textAlign: TextAlign.center,
-              style: typography.body1.copyWith(color: colors.secondaryText),
-            ).tr(),
+          child: Column(
+            children: [
+              const SizedBox(height: AppDimens.xxl),
+              Center(
+                child: Text(
+                  LocaleKeys.serviceList_noServices,
+                  textAlign: TextAlign.center,
+                  style: typography.body1.copyWith(color: colors.secondaryText),
+                ).tr(),
+              ),
+              const SizedBox(height: AppDimens.xxl),
+              _ActivityServicesSection(cubit: cubit),
+            ],
           ),
         ),
       ),
@@ -182,6 +193,10 @@ class _ContentList extends StatelessWidget {
                   child: Loader(),
                 ),
               ),
+            const SliverPadding(padding: EdgeInsets.only(top: AppDimens.xxl)),
+            SliverToBoxAdapter(
+              child: _ActivityServicesSection(cubit: cubit),
+            ),
           ],
         ),
       ),
@@ -240,6 +255,149 @@ class _ServicesHeader extends HookWidget {
   }
 }
 
+class _ActivityServicesSection extends HookWidget {
+  final ServiceListPageCubit cubit;
+
+  const _ActivityServicesSection({required this.cubit, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+    final services = useState<List<ServiceSummary>>([]);
+    final isLoading = useState(true);
+
+    useEffect(() {
+      cubit.loadActivityServices().then((result) {
+        services.value = result;
+        isLoading.value = false;
+      }).catchError((_) {
+        isLoading.value = false;
+      });
+      return null;
+    }, [cubit]);
+
+    if (isLoading.value) {
+      return const Padding(
+        padding: EdgeInsets.all(AppDimens.m),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (services.value.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+          child: Text(
+            LocaleKeys.serviceList_activitySectionHeader.tr(),
+            style: typography.h8,
+          ),
+        ),
+        const SizedBox(height: AppDimens.m),
+        ...services.value.map(
+          (s) => _ActivityServiceRow(summary: s, colors: colors, typography: typography),
+        ),
+        const SizedBox(height: AppDimens.xxl),
+      ],
+    );
+  }
+}
+
+class _ActivityServiceRow extends StatelessWidget {
+  final ServiceSummary summary;
+  final AppThemeColors colors;
+  final AppTypography typography;
+
+  const _ActivityServiceRow({
+    required this.summary,
+    required this.colors,
+    required this.typography,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final initials = summary.serviceName.isNotEmpty
+        ? summary.serviceName[0].toUpperCase()
+        : '?';
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ServiceActivityDetailPage(serviceName: summary.serviceName),
+        ),
+      ),
+      child: Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppDimens.l,
+        vertical: AppDimens.xs,
+      ),
+      padding: const EdgeInsets.all(AppDimens.m),
+      decoration: BoxDecoration(
+        border: Border.all(color: colors.dividerMedium),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: colors.buttonFill,
+            child: Text(
+              initials,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: colors.buttonFilledText,
+              ),
+            ),
+          ),
+          const SizedBox(width: AppDimens.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(summary.serviceName, style: typography.body3),
+                const SizedBox(height: 2),
+                Text(
+                  LocaleKeys.serviceList_activitySummary.plural(
+                    summary.actionCount,
+                    namedArgs: {
+                      'count': summary.actionCount.toString(),
+                      'date': _formatDate(summary.lastActivity),
+                    },
+                  ),
+                  style: typography.info2.copyWith(color: colors.secondaryText),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: colors.buttonFill.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    LocaleKeys.serviceList_verificationBadge.tr(),
+                    style: typography.input.copyWith(color: colors.buttonFill),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.chevron_right, color: colors.secondaryText),
+        ],
+      ),
+    ));
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.day}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
+  }
+}
+
 class _ServiceRow extends HookWidget {
   final ServiceWithTokens service;
   final bool active;
@@ -259,7 +417,7 @@ class _ServiceRow extends HookWidget {
       children: [
         InkWell(
           onTap: () {
-            AutoRouter.of(context).push(ServiceDetailsPageRoute(service: service.service));
+            AutoRouter.of(context).push(ServiceDetailsRoute(service: service.service));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: AppDimens.m),

@@ -63,7 +63,5 @@ ios/build/
 ### FVM related ###
 .fvm/flutter_sdk
 
-.cursor/
-google-services.json
-**/GoogleService-Info.plist
-
+# Nested repo artefakt (nie commituj)
+logpass-flutter/

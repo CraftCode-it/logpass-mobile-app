@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "logpass-me-stub",
+    "storage_bucket": "logpass-me-stub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+        "android_client_info": {
+          "package_name": "me.logpass.mobile"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "STUB_API_KEY_REPLACE_WITH_REAL"
+        }
+      ],
+      "services": {}
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000001",
+        "android_client_info": {
+          "package_name": "me.logpass.mobile.dev"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "STUB_API_KEY_REPLACE_WITH_REAL"
+        }
+      ],
+      "services": {}
+    }
+  ],
+  "configuration_version": "1"
+}

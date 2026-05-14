@@ -6,6 +6,7 @@ import 'package:logpass_me/domain/incoming_actions/use_case/get_queued_incoming_
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_refresh_code_actions_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_background_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_from_link_use_case.dart';
+import 'package:logpass_me/domain/incoming_actions/use_case/subscribe_to_incoming_actions_use_case.dart';
 import 'package:logpass_me/domain/incoming_actions/use_case/switch_pre_login_action_handler_use_case.dart';
 import 'package:logpass_me/domain/one_time_code/use_case/load_one_time_code_use_case.dart';
 import 'package:logpass_me/domain/push_notifications/use_case/init_notifications_services_use_case.dart';
@@ -31,7 +32,8 @@ import 'main_cubit_test.mocks.dart';
     SubscribeToIncomingActionsFromBackgroundUseCase,
     SubscribeToRefreshCodeActionsUseCase,
     LoadOneTimeCodeUseCase,
-    MarkNotificationAsReceivedUseCase
+    MarkNotificationAsReceivedUseCase,
+    SubscribeToIncomingActionsUseCase,
   ],
 )
 void main() {
@@ -46,6 +48,7 @@ void main() {
   late SubscribeToRefreshCodeActionsUseCase subscribeToRefreshCodeActionsUseCase;
   late LoadOneTimeCodeUseCase loadOneTimeCodeUseCase;
   late MarkNotificationAsReceivedUseCase markNotificationAsReceivedUseCase;
+  late SubscribeToIncomingActionsUseCase subscribeToIncomingActionsUseCase;
   late MainPageCubit cubit;
 
   setUp(() {
@@ -60,6 +63,7 @@ void main() {
     subscribeToRefreshCodeActionsUseCase = MockSubscribeToRefreshCodeActionsUseCase();
     loadOneTimeCodeUseCase = MockLoadOneTimeCodeUseCase();
     markNotificationAsReceivedUseCase = MockMarkNotificationAsReceivedUseCase();
+    subscribeToIncomingActionsUseCase = MockSubscribeToIncomingActionsUseCase();
 
     cubit = MainPageCubit(
       setupWebSocketChannelUseCase,
@@ -72,7 +76,8 @@ void main() {
       subscribeToIncomingActionsFromBackgroundUseCase,
       subscribeToRefreshCodeActionsUseCase,
       loadOneTimeCodeUseCase,
-      markNotificationAsReceivedUseCase
+      markNotificationAsReceivedUseCase,
+      subscribeToIncomingActionsUseCase,
     );
   });
 

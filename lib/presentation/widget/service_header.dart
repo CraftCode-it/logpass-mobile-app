@@ -26,7 +26,8 @@ class ServiceHeader extends HookWidget {
 
     return GestureDetector(
       onTap: () async {
-        await launch(serviceUrl);
+        final uri = Uri.tryParse(serviceUrl);
+        if (uri != null) await launchUrl(uri);
       },
       child: Container(
         width: double.infinity,

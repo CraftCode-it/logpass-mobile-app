@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 class AppSecurityDatabase {
   static const _typeKey = 'logPassAppSecurityType';
   static const _codeKey = 'logPassAppSecurityCode';
-  static const _iosOptions = IOSOptions(accessibility: IOSAccessibility.unlocked_this_device);
+  static const _iosOptions = IOSOptions(accessibility: KeychainAccessibility.unlocked_this_device);
 
   final FlutterSecureStorage _storage;
 

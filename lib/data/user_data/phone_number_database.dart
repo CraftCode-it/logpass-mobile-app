@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
 const _key = 'logpassPhoneNumber';
-const _iosOptions = IOSOptions(accessibility: IOSAccessibility.unlocked_this_device);
+const _iosOptions = IOSOptions(accessibility: KeychainAccessibility.unlocked_this_device);
 
 @LazySingleton()
 class PhoneNumberDatabase {

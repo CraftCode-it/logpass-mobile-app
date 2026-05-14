@@ -18,7 +18,7 @@ import 'package:logpass_me/presentation/widget/labeled_text.dart';
 import 'package:logpass_me/presentation/widget/logpass_dialog.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:pdfx/pdfx.dart';
 
 @RoutePage()
 class AgreementDetailsPage extends HookWidget {
@@ -125,7 +125,6 @@ class _Content extends HookWidget {
                 ? const Loader()
                 : PdfView(
                     controller: controller,
-                    documentLoader: const Loader(),
                     scrollDirection: Axis.vertical,
                   ),
           ),

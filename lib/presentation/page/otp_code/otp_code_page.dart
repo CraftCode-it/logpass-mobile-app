@@ -9,7 +9,7 @@ import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_cubit.dart';
 import 'package:logpass_me/presentation/page/otp_code/otp_code_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -24,8 +24,6 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/timed_wrapper/timed_wrapper.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:sms_user_consent/sms_user_consent.dart';
-
 @RoutePage()
 class OTPCodePage extends HookWidget {
   final String phoneNumber;
@@ -54,7 +52,8 @@ class OTPCodePage extends HookWidget {
         state,
         context,
         messengerController,
-        otpReceivedCode
+        otpReceivedCode,
+        otpCodeController,
       ),
     );
 
@@ -152,15 +151,29 @@ class OTPCodePage extends HookWidget {
     BuildContext context,
     MessengerController controller,
     ValueNotifier<String> otpReceivedCode,
+    TextEditingController otpCodeController,
   ) {
     state.maybeMap(
       connectionError: (state) => controller.showError(
         getConnectionErrorString(state.error),
       ),
-      otpAutofill: (state) => otpReceivedCode.value = state.code,
+      otpAutofill: (state) {
+        otpReceivedCode.value = state.code;
+        final raw = state.code;
+        if (raw.length == 6) {
+          final formatted = '${raw.substring(0, 3)}-${raw.substring(3)}';
+          otpCodeController.text = formatted;
+          otpCodeController.selection = TextSelection.fromPosition(
+            TextPosition(offset: formatted.length),
+          );
+          Future.delayed(const Duration(milliseconds: 300), () {
+            cubit.verify();
+          });
+        }
+      },
       success: (state) {
         AutoRouter.of(context).pushAndPopUntil(
-          const LoginSuccessPageRoute(),
+          const LoginSuccessRoute(),
           predicate: (route) => false,
         );
       },
@@ -169,7 +182,7 @@ class OTPCodePage extends HookWidget {
         tr(LocaleKeys.otpCode_codeResendSuccess),
       ),
       accountAlreadyExists: (state) {
-        AutoRouter.of(context).replaceAll([const LoginResetPageRoute()]);
+        AutoRouter.of(context).replaceAll([const LoginResetRoute()]);
       },
       orElse: () {},
     );

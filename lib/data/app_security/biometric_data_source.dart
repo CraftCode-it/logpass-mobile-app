@@ -33,7 +33,7 @@ class BiometricDataSource {
   Future<bool> authenticate(String reason) async {
     return _localAuthentication.authenticate(
       localizedReason: reason,
-      biometricOnly: true,
+      options: const AuthenticationOptions(biometricOnly: true),
     );
   }
 }

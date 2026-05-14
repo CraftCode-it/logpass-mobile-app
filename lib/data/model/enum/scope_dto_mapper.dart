@@ -1,4 +1,4 @@
-import 'package:injectable/injectable.dart';
+import 'package:injectable/injectable.dart' hide Scope;
 import 'package:logpass_me/data/common/bidirectional_data_mapper.dart';
 import 'package:logpass_me/domain/model/scope.dart';
 

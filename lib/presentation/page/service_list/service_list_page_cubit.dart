@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logpass_me/data/activity/activity_api_data_source.dart';
+import 'package:logpass_me/domain/activity/service_activity.dart';
 import 'package:logpass_me/domain/data_changed_notifier/data_changed_type.dart';
 import 'package:logpass_me/domain/data_changed_notifier/use_case/listen_for_data_changed_use_case.dart';
+import 'package:logpass_me/domain/identity/identity_repository.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 import 'package:logpass_me/domain/service/data/service_with_tokens.dart';
 import 'package:logpass_me/domain/service/data/services_bundle.dart';
@@ -15,6 +18,8 @@ import 'package:logpass_me/presentation/page/service_list/service_list_page_stat
 class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   final GetPageOfServicesUseCase _getPageOfServicesUseCase;
   final ListenForDataChangedUseCase _listenForDataChangedUseCase;
+  final ActivityApiDataSource _activityDataSource;
+  final IdentityRepository _identityRepo;
 
   StreamSubscription? _dataChangedSubscription;
 
@@ -27,6 +32,8 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
   ServiceListPageCubit(
     this._getPageOfServicesUseCase,
     this._listenForDataChangedUseCase,
+    this._activityDataSource,
+    this._identityRepo,
   ) : super(ServiceListPageState.loading());
 
   @override
@@ -69,8 +76,8 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
 
       _currentPage++;
     } on GeneralConnectionError catch (e) {
+      Fimber.e('Fetching service list page 1 failed (connection)', ex: e);
       emit(ServiceListPageState.connectionError(e));
-      emit(ServiceListPageState.empty());
     } catch (e, s) {
       Fimber.e('Fetching service list failed', ex: e, stacktrace: s);
       emit(ServiceListPageState.empty());
@@ -87,11 +94,10 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
 
     emit(ServiceListPageState.idle(_activeServices, _otherServices, true));
 
-    _currentPage++;
-
     try {
-      final services = await _getPageOfServicesUseCase(_currentPage);
+      final services = await _getPageOfServicesUseCase(_currentPage + 1);
 
+      _currentPage++;
       _itemsCount += services.services.length;
 
       final active = _getActiveServices(services);
@@ -104,10 +110,11 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
 
       emit(ServiceListPageState.idle(_activeServices, _otherServices, false));
     } on GeneralConnectionError catch (e) {
-      emit(ServiceListPageState.connectionError(e));
+      Fimber.e('Fetching service list page failed (connection)', ex: e);
+      emit(ServiceListPageState.idle(_activeServices, _otherServices, false));
     } catch (e, s) {
       Fimber.e('Fetching service list failed', ex: e, stacktrace: s);
-      emit(ServiceListPageState.empty());
+      emit(ServiceListPageState.idle(_activeServices, _otherServices, false));
     }
   }
 
@@ -121,5 +128,18 @@ class ServiceListPageCubit extends Cubit<ServiceListPageState> {
 
   void _didLoadAllItems(ServicesBundle bundle) {
     _loadedAll = bundle.totalCount <= _itemsCount;
+  }
+
+  Future<List<ServiceSummary>> loadActivityServices() async {
+    try {
+      String? profileId;
+      try {
+        profileId = await _identityRepo.getActiveProfileId();
+      } catch (_) {}
+      return await _activityDataSource.getServices(profileId: profileId);
+    } catch (e, s) {
+      Fimber.e('loadActivityServices failed', ex: e, stacktrace: s);
+      return [];
+    }
   }
 }

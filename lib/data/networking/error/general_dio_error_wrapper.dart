@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:logpass_me/domain/networking/error/general_connection_error.dart';
 
-class GeneralDioErrorWrapper extends DioError {
+class GeneralDioErrorWrapper extends DioException {
   final GeneralConnectionError connectionError;
 
   GeneralDioErrorWrapper({
     required this.connectionError,
-    required DioError original,
+    required DioException original,
   }) : super(
           requestOptions: original.requestOptions,
           response: original.response,

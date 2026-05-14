@@ -1,17 +1,32 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logpass_me/data/wallet/verifier_request.dart';
+import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_cubit.dart';
+import 'package:logpass_me/presentation/page/home/home_page.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 @RoutePage()
 class QrScanPage extends HookWidget {
   const QrScanPage({Key? key}) : super(key: key);
 
+  static const _uuidRegex =
+      r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$';
+
   @override
   Widget build(BuildContext context) {
-    final colors = useAppThemeColors();
     final typography = useAppTypography();
+    final hasNavigated = useState(false);
+    final controller = useMemoized(MobileScannerController.new);
+    final cubit = useMemoized(() => GetIt.I<GuardianCubit>());
+    useEffect(() => controller.dispose, [controller]);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -19,14 +34,62 @@ class QrScanPage extends HookWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.secondary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Scan QR Code', style: typography.h6.copyWith(color: Colors.white)),
+        title: Text(
+          LocaleKeys.qrScan_title.tr(),
+          style: typography.h6.copyWith(color: AppColors.secondary),
+        ),
       ),
       body: Stack(
         children: [
-          // Camera preview placeholder
+          MobileScanner(
+            controller: controller,
+            onDetect: (capture) {
+              if (hasNavigated.value) return;
+              final barcode = capture.barcodes.firstOrNull;
+              if (barcode?.rawValue == null) return;
+
+              final rawValue = barcode!.rawValue!;
+              try {
+                final request = VerifierRequest.fromQrPayload(rawValue);
+                hasNavigated.value = true;
+                controller.stop();
+                AutoRouter.of(context).push(VerificationRequestRoute(
+                  requestId: request.requestId,
+                  verifierName: request.verifier,
+                  requestType: request.requestType,
+                  minAge: request.minAge,
+                  allowGuardian: request.allowGuardian,
+                )).then((result) {
+                  if (result == true) {
+                    HomePage.reloadActivityNotifier.value++;
+                  }
+                  hasNavigated.value = false;
+                  controller.start();
+                });
+              } catch (e) {
+                if (kDebugMode) debugPrint('QR parse error: $e');
+                final uuidMatch = RegExp(_uuidRegex).hasMatch(rawValue);
+                if (uuidMatch) {
+                  hasNavigated.value = true;
+                  controller.stop();
+                  _showGuardianRelationshipDialog(context, rawValue, cubit, hasNavigated, controller);
+                } else {
+                  hasNavigated.value = true;
+                  controller.stop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(LocaleKeys.qrScan_unknownQr.tr())),
+                  );
+                  Future.delayed(const Duration(seconds: 2), () {
+                    hasNavigated.value = false;
+                    controller.start();
+                  });
+                }
+              }
+            },
+          ),
           Center(
             child: Container(
               width: 280,
@@ -35,58 +98,16 @@ class QrScanPage extends HookWidget {
                 border: Border.all(color: AppColors.success100, width: 2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.qr_code_scanner, size: 64, color: Colors.white.withOpacity(0.5)),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Camera Preview',
-                    style: typography.body1.copyWith(color: Colors.white.withOpacity(0.5)),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'QR scanner requires\nFlutter 3.x + camera package',
-                    style: typography.info2.copyWith(color: Colors.white.withOpacity(0.3)),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
             ),
           ),
-          // Bottom instructions
           Positioned(
             bottom: 80,
             left: 24,
             right: 24,
-            child: Column(
-              children: [
-                Text(
-                  'Point your camera at a verifier\'s QR code',
-                  style: typography.body1.copyWith(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Manual entry fallback for MVP
-                      _showManualEntry(context, colors, typography);
-                    },
-                    icon: const Icon(Icons.keyboard, color: Colors.white),
-                    label: Text(
-                      'Enter Code Manually',
-                      style: typography.body2.copyWith(color: Colors.white),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white24),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-                ),
-              ],
+            child: Text(
+              LocaleKeys.qrScan_hint.tr(),
+              style: typography.body1.copyWith(color: AppColors.secondary),
+              textAlign: TextAlign.center,
             ),
           ),
         ],
@@ -94,61 +115,93 @@ class QrScanPage extends HookWidget {
     );
   }
 
-  void _showManualEntry(BuildContext context, AppThemeColors colors, AppTypography typography) {
-    final controller = TextEditingController();
-    showModalBottomSheet(
+  void _showGuardianRelationshipDialog(
+    BuildContext context,
+    String minorUserId,
+    GuardianCubit cubit,
+    ValueNotifier<bool> hasNavigated,
+    MobileScannerController controller,
+  ) {
+    showDialog<void>(
       context: context,
-      backgroundColor: colors.dialogBackground,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      barrierDismissible: false,
+      builder: (dialogContext) => _RelationshipDialog(
+        minorUserId: minorUserId,
+        onConfirm: (relationship) {
+          Navigator.of(dialogContext).pop();
+          cubit.addMinor(minorUserId, relationshipType: relationship).then((_) {
+            final state = cubit.state;
+            if (state is GuardianError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(LocaleKeys.guardian_requestSent.tr())),
+              );
+            }
+            Navigator.of(context).pop();
+          });
+        },
+        onCancel: () {
+          Navigator.of(dialogContext).pop();
+          hasNavigated.value = false;
+          controller.start();
+        },
       ),
-      builder: (ctx) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 24,
-            right: 24,
-            top: 24,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Enter Verification Code', style: typography.h6),
-              const SizedBox(height: 16),
-              TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: 'Paste code here...',
-                  hintStyle: TextStyle(color: colors.inputHint),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colors.inputFocusedBorder),
-                  ),
-                ),
-                style: typography.body1,
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop(controller.text);
-                  },
-                  child: Text('Submit', style: typography.h8.copyWith(color: colors.buttonFilledText)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.buttonFill,
-                    foregroundColor: colors.buttonFilledText,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+    );
+  }
+}
+
+class _RelationshipDialog extends StatefulWidget {
+  final String minorUserId;
+  final void Function(String relationship) onConfirm;
+  final VoidCallback onCancel;
+
+  const _RelationshipDialog({
+    required this.minorUserId,
+    required this.onConfirm,
+    required this.onCancel,
+  });
+
+  @override
+  State<_RelationshipDialog> createState() => _RelationshipDialogState();
+}
+
+class _RelationshipDialogState extends State<_RelationshipDialog> {
+  String _selected = 'parent';
+
+  List<(String, String)> get _relationships => [
+    ('parent', LocaleKeys.guardian_relationParent.tr()),
+    ('legal_guardian', LocaleKeys.guardian_relationLegal.tr()),
+    ('relative', LocaleKeys.guardian_relationRelative.tr()),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(LocaleKeys.guardian_selectRelationship.tr()),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _relationships.map((r) {
+          return RadioListTile<String>(
+            value: r.$1,
+            groupValue: _selected,
+            title: Text(r.$2),
+            onChanged: (v) => setState(() => _selected = v!),
+          );
+        }).toList(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: widget.onCancel,
+          child: Text(LocaleKeys.common_cancel.tr()),
+        ),
+        ElevatedButton(
+          onPressed: () => widget.onConfirm(_selected),
+          child: Text(LocaleKeys.guardian_confirmRequest.tr()),
+        ),
+      ],
     );
   }
 }

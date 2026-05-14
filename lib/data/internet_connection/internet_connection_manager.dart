@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/networking/error/dio_error_resolver.dart';
 import 'package:logpass_me/data/networking/error/general_dio_error_wrapper.dart';
@@ -25,9 +25,9 @@ class InternetConnectionManager {
   }
 
   Future<bool> hasInternetConnection() async {
-    final connectivityResult = await _connectivity.checkConnectivity();
+    final result = await _connectivity.checkConnectivity();
 
-    return _mapInternetConnection(connectivityResult);
+    return _mapInternetConnection(result);
   }
 
   Stream<bool> listenInternetConnection() => _internetConnectionSubject.stream;
@@ -41,12 +41,17 @@ class InternetConnectionManager {
     _internetConnectionSubject.add(hasConnection);
   }
 
-  Future<bool> _mapInternetConnection(ConnectivityResult event) async {
-    switch(event) {
-      case ConnectivityResult.mobile: return true;
-      case ConnectivityResult.wifi: return _pingLogpassServer();
-      default: return false;
+  Future<bool> _mapInternetConnection(ConnectivityResult result) async {
+    if (result == ConnectivityResult.none) {
+      return false;
     }
+    if (result == ConnectivityResult.mobile) {
+      return true;
+    }
+    if (result == ConnectivityResult.wifi) {
+      return _pingLogpassServer();
+    }
+    return _pingLogpassServer();
   }
 
   Future<bool> _pingLogpassServer() async {

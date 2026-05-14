@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_approval_page.dart';
 import 'package:logpass_me/presentation/page/home/home_page.dart';
 import 'package:logpass_me/presentation/page/main/main_page_cubit.dart';
 import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
 import 'package:logpass_me/presentation/page/settings/settings_page.dart';
+import 'package:logpass_me/presentation/page/identity/identity_page.dart';
 import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
-import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
+import 'package:logpass_me/presentation/widget/hooks/app_life_cycyle_observer_hook.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/logout/guard_widget.dart';
 
@@ -41,6 +43,15 @@ class MainPage extends HookWidget {
       return;
     }, [cubit]);
 
+    useAppLifecycleStateListener((current, previous, ctx) {
+      if (current == AppLifecycleState.resumed &&
+          previous == AppLifecycleState.paused) {
+        if (index.value == 2) {
+          WalletHomePage.reloadNotifier.value++;
+        }
+      }
+    }, context: context);
+
     return Scaffold(
       key: key,
       body: GuardWidget(
@@ -54,7 +65,7 @@ class MainPage extends HookWidget {
                   HomePage(),
                   ServiceListPage(),
                   WalletHomePage(),
-                  YourDataPage(),
+                  IdentityPage(),
                   SettingsPage(),
                 ],
               ),
@@ -99,7 +110,7 @@ class MainPage extends HookWidget {
             activeIcon: Icon(Icons.account_balance_wallet,
               color: colors.bottomBarActiveText,
             ),
-            label: 'Wallet',
+            label: tr(LocaleKeys.bottomBarNavigation_wallet),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -125,7 +136,12 @@ class MainPage extends HookWidget {
           ),
         ],
         currentIndex: index.value,
-        onTap: (newIndex) => index.value = newIndex,
+        onTap: (newIndex) {
+          index.value = newIndex;
+          if (newIndex == 2) {
+            WalletHomePage.reloadNotifier.value++;
+          }
+        },
       ),
     );
   }
@@ -136,15 +152,71 @@ class MainPage extends HookWidget {
     BuildContext context,
   ) {
     state.maybeWhen(
-      error: (message) {},
+      error: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      },
       openAction: (action) {
         action.actionType.when(
           authorize: () => AutoRouter.of(context).push(
-            AuthorizePageRoute(incomingAction: action),
+            AuthorizeRoute(incomingAction: action),
           ),
-          confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
+          confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
           updateAccount: () {},
           refreshUserCode: () {},
+          logpassVerify: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                VerificationRequestRoute(
+                  requestId: requestId,
+                  verifierName: params?['verifier'],
+                  requestType: params?['request_type'],
+                  minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                  allowGuardian: params?['allow_guardian'] == 'true',
+                ),
+              ).then((result) {
+                if (result == true) {
+                  HomePage.reloadActivityNotifier.value++;
+                }
+              });
+            }
+          },
+          guardianPairing: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                GuardianApprovalRoute(
+                  requestId: requestId,
+                  approvalType: GuardianApprovalType.pairing,
+                  guardianName: params?['guardian_name'] ?? '',
+                  guardianPhone: params?['guardian_phone'],
+                ),
+              );
+            }
+          },
+          guardianAuthRequest: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                GuardianApprovalRoute(
+                  requestId: requestId,
+                  approvalType: GuardianApprovalType.authRequest,
+                  minorName: params?['minor_name'] ?? 'Nieznany',
+                  minorPhone: params?['minor_phone'],
+                  serviceName: params?['service_name'],
+                  action: params?['action'],
+                  expiresInSeconds:
+                      int.tryParse(params?['expires_in_seconds'] ?? '300') ?? 300,
+                ),
+              );
+            }
+          },
+          guardianAuthResult: () {},
         );
       },
       orElse: () {},

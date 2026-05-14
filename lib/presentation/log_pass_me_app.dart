@@ -1,11 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
+﻿import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/language/use_case/set_language_code_use_case.dart';
 import 'package:logpass_me/domain/theme/theme_brightness.dart';
 import 'package:logpass_me/domain/theme/use_case/listen_for_theme_brightness_changes_use_case.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/themes.dart';
 import 'package:logpass_me/presentation/utils/brightness_utils.dart';

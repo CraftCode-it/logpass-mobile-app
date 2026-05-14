@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/messenger/message_view.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger_cubit.dart';
@@ -33,6 +33,7 @@ class Messenger extends HookWidget {
     useEffect(
       () {
         cubit.initialize(withActionHandler);
+        return null;
       },
       [cubit],
     );
@@ -81,13 +82,29 @@ class Messenger extends HookWidget {
           onDismiss: cubit.dismissCurrent,
           action: LocaleKeys.main_openActionLabel.tr(),
           onAction: () {
-            state.action.actionType.when(
+            state.action.actionType.maybeWhen(
               authorize: () => AutoRouter.of(context).push(
-                AuthorizePageRoute(incomingAction: state.action),
+                AuthorizeRoute(incomingAction: state.action),
               ),
-              confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
+              confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
               updateAccount: () {},
-              refreshUserCode: () {  },
+              refreshUserCode: () {},
+              logpassVerify: () {
+                final requestId = state.action.actionId;
+                if (requestId != null) {
+                  final params = state.action.queryParameters;
+                  AutoRouter.of(context).push(
+                    VerificationRequestRoute(
+                      requestId: requestId,
+                      verifierName: params?['verifier'],
+                      requestType: params?['request_type'],
+                      minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                      allowGuardian: params?['allow_guardian'] == 'true',
+                    ),
+                  );
+                }
+              },
+              orElse: () {},
             );
           },
         ),

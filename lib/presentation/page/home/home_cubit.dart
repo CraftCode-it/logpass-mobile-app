@@ -97,7 +97,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future _getActions() async {
     emit(const HomeState.loadInProgress());
-    await Future.value(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     _emitIdleState();
   }

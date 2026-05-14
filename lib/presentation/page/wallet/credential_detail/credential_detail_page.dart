@@ -1,8 +1,11 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logpass_me/core/di/di_config.dart';
 import 'package:logpass_me/domain/wallet/credential.dart';
+import 'package:logpass_me/domain/wallet/wallet_repository.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
@@ -93,7 +96,25 @@ class CredentialDetailPage extends HookWidget {
               width: double.infinity,
               height: 56,
               child: OutlinedButton.icon(
-                onPressed: credential.isValid ? () {} : null,
+                onPressed: credential.isValid
+                    ? () async {
+                        final repo = getIt<WalletRepository>();
+                        try {
+                          final proof = await repo.generateProof(credential.id);
+                          if (context.mounted) {
+                            AutoRouter.of(context).push(
+                              ProofPresentationRoute(credential: credential, proofData: proof),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            AutoRouter.of(context).push(
+                              ProofPresentationRoute(credential: credential),
+                            );
+                          }
+                        }
+                      }
+                    : null,
                 icon: Icon(Icons.qr_code, color: credential.isValid ? colors.buttonOutlinedText : colors.lightText),
                 label: Text(
                   'Generate ZK Proof',
@@ -155,34 +176,34 @@ class _StatusBanner extends StatelessWidget {
           Icon(
             isValid ? Icons.verified : Icons.gpp_bad,
             size: 48,
-            color: Colors.white,
+            color: AppColors.secondary,
           ),
           const SizedBox(height: 12),
           Text(
             credential.displayType,
-            style: typography.h3.copyWith(color: Colors.white),
+            style: typography.h3.copyWith(color: AppColors.secondary),
           ),
           const SizedBox(height: 4),
           Text(
             isValid ? 'Verified & Valid' : 'Invalid / Expired',
-            style: typography.body1.copyWith(color: Colors.white.withOpacity(0.9)),
+            style: typography.body1.copyWith(color: AppColors.secondary.withOpacity(0.9)),
           ),
           if (credential.isAnchored) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: AppColors.secondary.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.link, size: 14, color: Colors.white),
+                  const Icon(Icons.link, size: 14, color: AppColors.secondary),
                   const SizedBox(width: 4),
                   Text(
                     'On-Chain Anchored',
-                    style: typography.info2.copyWith(color: Colors.white),
+                    style: typography.info2.copyWith(color: AppColors.secondary),
                   ),
                 ],
               ),

@@ -19,18 +19,27 @@ class WebSocketManager {
 
   WebSocketManager(this._getNotificationDeviceUseCase, this._getUserTokensUseCase);
 
+  static const _fallbackWsUrl = 'wss://logpass.me/ws/';
+
   Future setupWebSocketChannel() async {
     closed = false;
 
-    final device = await _getNotificationDeviceUseCase();
+    String host;
+    try {
+      final device = await _getNotificationDeviceUseCase();
+      host = device.webSocketUrl;
+    } catch (_) {
+      host = _fallbackWsUrl;
+    }
     final userToken = await _getUserTokensUseCase();
 
-    final host = device.webSocketUrl;
-    final queryParams = '?access_token=${userToken.accessToken.token}';
+    final wsUri = Uri.parse(host).replace(
+      queryParameters: {'access_token': userToken.accessToken.token},
+    );
 
     _webSocketChannel = IOWebSocketChannel.connect(
-      Uri.parse('$host$queryParams'),
-      pingInterval: const Duration(seconds: 1),
+      wsUri,
+      pingInterval: const Duration(seconds: 30),
     );
 
     _streamSubscription = _webSocketChannel.stream.listen(

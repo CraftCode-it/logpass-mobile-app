@@ -9,7 +9,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/start/start_page_cubit.dart';
 import 'package:logpass_me/presentation/page/start/start_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
@@ -118,12 +118,14 @@ class StartPage extends HookWidget {
   ) {
     state.maybeMap(
       successOTP: (state) {
-        AutoRouter.of(context).push(OTPCodePageRoute(phoneNumber: state.phoneNumber, verification: state.verification));
+        AutoRouter.of(context).push(OTPCodeRoute(phoneNumber: state.phoneNumber, verification: state.verification));
       },
       successSignature: (state) {
-        AutoRouter.of(context).replaceAll([const LoginSuccessPageRoute()]);
+        AutoRouter.of(context).replaceAll([const LoginSuccessRoute()]);
       },
-      error: (state) {},
+      error: (state) {
+        controller.showError(tr(LocaleKeys.error_somethingWentWrong));
+      },
       connectionError: (state) {
         controller.showError(getConnectionErrorString(state.error));
       },
@@ -208,7 +210,7 @@ class _TermsAndConditionsCheck extends HookWidget {
                     text: tr(LocaleKeys.start_termsAcceptHighlight),
                     style: typography.body3.copyWith(decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => AutoRouter.of(context).push(const TermsAndConditionsPageRoute()),
+                      ..onTap = () => AutoRouter.of(context).push(const TermsAndConditionsRoute()),
                   ),
                 ],
               ),
@@ -238,7 +240,7 @@ class _RegisterNewDevice extends HookWidget {
         const SizedBox(height: AppDimens.l),
         CustomRectangularButton.outlined(
           text: tr(LocaleKeys.start_addNewDeviceAction),
-          onPressed: () => AutoRouter.of(context).push(const AddNewDevicePageRoute()),
+          onPressed: () => AutoRouter.of(context).push(const AddNewDeviceRoute()),
         ),
         const SizedBox(height: AppDimens.m),
       ],

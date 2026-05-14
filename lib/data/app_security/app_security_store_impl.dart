@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/app_security/app_code_encryptor.dart';
 import 'package:logpass_me/data/app_security/app_security_database.dart';
@@ -15,25 +18,32 @@ class AppSecurityStoreImpl implements AppSecurityStore {
 
   @override
   Future<bool> compareCode(String code) async {
-    final savedEncryptedCode = await _appSecurityDatabase.loadCode();
-    final encryptedCode = _encryptor.encrypt(code);
+    final saved = await _appSecurityDatabase.loadCode();
+    if (saved == null) return false;
 
-    return savedEncryptedCode == encryptedCode;
+    // Migrate legacy SHA-256 hex hash to PBKDF2 on first correct login.
+    if (_encryptor.isLegacyHash(saved)) {
+      final legacyHash = _legacySha256(code);
+      if (legacyHash != saved) return false;
+      final newHash = await _encryptor.encrypt(code);
+      await _appSecurityDatabase.saveCode(newHash);
+      return true;
+    }
+
+    return _encryptor.verify(code, saved);
   }
 
   @override
   Future<AppSecurityType> loadSecurityType() async {
     final rawType = await _appSecurityDatabase.loadSecurityType();
-
     if (rawType == null) return AppSecurityType.none;
-
     return _mapper.to(rawType);
   }
 
   @override
   Future<void> saveCode(String code) async {
-    final encryptedCode = _encryptor.encrypt(code);
-    await _appSecurityDatabase.saveCode(encryptedCode);
+    final hashed = await _encryptor.encrypt(code);
+    await _appSecurityDatabase.saveCode(hashed);
   }
 
   @override
@@ -46,4 +56,7 @@ class AppSecurityStoreImpl implements AppSecurityStore {
   Future<void> clear() async {
     await _appSecurityDatabase.clear();
   }
+
+  String _legacySha256(String code) =>
+      sha256.convert(utf8.encode(code)).toString();
 }

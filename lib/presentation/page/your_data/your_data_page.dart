@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,7 +11,7 @@ import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
 import 'package:logpass_me/presentation/widget/navigation_row.dart';
 import 'package:logpass_me/presentation/widget/need_help_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 
 @RoutePage()
 class YourDataPage extends HookWidget {
@@ -38,31 +38,31 @@ class YourDataPage extends HookWidget {
               NavigationRow.withIcon(
                 AppIcon.personalData,
                 LocaleKeys.yourData_personalData.tr(),
-                () => AutoRouter.of(context).push(const DataPersonalPageRoute()),
+                () => AutoRouter.of(context).push(const DataPersonalRoute()),
               ),
               Separator.light(),
               NavigationRow.withIcon(
                 AppIcon.device,
                 LocaleKeys.yourData_phone.tr(),
-                () => AutoRouter.of(context).push(const DataPhoneNumberPageRoute()),
+                () => AutoRouter.of(context).push(const DataPhoneNumberRoute()),
               ),
               Separator.light(),
               NavigationRow.withIcon(
                 AppIcon.email,
                 LocaleKeys.yourData_emails.tr(),
-                () => AutoRouter.of(context).push(const DataEmailsPageRoute()),
+                () => AutoRouter.of(context).push(const DataEmailsRoute()),
               ),
               Separator.light(),
               NavigationRow.withIcon(
                 AppIcon.address,
                 LocaleKeys.yourData_addresses.tr(),
-                () => AutoRouter.of(context).push(const DataAddressesPageRoute()),
+                () => AutoRouter.of(context).push(const DataAddressesRoute()),
               ),
               Separator.light(),
               NavigationRow.withIcon(
                 AppIcon.invoiceData,
                 LocaleKeys.yourData_invoiceData.tr(),
-                () => AutoRouter.of(context).push(const DataInvoiceListPageRoute()),
+                () => AutoRouter.of(context).push(const DataInvoiceListRoute()),
               ),
               Separator.light(),
             ],

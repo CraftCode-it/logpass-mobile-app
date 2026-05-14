@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/incoming_actions/dtos/incoming_action_dto.dart';
+import 'package:logpass_me/domain/incoming_actions/action_type.dart';
 import 'package:logpass_me/data/incoming_actions/incoming_actions_validator.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/incoming_push_action_dto_to_incoming_action_mapper.dart';
 import 'package:logpass_me/data/incoming_actions/mappers/web_socket_action_dto_to_incoming_action_mapper.dart';
@@ -49,7 +52,9 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
   }
 
   void _dispatchAction(IncomingAction action) {
-    if (_incomingActionsValidator.canInvoke(action)) {
+    final canInvoke = _incomingActionsValidator.canInvoke(action);
+    debugPrint('[WS] _dispatchAction canInvoke=$canInvoke type=${action.actionType} id=${action.actionId}');
+    if (canInvoke) {
       action.actionType.maybeMap(
         refreshUserCode: (_) => _incomingRefreshCodeActionsBroadcast.add(action),
         orElse: () => _incomingUsersActionsBroadcast.add(action)
@@ -62,6 +67,73 @@ class IncomingActionsRepositoryImpl implements IncomingWithSplittedActionsReposi
 
     _webSocketStreamSubscription = _webSocketManager.listenForChannel().listen((event) {
       final jsonMap = json.decode(event as String) as Map<String, dynamic>;
+      debugPrint('[WS] received type=${jsonMap["type"]} keys=${jsonMap.keys.toList()}');
+      // Handle raw logpass_verify push messages from auth-service
+      if (jsonMap['type'] == 'logpass_verify') {
+        final requestId = jsonMap['request_id'] as String?;
+        debugPrint('[WS] logpass_verify requestId=$requestId verifier=${jsonMap["verifier"]}');
+        final action = IncomingAction.create(
+          ActionType.logpassVerify(),
+          requestId,
+          null,
+          {
+            'request_id': requestId ?? '',
+            'verifier': (jsonMap['verifier'] as String?) ?? '',
+            'request_type': (jsonMap['request_type'] as String?) ?? 'age_18',
+            'min_age': (jsonMap['min_age'] ?? 18).toString(),
+            'allow_guardian': (jsonMap['allow_guardian'] as bool? ?? false).toString(),
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
+      // Guardian pairing request pushed to MINOR — contains guardian data for minor to approve
+      if (jsonMap['type'] == 'guardian_pairing') {
+        final action = IncomingAction.create(
+          ActionType.guardianPairing(),
+          jsonMap['guardian_request_id'] as String?,
+          null,
+          {
+            'guardian_request_id': jsonMap['guardian_request_id'] as String? ?? '',
+            'guardian_name': jsonMap['guardian_name'] as String? ?? '',
+            'guardian_phone': jsonMap['guardian_phone'] as String? ?? '',
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
+      // Guardian auth request pushed to guardian
+      if (jsonMap['type'] == 'guardian_auth_request') {
+        final action = IncomingAction.create(
+          ActionType.guardianAuthRequest(),
+          jsonMap['auth_request_id'] as String?,
+          null,
+          {
+            'auth_request_id': jsonMap['auth_request_id'] as String? ?? '',
+            'minor_name': jsonMap['minor_name'] as String? ?? '',
+            'minor_phone': jsonMap['minor_phone'] as String? ?? '',
+            'service_name': jsonMap['service_name'] as String? ?? '',
+            'action': jsonMap['action'] as String? ?? '',
+            'expires_in_seconds': (jsonMap['expires_in_seconds'] ?? 300).toString(),
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
+      // Auth result pushed to minor
+      if (jsonMap['type'] == 'guardian_auth_result') {
+        final action = IncomingAction.create(
+          ActionType.guardianAuthResult(),
+          jsonMap['auth_request_id'] as String?,
+          null,
+          {
+            'auth_request_id': jsonMap['auth_request_id'] as String? ?? '',
+            'status': jsonMap['status'] as String? ?? 'expired',
+          },
+        );
+        _dispatchAction(action);
+        return;
+      }
       final incomingAction = _mapIncomingActionDto(jsonMap);
       _dispatchAction(incomingAction);
     });

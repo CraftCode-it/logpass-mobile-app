@@ -5,13 +5,17 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
 import 'package:logpass_me/domain/service/data/service_agreement.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/authorize/authorize_page_cubit.dart';
 import 'package:logpass_me/presentation/page/authorize/personal_data_selection/personal_data_selection_page.dart';
 import 'package:logpass_me/presentation/page/authorize/scope_element.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -294,7 +298,7 @@ class _TrustLevelElement extends StatelessWidget {
       imagePath: AppIcon.lock,
       contentHasError: isActionRequired,
       onTapAction: isActionRequired
-          ? () => AutoRouter.of(context).push(TrustLevelConfirmationPageRoute(
+          ? () => AutoRouter.of(context).push(TrustLevelConfirmationRoute(
                 service: service,
                 initialTrustLevel: currentTrustLevel,
                 requiredTrustLevel: requiredTrustLevel,
@@ -318,7 +322,7 @@ class _ServiceRulesElement extends StatelessWidget {
       title: LocaleKeys.authorize_serviceRules.tr(),
       imagePath: AppIcon.serviceRules,
       onTapAction: () => AutoRouter.of(context).push(
-        ServiceRulesPageRoute(
+        ServiceRulesRoute(
           agreements: agreements,
           service: service,
           onPagePop: (updatedAgreements) => onAgreementsChange(updatedAgreements),
@@ -361,31 +365,31 @@ class _ScopeFormElement extends StatelessWidget {
   VoidCallback? _getOnTapAction(BuildContext context, Service service) {
     return element.maybeMap(
       address: (state) => () {
-        AutoRouter.of(context).push(AddressSelectionPageRoute(
+        AutoRouter.of(context).push(AddressSelectionRoute(
           service: service,
           address: state.address,
-          onPagePop: (address) => onScopeElementChange(state.copyWith(address: address)),
+          onPagePop: (address) => onScopeElementChange(state.copyWith(address: address as Address)),
         ));
       },
       email: (state) => () {
-        AutoRouter.of(context).push(EmailSelectionPageRoute(
+        AutoRouter.of(context).push(EmailSelectionRoute(
           service: service,
           email: state.email,
-          onPagePop: (email) => onScopeElementChange(state.copyWith(email: email)),
+          onPagePop: (email) => onScopeElementChange(state.copyWith(email: email as Email)),
         ));
       },
       invoice: (state) => () {
-        AutoRouter.of(context).push(InvoiceDataSelectionPageRoute(
+        AutoRouter.of(context).push(InvoiceDataSelectionRoute(
           service: service,
           invoiceData: state.invoiceData,
-          onPagePop: (invoice) => onScopeElementChange(state.copyWith(invoiceData: invoice)),
+          onPagePop: (invoice) => onScopeElementChange(state.copyWith(invoiceData: invoice as InvoiceData)),
         ));
       },
       profile: (state) => () {
-        AutoRouter.of(context).push(PersonalDataSelectionPageRoute(
+        AutoRouter.of(context).push(PersonalDataSelectionRoute(
           service: service,
           personalData: state.personalData,
-          onPagePop: (personalData) => onScopeElementChange(state.copyWith(personalData: personalData)),
+          onPagePop: (personalData) => onScopeElementChange(state.copyWith(personalData: personalData as PersonalData?)),
         ));
       },
       orElse: () {},

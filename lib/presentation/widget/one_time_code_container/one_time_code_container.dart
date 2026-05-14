@@ -70,6 +70,7 @@ class OneTimeCodeContainer extends HookWidget {
             onRefreshAction: cubit.refreshOneTimeCode,
             onCopyAction: cubit.copyOneTimeCodeToClipboard,
             progressSize: size,
+            showErrorHint: true,
           ),
           internetConnection: (hasInternetConnection) => _CodeContainer(
             oneTimeCode: null,
@@ -104,6 +105,7 @@ class _CodeContainer extends HookWidget {
   final double progressSize;
   final bool hasInternetConnection;
   final bool isLoading;
+  final bool showErrorHint;
 
   const _CodeContainer({
     required this.onRefreshAction,
@@ -113,6 +115,7 @@ class _CodeContainer extends HookWidget {
     this.onCopyCallback,
     this.hasInternetConnection = true,
     this.isLoading = false,
+    this.showErrorHint = false,
     Key? key,
   }) : super(key: key);
 
@@ -218,6 +221,14 @@ class _CodeContainer extends HookWidget {
                         color: oneTimeCode == null ? inactiveColor : colors.textSpecial,
                       ),
                     ),
+                    if (showErrorHint && oneTimeCode == null) ...[
+                      const SizedBox(height: AppDimens.xs),
+                      Text(
+                        'Nie udało się pobrać kodu. Dotknij aby odświeżyć.',
+                        style: appTypography.info2.copyWith(color: inactiveColor),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -293,7 +304,7 @@ class _IconTextButton extends HookWidget {
           children: [
             SvgPicture.asset(
               icon,
-              color: color,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
             const SizedBox(width: AppDimens.xs),
             Text(

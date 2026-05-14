@@ -58,8 +58,8 @@
     <dict>
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
-        <key></key>
-        <string>me.logpass.mobile</string>
+        <key>CFBundleURLName</key>
+        <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
         <key>CFBundleURLSchemes</key>
         <array>
         <string>${DEEP_LINKS_SCHEME}</string>

@@ -4,7 +4,7 @@ class AppEnv {
 
   static const apiUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://api.logpass.dev/',
+    defaultValue: 'https://logpass.me/api/',
   );
 
   final String name;

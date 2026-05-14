@@ -22,42 +22,41 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
   );
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response == null) return handler.next(err);
 
     if (err.response?.statusCode == HttpStatus.unauthorized) {
-      try {
-        dio.lockAll();
+      // Skip token refresh for unauthenticated requests (login flow, no JWT sent).
+      // Without this check, the interceptor calls logout on a 401 from /login-attempts/.
+      final hasAuthHeader =
+          err.requestOptions.headers[HttpHeaders.authorizationHeader] != null;
+      if (!hasAuthHeader) return handler.next(err);
 
+      try {
         final userToken = await _getUserTokensUseCase();
         final requestAuthHeader = err.requestOptions.headers[HttpHeaders.authorizationHeader];
-        final currentAuthHeader = userToken.accessToken.toString();
+        final currentAuthHeader = userToken.accessToken.toAuthorizationHeader();
 
         if (requestAuthHeader != currentAuthHeader) {
           await _retryRequest(err.requestOptions, handler, currentAuthHeader);
         } else {
           await _refreshAccessTokenAndRetryRequest(err, handler);
         }
-
-        dio.unlockAll();
+        return;
       } on AuthExceptionUserNotSignedIn catch (e) {
-        dio.unlockAll();
-
         Fimber.e('Making requests when user is not signed in.', ex: e);
         await _logoutService.logout();
-        return handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
+        return handler.next(DioException(requestOptions: err.requestOptions, error: e, response: err.response));
       } catch (e, s) {
-        dio.unlockAll();
-
         Fimber.e('Failed to retry unauthorized request.', ex: e, stacktrace: s);
-        return handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
+        return handler.next(DioException(requestOptions: err.requestOptions, error: e, response: err.response));
       }
     }
 
     return handler.next(err);
   }
 
-  Future<void> _refreshAccessTokenAndRetryRequest(DioError err, ErrorInterceptorHandler handler) async {
+  Future<void> _refreshAccessTokenAndRetryRequest(DioException err, ErrorInterceptorHandler handler) async {
     try {
       try {
         await _refreshAccessTokenUseCase();
@@ -65,23 +64,20 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
         Fimber.d('Refresh token has expired, logging out.');
         await _logoutService.logout();
         handler.reject(err);
+        return;
       }
 
       final newTokens = await _getUserTokensUseCase();
-      final newAuthHeader = newTokens.accessToken.toString();
-
-      dio.unlockAll();
+      final newAuthHeader = newTokens.accessToken.toAuthorizationHeader();
 
       await _retryRequest(err.requestOptions, handler, newAuthHeader);
     } catch (e, s) {
       Fimber.w('Refreshing token somehow failed', ex: e, stacktrace: s);
-      handler.next(DioError(requestOptions: err.requestOptions, error: e, response: err.response));
+      handler.next(DioException(requestOptions: err.requestOptions, error: e, response: err.response));
     }
   }
 
   Future<void> _retryRequest(RequestOptions requestOptions, ErrorInterceptorHandler handler, String authHeader) async {
-    dio.unlockAll();
-
     final response = await dio.request(
       requestOptions.path,
       cancelToken: requestOptions.cancelToken,
@@ -89,22 +85,17 @@ class RefreshTokenInterceptor extends InterceptorWithDio {
       onReceiveProgress: requestOptions.onReceiveProgress,
       onSendProgress: requestOptions.onSendProgress,
       queryParameters: requestOptions.queryParameters,
+      options: Options(
+        method: requestOptions.method,
+        headers: {
+          ...requestOptions.headers,
+          HttpHeaders.authorizationHeader: authHeader,
+        },
+        contentType: requestOptions.contentType,
+        responseType: requestOptions.responseType,
+      ),
     );
 
     handler.resolve(response);
-  }
-}
-
-extension on Dio {
-  void lockAll() {
-    interceptors.requestLock.lock();
-    interceptors.responseLock.lock();
-    interceptors.errorLock.lock();
-  }
-
-  void unlockAll() {
-    interceptors.requestLock.unlock();
-    interceptors.responseLock.unlock();
-    interceptors.errorLock.unlock();
   }
 }

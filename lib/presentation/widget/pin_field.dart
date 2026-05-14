@@ -6,7 +6,7 @@ import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
-import 'package:pinput/pin_put/pin_put.dart';
+import 'package:pinput/pinput.dart';
 
 const _singlePinFieldWidth = 44.0;
 const _pinFieldMaxWith = 256.0;
@@ -41,19 +41,20 @@ class PinField extends HookWidget {
           constraints: const BoxConstraints(maxWidth: _pinFieldMaxWith),
           child: Column(
             children: [
-              PinPut(
+              Pinput(
                 onChanged: onPinChanged,
-                fieldsCount: appPinLength,
-                fieldsAlignment: MainAxisAlignment.center,
+                length: appPinLength,
                 autofocus: autoFocus,
-                eachFieldMargin: const EdgeInsets.symmetric(horizontal: AppDimens.s),
-                selectedFieldDecoration: _inputBorder(colors),
-                followingFieldDecoration: _inputBorder(colors),
-                submittedFieldDecoration: _inputBorder(colors),
-                eachFieldPadding: const EdgeInsets.all(AppDimens.m),
-                textStyle: typography.h9,
-                eachFieldWidth: _singlePinFieldWidth,
-                obscureText: isObscured.value ? '*' : null,
+                obscureText: isObscured.value,
+                obscuringCharacter: '*',
+                defaultPinTheme: PinTheme(
+                  width: _singlePinFieldWidth,
+                  height: _singlePinFieldWidth,
+                  margin: const EdgeInsets.symmetric(horizontal: AppDimens.s),
+                  padding: const EdgeInsets.all(AppDimens.m),
+                  textStyle: typography.h9,
+                  decoration: _inputBorder(colors),
+                ),
               ),
               if (pinErrorText != null) ...[
                 const SizedBox(height: AppDimens.s),
@@ -84,7 +85,7 @@ class PinField extends HookWidget {
                 isObscured.value ? AppIcon.passwordEyeHide : AppIcon.passwordEyeShow,
                 width: AppDimens.l,
                 height: AppDimens.l,
-                color: colors.text,
+                colorFilter: ColorFilter.mode(colors.text, BlendMode.srcIn),
               ),
             ),
           ),

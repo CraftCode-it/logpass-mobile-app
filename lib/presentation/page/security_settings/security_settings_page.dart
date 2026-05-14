@@ -1,4 +1,4 @@
-import 'package:app_settings/app_settings.dart';
+﻿import 'package:app_settings/app_settings.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page_cubit.dart';
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page_state.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -88,7 +88,7 @@ class SecuritySettingsPage extends HookWidget {
         );
 
         if(confirmed) {
-          await AppSettings.openLocationSettings(asAnotherTask: true);
+          await AppSettings.openAppSettings(type: AppSettingsType.location, asAnotherTask: true);
         }
       },
       biometricNotSupported: (_) =>
@@ -98,13 +98,13 @@ class SecuritySettingsPage extends HookWidget {
   }
 
   Future<void> _setCode(SecuritySettingsPageCubit cubit, BuildContext context, AppSecurityType type) async {
-    final success = await AutoRouter.of(context).push(const NewPinPageRoute());
+    final success = await AutoRouter.of(context).push(const NewPinRoute());
     if (success == true) {
       await cubit.applySecurityChange(type);
       await AutoRouter.of(context).push(
-        PinSuccessPageRoute(
+        PinSuccessRoute(
           title: LocaleKeys.pinSuccess_set.tr(),
-          route: const SecuritySettingsPageRoute()
+          route: const SecuritySettingsRoute()
         )
       );
     }
@@ -130,7 +130,7 @@ class SecuritySettingsPage extends HookWidget {
     }
 
     final success = await AutoRouter.of(context).push(
-      ConfirmWithPinPageRoute(
+      ConfirmWithPinRoute(
         title: type == AppSecurityType.none
             ? LocaleKeys.securitySettings_deactivatePinTitle.tr()
             : LocaleKeys.securitySettings_deactivateBiometricsTitle.tr(),
@@ -203,20 +203,20 @@ class _Content extends HookWidget {
 
   Future<void> _changePinCode(BuildContext context) async {
     final correctPinCode = await AutoRouter.of(context).push(
-      ConfirmWithPinPageRoute(
+      ConfirmWithPinRoute(
         title: LocaleKeys.securitySettings_changePinCode_title.tr(),
         button: LocaleKeys.securitySettings_changePinCode_action.tr(),
       ),
     );
 
     if (correctPinCode == true) {
-      final pinCodeSet = await AutoRouter.of(context).push(const NewPinPageRoute());
+      final pinCodeSet = await AutoRouter.of(context).push(const NewPinRoute());
 
       if (pinCodeSet == true) {
         await AutoRouter.of(context).push(
-          PinSuccessPageRoute(
+          PinSuccessRoute(
             title: LocaleKeys.pinSuccess_changed.tr(),
-            route: const SecuritySettingsPageRoute()
+            route: const SecuritySettingsRoute()
           )
         );
       }

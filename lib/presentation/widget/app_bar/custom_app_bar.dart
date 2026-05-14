@@ -7,7 +7,7 @@ import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
 import 'package:logpass_me/presentation/style/app_typography.dart';
 
-class CustomAppBar extends HookWidget with PreferredSizeWidget {
+class CustomAppBar extends HookWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
@@ -131,7 +131,6 @@ class CustomAppBar extends HookWidget with PreferredSizeWidget {
         AppBar(
           centerTitle: centerTitle,
           systemOverlayStyle: systemUiOverlayStyle,
-          backwardsCompatibility: false,
           backgroundColor: isError ? AppColors.error100 : (predefinedBackground ?? colors.background),
           title: Padding(
             padding: EdgeInsets.only(left: isBigTitle ? AppDimens.s : AppDimens.zero),

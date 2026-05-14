@@ -19,7 +19,7 @@ class AuthTokenInterceptor extends Interceptor {
 
     try {
       final tokens = await _getUserTokensUseCase();
-      options.headers[HttpHeaders.authorizationHeader] = tokens.accessToken.toString();
+      options.headers[HttpHeaders.authorizationHeader] = tokens.accessToken.toAuthorizationHeader();
     } catch (e, s) {
       Fimber.w('Failed adding authorization header to API call.', ex: e, stacktrace: s);
     }

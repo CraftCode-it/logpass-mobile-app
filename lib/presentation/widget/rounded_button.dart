@@ -105,7 +105,7 @@ class CustomRectangularButton extends HookWidget {
           if (leadingIconPath != null) ...[
             SvgPicture.asset(
               leadingIconPath!,
-              color: _getTextColor(colors),
+              colorFilter: ColorFilter.mode(_getTextColor(colors), BlendMode.srcIn),
               width: _leadingIconSize,
               height: _leadingIconSize,
             ),

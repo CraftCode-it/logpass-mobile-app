@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/widget/checkbox/loader.dart';
-import 'package:native_pdf_renderer/native_pdf_renderer.dart';
+import 'package:pdfx/pdfx.dart';
 import 'package:synchronized/synchronized.dart';
 
 final Lock _lock = Lock();
@@ -66,7 +66,7 @@ class _PdfPage extends HookWidget {
         final image = await page.render(
           width: page.width,
           height: page.height,
-          format: PdfPageFormat.JPEG,
+              format: PdfPageImageFormat.jpeg,
         );
         await page.close();
 

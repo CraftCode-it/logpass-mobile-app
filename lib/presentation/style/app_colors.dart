@@ -79,6 +79,8 @@ class AppColors {
   static const error20 = Color(0xFFFED4DB);
   static const error10 = Color(0xFFFFE9ED);
 
+  static const warning = Color(0xFFFF9500);
+
   static const secondary = Colors.white;
 
   // Light mode

@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+﻿import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,7 +9,7 @@ import 'package:logpass_me/presentation/style/app_typography.dart';
 import 'package:logpass_me/presentation/widget/app_bar/custom_app_bar.dart';
 import 'package:logpass_me/presentation/widget/rounded_button.dart';
 import 'package:logpass_me/presentation/widget/separator.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 
 @RoutePage()
 class LoginResetPage extends HookWidget {
@@ -70,7 +70,7 @@ class _Content extends HookWidget {
           const SizedBox(height: AppDimens.m),
           CustomRectangularButton.filled(
             text: LocaleKeys.loginReset_newDeviceButton.tr(),
-            onPressed: () => AutoRouter.of(context).push(const AddNewDevicePageRoute()),
+            onPressed: () => AutoRouter.of(context).push(const AddNewDeviceRoute()),
           ),
           const SizedBox(height: AppDimens.xxl),
           Padding(
@@ -84,7 +84,7 @@ class _Content extends HookWidget {
           const SizedBox(height: AppDimens.m),
           CustomRectangularButton.outlined(
             text: LocaleKeys.loginReset_resetAccountButton.tr(),
-            onPressed: () => AutoRouter.of(context).push(const ResetAccountPageRoute()),
+            onPressed: () => AutoRouter.of(context).push(const ResetAccountRoute()),
           ),
           const Spacer(flex: 3),
         ],

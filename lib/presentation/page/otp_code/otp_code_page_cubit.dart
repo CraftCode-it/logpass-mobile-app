@@ -30,6 +30,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   late DateTime _resendTimestamp;
 
   String _code = '';
+  StreamSubscription<String>? _smsSubscription;
 
   OTPCodePageCubit(
     this._listenSmsCodeUseCase,
@@ -41,6 +42,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
 
   @override
   Future<void> close() async {
+    await _smsSubscription?.cancel();
     await _disposeSmsCodeListenerUseCase();
     return super.close();
   }
@@ -51,6 +53,15 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
     _resendTimestamp = clock.now().add(resendDelayDuration);
 
     emit(OTPCodePageState.idle(_code, false, _resendTimestamp));
+
+    // DEV_MODE: backend returns OTP in toSign field — auto-fill if 6 digits
+    if (verification.toSign != null && verification.toSign!.isNotEmpty) {
+      final raw = verification.toSign!.replaceAll(RegExp(r'\D'), '');
+      if (raw.length == otpCodeLength) {
+        _code = raw;
+        emit(OTPCodePageState.otpAutofill(raw));
+      }
+    }
 
     _listenSmsCode();
   }
@@ -86,14 +97,22 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
       _signUpVerification = await _retrySignUpSmsCodeUseCase(_signUpVerification.id);
       _resendTimestamp = clock.now().add(resendDelayDuration);
       emit(OTPCodePageState.resendSuccess());
+
+      // DEV_MODE: re-check toSign from new verification response
+      final raw = _signUpVerification.toSign?.replaceAll(RegExp(r'\D'), '') ?? '';
+      if (raw.length == otpCodeLength) {
+        _code = raw;
+        emit(OTPCodePageState.otpAutofill(raw));
+        // Don't emit idle here — let the UI handle autofill first (via Future.delayed in page)
+        return;
+      }
     } on GeneralConnectionError catch (e) {
       emit(OTPCodePageState.connectionError(e));
     } catch (e, s) {
       Fimber.e('Resending OTP code failed', ex: e, stacktrace: s);
       emit(OTPCodePageState.connectionError(GeneralConnectionError.somethingWentWrong()));
-    } finally {
-      _emitIdleState();
     }
+    _emitIdleState();
   }
 
   void _handleLoginVerificationError(LoginVerificationError error) {
@@ -113,7 +132,7 @@ class OTPCodePageCubit extends Cubit<OTPCodePageState> {
   }
 
   void _listenSmsCode() {
-    _listenSmsCodeUseCase().listen((code) {
+    _smsSubscription = _listenSmsCodeUseCase().listen((code) {
       emit(OTPCodePageState.otpAutofill(code));
     });
   }

@@ -12,7 +12,7 @@ import 'package:logpass_me/presentation/widget/hooks/cubit_hooks.dart';
 import 'package:logpass_me/presentation/widget/custom_scaffold.dart';
 import 'package:logpass_me/presentation/widget/error_snackbar.dart';
 import 'package:logpass_me/presentation/widget/messenger/messenger.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:pdfx/pdfx.dart';
 
 @RoutePage()
 class AgreementContentPreviewPage extends HookWidget {

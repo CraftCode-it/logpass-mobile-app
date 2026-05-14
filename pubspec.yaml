@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.5.1+16
+version: 0.6.0+18
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -27,9 +27,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   freezed_annotation: ^2.4.1
   dio: ^5.4.0
-  retrofit: ^4.1.0
+  retrofit: ^4.4.0
   pretty_dio_logger: ^1.3.1
-  socket_io: ^1.0.2
   fimber: ^0.7.0
   injectable: ^2.3.2
   get_it: ^7.6.4
@@ -46,21 +45,21 @@ dependencies:
   libphonenumber: ^2.0.2
   flutter_keyboard_visibility: ^6.0.0
   pinput: ^4.0.0
-  clock: ^1.1.1
+  clock: any
   local_auth: ^2.1.8
   web_socket_channel: ^2.4.0
   url_launcher: ^6.2.2
-  path: ^1.8.3
+  path: any
   path_provider: ^2.1.1
   synchronized: ^3.1.0
   flutter_svg: ^2.0.9
   google_fonts: ^6.1.0
   flutter_switch: ^0.3.2
   country_codes: ^2.2.0
-  collection: ^1.18.0
+  collection: any
   mask_text_input_formatter: ^2.9.0
   uni_links: ^0.5.1
-  package_info_plus: ^5.0.1
+  package_info_plus: ^8.0.0
   device_info_plus: ^10.1.0
   auto_size_text: ^3.0.0
   hive: ^2.2.3
@@ -68,6 +67,10 @@ dependencies:
   uuid: ^4.2.2
   connectivity_plus: ^5.0.2
   app_settings: ^5.1.1
+  cryptography: ^2.7.0
+  pdfx: '>=2.7.0 <2.9.0'
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.2.3
   logpass_crypto:
     path: ./logpass_crypto
 
@@ -85,6 +88,14 @@ dev_dependencies:
   bloc_test: ^9.1.5
   flutter_launcher_icons: ^0.13.1
   hive_generator: ^2.0.1
+
+dependency_overrides:
+  # watcher 1.0.0 uses FileSystemEvent which became sealed in Dart 3.x
+  watcher: ^1.1.0
+  # pub_semver 2.1.0 uses FallThroughError removed in Dart 3.x
+  pub_semver: ^2.1.4
+  # platform 3.0.2 uses Platform.packageRoot removed in Dart 3.x
+  platform: ^3.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

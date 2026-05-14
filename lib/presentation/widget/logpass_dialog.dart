@@ -69,12 +69,12 @@ class TwoOptionsDialog extends HookWidget {
         CustomRectangularButton.outlined(
           fillColor: colors.dialogBackground,
           text: topAction,
-          onPressed: () => AutoRouter.of(context).pop(true),
+          onPressed: () => AutoRouter.of(context).maybePop(true),
         ),
         const SizedBox(height: AppDimens.l),
         CustomRectangularButton.filled(
           text: bottomAction,
-          onPressed: () => AutoRouter.of(context).pop(false),
+          onPressed: () => AutoRouter.of(context).maybePop(false),
         ),
       ],
     );

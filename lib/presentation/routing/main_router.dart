@@ -1,5 +1,16 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:logpass_me/domain/auth/sign_up/sign_up_verification.dart';
 import 'package:logpass_me/domain/country_code/country_code.dart';
+import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
+import 'package:logpass_me/domain/need_help/question.dart';
+import 'package:logpass_me/domain/service/data/service.dart';
+import 'package:logpass_me/domain/service/data/service_agreement.dart';
+import 'package:logpass_me/domain/user_data/data/address.dart';
+import 'package:logpass_me/domain/user_data/data/email.dart';
+import 'package:logpass_me/domain/user_data/data/invoice_data.dart';
+import 'package:logpass_me/domain/user_data/data/personal_data.dart';
+import 'package:logpass_me/domain/wallet/credential.dart';
 import 'package:logpass_me/presentation/page/add_new_device/add_new_device_page.dart';
 import 'package:logpass_me/presentation/page/add_new_device_code/add_new_device_code_page.dart';
 import 'package:logpass_me/presentation/page/agreement_details/agreement_details_page.dart';
@@ -45,6 +56,8 @@ import 'package:logpass_me/presentation/page/secured_login/secured_login_page.da
 import 'package:logpass_me/presentation/page/security_settings/security_settings_page.dart';
 import 'package:logpass_me/presentation/page/service_details/service_details_page.dart';
 import 'package:logpass_me/presentation/page/service_details/session_list/historical_session_list_page.dart';
+import 'package:logpass_me/presentation/page/service_list/service_list_page.dart';
+import 'package:logpass_me/presentation/page/settings/settings_page.dart';
 import 'package:logpass_me/presentation/page/start/start_page.dart';
 import 'package:logpass_me/presentation/page/terms_and_conditions/terms_and_conditions_page.dart';
 import 'package:logpass_me/presentation/page/trust_level/trust_level_page.dart';
@@ -52,12 +65,18 @@ import 'package:logpass_me/presentation/page/wallet/credential_detail/credential
 import 'package:logpass_me/presentation/page/wallet/proof_presentation/proof_presentation_page.dart';
 import 'package:logpass_me/presentation/page/wallet/qr_scan/qr_scan_page.dart';
 import 'package:logpass_me/presentation/page/wallet/verification_request/verification_request_page.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_approval_page.dart'
+    show GuardianApprovalPage, GuardianApprovalType;
+import 'package:logpass_me/presentation/page/guardian/guardian_page.dart';
+import 'package:logpass_me/presentation/page/guardian/guardian_show_qr_page.dart';
+import 'package:logpass_me/presentation/page/identity/identity_page.dart';
 import 'package:logpass_me/presentation/page/wallet/wallet_home/wallet_home_page.dart';
+import 'package:logpass_me/presentation/page/your_data/your_data_page.dart';
 
 part 'main_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class MainRouter extends RootStackRouter {
+class MainRouter extends _$MainRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: EntryRoute.page, initial: true),
@@ -113,5 +132,9 @@ class MainRouter extends RootStackRouter {
     AutoRoute(page: ProofPresentationRoute.page),
     AutoRoute(page: QrScanRoute.page),
     AutoRoute(page: VerificationRequestRoute.page),
+    AutoRoute(page: IdentityRoute.page),
+    AutoRoute(page: GuardianRoute.page),
+    AutoRoute(page: GuardianApprovalRoute.page),
+    AutoRoute(page: GuardianShowQrRoute.page),
   ];
 }

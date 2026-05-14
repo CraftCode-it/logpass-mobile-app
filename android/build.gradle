@@ -11,6 +11,13 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+    project.plugins.withId("com.android.library") {
+        project.android {
+            if (namespace == null || namespace.isEmpty()) {
+                namespace = project.group?.toString() ?: project.name
+            }
+        }
+    }
 }
 
 tasks.register("clean", Delete) {

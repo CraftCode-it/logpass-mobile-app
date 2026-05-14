@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logpass_me/core/di/di_config.dart';
+import 'package:logpass_me/data/activity/activity_api_data_source.dart';
+import 'package:logpass_me/domain/activity/service_activity.dart';
 import 'package:logpass_me/domain/incoming_actions/incoming_action.dart';
 import 'package:logpass_me/exports.dart';
 import 'package:logpass_me/generated/local_keys.g.dart';
 import 'package:logpass_me/presentation/page/home/home_cubit.dart';
-import 'package:logpass_me/presentation/routing/main_router.gr.dart';
+import 'package:logpass_me/presentation/routing/main_router.dart';
 import 'package:logpass_me/presentation/style/app_colors.dart';
 import 'package:logpass_me/presentation/style/app_dimens.dart';
 import 'package:logpass_me/presentation/style/app_icon.dart';
@@ -28,6 +31,8 @@ const _smallerSizePhoneThreshold = 672.0;
 @RoutePage()
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  static final reloadActivityNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +87,24 @@ class _HomePageContent extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = useAppThemeColors();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final overlayStyle =
+        isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
+      value: overlayStyle,
       child: Scaffold(
         backgroundColor: colors.background,
         appBar: isSmallSize
             ? null
             : CustomAppBar.smallLogo(
-                systemUiOverlayStyle: SystemUiOverlayStyle.light,
+                systemUiOverlayStyle: overlayStyle,
                 logoColor: colors.logoSpecial,
+                trailing: IconButton(
+                  icon: Icon(Icons.qr_code_scanner, color: colors.logoSpecial),
+                  tooltip: LocaleKeys.qrScan_title.tr(),
+                  onPressed: () => AutoRouter.of(context).push(const QrScanRoute()),
+                ),
               ).copyWith(
                 predefinedBackground: colors.codeContainerBackground,
               ),
@@ -105,9 +118,17 @@ class _HomePageContent extends HookWidget {
                 messengerController :messengerController
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
-                  child: _PendingActions(cubit, state, isSmallSize),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppDimens.l),
+                        child: _PendingActions(cubit, state, isSmallSize),
+                      ),
+                    ),
+                    _PastEventsButton(),
+                  ],
                 ),
               ),
             ],
@@ -145,8 +166,8 @@ class _PendingActions extends HookWidget {
             loadInProgress: () => const Loader(),
           ),
           const SizedBox(height: AppDimens.l),
-          _PastEventsButton(),
-          const SizedBox(height: AppDimens.xl),
+          const _RecentActivitySection(),
+          const SizedBox(height: AppDimens.l),
         ],
       ),
     );
@@ -212,14 +233,32 @@ class _PendingItem extends HookWidget {
 
     return InkWell(
       onTap: () {
-        //TODO change 'when' to 'maybeWhen' when all kind notification will be implemented
-        action.actionType.when(
+        action.actionType.maybeWhen(
           authorize: () => AutoRouter.of(context).push(
-            AuthorizePageRoute(incomingAction: action),
+            AuthorizeRoute(incomingAction: action),
           ),
-          confirm: () => AutoRouter.of(context).push(const ConfirmPageRoute()),
+          confirm: () => AutoRouter.of(context).push(const ConfirmRoute()),
           updateAccount: () {},
           refreshUserCode: () {},
+          logpassVerify: () {
+            final requestId = action.actionId;
+            if (requestId != null) {
+              final params = action.queryParameters;
+              AutoRouter.of(context).push(
+                VerificationRequestRoute(
+                  requestId: requestId,
+                  verifierName: params?['verifier'],
+                  requestType: params?['request_type'],
+                  minAge: int.tryParse(params?['min_age'] ?? '18') ?? 18,
+                  allowGuardian: params?['allow_guardian'] == 'true',
+                ),
+              ).then((_) {
+                onRemove(action);
+                HomePage.reloadActivityNotifier.value++;
+              });
+            }
+          },
+          orElse: () {},
         );
       },
       child: Container(
@@ -260,7 +299,11 @@ class _PendingItem extends HookWidget {
                         child: Text(
                           action.actionType.maybeWhen(
                             authorize: () => LocaleKeys.home_actionTypeAuthorization.tr(),
-                            orElse: () => 'Unknown',
+                            logpassVerify: () =>
+                                action.queryParameters?['verifier']?.isNotEmpty == true
+                                    ? action.queryParameters!['verifier']!
+                                    : LocaleKeys.verificationRequest_title.tr(),
+                            orElse: () => LocaleKeys.home_actionTypeAuthorization.tr(),
                           ),
                           style: typography.body3,
                         ),
@@ -318,7 +361,7 @@ class _PastEventsButton extends HookWidget {
             ),
           ),
         ),
-        onPressed: () => AutoRouter.of(context).push(const EventLogPageRoute()),
+        onPressed: () => AutoRouter.of(context).push(const EventLogRoute()),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.m),
           child: Row(
@@ -339,5 +382,135 @@ class _PastEventsButton extends HookWidget {
         ),
       ),
     );
+  }
+}
+
+class _RecentActivitySection extends HookWidget {
+  const _RecentActivitySection();
+
+  @override
+  Widget build(BuildContext context) {
+    final typography = useAppTypography();
+    final colors = useAppThemeColors();
+    final activities = useState<List<ServiceActivity>>([]);
+    final isLoading = useState(true);
+    final reloadKey = useValueListenable(HomePage.reloadActivityNotifier);
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final activityLimit = screenHeight < 700 ? 1 : (screenHeight < 800 ? 2 : 3);
+
+    useEffect(() {
+      isLoading.value = true;
+      final dataSource = getIt<ActivityApiDataSource>();
+      dataSource.getActivity(limit: activityLimit).then((result) {
+        activities.value = result;
+        isLoading.value = false;
+      }).catchError((_) {
+        isLoading.value = false;
+      });
+      return null;
+    }, [reloadKey]);
+
+    if (isLoading.value) return const SizedBox.shrink();
+    if (activities.value.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocaleKeys.home_recentActivityLabel.tr(),
+          style: typography.h8,
+        ),
+        const SizedBox(height: AppDimens.s),
+        ...activities.value.map(
+          (a) => _RecentActivityRow(activity: a, colors: colors, typography: typography),
+        ),
+        const SizedBox(height: AppDimens.s),
+      ],
+    );
+  }
+}
+
+class _RecentActivityRow extends StatelessWidget {
+  final ServiceActivity activity;
+  final AppThemeColors colors;
+  final AppTypography typography;
+
+  const _RecentActivityRow({
+    required this.activity,
+    required this.colors,
+    required this.typography,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppDimens.s),
+      child: Row(
+        children: [
+          Container(
+            width: AppDimens.l,
+            height: AppDimens.l,
+            decoration: BoxDecoration(
+              color: colors.buttonFill.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              _iconForAction(activity.actionType),
+              size: 16,
+              color: colors.buttonFill,
+            ),
+          ),
+          const SizedBox(width: AppDimens.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(activity.serviceName, style: typography.body3),
+                Text(
+                  '${_labelForAction(activity.actionType)} · ${_formatDate(activity.createdAt)}',
+                  style: typography.info2.copyWith(color: colors.secondaryText),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _iconForAction(String actionType) {
+    switch (actionType) {
+      case 'identity':
+        return Icons.person_outlined;
+      case 'age_18':
+      case 'verification':
+        return Icons.verified_user_outlined;
+      case 'login':
+        return Icons.login_outlined;
+      default:
+        return Icons.shield_outlined;
+    }
+  }
+
+  String _labelForAction(String actionType) {
+    switch (actionType) {
+      case 'identity':
+        return LocaleKeys.home_recentActivityActionIdentity.tr();
+      case 'age_18':
+      case 'verification':
+        return LocaleKeys.home_recentActivityActionAge.tr();
+      default:
+        return LocaleKeys.home_recentActivityActionVerification.tr();
+    }
+  }
+
+  String _formatDate(DateTime dt) {
+    final now = DateTime.now();
+    final diff = now.difference(dt);
+    if (diff.inDays == 0) {
+      return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    }
+    return '${dt.day}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
   }
 }
