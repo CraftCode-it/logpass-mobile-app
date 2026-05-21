@@ -37,12 +37,15 @@ class CountryCodeWidePicker extends HookWidget {
     final typography = useAppTypography();
     final colors = useAppThemeColors();
 
-    useCubitListener(cubit, (CountryCodePickerCubit cubit, CountryCodePickerState state, context, {controller}) {
-      state.maybeWhen(
-        selectedEvent: onCountryCodeSelected,
-        orElse: () {},
-      );
-    });
+    useCubitListener<CountryCodePickerCubit, CountryCodePickerState>(
+      cubit,
+      (cubit, state, context) {
+        state.maybeWhen(
+          selectedEvent: onCountryCodeSelected,
+          orElse: () {},
+        );
+      },
+    );
 
     useEffect(() {
       cubit.initialize(initialCountry ?? _getSystemLocale());
@@ -123,7 +126,29 @@ class CountryCodeWidePicker extends HookWidget {
 
 String _getSystemLocale() {
   try {
-    return Platform.localeName.split('_').last;
+    final localeName = Platform.localeName;
+    if (localeName.isEmpty) return 'PL';
+    
+    // Handle different formats: "en_US", "en-US", "en_US.UTF-8", "en"
+    String cleaned = localeName.split('.').first; // Remove ".UTF-8" suffix
+    
+    // Try splitting by underscore first (most common)
+    if (cleaned.contains('_')) {
+      return cleaned.split('_').last.toUpperCase();
+    }
+    
+    // Try splitting by hyphen (iOS format)
+    if (cleaned.contains('-')) {
+      return cleaned.split('-').last.toUpperCase();
+    }
+    
+    // If no separator, return the string as-is if it's 2 chars (country code)
+    if (cleaned.length == 2) {
+      return cleaned.toUpperCase();
+    }
+    
+    // Fallback to PL
+    return 'PL';
   } catch (e, s) {
     Fimber.e('Getting system locale failed', ex: e, stacktrace: s);
     return 'PL';

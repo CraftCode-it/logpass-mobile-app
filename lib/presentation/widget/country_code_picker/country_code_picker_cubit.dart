@@ -14,14 +14,24 @@ class CountryCodePickerCubit extends Cubit<CountryCodePickerState> {
   CountryCodePickerCubit(this._getCountryCodesUseCase) : super(CountryCodePickerState.loading());
 
   Future<void> initialize(String country) async {
-    final countryCodeList = await _getCountryCodesUseCase();
-    final selectedCountryCode = _findDefaultCountryCode(countryCodeList, country);
+    try {
+      final countryCodeList = await _getCountryCodesUseCase();
+      
+      if (countryCodeList.isEmpty) {
+        Fimber.e('Country code list is empty');
+        return;
+      }
+      
+      final selectedCountryCode = _findDefaultCountryCode(countryCodeList, country);
 
-    _countryCodeList = countryCodeList;
-    _countryCodeList.sort((codeA, codeB) => codeA.countryName.compareTo(codeB.countryName));
+      _countryCodeList = countryCodeList;
+      _countryCodeList.sort((codeA, codeB) => codeA.countryName.compareTo(codeB.countryName));
 
-    emit(CountryCodePickerState.selectedEvent(selectedCountryCode));
-    emit(CountryCodePickerState.selected(countryCodeList, selectedCountryCode));
+      emit(CountryCodePickerState.selectedEvent(selectedCountryCode));
+      emit(CountryCodePickerState.selected(countryCodeList, selectedCountryCode));
+    } catch (e, s) {
+      Fimber.e('Failed to initialize country code picker', ex: e, stacktrace: s);
+    }
   }
 
   void select(CountryCode countryCode) {

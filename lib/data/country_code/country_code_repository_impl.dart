@@ -1,4 +1,5 @@
 import 'package:country_codes/country_codes.dart';
+import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logpass_me/data/country_code/country_code_data_source.dart';
@@ -12,6 +13,7 @@ class CountryCodeRepositoryImpl implements CountryCodeRepository {
   final CountryCodeFromEntityMapper _mapper;
 
   List<CountryCode>? _countryCodeListCache;
+  bool _countryCodesInitialized = false;
 
   CountryCodeRepositoryImpl(this._dataSource, this._mapper);
 
@@ -20,7 +22,15 @@ class CountryCodeRepositoryImpl implements CountryCodeRepository {
     final cache = _countryCodeListCache;
     if (cache != null) return cache;
 
-    await CountryCodes.init(Locale(languageCode));
+    if (!_countryCodesInitialized) {
+      try {
+        await CountryCodes.init(Locale(languageCode));
+        _countryCodesInitialized = true;
+      } catch (e, s) {
+        Fimber.w('CountryCodes.init failed, using fallback country names', ex: e, stacktrace: s);
+      }
+    }
+    
     final entityList = await _dataSource.load();
     final countryCodeList =
         entityList.map<CountryCode>((entity) => _mapper(entity, languageCode)).toList(growable: false);
