@@ -111,6 +111,7 @@ abstract class _$MainRouter extends RootStackRouter {
           countryCodeList: args.countryCodeList,
           selectedCountryCode: args.selectedCountryCode,
           includeCountryCodes: args.includeCountryCodes,
+          onCountrySelected: args.onCountrySelected,
           key: args.key,
         ),
       );
@@ -831,6 +832,7 @@ class CountryCodePickerRoute extends PageRouteInfo<CountryCodePickerRouteArgs> {
     required List<CountryCode> countryCodeList,
     required CountryCode selectedCountryCode,
     required bool includeCountryCodes,
+    required dynamic Function(CountryCode) onCountrySelected,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -839,6 +841,7 @@ class CountryCodePickerRoute extends PageRouteInfo<CountryCodePickerRouteArgs> {
             countryCodeList: countryCodeList,
             selectedCountryCode: selectedCountryCode,
             includeCountryCodes: includeCountryCodes,
+            onCountrySelected: onCountrySelected,
             key: key,
           ),
           initialChildren: children,
@@ -855,6 +858,7 @@ class CountryCodePickerRouteArgs {
     required this.countryCodeList,
     required this.selectedCountryCode,
     required this.includeCountryCodes,
+    required this.onCountrySelected,
     this.key,
   });
 
@@ -864,11 +868,13 @@ class CountryCodePickerRouteArgs {
 
   final bool includeCountryCodes;
 
+  final dynamic Function(CountryCode) onCountrySelected;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'CountryCodePickerRouteArgs{countryCodeList: $countryCodeList, selectedCountryCode: $selectedCountryCode, includeCountryCodes: $includeCountryCodes, key: $key}';
+    return 'CountryCodePickerRouteArgs{countryCodeList: $countryCodeList, selectedCountryCode: $selectedCountryCode, includeCountryCodes: $includeCountryCodes, onCountrySelected: $onCountrySelected, key: $key}';
   }
 }
 

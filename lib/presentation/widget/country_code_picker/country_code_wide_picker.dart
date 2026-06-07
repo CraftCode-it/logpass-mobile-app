@@ -105,18 +105,15 @@ class CountryCodeWidePicker extends HookWidget {
   Function()? _onPressed(CountryCodePickerState state, BuildContext context, CountryCodePickerCubit cubit) {
     return state.maybeMap(
       selected: (state) {
-        return () async {
-          final selectedCountry = await AutoRouter.of(context).push<CountryCode?>(
+        return () {
+          AutoRouter.of(context).push(
             CountryCodePickerRoute(
               countryCodeList: state.countryCodeList,
               selectedCountryCode: state.countryCode,
               includeCountryCodes: false,
+              onCountrySelected: cubit.select,
             ),
           );
-
-          if (selectedCountry != null) {
-            cubit.select(selectedCountry);
-          }
         };
       },
       orElse: () => null,

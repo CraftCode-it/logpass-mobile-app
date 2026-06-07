@@ -22,16 +22,20 @@ const _rowHeight = 64.0;
 const _headerHeight = 48.0;
 const _rowWithSeparatorHeight = _rowHeight + 1;
 
+typedef OnCountrySelected = Function(CountryCode countryCode);
+
 @RoutePage()
 class CountryCodePickerPage extends HookWidget {
   final List<CountryCode> countryCodeList;
   final CountryCode selectedCountryCode;
   final bool includeCountryCodes;
+  final OnCountrySelected onCountrySelected;
 
   const CountryCodePickerPage({
     required this.countryCodeList,
     required this.selectedCountryCode,
     required this.includeCountryCodes,
+    required this.onCountrySelected,
     Key? key,
   }) : super(key: key);
 
@@ -105,7 +109,10 @@ class CountryCodePickerPage extends HookWidget {
                                         countryCode: countryCode,
                                         selected: countryCode == selectedCountryCode,
                                         codeVisible: includeCountryCodes,
-                                        onPressed: () => AutoRouter.of(context).pop(countryCode),
+                                        onPressed: () {
+                                          onCountrySelected(countryCode);
+                                          AutoRouter.of(context).pop();
+                                        },
                                       ),
                                       Separator.light(),
                                     ],
